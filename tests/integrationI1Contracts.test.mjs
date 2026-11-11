@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {readFileSync} from 'node:fs';
+import {explorationHref,resolveExplorationContext} from '../ui/explorationLinkPolicy.js';
+import {parseLegacyOrTypedLink} from '../ui/recordRef.js';
+import {FATIGUE_QUESTIONS} from '../ui/learningFatigueLesson.js';
+import {inspectPortableBackup} from '../ui/portableDataV2.js';
+
+test('I1 GPS source identity and reading boundary remain distinct from knowledge and manual notes',()=>{
+ const gpsId='gps-v2-11111111-1111-4111-8111-111111111111';
+ const gpsRef={sourceType:'GPS_V2',recordId:gpsId};
+ const gpsHref=explorationHref(gpsRef,'01','自分が感じた疲れ');
+ assert.match(gpsHref,/source=gps-v2&record=gps-v2-/);
+ const parsed=parseLegacyOrTypedLink(gpsHref,'exploration');
+ assert.equal(parsed.ok,true);
+ assert.deepEqual(parsed.value,gpsRef);
+ const wrong=parseLegacyOrTypedLink('#/exploration-tree?source=manual&record='+gpsId,'exploration');
+ assert.equal(wrong.ok,false);
+ const unknown=parseLegacyOrTypedLink('#/exploration-tree?source=gps-v1&record='+gpsId,'exploration');
+ assert.equal(unknown.ok,false);
+ const general=explorationHref(null,'01','自分が感じた疲れ');
+ assert.equal(parseLegacyOrTypedLink(general,'exploration').value,null);
+ assert.doesNotMatch(general,/record=|source=|gps=/);
+ const code=readFileSync(new URL('../ui/explorationLinkPolicy.js',import.meta.url),'utf8');
+ assert.match(code,/GPS_READONLY/);
+ assert.match(code,/このGPS記録を既存の手入力専用探究メモへ自動的には関連づけません/);
+ const posthoc=readFileSync(new URL('../ui/annotationStore.js',import.meta.url),'utf8');
+ assert.match(posthoc,/原本を再確認/);
+ const route=readFileSync(new URL('../app.js',import.meta.url),'utf8');
+ assert.match(route,/gpsInquiryBridge/);
+ assert.match(route,/GPS_READONLY/);
+ const lesson=readFileSync(new URL('../ui/learningFatigueLesson.js',import.meta.url),'utf8');
+ assert.doesNotMatch(lesson,/readGpsV2Summaries\(|openAnnotationStore\(|readManualRuns\(/);
+ assert.equal(FATIGUE_QUESTIONS.length,4);
+ assert.equal(inspectPortableBackup('{invalid').ok,false);
+});

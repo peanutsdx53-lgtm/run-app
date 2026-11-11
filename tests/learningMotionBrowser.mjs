@@ -1,0 +1,86 @@
+import assert from 'node:assert/strict';
+import {createServer} from 'node:http';
+import {readFile,mkdir} from 'node:fs/promises';
+import {resolve,dirname,extname,sep} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {chromium,webkit} from 'playwright';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const engineName=process.env.RUNLOAD_BROWSER==='webkit'?'webkit':'chromium';
+const engine=engineName==='webkit'?webkit:chromium;
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.webmanifest':'application/manifest+json'};
+const server=createServer(async(req,res)=>{try{
+ const p=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname));
+ if(p!==root&&!p.startsWith(root+sep))throw Error('outside project');
+ const file=p===root?resolve(root,'index.html'):p;
+ res.setHeader('content-type',types[extname(file)]||'application/octet-stream');res.end(await readFile(file));
+}catch{res.writeHead(404);res.end('not found');}});
+await new Promise(done=>server.listen(0,'127.0.0.1',done));
+const base='http://127.0.0.1:'+server.address().port+'/';
+const browser=await engine.launch({headless:true});
+try{
+ await mkdir(resolve(root,'screenshots'),{recursive:true});
+ for(const width of [320,390,768,1440]){
+  const context=await browser.newContext({viewport:{width,height:width===1440?900:820},serviceWorkers:'allow',reducedMotion:'reduce'});
+  await context.addInitScript(()=>localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:'ja'})));
+  const page=await context.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(base+'#/learning',{waitUntil:'networkidle'});
+  await page.locator('.lr-catalog').waitFor();
+  assert.equal(await page.locator('.lr-course').count(),3);
+  assert.equal(await page.locator('.lr-coming').count(),0);
+  assert.equal(await page.locator('a[href="#/learning?lesson=effort-fatigue-recovery"]').count(),1);
+  assert.equal(await page.locator('a[href="#/learning?lesson=running-motion-basics"]').count(),1);
+  const before=await page.evaluate(()=>({keys:Object.keys(localStorage).sort(),manual:localStorage.getItem('runload-v2-manual-runs-v2'),notes:localStorage.getItem('runload-v2-exploration-notes-v1')}));
+  await page.locator('a[href="#/learning?lesson=running-motion-basics"]').click();
+  await page.locator('.lr-chapter').evaluateAll(chapters=>chapters.forEach(ch=>ch.open=true));
+  await page.locator('#lm-review [data-lm-quiz]').waitFor({timeout:15000});
+  assert.match(await page.locator('.lr-lesson-title').innerText(),/脚の動き/);
+  assert.equal(await page.locator('[data-lm-quiz] fieldset').count(),4);
+  assert.equal(await page.locator('#lm-anatomy svg[role=img]').count(),1);
+  assert.match(await page.locator('#lm-anatomy figcaption').innerText(),/原著の図の転載でもありません/);
+  assert.match(await page.locator('#lm-research').innerText(),/28名/);
+  assert.match(await page.locator('#lm-research').innerText(),/10名/);
+  assert.equal(await page.locator('#lm-cycle .lr-motion-cycle').count(),1);
+  assert.match(await page.locator('#lm-cycle').innerText(),/歩行と走行でふくらはぎ筋群/);
+  const dimensions=await page.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth}));
+  assert.ok(dimensions.document<=dimensions.viewport+3,'L4 overflow at '+width+' '+JSON.stringify(dimensions));
+  if(width<=390){
+   await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
+   const zoom=await page.evaluate(()=>({viewport:innerWidth,document:document.documentElement.scrollWidth}));
+   assert.ok(zoom.document<=zoom.viewport+3,'L4 200% overflow at '+width+' '+JSON.stringify(zoom));
+   await page.evaluate(()=>{document.documentElement.style.fontSize='';});
+  }
+  await page.locator('[data-lm-quiz] button[type=submit]').click();
+  assert.equal(await page.locator('[data-lm-feedback]:visible').count(),4);
+  assert.match(await page.locator('[data-lm-feedback=m1]').innerText(),/未回答/);
+  await page.locator('[data-lm-hint]').click();
+  assert.match(await page.locator('[data-lm-hint-text]').innerText(),/測定対象が違います/);
+  await page.locator('#lm-measure-select').selectOption('emg');
+  await page.locator('[data-lm-practice] button[type=submit]').click();
+  assert.equal(await page.locator('[data-lm-practice-feedback]').getAttribute('data-correct'),'false');
+  await page.locator('#lm-measure-select').selectOption('angle');
+  await page.locator('[data-lm-practice] button[type=submit]').click();
+  assert.equal(await page.locator('[data-lm-practice-feedback]').getAttribute('data-correct'),'true');
+  for(const id of ['m1','m2','m3','m4'])await page.locator('[name='+id+'][value="2"]').check();
+  await page.locator('[data-lm-quiz] button[type=submit]').click();
+  assert.equal(await page.locator('[data-lm-quiz] [data-lm-relearn]:visible').count(),3);
+  const oldHash=await page.evaluate(()=>location.hash);
+  await page.locator('[data-lm-relearn="lm-measures"]').click();
+  assert.equal(await page.evaluate(()=>location.hash),oldHash,'relearning must preserve route');
+  for(const [id,v] of [['m1','0'],['m2','1'],['m3','2'],['m4','1']])await page.locator('[name='+id+'][value="'+v+'"]').check();
+  await page.locator('[data-lm-quiz] button[type=submit]').click();
+  assert.equal(await page.locator('[data-lm-feedback][data-correct=true]').count(),4);
+  assert.equal(await page.locator('[data-lm-quiz] [data-lm-relearn]:visible').count(),0);
+  assert.equal(await page.evaluate(()=>location.hash),oldHash);
+  const after=await page.evaluate(()=>({keys:Object.keys(localStorage).sort(),manual:localStorage.getItem('runload-v2-manual-runs-v2'),notes:localStorage.getItem('runload-v2-exploration-notes-v1')}));
+  assert.deepEqual(after,before,'generic lesson cannot change user data');
+  await page.screenshot({path:resolve(root,'screenshots','learning-motion-'+width+'-lesson.png'),fullPage:false,animations:'disabled'});
+  await page.locator('#lm-explore a[href^="#/exploration-tree"]').click();
+  await page.locator('.ex-page').waitFor({timeout:15000});
+  assert.doesNotMatch(await page.evaluate(()=>location.hash),/record=/);
+  assert.equal(await page.locator('.ex-record-return').count(),0);
+  await context.close();
+  assert.deepEqual(errors,[]);
+  console.log(JSON.stringify({gate:'L4-MOTION',browser:engineName,width,status:'PASS',nonmutating:true}));
+ }
+}finally{await browser.close();await new Promise(done=>server.close(done));}

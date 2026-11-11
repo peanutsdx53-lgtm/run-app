@@ -1,0 +1,171 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createRofUiState,rofPage,setExerciseClockTime,resolveExerciseTimes,nearestAnchorIndex,setRofScore,setRofPhase,adjustRofScore,clearRofScore,focusRofAnchor,setRofTiming,recordRofInput,anchorDescriptionMarkup} from '../ui/rofExperience.js';
+const fresh=()=>({rofBefore:null,rofAfter:null});
+test('approved 11 integer inputs and five non-numeric representative anchors',()=>{
+ assert.deepEqual(Array.from({length:11},(_,i)=>nearestAnchorIndex(i)),[0,1,1,1,2,2,2,3,3,4,4]);
+ const d=fresh(),ui=createRofUiState(),html=rofPage(d,ui);
+ assert.equal((html.match(/data-rof-v4-tick="\d+"/g)||[]).length,11);
+ assert.equal((html.match(/data-rof-v4-anchor="\d+"/g)||[]).length,5);
+ assert.match(html,/2と3の間/);assert.match(html,/7と8の間/);
+ assert.match(html,/rof-visual-lowest.png/);
+});
+test('before and after selections stay independent and missing is not zero',()=>{
+ const d=fresh(),ui=createRofUiState();assert.equal(setRofScore(ui,d,2.5),false);
+ assert.equal(setRofScore(ui,d,-1),false);assert.equal(setRofScore(ui,d,11),false);
+ assert.equal(setRofScore(ui,d,0),true);assert.equal(d.rofBefore,0);
+ assert.equal(setRofPhase(ui,'after',d),true);assert.equal(d.rofAfter,null);
+ assert.equal(setRofScore(ui,d,8),true);assert.equal(d.rofAfter,8);
+ assert.equal(setRofPhase(ui,'before',d),true);assert.equal(d.rofBefore,0);
+ clearRofScore(ui,d);assert.equal(d.rofBefore,null);assert.equal(d.rofAfter,8);
+});
+test('reading anchor does not change the selected integer',()=>{
+ const d=fresh(),ui=createRofUiState();setRofScore(ui,d,4);
+ assert.equal(focusRofAnchor(ui,0),true);assert.equal(d.rofBefore,4);
+ assert.equal(ui.readingAnchor,true);assert.equal(ui.focusedAnchor,0);
+ assert.equal(focusRofAnchor(ui,5),false);
+ adjustRofScore(ui,d,1);assert.equal(d.rofBefore,5);assert.equal(ui.readingAnchor,false);
+ adjustRofScore(ui,d,-1);assert.equal(d.rofBefore,4);
+});
+test('missing, blank and boolean inputs cannot become actual ROF-J zero',()=>{
+ const d=fresh(),ui=createRofUiState();
+ for(const invalid of [null,undefined,'','  ',false,true,[],{},'0.0','2.5']){
+  assert.equal(setRofScore(ui,d,invalid),false,'must reject '+String(invalid));
+  assert.equal(d.rofBefore,null,'invalid input must preserve missing');
+ }
+ assert.equal(setRofScore(ui,d,'0'),true);
+ assert.equal(d.rofBefore,0,'true scale zero remains valid');
+ assert.equal(setRofScore(ui,d,null),false);
+ assert.equal(d.rofBefore,0,'invalid reset must not erase actual zero');
+ clearRofScore(ui,d);
+ assert.equal(d.rofBefore,null,'only explicit clear changes zero to missing');
+});
+
+test('stage 8 explicit contemporary and retrospective ROF-J entries have separate captured and declared times',()=>{
+ const d={rofBefore:null,rofAfter:null},ui=createRofUiState();
+ assert.equal(setRofTiming(d,'before','AT_ENTRY'),true);
+ assert.equal(recordRofInput(d,'before',0,'2026-10-30T01:00:00.000Z'),true);
+ assert.equal(d.rofBefore,0);
+ assert.deepEqual(d.rofEntryEvidence.before,{capturedAt:'2026-10-30T01:00:00.000Z',
+  assessedAt:'2026-10-30T01:00:00.000Z',timeBasis:'AT_ENTRY'});
+ setRofPhase(ui,'after',d);
+ assert.equal(setRofTiming(d,'after','RECALLED','2026-10-29T16:00'),true);
+ assert.equal(recordRofInput(d,'after',8,'2026-10-30T02:00:00.000Z'),true);
+ assert.equal(d.rofEntryEvidence.after.capturedAt,'2026-10-30T02:00:00.000Z');
+ assert.equal(d.rofEntryEvidence.after.timeBasis,'RECALLED');
+ assert.notEqual(d.rofEntryEvidence.after.assessedAt,d.rofEntryEvidence.after.capturedAt);
+ assert.equal(setRofTiming(d,'after','RECALLED','invalid'),false);
+ assert.equal(recordRofInput(d,'after',null,'2026-10-30T03:00:00.000Z'),true);
+ assert.equal(d.rofAfter,null);
+});
+
+test('S06: optional metadata collapses by default while phase switching remains available',()=>{
+ const d={rofBefore:0,rofAfter:null};
+ const ui=createRofUiState();
+ const html=rofPage(d,ui);
+ assert.match(html,/<details class="rv4-optional-meta" >/);
+ assert.doesNotMatch(html,/data-rof-v4-next-phase/);
+ assert.match(html,/data-rof-v4-phase="before"/);
+ assert.match(html,/data-rof-v4-phase="after"/);
+ assert.match(html,/value="0"/);
+ ui.metaOpen=true;setRofPhase(ui,'after',d);
+ const next=rofPage(d,ui);
+ assert.match(next,/<details class="rv4-optional-meta" open>/);
+ assert.doesNotMatch(next,/data-rof-v4-next-phase/);
+ assert.match(next,/まだ選択されていません/);
+});
+
+test('S06 reuses recorded running date and native time picker, without duplicated date entry',()=>{
+ const d={date:'2026-10-31',rofBefore:null,rofAfter:null,exerciseTimingDraft:{startedLocal:'2026-10-31T10:20',endedLocal:''}};
+ const v=rofPage(d,createRofUiState());
+ assert.match(v,/走行日：<strong>2026\/10\/31<\/strong>/);
+ assert.match(v,/type="time" data-rof-run-start/);
+ assert.match(v,/value="10:20"/);
+ assert.doesNotMatch(v,/type="date"/);
+ assert.match(v,/運動時刻・回答時点（任意）/);
+ assert.match(v,/未入力の時刻は推定しません/);
+ assert.doesNotMatch(v,/ここで再入力する必要はありません/);
+ assert.doesNotMatch(v,/data-rof-run-start-date|data-rof-v4-next-phase/);
+});
+test('S06 calendar auto resolution matches condition midnight principle and does not infer missing times',()=>{
+ const d={date:'2026-10-31',rofBefore:null,rofAfter:null};
+ assert.equal(setExerciseClockTime(d,'start','23:55'),true);
+ assert.equal(d.exerciseTimingDraft.endedAt,null);
+ assert.equal(setExerciseClockTime(d,'end','00:15'),true);
+ assert.equal(d.exerciseTimingDraft.endedLocal,'2026-11-01T00:15');
+ assert.equal(d.exerciseTimingDraft.endDayOffset,1);
+ assert.equal(setExerciseClockTime(d,'end','00:15','same'),false,'same-day end earlier than start is invalid');
+ assert.equal(d.exerciseTimingDraft.endedLocal,'2026-11-01T00:15','rejected input does not corrupt prior valid timestamps');
+ assert.equal(setExerciseClockTime(d,'end','00:15','next'),true);
+ assert.equal(d.exerciseTimingDraft.endedLocal,'2026-11-01T00:15');
+ assert.equal(setExerciseClockTime(d,'start',''),true);
+ assert.equal(d.exerciseTimingDraft.startedAt,null);
+ assert.equal(setExerciseClockTime(d,'end','99:99'),false);
+});
+
+test('S06: immediate illustration explanation with no repeated long notes',()=>{
+ const d={date:'2026-11-01',rofBefore:10,rofAfter:null};
+ const ui=createRofUiState();
+ const html=rofPage(d,ui);
+ assert.equal((html.match(/class="rv4-description"/g)||[]).length,1);
+ assert.ok(html.indexOf('class="rv4-anchor-row"')<html.indexOf('class="rv4-description"'));
+ assert.ok(html.indexOf('class="rv4-description"')<html.indexOf('class="rv4-axis"'));
+ assert.match(html,/5つの代表イラストは説明用/);assert.doesNotMatch(html,/<div class="rv4-rail-top"><strong>代表イラスト<\/strong><small>/);
+ for(const old of [
+ '選択したイラストの説明です。点数は変更されません。',
+ '「2と3の間」「7と8の間」は目安の位置',
+ '自分が感じる疲労感の記録です。身体部位別の計算値ではありません。'
+ ]) assert.ok(!html.includes(old),'repeated note removed: '+old);
+ assert.match(html,/class="rv4-description-main">完全な疲労困憊<\/span>/);
+ assert.match(html,/class="rv4-description-detail">（何も残っていない状態）<\/span>/);
+ assert.match(html,/尺度・イラストの出典/,'attribution still available');
+ assert.equal(d.rofBefore,10,'render never modifies recorded score');
+ assert.equal(d.rofAfter,null,'missing before/after preserved');
+});
+test('S06: exact anchor copy and escaped markup remain intact',()=>{
+ assert.equal(anchorDescriptionMarkup('少し疲れている'),'<span class="rv4-description-main">少し疲れている</span>');
+ assert.match(anchorDescriptionMarkup('完全な疲労困憊（何も残っていない状態）'),/完全な疲労困憊<\/span><span class="rv4-description-detail">（何も残っていない状態）/);
+ assert.doesNotMatch(anchorDescriptionMarkup('<b>'),/<b>/);
+});
+
+test('S06: selected score 10 is grouped at the exact parenthetical boundary too',()=>{
+ const d={rofBefore:10,rofAfter:null},html=rofPage(d,createRofUiState());
+ assert.match(html,/data-rof-v4-meaning><span class="rv4-description-main">完全な疲労困憊<\/span><span class="rv4-description-detail">（何も残っていない状態）<\/span>/);
+ assert.equal(d.rofBefore,10);
+});
+
+test('changing ROF-J timing preserves original input timestamp and never invents a new answer (031)',()=>{
+ const d={rofBefore:null,rofAfter:null};
+ const captured='2026-10-30T01:00:00.000Z';
+ assert.equal(recordRofInput(d,'before',0,captured),true);
+ assert.equal(d.rofEntryEvidence.before.capturedAt,captured);
+ assert.equal(setRofTiming(d,'before','RECALLED','2026-10-29T16:00'),true);
+ assert.equal(d.rofEntryEvidence.before.capturedAt,captured);
+ assert.equal(d.rofEntryEvidence.before.timeBasis,'RECALLED');
+ assert.notEqual(d.rofEntryEvidence.before.assessedAt,captured);
+ assert.equal(setRofTiming(d,'before','AT_ENTRY'),true);
+ assert.deepEqual(d.rofEntryEvidence.before,{capturedAt:captured,assessedAt:captured,timeBasis:'AT_ENTRY'});
+ assert.equal(setRofTiming(d,'before','UNKNOWN'),true);
+ assert.deepEqual(d.rofEntryEvidence.before,{capturedAt:captured,assessedAt:null,timeBasis:'UNKNOWN'});
+ assert.equal(d.rofBefore,0,'the original zero score is never rewritten');
+ const legacy={rofBefore:6,rofAfter:null};
+ assert.equal(setRofTiming(legacy,'before','AT_ENTRY'),false,'old scores without a capture time cannot be relabelled as now');
+ assert.equal(setRofTiming(legacy,'before','RECALLED','2026-10-29T16:00'),false,'old scores cannot gain fabricated provenance');
+ assert.equal(setRofTiming(legacy,'before','UNKNOWN'),true);
+ assert.equal(legacy.rofEntryEvidence.before.capturedAt,null);
+});
+test('same-day reverse clocks fail without overwriting a previously accepted exercise period (032)',()=>{
+ const d={date:'2026-11-01'};
+ assert.equal(setExerciseClockTime(d,'start','23:40'),true);
+ assert.equal(setExerciseClockTime(d,'end','00:10','auto'),true);
+ const accepted=structuredClone(d.exerciseTimingDraft);
+ assert.equal(setExerciseClockTime(d,'end','00:10','same'),false);
+ assert.deepEqual(d.exerciseTimingDraft,accepted);
+ assert.equal(setExerciseClockTime(d,'end','00:10','next'),true);
+ assert.equal(d.exerciseTimingDraft.endDayOffset,1);
+ const result=resolveExerciseTimes(d.date,'23:40','00:10','same');
+ assert.equal(result.ok,false);
+ assert.match(result.reason,/終了時刻が開始時刻より前/);
+});
+
+test('P6-D ROF help does not replace eleven-point axis, five originals or optional timestamps',()=>{const d={date:'2026-10-30',rofBefore:null,rofAfter:null};const html=rofPage(d,createRofUiState());assert.equal((html.match(/class="rv-screen-help"/g)||[]).length,1);assert.match(html,/未入力と0は別です/);assert.equal((html.match(/data-rof-v4-tick=/g)||[]).length,11);assert.equal((html.match(/data-rof-v4-anchor=/g)||[]).length,5);assert.match(html,/rv4-optional-meta/);assert.match(html,/rv4-rights/);});

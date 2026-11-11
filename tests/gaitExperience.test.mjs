@@ -1,0 +1,53 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {gaitKeys,gaitValidation,gaitPage} from '../ui/gaitExperience.js';
+test('gait preserves six shared record-draft fields including activity selected in Basic information',()=>{
+ assert.deepEqual(gaitKeys,['steps','stepsProvenance','activityGait','runningFormat','runWalkRunningDistanceKm','runWalkRunningDurationMinutes']);
+ const html=gaitPage({steps:'0',stepsProvenance:'UNKNOWN',runningFormat:'UNKNOWN',distance:'',minutes:''});
+ assert.match(html,/data-draft="steps"/);
+ assert.match(html,/value="0"/);
+ assert.match(html,/data-g4-runwalk hidden/);
+ assert.match(html,/距離未入力/);
+ assert.doesNotMatch(html,/>0\.00 km</);
+});
+test('empty zero and unknown are not conflated',()=>{
+ assert.equal(gaitValidation({steps:'',stepsProvenance:'UNKNOWN',runningFormat:'UNKNOWN'}).steps,null);
+ assert.equal(gaitValidation({steps:'0',stepsProvenance:'UNKNOWN',runningFormat:'UNKNOWN'}).steps,0);
+ assert.ok(gaitValidation({steps:'12',stepsProvenance:'UNKNOWN'}).warnings.length>0);
+ assert.equal(gaitValidation({steps:'1.2'}).valid,false);
+});
+test('mixed run enforces positive values and total bounds',()=>{
+ const base={distance:'5.2',minutes:'32.5',runningFormat:'RUN_WALK',runWalkRunningDistanceKm:'4',runWalkRunningDurationMinutes:'25'};
+ assert.equal(gaitValidation(base).valid,true);
+ assert.equal(gaitValidation({...base,runWalkRunningDistanceKm:'6'}).valid,false);
+ assert.equal(gaitValidation({...base,runWalkRunningDurationMinutes:'33'}).valid,false);
+ assert.equal(gaitValidation({...base,runWalkRunningDistanceKm:''}).valid,false);
+ assert.equal(gaitValidation({...base,runningFormat:'CONTINUOUS_RUN',runWalkRunningDistanceKm:''}).valid,true);
+ assert.equal(gaitValidation({...base,distance:'',minutes:''}).valid,true);
+});
+test('gait preview uses final-save run/walk total bounds',()=>{
+ const b={distance:'5',minutes:'30',runningFormat:'RUN_WALK',runWalkRunningDistanceKm:'3',runWalkRunningDurationMinutes:'20'};
+ assert.equal(gaitValidation(b).valid,true);
+ assert.equal(gaitValidation({...b,runWalkRunningDistanceKm:'5'}).valid,false);
+ assert.equal(gaitValidation({...b,runWalkRunningDurationMinutes:'30'}).valid,false);
+ assert.equal(gaitValidation({...b,hours:'1',minutes:'5',runWalkRunningDurationMinutes:'60'}).valid,true);
+});
+test('escapes entered value and does not add data storage API',()=>{
+ const html=gaitPage({steps:'" autofocus onfocus=alert(1)',runningFormat:'RUN_WALK'});
+ assert.match(html,/&quot; autofocus/);
+ assert.doesNotMatch(html,/value="" autofocus/);
+ assert.doesNotMatch(html,/localStorage|saveRecord\(/);
+});
+test('S05 removes duplicate activity editor but keeps steps, run pattern, provenance and validation',()=>{
+ const d={activityGait:'JOGGING',runningFormat:'CONTINUOUS_RUN',steps:'1200',stepsProvenance:'DEVICE_MEASURED'};
+ const before=JSON.stringify(d),html=gaitPage(d);
+ assert.doesNotMatch(html,/data-g4-gait|活動種別（12部位|aria-label="活動種別"/);
+ assert.match(html,/当日の走行パターン/);
+ assert.equal((html.match(/data-g4-format=/g)||[]).length,3);
+ assert.equal((html.match(/data-g4-source=/g)||[]).length,3);
+ assert.equal(JSON.stringify(d),before,'render does not mutate Basic activityGait');
+ assert.equal(gaitValidation(d).valid,true);
+ assert.match(gaitValidation({...d,activityGait:'BOGUS'}).errors.join(' '),/活動種別を選び直してください/);
+});
+
+test('P6-D gait explanation is available by header without losing provenance and mixed-run constraint',()=>{const html=gaitPage({});assert.equal((html.match(/class="rv-screen-help"/g)||[]).length,1);assert.match(html,/GPSから歩数を推定しません/);assert.match(html,/走歩混在では12部位文献参考値を算出せず/);assert.match(html,/data-g4-source=/);assert.match(html,/data-g4-apply/);});

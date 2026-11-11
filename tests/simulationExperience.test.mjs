@@ -1,0 +1,161 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {newSimulationUi,beginGpsCourseSelection,resolveGpsV2CourseSelection,computeSteady,computeRunWalk,reachTime,computeComparison,renderSimulation,renderSimulationResults,courseDescription,eligibleRunningPaceRecord} from '../ui/simulationExperience.js';
+test('a steady scenario is distance from an explicitly assumed pace',()=>{
+ assert.equal(computeSteady(30,7).distanceKm,30/7);
+ assert.equal(computeSteady(30,0),null);
+ assert.equal(computeSteady(0,7),null);
+ assert.equal(reachTime(5,'steady',7,12,5,2),35);
+});
+test('run-walk intervals prorate incomplete cycles exactly, without silent averaging',()=>{
+ const a=computeRunWalk(30,7,12,5,2);
+ assert.ok(Math.abs(a.distanceKm-(22/7+8/12))<1e-9);
+ assert.equal(a.runMinutes,22);assert.equal(a.walkMinutes,8);
+ assert.ok(Math.abs(reachTime(5,'mixed',7,12,5,2)-39.1666666667)<.000001);
+});
+test('source without course never claims a remaining distance',()=>{
+ const ui={...newSimulationUi(),source:'none',distance:'5'};
+ const r=computeComparison(ui);
+ assert.equal(r.ok,true);assert.equal(r.goal,null);
+ assert.match(renderSimulationResults(ui),/距離目標なし/);
+ assert.doesNotMatch(renderSimulationResults(ui),/残り \d/);
+});
+test('explicit manual target computes remaining distance and no unmeasured bodily burden',()=>{
+ const ui={...newSimulationUi(),distance:'5'};
+ const r=computeComparison(ui);assert.equal(r.ok,true);
+ assert.ok(r.a.distanceKm<r.goal);
+ assert.ok(r.b.distanceKm<r.goal);
+ const html=renderSimulationResults(ui);assert.match(html,/残り/);assert.match(html,/身体負荷を予測しません/);
+});
+test('missing, negative or out-of-range assumptions fail closed',()=>{
+ for(const [key,val] of [['budget',''],['runPace','0'],['walkPace','999'],['runMin',''],['walkMin','-1'],['distance',''],['distance','0'],['budget','Infinity']]){
+  const ui={...newSimulationUi(),[key]:val};
+  assert.equal(computeComparison(ui).ok,false,`${key}=${val}`);
+ }
+});
+test('saved presets are described but neither their distances nor routes are inferred',()=>{
+ const preset={id:'id',data:{courseName:'川沿い',gradeMode:'FLAT',surfaceMode:'SINGLE',primarySurface:'paved'}};
+ const html=renderSimulation(newSimulationUi(),{presets:{ok:true,records:[preset]},manualRuns:{ok:true,records:[]}});
+ assert.match(html,/川沿い/);
+ assert.match(html,/距離を入力/);
+ assert.match(html,/地図上の位置/);
+ assert.doesNotMatch(html,/実際のGPS/);
+ const desc=courseDescription(preset);assert.match(desc.slope,/平坦/);
+});
+test('untrusted course names are escaped and storage errors are surfaced without fake records',()=>{
+ const preset={id:'1',data:{courseName:'<script>bad</script>',gradeMode:'UNKNOWN',surfaceMode:'UNKNOWN'}};
+ const html=renderSimulation(newSimulationUi(),{presets:{ok:true,records:[preset]},manualRuns:{ok:false,reason:'読み取れません',records:[]}});
+ assert.doesNotMatch(html,/<script>/);assert.match(html,/&lt;script&gt;/);assert.match(html,/読み取れません/);
+});
+
+test('GPX mode stays useful without a loaded file and never invents position',()=>{
+ const s={...newSimulationUi(),source:'gpx',gpxRoutes:[],distance:'3.5'};
+ const r=computeComparison(s);
+ assert.equal(r.ok,true);assert.equal(r.goal,null);
+ const html=renderSimulation(s,{presets:{ok:true,records:[]},manualRuns:{ok:true,records:[]}});
+ assert.match(html,/GPXがまだ読み込まれていません/);
+ assert.doesNotMatch(html,/sm-gpx-shape/);
+ assert.match(html,/距離目標なし/);
+});
+
+test('v34 source selector and scenario controls preserve provenance and use aligned units',()=>{
+ const html=renderSimulation(newSimulationUi(),{presets:{ok:true,records:[]},manualRuns:{ok:true,records:[]}});
+ assert.match(html,/data-sm-source="manual"/);
+ assert.match(html,/data-sm-source="gpx"/);
+ assert.match(html,/data-sm-source="none"/);
+ assert.match(html,/GPS実走履歴/);
+ assert.match(html,/data-sm-source="gps"/);
+ assert.match(html,/sm-course-fields/);
+ assert.match(html,/sm-input-wrap/);
+ assert.match(html,/仮のコース距離/);
+ assert.match(html,/data-sm-summary-a/);
+ assert.match(html,/data-sm-summary-b/);
+ assert.match(html,/7分サイクル/);
+ assert.match(html,/data-sm-cycle-track/);
+});
+
+
+test('reference RUN pace uses only confirmed running-only records and handoff does not invent actuals',()=>{
+ const item=(id,gait,format='CONTINUOUS_RUN')=>({id,source:'manual',type:'run',distanceKm:5,durationSeconds:1800,date:'2026-10-25',draft:{activityGait:gait,runningFormat:format}});
+ const records=[item('run','RUNNING'),item('walk','WALK'),item('jog','JOGGING'),item('unknown','UNKNOWN'),item('mixed','RUNNING','RUN_WALK')];
+ assert.equal(eligibleRunningPaceRecord(records[0]),true);
+ for(const v of records.slice(1))assert.equal(eligibleRunningPaceRecord(v),false);
+ const html=renderSimulation(newSimulationUi(),{presets:{ok:true,records:[]},manualRuns:{ok:true,records}});
+ assert.match(html,/value="run" data-distance-km=/);
+ for(const v of records.slice(1))assert.doesNotMatch(html,new RegExp('value="'+v.id+'" data-distance-km='));
+ assert.doesNotMatch(html,/<a href="#\/measurement"/);
+ assert.match(html,/GPS測定はスマートフォン専用/);
+ assert.match(html,/仮のペース・走歩比率を実績へ自動転記しません/);
+});
+test('short measured GPS course (10–100 m) is still a valid what-if route',()=>{
+ const ui=newSimulationUi();ui.source='gps';ui.gpsFeature={distanceKm:0.029,segments:[]};ui.distance='0.029';
+ const output=computeComparison(ui);assert.equal(output.ok,true);assert.ok(output.a.finish>0);assert.ok(output.b.finish>0);
+});
+
+test('GPS V2 selection resolves the chosen saved route and does not retain old geometry (017)',async()=>{
+ const ui=newSimulationUi();ui.source='gps';
+ const older={kind:'gps',name:'前の保存軌跡',distanceKm:4.2,segments:[]};
+ ui.gpsId='gps-v2-previous';ui.gpsFeatureId=ui.gpsId;ui.gpsFeature=older;
+ const id='gps-v2-current1';
+ beginGpsCourseSelection(ui,id);
+ assert.equal(ui.gpsFeature,null,'old route is cleared before async read');
+ assert.equal(ui.gpsFeatureId,'');
+ const result=await resolveGpsV2CourseSelection(ui,{
+  readDetail:async selected=>({ok:true,summary:{id:selected},detail:{route:[]}}),
+  toFeature:(summary)=>({kind:'gps',name:'現在の保存軌跡',distanceKm:1.25,segments:[],savedId:summary.id})
+ });
+ assert.equal(result.ok,true);
+ assert.equal(ui.gpsFeatureId,id);
+ assert.equal(ui.gpsFeature.savedId,id);
+ assert.equal(ui.distance,'1.25','distance updates only when selected route is ready');
+ assert.equal(ui.notice,'');
+});
+test('a delayed V2 load cannot replace a subsequent selection or different source (017)',async()=>{
+ const ui=newSimulationUi();ui.source='gps';
+ let deliver;
+ beginGpsCourseSelection(ui,'gps-v2-first000');
+ const pending=resolveGpsV2CourseSelection(ui,{
+  readDetail:()=>new Promise(resolve=>{deliver=resolve;}),
+  toFeature:()=>({kind:'gps',name:'obsolete',distanceKm:9,segments:[]})
+ });
+ beginGpsCourseSelection(ui,'gps-v2-second00');
+ deliver({ok:true,summary:{id:'gps-v2-first000'},detail:{}});
+ const stale=await pending;
+ assert.equal(stale.stale,true);
+ assert.equal(ui.gpsFeature,null);
+ const current=await resolveGpsV2CourseSelection(ui,{
+  readDetail:async id=>({ok:true,summary:{id},detail:{}}),
+  toFeature:()=>({kind:'gps',name:'new',distanceKm:2.5,segments:[]})
+ });
+ assert.equal(current.ok,true);
+ assert.equal(ui.gpsFeatureId,'gps-v2-second00');
+ beginGpsCourseSelection(ui,'gps-v1-legacy00');
+ assert.equal(ui.gpsFeature,null,'selecting legacy V1 never retains a V2 feature');
+ assert.equal(ui.gpsFeatureId,'');
+});
+test('V2 read failures leave no route and show a visible error (017)',async()=>{
+ const ui=newSimulationUi();ui.source='gps';
+ beginGpsCourseSelection(ui,'gps-v2-missing00');
+ const result=await resolveGpsV2CourseSelection(ui,{
+  readDetail:async()=>({ok:false,reason:'GPS記録が見つかりません'}),
+  toFeature:()=>{throw Error('must not fabricate a feature');}
+ });
+ assert.equal(result.ok,false);
+ assert.equal(ui.gpsFeature,null);
+ assert.equal(ui.gpsFeatureId,'');
+ const html=renderSimulation(ui,{presets:{ok:true,records:[]},manualRuns:{ok:true,records:[]},gpsRuns:{ok:true,records:[]}});
+ assert.match(html,/GPS記録が見つかりません/);
+ assert.match(html,/role="alert"/);
+ assert.equal(computeComparison(ui).goal,null,'no phantom course distance');
+});
+
+test('GPS source choice is enabled; obsolete pre-integration disabled copy is gone',()=>{
+ const html=renderSimulation(newSimulationUi(),{
+  presets:{ok:true,records:[]},
+  manualRuns:{ok:true,records:[]},
+  gpsRuns:{ok:true,records:[]}
+ });
+ assert.match(html,/<button[^>]*data-sm-source="gps"[^>]*aria-pressed="false"/);
+ assert.doesNotMatch(html,/<button(?=[^>]*data-sm-source="gps")[^>]*disabled/);
+ assert.doesNotMatch(html,/GPS実走履歴：今後対応|GPS走行軌跡の保存機能が接続されてから利用できます/);
+});

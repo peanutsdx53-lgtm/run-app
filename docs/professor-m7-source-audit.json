@@ -1,0 +1,1330 @@
+{
+  "schema": 1,
+  "basis_sha": "7794a27259b7e52000bd773b6ef45bc7d03ccb65",
+  "input": "06_教授4点_実行受入試験92件.csv",
+  "scope": "M7 source audit and explicit CI replay. Candidate markers are not automatically PASS.",
+  "cases": [
+    {
+      "id": "T-001",
+      "category": "P1",
+      "input": "前2/後0で心地よかったという本人の任意記述",
+      "acceptance": "ROFと本人記述を別々に示し原因推定をしない",
+      "stage": "M6",
+      "proposed": "HOLD",
+      "gap": "指定の前2/後0と「心地よい」の同一実記録例を未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-002",
+      "category": "P1",
+      "input": "前2/後2で本人は精神的に疲れた",
+      "acceptance": "値の一致から鈍感/回復/変化なし等を断定しない",
+      "stage": "M6",
+      "proposed": "HOLD",
+      "gap": "前後2/2かつ精神面FELTの同一記録での表示断定検査を未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-003",
+      "category": "P1",
+      "input": "前0/後null",
+      "acceptance": "0を有効値、nullを未回答として表示",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/manualRunStore.test.mjs",
+          "needle": "ROF-J true zero, missing fatigue",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-004",
+      "category": "P1",
+      "input": "ROF入力時刻は翌日・本人は走行直後と申告",
+      "acceptance": "入力時刻と本人が意味した時点を別表示",
+      "stage": "M6",
+      "proposed": "HOLD",
+      "gap": "翌日入力と本人申告の評価時刻を同一記録で突き合わせた反例未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-005",
+      "category": "P1",
+      "input": "記録0件で探究にアクセス",
+      "acceptance": "本人データ0件を明示し一般問いと旧単独メモは利用可能",
+      "stage": "M6",
+      "proposed": "HOLD",
+      "gap": "無記録時の独立メモ新規作成と一般問いを一連のUI操作で未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-006",
+      "category": "P1",
+      "input": "有効MANUAL IDがある",
+      "acceptance": "正しい旧疲労テーマへ同じRecordRefで遷移",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorM6Browser.mjs",
+          "needle": "href,/source=manual&record=run-v1-/",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-007",
+      "category": "P1",
+      "input": "不明なMANUAL IDが指定される",
+      "acceptance": "別最新走行へ移動せず関連付け失敗を明示",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorM6Browser.mjs",
+          "needle": "data-ex-inquiry-error",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-008",
+      "category": "P1",
+      "input": "比較不適格/相手未指定",
+      "acceptance": "旧比較演算は不変、比較差を表示しない",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/runReflection.test.mjs",
+          "needle": "unsupported, cross-activity, invented and same records fail closed",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-009",
+      "category": "P1",
+      "input": "旧メモの編集/削除/遡り操作",
+      "acceptance": "旧ID・本文・关联runIDを改変せず使える",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/explorationExperience.test.mjs",
+          "needle": "notes are opt-in, persisted only to isolated key, deletion works",
+          "runner": "node"
+        },
+        {
+          "path": "tests/noteRunLink.test.mjs",
+          "needle": "selected-run notes do not borrow another run or legacy free notes",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-010",
+      "category": "P2",
+      "input": "初期表示",
+      "acceptance": "閉じた1行・無選択で既存必須入力を増やさない",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalExperience.test.mjs",
+          "needle": "unselected question is optional; no event or forced answer",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-011",
+      "category": "P2",
+      "input": "FELTを任意で選ぶ",
+      "acceptance": "本人の申告として保存、ROF-Jの変更なし",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalBrowser.mjs",
+          "needle": "read.event.payload.answer,'FELT'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-012",
+      "category": "P2",
+      "input": "NOT_FELTを選ぶ",
+      "acceptance": "未回答に変換せず明示否定回答として保存",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalBrowser.mjs",
+          "needle": "gps.answer,'NOT_FELT'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-013",
+      "category": "P2",
+      "input": "UNSUREを選ぶ",
+      "acceptance": "未回答と分けてよく分からないを保存",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "{answer:'UNSURE'},'CORRECT'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-014",
+      "category": "P2",
+      "input": "回答せず閉じる",
+      "acceptance": "精神面イベント無し、走行保存可能",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalBrowser.mjs",
+          "needle": "no.value.status,'NO_ANSWER'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-015",
+      "category": "P2",
+      "input": "FELTを撤回",
+      "acceptance": "元イベントを維持し現行値を撤回として表示",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "status!=='RETRACTED'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-016",
+      "category": "P2",
+      "input": "FELTかつROF前0/後0",
+      "acceptance": "医学・心理の不整合と決めつけず併存可",
+      "stage": "M4",
+      "proposed": "HOLD",
+      "gap": "精神面FELTとROF 0/0の同一記録例を未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-017",
+      "category": "P2",
+      "input": "精神面NOT_FELTと印象「楽しかった」",
+      "acceptance": "別々の本人回答の意味を保持、心理の判定をしない",
+      "stage": "M4",
+      "proposed": "HOLD",
+      "gap": "NOT_FELTと「楽しかった」自由記述の同一記録例を未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-018",
+      "category": "P2",
+      "input": "declaredPhase=BEFOREだがenteredAtは翌日",
+      "acceptance": "過去想起として扱い運動前の実測としない",
+      "stage": "M4",
+      "proposed": "HOLD",
+      "gap": "declared BEFORE・翌日 enteredAt・過去想起の3条件を同時に試験していない",
+      "proofs": []
+    },
+    {
+      "id": "T-019",
+      "category": "P2",
+      "input": "新ストア読取エラー",
+      "acceptance": "未回答と表示せず利用不可と明示",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalExperience.test.mjs",
+          "needle": "missing/read-error/retracted distinct",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-020",
+      "category": "P2",
+      "input": "未知mental code/未来辞書版",
+      "acceptance": "保存・復元を安全に拒否",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationSchema.test.mjs",
+          "needle": "strict event protects dictionary, chain identity and payload",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-021",
+      "category": "P3",
+      "input": "端末の位置許可拒否",
+      "acceptance": "測定値の捏造なし。手入力経路を残す",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/measurementExperience.test.mjs",
+          "needle": "GPS permission revocation stops watcher",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-022",
+      "category": "P3",
+      "input": "GPS未計測の路面・精神面・気分",
+      "acceptance": "センサー取得済みと推定入力しない",
+      "stage": "M5",
+      "proposed": "HOLD",
+      "gap": "GPS路面・精神面・気分を非推定とする同一保存状態の独立ブラウザ検証を未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-023",
+      "category": "P3",
+      "input": "既存GPSv1 1件にROFを後日申告",
+      "acceptance": "測定概要と後日申告の別欄。原本IDB不変",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorPostHocBrowser.mjs",
+          "needle": "sourceType:'GPS_V1',recordId:gps.old",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-024",
+      "category": "P3",
+      "input": "GPSv1に科学12部位結果へ遷移",
+      "acceptance": "存在しない科学モデルの結果を表示しない",
+      "stage": "M5",
+      "proposed": "HOLD",
+      "gap": "GPSv1からReference-100への誤経路抑止を専用反例で未検査",
+      "proofs": []
+    },
+    {
+      "id": "T-025",
+      "category": "P3",
+      "input": "元experienceのROF 2、翌日0を回答",
+      "acceptance": "保存時2・後日申告0を別行、入力時点を表示",
+      "stage": "M5",
+      "proposed": "HOLD",
+      "gap": "GPSv2元ROF=2と翌日追記0の正確な前後値の同居を未試験",
+      "proofs": []
+    },
+    {
+      "id": "T-026",
+      "category": "P3",
+      "input": "未回答ROF-Jを後日補完",
+      "acceptance": "既存correctSavedRofのみ使用し、別正本を作らない",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "badManual.code!=='BAD_FIELD'",
+          "runner": "browser"
+        },
+        {
+          "path": "tests/manualRunStore.test.mjs",
+          "needle": "stage 8 V2 preserves real zero, absent score, explicit assessment time and immutable corrections",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-027",
+      "category": "P3",
+      "input": "手入力ROF 0を後で訂正",
+      "acceptance": "既存訂正履歴・変更時点を維持し0を未回答にしない",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/manualRunStore.test.mjs",
+          "needle": "stage 8 correction rejection for quota and invalid future-only attribution",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-028",
+      "category": "P3",
+      "input": "同日2回、異なるIDがある",
+      "acceptance": "選択したIDにだけ記録、日時で相互接続しない",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "status!=='NO_ANSWER'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-029",
+      "category": "P3",
+      "input": "身体観察を未入力で保存し翌日追加",
+      "acceptance": "身体観察欄に「後日申告」が現れ自由メモに埋没しない",
+      "stage": "M5",
+      "proposed": "HOLD",
+      "gap": "身体観察の元未回答→翌日追記と結果表示の一連を未検査",
+      "proofs": []
+    },
+    {
+      "id": "T-030",
+      "category": "P3",
+      "input": "路面の割合が100にならず不完全",
+      "acceptance": "路面群全体を拒否、既存原本・科学値を保持",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationSchema.test.mjs",
+          "needle": "surface bundle must be complete",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-031",
+      "category": "P3",
+      "input": "坂のSUMMARY/SECTIONSが混在",
+      "acceptance": "群の相互排他により拒否、元値から補完しない",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationSchema.test.mjs",
+          "needle": "complete grade bundle",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-032",
+      "category": "P3",
+      "input": "歩数0の有効申告",
+      "acceptance": "0と未回答を区別、出所を記録",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorPostHocBrowser.mjs",
+          "needle": "first.latest.payload.steps,0",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-033",
+      "category": "P3",
+      "input": "後日路面/坂を正しく保存",
+      "acceptance": "Reference-100と比較署名のビット単位/スナップショット無変更",
+      "stage": "M5",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/scienceEngineParity.test.mjs",
+          "needle": "RUNNING: every region number, route and eligibility equals",
+          "runner": "node"
+        },
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "manual original changed during annotation",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-034",
+      "category": "P3",
+      "input": "親が失敗",
+      "acceptance": "注記は生成しない。未確定入力を本人に伝える",
+      "stage": "M4",
+      "proposed": "HOLD",
+      "gap": "親保存失敗時の注記イベント0件と表示の一連を未検査",
+      "proofs": []
+    },
+    {
+      "id": "T-035",
+      "category": "P3",
+      "input": "親成功・注記失敗",
+      "acceptance": "親IDは1件。部分失敗通知、注記だけ同requestIdで再試行",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalBrowser.mjs",
+          "needle": "data-mental-retry",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-036",
+      "category": "P3",
+      "input": "親のコミット可否不明",
+      "acceptance": "新しい親を勝手に追加せず再読込して照合・安全停止",
+      "stage": "M4",
+      "proposed": "HOLD",
+      "gap": "親commit可否不明の再読込・新規親追加回避の故障注入が未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-037",
+      "category": "P3",
+      "input": "同streamを二タブから同時訂正",
+      "acceptance": "古いexpectedHeadを拒否し喪失更新しない",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "filter(r=>!r.ok).map(r=>r.code),['HEAD_CONFLICT']",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-038",
+      "category": "P3",
+      "input": "別streamを二タブから保存",
+      "acceptance": "両方のevents/headを保持",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "different streams must both commit without overwriting",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-039",
+      "category": "P3",
+      "input": "同clientRequestIdを同payloadで再送",
+      "acceptance": "既存結果を返しイベント1件のまま",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "idempotence failed",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-040",
+      "category": "P3",
+      "input": "同clientRequestIdを異payloadで再送",
+      "acceptance": "差異を拒否、イベントを追加しない",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "clash.code!=='REQUEST_CONFLICT'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-041",
+      "category": "P3",
+      "input": "GPS元記録を削除",
+      "acceptance": "関連イベントをORPHANED隔離、別走行へ自動付替えしない",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "orphan.value.status!=='ORPHANED'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-042",
+      "category": "P3",
+      "input": "QuotaExceeded/24MiB上限/10,000件",
+      "acceptance": "原本と既存イベントは保持。成功と表示しない",
+      "stage": "M2",
+      "proposed": "HOLD",
+      "gap": "Quotaは一部実施済みだが24MiB/10000件という上限境界の3条件すべてを未実測",
+      "proofs": []
+    },
+    {
+      "id": "T-043",
+      "category": "P3",
+      "input": "従来portable v1を新アプリで復元",
+      "acceptance": "旧v1を旧検証路で読み込み、新精神面があると仮定しない",
+      "stage": "M3",
+      "proposed": "HOLD",
+      "gap": "旧portable v1の復元をM7で独立に再実行・検証していない",
+      "proofs": []
+    },
+    {
+      "id": "T-044",
+      "category": "P3",
+      "input": "v2出力でincludeGps=false",
+      "acceptance": "GPS親・GPS関連注記とも除外、件数を明示",
+      "stage": "M3",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorPortableV2Browser.mjs",
+          "needle": "excludedGpsAnnotationCount!==2",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-045",
+      "category": "P3",
+      "input": "v2でGPS位置点を含む",
+      "acceptance": "本人に含有確認。未暗号化である旨を表示",
+      "stage": "M3",
+      "proposed": "HOLD",
+      "gap": "GPS位置情報を含むportable v2の実UI確認・未暗号化説明をM7で独立未実施",
+      "proofs": []
+    },
+    {
+      "id": "T-046",
+      "category": "P3",
+      "input": "v2で同ID異内容を復元",
+      "acceptance": "全体preflight段階で拒否、既存を上書きしない",
+      "stage": "M3",
+      "proposed": "HOLD",
+      "gap": "同ID異内容の事前検証と不変更の統合試験が未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-047",
+      "category": "P3",
+      "input": "原本成功/注記復元失敗",
+      "acceptance": "部分復元と保存件数を表示、成功と断定しない",
+      "stage": "M3",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorPortableV2Browser.mjs",
+          "needle": "partial?.ok!==false||partial.partial!==true",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-048",
+      "category": "P3",
+      "input": "親なし注記が含まれる",
+      "acceptance": "デフォルト拒否、本人明示の隔離のみ可",
+      "stage": "M3",
+      "proposed": "HOLD",
+      "gap": "親なし注記の通常拒否／本人指定隔離の両経路未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-049",
+      "category": "P3",
+      "input": "アプリ内全記録削除",
+      "acceptance": "旧原本DBと新注記DBの削除成否を別々に確認",
+      "stage": "M3",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorPortableV2Browser.mjs",
+          "needle": "annotations not deleted",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-050",
+      "category": "P4",
+      "input": "手入力とGPS値が同画面にある",
+      "acceptance": "本人入力/GPS計測値を混同せず近くに表示",
+      "stage": "M6",
+      "proposed": "HOLD",
+      "gap": "手入力とGPS値の併記に関する画面内出所の両表示未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-051",
+      "category": "P4",
+      "input": "平均ペースが表示される",
+      "acceptance": "距離と時間から算出と単位・元値を確認可能",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorM6Browser.mjs",
+          "needle": "data-source-pace",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-052",
+      "category": "P4",
+      "input": "Reference-100が表示される",
+      "acceptance": "文献条件付き参考値と対象/範囲/不適格を表示",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/referenceEvidenceInfo.test.mjs",
+          "needle": "describeRegionEvidence",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-053",
+      "category": "P4",
+      "input": "後日申告がある",
+      "acceptance": "元値/後日値の別と科学計算未使用を明示",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorPostHocBrowser.mjs",
+          "needle": "original canonical source byte-identical",
+          "runner": "browser"
+        },
+        {
+          "path": "tests/professorPostHocCore.test.mjs",
+          "needle": "no scientific overclaim",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-054",
+      "category": "P4",
+      "input": "結果画像を作る",
+      "acceptance": "本人の新精神面・後日記述・GPS軌跡はデフォルト除外",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorM6Browser.mjs",
+          "needle": "privacy.mental,'none'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-055",
+      "category": "P4",
+      "input": "window.print()で画面を印刷",
+      "acceptance": "画面内で開いた私的記述を既定で印刷に含めない",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorM6Browser.mjs",
+          "needle": "privacy.extras,'none'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-056",
+      "category": "P4",
+      "input": "相談コピー文/共有下書きを生成",
+      "acceptance": "精神面等を明示選択なく自動挿入しない",
+      "stage": "M6",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorM6Browser.mjs",
+          "needle": "private consultation section initially excluded",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-057",
+      "category": "P4",
+      "input": "出所に関する設計とCI結果を説明",
+      "acceptance": "設計/実装はRQ2、確認実験の結果はRQ3へ配置",
+      "stage": "M7",
+      "proposed": "HOLD",
+      "gap": "教授のスライド実物・ページ指定が未入手。発表案は候補のみ",
+      "proofs": []
+    },
+    {
+      "id": "T-058",
+      "category": "G",
+      "input": "結果上位3タブ・身体内3切替",
+      "acceptance": "学習未使用・教授案未入力でも元のタブ操作成立",
+      "stage": "M7",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/uiContracts.test.mjs",
+          "needle": "all 12 official region IDs",
+          "runner": "node"
+        },
+        {
+          "path": "tests/twoRunCycleBrowserSmoke.mjs",
+          "needle": "preserved three tabs",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-059",
+      "category": "G",
+      "input": "旧28テーマ全ルート、10記事18観察ガイド",
+      "acceptance": "全件可読、元のリンク・学術掲載範囲を保持",
+      "stage": "M7",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/explorationExperience.test.mjs",
+          "needle": "all 28 topics have a useful beginner prompt",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-060",
+      "category": "G",
+      "input": "旧探究メモの作成/編集/削除",
+      "acceptance": "旧キー/旧本文/旧topicIdで互換維持",
+      "stage": "M7",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/explorationExperience.test.mjs",
+          "needle": "notes are opt-in, persisted only to isolated key, deletion works",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-061",
+      "category": "G",
+      "input": "学習未使用で記録→結果→比較→任意記述",
+      "acceptance": "既存4操作を履修なしで利用可能",
+      "stage": "M7",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/twoRunCycleBrowserSmoke.mjs",
+          "needle": "two actual saved browser-local records",
+          "runner": "browser"
+        },
+        {
+          "path": "tests/twoRunCycleBrowserSmoke.mjs",
+          "needle": "two real in-domain saved references",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-062",
+      "category": "G",
+      "input": "科学12系列と対象外条件",
+      "acceptance": "算式・適格性・文献射程不変",
+      "stage": "M7",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/scienceEngineParity.test.mjs",
+          "needle": "unselected gait, running-walking mixes and unsupported speeds",
+          "runner": "node"
+        },
+        {
+          "path": "tests/researchCoreIntegration.test.mjs",
+          "needle": "reference",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-063",
+      "category": "G",
+      "input": "320/390/1440pxと200%文字",
+      "acceptance": "出所・精神面/後日値・保存通知が読める",
+      "stage": "M7",
+      "proposed": "HOLD",
+      "gap": "320/390/1440pxは既存CIで検証済みだが200%文字とM7追加情報の同時実測が未了",
+      "proofs": []
+    },
+    {
+      "id": "T-064",
+      "category": "G",
+      "input": "キーボード/戻る/Escape/フォーカス",
+      "acceptance": "折りたたみ/任意入力/補完の操作と復帰",
+      "stage": "M7",
+      "proposed": "HOLD",
+      "gap": "キーボード・フォーカスは既存CIの一部のみ。全補完導線／実機での往復検証未了",
+      "proofs": []
+    },
+    {
+      "id": "T-065",
+      "category": "G",
+      "input": "ネット遮断後、既存記録と新注記表示・保存",
+      "acceptance": "オフライン動作し通信復帰で元の値を破壊しない",
+      "stage": "M7",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "offline read/write must work with a preloaded application module",
+          "runner": "browser"
+        },
+        {
+          "path": "tests/offlineShellBrowserSmoke.mjs",
+          "needle": "installed cache",
+          "runner": "browser-chromium"
+        }
+      ]
+    },
+    {
+      "id": "T-066",
+      "category": "G",
+      "input": "親ストア/注記ストア読込不能",
+      "acceptance": "未回答と区別し明確に安全停止、旧記録保護",
+      "stage": "M7",
+      "proposed": "HOLD",
+      "gap": "親と注記DBの同時/単独読取不能の異常表示の組み合わせ未網羅",
+      "proofs": []
+    },
+    {
+      "id": "T-067",
+      "category": "P1",
+      "input": "source=gps-v2&record=run-v1-UUID",
+      "acceptance": "SOURCE_MISMATCH。最新記録やMANUALへ自動移動しない",
+      "stage": "M1",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorRecordRef.test.mjs",
+          "needle": "M1: strictly validate three source types",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-068",
+      "category": "P1",
+      "input": "?record=missing vs URLパラメータなし",
+      "acceptance": "明示不正は安全停止、未指定だけ一般画面",
+      "stage": "M1",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorRecordRef.test.mjs",
+          "needle": "M1: invalid explicit references never become latest or unspecified",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-069",
+      "category": "P1",
+      "input": "?record=run-v1-UUIDだけ",
+      "acceptance": "MANUALとして元の走行と旧テーマへ到達",
+      "stage": "M1",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorRecordRef.test.mjs",
+          "needle": "legacy manual, legacy GPS result and typed routes round-trip",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-070",
+      "category": "P3",
+      "input": "元gps-v2を旧?gps=..から表示",
+      "acceptance": "sourceType=GPS_V2の同一IDへ保持",
+      "stage": "M1",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorRecordRef.test.mjs",
+          "needle": "legacy manual, legacy GPS result and typed routes round-trip",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-071",
+      "category": "P2",
+      "input": "declaredPhase BEFORE+RECALLED+enteredAt翌日",
+      "acceptance": "経験時点と入力日を区別し実測時点にしない",
+      "stage": "M2",
+      "proposed": "HOLD",
+      "gap": "BEFORE、RECALLED、翌日enteredAtが同時の有効保存→表示反例未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-072",
+      "category": "P2",
+      "input": "3択無選択で原本保存",
+      "acceptance": "精神イベント無し、原本成功、未回答をUNSUREにしない",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalBrowser.mjs",
+          "needle": "no.value.status,'NO_ANSWER'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-073",
+      "category": "P3",
+      "input": "自由文500字と501字",
+      "acceptance": "500は受け入れ、501は拒否。原本不変",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationSchema.test.mjs",
+          "needle": "'a'.repeat(501)",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-074",
+      "category": "P3",
+      "input": "未知/未来schema/NaN/異時点ISO",
+      "acceptance": "BAD_EVENT/BAD_VALUE。推測補正しない",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationSchema.test.mjs",
+          "needle": "strict event protects dictionary, chain identity and payload",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-075",
+      "category": "P3",
+      "input": "成功後に同clientRequestIdを再送",
+      "acceptance": "保存済み同一eventIdを返し重複追加しない",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "old idempotent request was rejected after newer head",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-076",
+      "category": "P3",
+      "input": "2タブでhead revisionが競合",
+      "acceptance": "一方のみ成功、他方HEAD_CONFLICT。旧値は保持",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "HEAD_CONFLICT",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-077",
+      "category": "P3",
+      "input": "路面MIXED=60+30、坂SECTIONS=40+30",
+      "acceptance": "BAD_VALUEとして群全体拒否、原本から補間しない",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationSchema.test.mjs",
+          "needle": "surface bundle must be complete",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-078",
+      "category": "P3",
+      "input": "GPS MIXEDの元記録からrunWalkBundleを申告",
+      "acceptance": "現工程では保存不可。MANUAL RUN_WALKかつ元総値一致のみ",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationSchema.test.mjs",
+          "needle": "run-walk post-hoc data must be strictly below original measured totals",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-079",
+      "category": "P3",
+      "input": "version=1 valid envelope",
+      "acceptance": "旧の検証と復元が引き続き成功する",
+      "stage": "M3",
+      "proposed": "HOLD",
+      "gap": "portable v1 valid envelope の検証・復元を同一最新SHAで特定例として未実施",
+      "proofs": []
+    },
+    {
+      "id": "T-080",
+      "category": "P3",
+      "input": "manifestのannotationsだけ1 byte改竄",
+      "acceptance": "事前検査でhash mismatch、復元を始めない",
+      "stage": "M3",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorPortableV2Browser.mjs",
+          "needle": "tampered digest was accepted in preflight",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-081",
+      "category": "P3",
+      "input": "includeGps=false、GPSイベント3件",
+      "acceptance": "GPS原本/注記とも除外、除外件数3の表示",
+      "stage": "M3",
+      "proposed": "HOLD",
+      "gap": "GPS関連注記3件を除外したケースの個数表示は未実行（既存は2件）",
+      "proofs": []
+    },
+    {
+      "id": "T-082",
+      "category": "P3",
+      "input": "local成功/GPS成功/annotations失敗",
+      "acceptance": "追加件数と失敗を通知。同じID同内容はno-op",
+      "stage": "M3",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorPortableV2Browser.mjs",
+          "needle": "annotation storage denial was not labeled as partial",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-083",
+      "category": "P3",
+      "input": "GPSv1 IDをGPSv2として指定",
+      "acceptance": "SOURCE_MISMATCH、別の親へ補足を付けない",
+      "stage": "M1",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorRecordRef.test.mjs",
+          "needle": "M1: strictly validate three source types",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-084",
+      "category": "P4",
+      "input": "精神面を画面表示した後で印刷とPNG",
+      "acceptance": "両出力で既定非表示、明示確認なしで含有しない",
+      "stage": "M6",
+      "proposed": "HOLD",
+      "gap": "精神面の実回答が画面に存在する状態でのPNG／印刷の両同時試験未実施",
+      "proofs": []
+    },
+    {
+      "id": "T-085",
+      "category": "P4",
+      "input": "mental自由文+GPS軌跡を持つ記録",
+      "acceptance": "コピー文に両者を既定で含めない",
+      "stage": "M6",
+      "proposed": "HOLD",
+      "gap": "精神自由文＋軌跡の両方を保持する実記録から相談コピー生成の未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-086",
+      "category": "G",
+      "input": "学習コード/科学式/旧28/3タブの差分比較",
+      "acceptance": "承認された局所差分のみ。学習PR#49は未マージ",
+      "stage": "M7",
+      "proposed": "HOLD",
+      "gap": "学習PR#49の非混入をGitHub PRと全設計差分の双方で個別確認するまで保留",
+      "proofs": []
+    },
+    {
+      "id": "T-087",
+      "category": "P3",
+      "input": "IndexedDB読出権限拒否・破損",
+      "acceptance": "NO_ANSWERでなくREAD_ERROR、既存記録は正常表示",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalExperience.test.mjs",
+          "needle": "missing/read-error/retracted distinct",
+          "runner": "node"
+        }
+      ]
+    },
+    {
+      "id": "T-088",
+      "category": "P3",
+      "input": "GPSv1初期にmental、後日ROF",
+      "acceptance": "元形式NO_FIELD_IN_SCHEMAと後日回答を区分",
+      "stage": "M5",
+      "proposed": "HOLD",
+      "gap": "GPSv1精神面と後日ROFがともにある形式比較の反例未実行",
+      "proofs": []
+    },
+    {
+      "id": "T-089",
+      "category": "P3",
+      "input": "MANUAL ROFをannotationStoreで追加",
+      "acceptance": "BAD_FIELDで拒否、correctSavedRofのみ正規",
+      "stage": "M2",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorAnnotationBrowser.mjs",
+          "needle": "badManual.code!=='BAD_FIELD'",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-090",
+      "category": "P3",
+      "input": "親ID確定+注記QuotaExceeded",
+      "acceptance": "成功親IDの再保存なし、注記のみ再試行",
+      "stage": "M4",
+      "proposed": "DIRECT_REPLAY",
+      "gap": "",
+      "proofs": [
+        {
+          "path": "tests/professorMentalBrowser.mjs",
+          "needle": "M4 injected annotation-only failure",
+          "runner": "browser"
+        }
+      ]
+    },
+    {
+      "id": "T-091",
+      "category": "P4",
+      "input": "GPSを含むv2バックアップ",
+      "acceptance": "未暗号化/機微情報の警告と明示選択。印刷とは別",
+      "stage": "M3",
+      "proposed": "HOLD",
+      "gap": "GPS有portable v2の未暗号化・機微表示／本人選択UIの完全受入が未実施",
+      "proofs": []
+    },
+    {
+      "id": "T-092",
+      "category": "P4",
+      "input": "未実行項目がある発表案",
+      "acceptance": "RQ2設計/実装、RQ3検査は未実行と明示",
+      "stage": "M7",
+      "proposed": "HOLD",
+      "gap": "教授の実際の発表スライドを確認できない。RQ2/RQ3配置は改稿候補でのみ示せる",
+      "proofs": []
+    }
+  ],
+  "source_sha256": "6dae984b7a2399f1ed0f4e43af65b5156ef904690425c48fbb753a39dfe98620",
+  "source_csv_base64": "77u/Q2FzZUlELOaVmeaOiOaMh+aRmCznqK7liKUs5YWl5Yqb44O75YmN5o+QLOWPl+WFpeadoeS7tu+8iOims+Wvn+WPr+iDve+8iSzlrp/ooYzjgYzlj6/og73jgavjgarjgovmrrXpmo4s5qSc5p+75a++6LGhLOePvueKtg0KVC0wMDEsUDEs5Y+N5L6LLOWJjTIv5b6MMOOBp+W/g+WcsOOCiOOBi+OBo+OBn+OBqOOBhOOBhuacrOS6uuOBruS7u+aEj+iomOi/sCxST0bjgajmnKzkurroqJjov7DjgpLliKXjgIXjgavnpLrjgZfljp/lm6DmjqjlrprjgpLjgZfjgarjgYQsTTYscmVzdWx0RXhwZXJpZW5jZSAvIGV4cGxvcmF0aW9uRXhwZXJpZW5jZSxOT1RfRVhFQ1VURUQNClQtMDAyLFAxLOWPjeS+iyzliY0yL+W+jDLjgafmnKzkurrjga/nsr7npZ7nmoTjgavnlrLjgozjgZ8s5YCk44Gu5LiA6Ie044GL44KJ6YiN5oSfL+WbnuW+qS/lpInljJbjgarjgZfnrYnjgpLmlq3lrprjgZfjgarjgYQsTTYscmVzdWx0RXhwZXJpZW5jZSAvIGhpc3RvcnlFeHBlcmllbmNlLE5PVF9FWEVDVVRFRA0KVC0wMDMsUDEs5Y+N5L6LLOWJjTAv5b6MbnVsbCww44KS5pyJ5Yq55YCk44CBbnVsbOOCkuacquWbnuetlOOBqOOBl+OBpuihqOekuixNNixyZXN1bHRFeHBlcmllbmNlIC8gcm9mSlNjYWxlLE5PVF9FWEVDVVRFRA0KVC0wMDQsUDEs5Y+N5L6LLFJPRuWFpeWKm+aZguWIu+OBr+e/jOaXpeODu+acrOS6uuOBr+i1sOihjOebtOW+jOOBqOeUs+WRiizlhaXlipvmmYLliLvjgajmnKzkurrjgYzmhI/lkbPjgZfjgZ/mmYLngrnjgpLliKXooajnpLosTTYscmVzdWx0RXhwZXJpZW5jZSAvIG1hbnVhbFJ1blN0b3JlLE5PVF9FWEVDVVRFRA0KVC0wMDUsUDEs5Y+N5L6LLOiomOmMsjDku7bjgafmjqLnqbbjgavjgqLjgq/jgrvjgrks5pys5Lq644OH44O844K/MOS7tuOCkuaYjuekuuOBl+S4gOiIrOWVj+OBhOOBqOaXp+WNmOeLrOODoeODouOBr+WIqeeUqOWPr+iDvSxNNixleHBsb3JhdGlvbkV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTAwNixQMSzlj43kvoss5pyJ5Yq5TUFOVUFMIElE44GM44GC44KLLOato+OBl+OBhOaXp+eWsuWKtOODhuODvOODnuOBuOWQjOOBmFJlY29yZFJlZuOBp+mBt+enuyxNNixhcHAuanMgLyBleHBsb3JhdGlvbkV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTAwNyxQMSzlj43kvoss5LiN5piO44GqTUFOVUFMIElE44GM5oyH5a6a44GV44KM44KLLOWIpeacgOaWsOi1sOihjOOBuOenu+WLleOBm+OBmumWoumAo+S7mOOBkeWkseaVl+OCkuaYjuekuixNNixhcHAuanMgLyByZWNvcmRSZWYsTk9UX0VYRUNVVEVEDQpULTAwOCxQMSzlj43kvoss5q+U6LyD5LiN6YGp5qC8L+ebuOaJi+acquaMh+Wumizml6fmr5TovIPmvJTnrpfjga/kuI3lpInjgIHmr5TovIPlt67jgpLooajnpLrjgZfjgarjgYQsTTYscnVuUmVmbGVjdGlvbiAvIHJlc3VsdEV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTAwOSxQMSzmraPluLgs5pen44Oh44Oi44Gu57eo6ZuGL+WJiumZpC/pgaHjgormk43kvZws5penSUTjg7vmnKzmlofjg7vlhbPogZRydW5JROOCkuaUueWkieOBm+OBmuS9v+OBiOOCiyxNNixleHBsb3JhdGlvbkV4cGVyaWVuY2UgLyBub3RlUnVuTGluayxOT1RfRVhFQ1VURUQNClQtMDEwLFAyLOWPjeS+iyzliJ3mnJ/ooajnpLos6ZaJ44GY44GfMeihjOODu+eEoemBuOaKnuOBp+aXouWtmOW/hemgiOWFpeWKm+OCkuWil+OChOOBleOBquOBhCxNNCxyZWNvcmRFeHBlcmllbmNlLE5PVF9FWEVDVVRFRA0KVC0wMTEsUDIs5q2j5bi4LEZFTFTjgpLku7vmhI/jgafpgbjjgbYs5pys5Lq644Gu55Sz5ZGK44Go44GX44Gm5L+d5a2Y44CBUk9GLUrjga7lpInmm7TjgarjgZcsTTQscmVjb3JkRXhwZXJpZW5jZSAvIGFubm90YXRpb25TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDEyLFAyLOWPjeS+iyxOT1RfRkVMVOOCkumBuOOBtizmnKrlm57nrZTjgavlpInmj5vjgZvjgZrmmI7npLrlkKblrprlm57nrZTjgajjgZfjgabkv53lrZgsTTQsYW5ub3RhdGlvblN0b3JlLE5PVF9FWEVDVVRFRA0KVC0wMTMsUDIs5Y+N5L6LLFVOU1VSReOCkumBuOOBtizmnKrlm57nrZTjgajliIbjgZHjgabjgojjgY/liIbjgYvjgonjgarjgYTjgpLkv53lrZgsTTQsYW5ub3RhdGlvblN0b3JlLE5PVF9FWEVDVVRFRA0KVC0wMTQsUDIs5Y+N5L6LLOWbnuetlOOBm+OBmumWieOBmOOCiyznsr7npZ7pnaLjgqTjg5njg7Pjg4jnhKHjgZfjgIHotbDooYzkv53lrZjlj6/og70sTTQscmVjb3JkRXhwZXJpZW5jZSAvIGFubm90YXRpb25TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDE1LFAyLOWPjeS+iyxGRUxU44KS5pKk5ZueLOWFg+OCpOODmeODs+ODiOOCkue2reaMgeOBl+ePvuihjOWApOOCkuaSpOWbnuOBqOOBl+OBpuihqOekuixNNCxhbm5vdGF0aW9uU3RvcmUgLyByZXN1bHRFeHBlcmllbmNlLE5PVF9FWEVDVVRFRA0KVC0wMTYsUDIs5Y+N5L6LLEZFTFTjgYvjgaRST0bliY0wL+W+jDAs5Yy75a2m44O75b+D55CG44Gu5LiN5pW05ZCI44Go5rG644KB44Gk44GR44Ga5L215a2Y5Y+vLE00LHJlc3VsdEV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTAxNyxQMizlj43kvoss57K+56We6Z2iTk9UX0ZFTFTjgajljbDosaHjgIzmpb3jgZfjgYvjgaPjgZ/jgI0s5Yil44CF44Gu5pys5Lq65Zue562U44Gu5oSP5ZGz44KS5L+d5oyB44CB5b+D55CG44Gu5Yik5a6a44KS44GX44Gq44GELE00LHJlc3VsdEV4cGVyaWVuY2UgLyBleHBsb3JhdGlvbkV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTAxOCxQMizlj43kvossZGVjbGFyZWRQaGFzZT1CRUZPUkXjgaDjgYxlbnRlcmVkQXTjga/nv4zml6Us6YGO5Y675oOz6LW344Go44GX44Gm5omx44GE6YGL5YuV5YmN44Gu5a6f5ris44Go44GX44Gq44GELE00LGFubm90YXRpb25TdG9yZSAvIHJlc3VsdEV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTAxOSxQMizlj43kvoss5paw44K544OI44Ki6Kqt5Y+W44Ko44Op44O8LOacquWbnuetlOOBqOihqOekuuOBm+OBmuWIqeeUqOS4jeWPr+OBqOaYjuekuixNNCxyZXN1bHRFeHBlcmllbmNlIC8gYW5ub3RhdGlvblN0b3JlLE5PVF9FWEVDVVRFRA0KVC0wMjAsUDIs5Y+N5L6LLOacquefpW1lbnRhbCBjb2RlL+acquadpei+nuabuOeJiCzkv53lrZjjg7vlvqnlhYPjgpLlronlhajjgavmi5LlkKYsTTQsYW5ub3RhdGlvblN0b3JlIC8gZGF0YU1hbmFnZW1lbnQsTk9UX0VYRUNVVEVEDQpULTAyMSxQMyzlj43kvoss56uv5pyr44Gu5L2N572u6Kix5Y+v5ouS5ZCmLOa4rOWumuWApOOBruaNj+mAoOOBquOBl+OAguaJi+WFpeWKm+e1jOi3r+OCkuaui+OBmSxNNSxtZWFzdXJlbWVudEV4cGVyaWVuY2UgLyBhcHAuanMsTk9UX0VYRUNVVEVEDQpULTAyMixQMyzlj43kvossR1BT5pyq6KiI5ris44Gu6Lev6Z2i44O757K+56We6Z2i44O75rCX5YiGLOOCu+ODs+OCteODvOWPluW+l+a4iOOBv+OBqOaOqOWumuWFpeWKm+OBl+OBquOBhCxNNSxtZWFzdXJlbWVudEV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTAyMyxQMyzmraPluLgs5pei5a2YR1BTdjEgMeS7tuOBq1JPRuOCkuW+jOaXpeeUs+WRiizmuKzlrprmpoLopoHjgajlvozml6XnlLPlkYrjga7liKXmrITjgILljp/mnKxJRELkuI3lpIksTTUsZ3BzSW5kZXhlZERiU3RvcmUgLyBoaXN0b3J5RXhwZXJpZW5jZSAvIGFubm90YXRpb25TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDI0LFAzLOWPjeS+iyxHUFN2MeOBq+enkeWtpjEy6YOo5L2N57WQ5p6c44G46YG356e7LOWtmOWcqOOBl+OBquOBhOenkeWtpuODouODh+ODq+OBrue1kOaenOOCkuihqOekuuOBl+OBquOBhCxNNSxoaXN0b3J5RXhwZXJpZW5jZSAvIGFwcC5qcyxOT1RfRVhFQ1VURUQNClQtMDI1LFAzLOWPjeS+iyzlhYNleHBlcmllbmNl44GuUk9GIDLjgIHnv4zml6Uw44KS5Zue562ULOS/neWtmOaZgjLjg7vlvozml6XnlLPlkYow44KS5Yil6KGM44CB5YWl5Yqb5pmC54K544KS6KGo56S6LE01LGdwc1JlcGxheUluZGV4ZWREYlN0b3JlIC8gYW5ub3RhdGlvblN0b3JlIC8gcmVzdWx0RXhwZXJpZW5jZSxOT1RfRVhFQ1VURUQNClQtMDI2LFAzLOWPjeS+iyzmnKrlm57nrZRST0YtSuOCkuW+jOaXpeijnOWujCzml6LlrZhjb3JyZWN0U2F2ZWRSb2bjga7jgb/kvb/nlKjjgZfjgIHliKXmraPmnKzjgpLkvZzjgonjgarjgYQsTTUsbWFudWFsUnVuU3RvcmUgLyBhbm5vdGF0aW9uU3RvcmUsTk9UX0VYRUNVVEVEDQpULTAyNyxQMyzlj43kvoss5omL5YWl5YqbUk9GIDDjgpLlvozjgafoqILmraMs5pei5a2Y6KiC5q2j5bGl5q2044O75aSJ5pu05pmC54K544KS57at5oyB44GXMOOCkuacquWbnuetlOOBq+OBl+OBquOBhCxNNSxtYW51YWxSdW5TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDI4LFAzLOWPjeS+iyzlkIzml6Uy5Zue44CB55Ww44Gq44KLSUTjgYzjgYLjgoss6YG45oqe44GX44GfSUTjgavjgaDjgZHoqJjpjLLjgIHml6XmmYLjgafnm7jkupLmjqXntprjgZfjgarjgYQsTTUsaGlzdG9yeUV4cGVyaWVuY2UgLyByZWNvcmRSZWYgLyBhbm5vdGF0aW9uU3RvcmUsTk9UX0VYRUNVVEVEDQpULTAyOSxQMyzlj43kvoss6Lqr5L2T6Kaz5a+f44KS5pyq5YWl5Yqb44Gn5L+d5a2Y44GX57+M5pel6L+95YqgLOi6q+S9k+ims+Wvn+ashOOBq+OAjOW+jOaXpeeUs+WRiuOAjeOBjOePvuOCjOiHqueUseODoeODouOBq+Wfi+ayoeOBl+OBquOBhCxNNSxyZXN1bHRFeHBlcmllbmNlIC8gYW5ub3RhdGlvblN0b3JlLE5PVF9FWEVDVVRFRA0KVC0wMzAsUDMs5Y+N5L6LLOi3r+mdouOBruWJsuWQiOOBjDEwMOOBq+OBquOCieOBmuS4jeWujOWFqCzot6/pnaLnvqTlhajkvZPjgpLmi5LlkKbjgIHml6LlrZjljp/mnKzjg7vnp5HlrablgKTjgpLkv53mjIEsTTUscmVjb3JkRHJhZnRSZXZpZXcgLyBhbm5vdGF0aW9uU3RvcmUsTk9UX0VYRUNVVEVEDQpULTAzMSxQMyzlj43kvoss5Z2C44GuU1VNTUFSWS9TRUNUSU9OU+OBjOa3t+WcqCznvqTjga7nm7jkupLmjpLku5bjgavjgojjgormi5LlkKbjgIHlhYPlgKTjgYvjgonoo5zlrozjgZfjgarjgYQsTTUscmVjb3JkRHJhZnRSZXZpZXcgLyBhbm5vdGF0aW9uU3RvcmUsTk9UX0VYRUNVVEVEDQpULTAzMixQMyzlj43kvoss5q2p5pWwMOOBruacieWKueeUs+WRiiww44Go5pyq5Zue562U44KS5Yy65Yil44CB5Ye65omA44KS6KiY6YyyLE01LGFubm90YXRpb25TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDMzLFAzLOWPjeS+iyzlvozml6Xot6/pnaIv5Z2C44KS5q2j44GX44GP5L+d5a2YLFJlZmVyZW5jZS0xMDDjgajmr5TovIPnvbLlkI3jga7jg5Pjg4Pjg4jljZjkvY0v44K544OK44OD44OX44K344On44OD44OI54Sh5aSJ5pu0LE01LGFubm90YXRpb25TdG9yZSAvIHNjaWVuY2VFbmdpbmVQYXJpdHksTk9UX0VYRUNVVEVEDQpULTAzNCxQMyzlj43kvoss6Kaq44GM5aSx5pWXLOazqOiomOOBr+eUn+aIkOOBl+OBquOBhOOAguacqueiuuWumuWFpeWKm+OCkuacrOS6uuOBq+S8neOBiOOCiyxNNCxhcHAuanMgLyBtYW51YWxSdW5TdG9yZSAvIGFubm90YXRpb25TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDM1LFAzLOWPjeS+iyzopqrmiJDlip/jg7vms6joqJjlpLHmlZcs6KaqSUTjga8x5Lu244CC6YOo5YiG5aSx5pWX6YCa55+l44CB5rOo6KiY44Gg44GR5ZCMcmVxdWVzdElk44Gn5YaN6Kmm6KGMLE00LGFwcC5qcyAvIGFubm90YXRpb25TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDM2LFAzLOWPjeS+iyzopqrjga7jgrPjg5/jg4Pjg4jlj6/lkKbkuI3mmI4s5paw44GX44GE6Kaq44KS5Yud5omL44Gr6L+95Yqg44Gb44Ga5YaN6Kqt6L6844GX44Gm54Wn5ZCI44O75a6J5YWo5YGc5q2iLE00LGFwcC5qcyAvIG1hbnVhbFJ1blN0b3JlLE5PVF9FWEVDVVRFRA0KVC0wMzcsUDMs5Y+N5L6LLOWQjHN0cmVhbeOCkuS6jOOCv+ODluOBi+OCieWQjOaZguioguatoyzlj6TjgYRleHBlY3RlZEhlYWTjgpLmi5LlkKbjgZfllqrlpLHmm7TmlrDjgZfjgarjgYQsTTIsYW5ub3RhdGlvblN0b3JlIC8gSW5kZXhlZERCLE5PVF9FWEVDVVRFRA0KVC0wMzgsUDMs5Y+N5L6LLOWIpXN0cmVhbeOCkuS6jOOCv+ODluOBi+OCieS/neWtmCzkuKHmlrnjga5ldmVudHMvaGVhZOOCkuS/neaMgSxNMixhbm5vdGF0aW9uU3RvcmUgLyBJbmRleGVkREIsTk9UX0VYRUNVVEVEDQpULTAzOSxQMyzlj43kvoss5ZCMY2xpZW50UmVxdWVzdElk44KS5ZCMcGF5bG9hZOOBp+WGjemAgSzml6LlrZjntZDmnpzjgpLov5TjgZfjgqTjg5njg7Pjg4gx5Lu244Gu44G+44G+LE0yLGFubm90YXRpb25TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDQwLFAzLOWPjeS+iyzlkIxjbGllbnRSZXF1ZXN0SWTjgpLnlbBwYXlsb2Fk44Gn5YaN6YCBLOW3rueVsOOCkuaLkuWQpuOAgeOCpOODmeODs+ODiOOCkui/veWKoOOBl+OBquOBhCxNMixhbm5vdGF0aW9uU3RvcmUsTk9UX0VYRUNVVEVEDQpULTA0MSxQMyzlj43kvossR1BT5YWD6KiY6Yyy44KS5YmK6ZmkLOmWoumAo+OCpOODmeODs+ODiOOCkk9SUEhBTkVE6ZqU6Zui44CB5Yil6LWw6KGM44G46Ieq5YuV5LuY5pu/44GI44GX44Gq44GELE0yLGFubm90YXRpb25TdG9yZSAvIGhpc3RvcnlFeHBlcmllbmNlLE5PVF9FWEVDVVRFRA0KVC0wNDIsUDMs5Y+N5L6LLCJRdW90YUV4Y2VlZGVkLzI0TWlC5LiK6ZmQLzEwLDAwMOS7tiIs5Y6f5pys44Go5pei5a2Y44Kk44OZ44Oz44OI44Gv5L+d5oyB44CC5oiQ5Yqf44Go6KGo56S644GX44Gq44GELE0yLGFubm90YXRpb25TdG9yZSxOT1RfRVhFQ1VURUQNClQtMDQzLFAzLOWPjeS+iyzlvpPmnaVwb3J0YWJsZSB2MeOCkuaWsOOCouODl+ODquOBp+W+qeWFgyzml6d2MeOCkuaXp+aknOiovOi3r+OBp+iqreOBv+i+vOOBv+OAgeaWsOeyvuelnumdouOBjOOBguOCi+OBqOS7ruWumuOBl+OBquOBhCxNMyxkYXRhTWFuYWdlbWVudCxOT1RfRVhFQ1VURUQNClQtMDQ0LFAzLOWPjeS+iyx2MuWHuuWKm+OBp2luY2x1ZGVHcHM9ZmFsc2UsR1BT6Kaq44O7R1BT6Zai6YCj5rOo6KiY44Go44KC6Zmk5aSW44CB5Lu25pWw44KS5piO56S6LE0zLGRhdGFNYW5hZ2VtZW50IC8gZGF0YU1hbmFnZW1lbnRVaSxOT1RfRVhFQ1VURUQNClQtMDQ1LFAzLOWPjeS+iyx2MuOBp0dQU+S9jee9rueCueOCkuWQq+OCgCzmnKzkurrjgavlkKvmnInnorroqo3jgILmnKrmmpflj7fljJbjgafjgYLjgovml6jjgpLooajnpLosTTMsZGF0YU1hbmFnZW1lbnRVaSxOT1RfRVhFQ1VURUQNClQtMDQ2LFAzLOWPjeS+iyx2MuOBp+WQjElE55Ww5YaF5a6544KS5b6p5YWDLOWFqOS9k3ByZWZsaWdodOautemajuOBp+aLkuWQpuOAgeaXouWtmOOCkuS4iuabuOOBjeOBl+OBquOBhCxNMyxkYXRhTWFuYWdlbWVudCxOT1RfRVhFQ1VURUQNClQtMDQ3LFAzLOWPjeS+iyzljp/mnKzmiJDlip8v5rOo6KiY5b6p5YWD5aSx5pWXLOmDqOWIhuW+qeWFg+OBqOS/neWtmOS7tuaVsOOCkuihqOekuuOAgeaIkOWKn+OBqOaWreWumuOBl+OBquOBhCxNMyxkYXRhTWFuYWdlbWVudCxOT1RfRVhFQ1VURUQNClQtMDQ4LFAzLOWPjeS+iyzopqrjgarjgZfms6joqJjjgYzlkKvjgb7jgozjgoss44OH44OV44Kp44Or44OI5ouS5ZCm44CB5pys5Lq65piO56S644Gu6ZqU6Zui44Gu44G/5Y+vLE0zLGRhdGFNYW5hZ2VtZW50LE5PVF9FWEVDVVRFRA0KVC0wNDksUDMs5Y+N5L6LLOOCouODl+ODquWGheWFqOiomOmMsuWJiumZpCzml6fljp/mnKxEQuOBqOaWsOazqOiomERC44Gu5YmK6Zmk5oiQ5ZCm44KS5Yil44CF44Gr56K66KqNLE0zLGRhdGFNYW5hZ2VtZW50LE5PVF9FWEVDVVRFRA0KVC0wNTAsUDQs5Y+N5L6LLOaJi+WFpeWKm+OBqEdQU+WApOOBjOWQjOeUu+mdouOBq+OBguOCiyzmnKzkurrlhaXlipsvR1BT6KiI5ris5YCk44KS5re35ZCM44Gb44Ga6L+R44GP44Gr6KGo56S6LE02LHJlc3VsdEV4cGVyaWVuY2UgLyBtZWFzdXJlbWVudEV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTA1MSxQNCzlj43kvoss5bmz5Z2H44Oa44O844K544GM6KGo56S644GV44KM44KLLOi3nembouOBqOaZgumWk+OBi+OCieeul+WHuuOBqOWNmOS9jeODu+WFg+WApOOCkueiuuiqjeWPr+iDvSxNNixyZXN1bHRFeHBlcmllbmNlLE5PVF9FWEVDVVRFRA0KVC0wNTIsUDQs5Y+N5L6LLFJlZmVyZW5jZS0xMDDjgYzooajnpLrjgZXjgozjgoss5paH54yu5p2h5Lu25LuY44GN5Y+C6ICD5YCk44Go5a++6LGhL+evhOWbsi/kuI3pganmoLzjgpLooajnpLosTTYscmVmZXJlbmNlRXZpZGVuY2VJbmZvIC8gcmVzdWx0RXhwZXJpZW5jZSxOT1RfRVhFQ1VURUQNClQtMDUzLFA0LOWPjeS+iyzlvozml6XnlLPlkYrjgYzjgYLjgoss5YWD5YCkL+W+jOaXpeWApOOBruWIpeOBqOenkeWtpuioiOeul+acquS9v+eUqOOCkuaYjuekuixNNixyZXN1bHRFeHBlcmllbmNlIC8gaGlzdG9yeUV4cGVyaWVuY2UsTk9UX0VYRUNVVEVEDQpULTA1NCxQNCzlj43kvoss57WQ5p6c55S75YOP44KS5L2c44KLLOacrOS6uuOBruaWsOeyvuelnumdouODu+W+jOaXpeiomOi/sOODu0dQU+i7jOi3oeOBr+ODh+ODleOCqeODq+ODiOmZpOWklixNNixyZXN1bHRFeHBlcmllbmNlIC8gcmVzdWx0SW1hZ2VBbm5vdGF0aW9uLE5PVF9FWEVDVVRFRA0KVC0wNTUsUDQs5Y+N5L6LLHdpbmRvdy5wcmludCgp44Gn55S76Z2i44KS5Y2w5Yi3LOeUu+mdouWGheOBp+mWi+OBhOOBn+engeeahOiomOi/sOOCkuaXouWumuOBp+WNsOWIt+OBq+WQq+OCgeOBquOBhCxNNixwcmludCBDU1MgLyBhcHAuanMsTk9UX0VYRUNVVEVEDQpULTA1NixQNCzlj43kvoss55u46KuH44Kz44OU44O85paHL+WFseacieS4i+abuOOBjeOCkueUn+aIkCznsr7npZ7pnaLnrYnjgpLmmI7npLrpgbjmip7jgarjgY/oh6rli5XmjL/lhaXjgZfjgarjgYQsTTYsY29uc3VsdGF0aW9uRXhwZXJpZW5jZSxOT1RfRVhFQ1VURUQNClQtMDU3LFA0LOioreioiCzlh7rmiYDjgavplqLjgZnjgovoqK3oqIjjgahDSee1kOaenOOCkuiqrOaYjizoqK3oqIgv5a6f6KOF44GvUlEy44CB56K66KqN5a6f6aiT44Gu57WQ5p6c44GvUlEz44G46YWN572uLE03LOWNkuirlueZuuihqOizh+aWme+8j+WIpeaUueeov+aWh+abuCxOT1RfRVhFQ1VURUQNClQtMDU4LEcs5q2j5bi4LOe1kOaenOS4iuS9jTPjgr/jg5bjg7vouqvkvZPlhoUz5YiH5pu/LOWtpue/kuacquS9v+eUqOODu+aVmeaOiOahiOacquWFpeWKm+OBp+OCguWFg+OBruOCv+ODluaTjeS9nOaIkOeriyxNNyxyZXN1bHRFeHBlcmllbmNlIC8gdWlDb250cmFjdHMsTk9UX0VYRUNVVEVEDQpULTA1OSxHLOato+W4uCzml6cyOOODhuODvOODnuWFqOODq+ODvOODiOOAgTEw6KiY5LqLMTjoprPlr5/jgqzjgqTjg4ks5YWo5Lu25Y+v6Kqt44CB5YWD44Gu44Oq44Oz44Kv44O75a2m6KGT5o6y6LyJ56+E5Zuy44KS5L+d5oyBLE03LGV4cGxvcmF0aW9uRXhwZXJpZW5jZSAvIDAyRCxOT1RfRVhFQ1VURUQNClQtMDYwLEcs5q2j5bi4LOaXp+aOoueptuODoeODouOBruS9nOaIkC/nt6jpm4Yv5YmK6ZmkLOaXp+OCreODvC/ml6fmnKzmlocv5pendG9waWNJZOOBp+S6kuaPm+e2reaMgSxNNyxleHBsb3JhdGlvbkV4cGVyaWVuY2UgLyBub3RlUnVuTGluayxOT1RfRVhFQ1VURUQNClQtMDYxLEcs5q2j5bi4LOWtpue/kuacquS9v+eUqOOBp+iomOmMsuKGkue1kOaenOKGkuavlOi8g+KGkuS7u+aEj+iomOi/sCzml6LlrZg05pON5L2c44KS5bGl5L+u44Gq44GX44Gn5Yip55So5Y+v6IO9LE03LHR3b1J1bkN5Y2xlQnJvd3NlclNtb2tlIC8gbGVhcm5pbmcgUFIgbm8gZWRpdCxOT1RfRVhFQ1VURUQNClQtMDYyLEcs5q2j5bi4LOenkeWtpjEy57O75YiX44Go5a++6LGh5aSW5p2h5Lu2LOeul+W8j+ODu+mBqeagvOaAp+ODu+aWh+eMruWwhOeoi+S4jeWkiSxNNyxzY2llbmNlRW5naW5lUGFyaXR5IC8gcmVzZWFyY2hDb3JlSW50ZWdyYXRpb24sTk9UX0VYRUNVVEVEDQpULTA2MyxHLOato+W4uCwzMjAvMzkwLzE0NDBweOOBqDIwMCXmloflrZcs5Ye65omA44O757K+56We6Z2iL+W+jOaXpeWApOODu+S/neWtmOmAmuefpeOBjOiqreOCgeOCiyxNNyxuZXcgYnJvd3NlciB0ZXN0cyArIHZpc3VhbCByZXZpZXcsTk9UX0VYRUNVVEVEDQpULTA2NCxHLOato+W4uCzjgq3jg7zjg5zjg7zjg4kv5oi744KLL0VzY2FwZS/jg5Xjgqnjg7zjgqvjgrks5oqY44KK44Gf44Gf44G/L+S7u+aEj+WFpeWKmy/oo5zlrozjga7mk43kvZzjgajlvqnluLAsTTcsbmV3IGJyb3dzZXIgdGVzdHMgKyBhY3R1YWwgZGV2aWNlLE5PVF9FWEVDVVRFRA0KVC0wNjUsRyzmraPluLgs44ON44OD44OI6YGu5pat5b6M44CB5pei5a2Y6KiY6Yyy44Go5paw5rOo6KiY6KGo56S644O75L+d5a2YLOOCquODleODqeOCpOODs+WLleS9nOOBl+mAmuS/oeW+qeW4sOOBp+WFg+OBruWApOOCkuegtOWjiuOBl+OBquOBhCxNNyxvZmZsaW5lU2hlbGxCcm93c2VyU21va2UgKyBuZXcgY2FzZXMsTk9UX0VYRUNVVEVEDQpULTA2NixHLOWPjeS+iyzopqrjgrnjg4jjgqIv5rOo6KiY44K544OI44Ki6Kqt6L685LiN6IO9LOacquWbnuetlOOBqOWMuuWIpeOBl+aYjueiuuOBq+WuieWFqOWBnOatouOAgeaXp+iomOmMsuS/neittyxNNyxuZXcgc3RvcmFnZSBmYWlsdXJlIHRlc3RzLE5PVF9FWEVDVVRFRA0KVC0wNjcsUDEs5LiN5q2j5Z6L5LuY44GNVVJMLHNvdXJjZT1ncHMtdjImcmVjb3JkPXJ1bi12MS1VVUlELFNPVVJDRV9NSVNNQVRDSOOAguacgOaWsOiomOmMsuOChE1BTlVBTOOBuOiHquWLleenu+WLleOBl+OBquOBhCxNMSxyZWNvcmRSZWYudGVzdCxOT1RfRVhFQ1VURUQNClQtMDY4LFAxLOaYjuekuuS4jeato3Zz5pyq5oyH5a6aLD9yZWNvcmQ9bWlzc2luZyB2cyBVUkzjg5Hjg6njg6Hjg7zjgr/jgarjgZcs5piO56S65LiN5q2j44Gv5a6J5YWo5YGc5q2i44CB5pyq5oyH5a6a44Gg44GR5LiA6Iis55S76Z2iLE0xLHJlY29yZFJlZi5icm93c2VyLE5PVF9FWEVDVVRFRA0KVC0wNjksUDEs5pen5omL5YWl5YqbVVJMLD9yZWNvcmQ9cnVuLXYxLVVVSUTjgaDjgZEsTUFOVUFM44Go44GX44Gm5YWD44Gu6LWw6KGM44Go5pen44OG44O844Oe44G45Yiw6YGULE0xLGxlZ2FjeVJvdXRlLnRlc3QsTk9UX0VYRUNVVEVEDQpULTA3MCxQMyxHUFMtdjIgSUTjga7ntYzot68s5YWDZ3BzLXYy44KS5penP2dwcz0uLuOBi+OCieihqOekuixzb3VyY2VUeXBlPUdQU19WMuOBruWQjOS4gElE44G45L+d5oyBLE0xLHJlY29yZFJlZi5icm93c2VyLE5PVF9FWEVDVVRFRA0KVC0wNzEsUDIs6KOc6Laz44Kk44OZ44Oz44OI44Gu5pmC54K5LGRlY2xhcmVkUGhhc2UgQkVGT1JFK1JFQ0FMTEVEK2VudGVyZWRBdOe/jOaXpSzntYzpqJPmmYLngrnjgajlhaXlipvml6XjgpLljLrliKXjgZflrp/muKzmmYLngrnjgavjgZfjgarjgYQsTTIsYW5ub3RhdGlvblNjaGVtYS50ZXN0LE5PVF9FWEVDVVRFRA0KVC0wNzIsUDIsbWVudGFs5pyq5Zue562ULDPmip7nhKHpgbjmip7jgafljp/mnKzkv53lrZgs57K+56We44Kk44OZ44Oz44OI54Sh44GX44CB5Y6f5pys5oiQ5Yqf44CB5pyq5Zue562U44KSVU5TVVJF44Gr44GX44Gq44GELE00LG1lbnRhbERyYWZ0LmJyb3dzZXIsTk9UX0VYRUNVVEVEDQpULTA3MyxQMyzmloflrZfliJflrrnph48s6Ieq55Sx5paHNTAw5a2X44GoNTAx5a2XLDUwMOOBr+WPl+OBkeWFpeOCjOOAgTUwMeOBr+aLkuWQpuOAguWOn+acrOS4jeWkiSxNMixhbm5vdGF0aW9uU2NoZW1hLnRlc3QsTk9UX0VYRUNVVEVEDQpULTA3NCxQMyzjgqTjg5njg7Pjg4jmnKrnn6Xjgq3jg7ws5pyq55+lL+acquadpXNjaGVtYS9OYU4v55Ww5pmC54K5SVNPLEJBRF9FVkVOVC9CQURfVkFMVUXjgILmjqjmuKzoo5zmraPjgZfjgarjgYQsTTIsYW5ub3RhdGlvblNjaGVtYS50ZXN0LE5PVF9FWEVDVVRFRA0KVC0wNzUsUDMs5ZCMSUTlkIzlhoXlrrnjga7oqq3miLvjgZcs5oiQ5Yqf5b6M44Gr5ZCMY2xpZW50UmVxdWVzdElk44KS5YaN6YCBLOS/neWtmOa4iOOBv+WQjOS4gGV2ZW50SWTjgpLov5TjgZfph43opIfov73liqDjgZfjgarjgYQsTTIsYW5ub3RhdGlvblN0b3JlLnRlc3QsTk9UX0VYRUNVVEVEDQpULTA3NixQMyzliKXjgr/jg5ZyZWFkL3dyaXRlLDLjgr/jg5bjgadoZWFkIHJldmlzaW9u44GM56u25ZCILOS4gOaWueOBruOBv+aIkOWKn+OAgeS7luaWuUhFQURfQ09ORkxJQ1TjgILml6flgKTjga/kv53mjIEsTTIsYW5ub3RhdGlvblN0b3JlLmJyb3dzZXIsTk9UX0VYRUNVVEVEDQpULTA3NyxQMyzljLrplpPnvqTjg7vot6/pnaLnvqTkuI3mraMs6Lev6Z2iTUlYRUQ9NjArMzDjgIHlnYJTRUNUSU9OUz00MCszMCxCQURfVkFMVUXjgajjgZfjgabnvqTlhajkvZPmi5LlkKbjgIHljp/mnKzjgYvjgonoo5zplpPjgZfjgarjgYQsTTIsYW5ub3RhdGlvblNjaGVtYS50ZXN0LE5PVF9FWEVDVVRFRA0KVC0wNzgsUDMsbWFudWFs6LWw5q2p44Gu44G/LEdQUyBNSVhFROOBruWFg+iomOmMsuOBi+OCiXJ1bldhbGtCdW5kbGXjgpLnlLPlkYos54++5bel56iL44Gn44Gv5L+d5a2Y5LiN5Y+v44CCTUFOVUFMIFJVTl9XQUxL44GL44Gk5YWD57eP5YCk5LiA6Ie044Gu44G/LE0yLGFubm90YXRpb25TY2hlbWEudGVzdCxOT1RfRVhFQ1VURUQNClQtMDc5LFAzLOW+k+adpeODkOODg+OCr+OCouODg+ODl3Yx5YiG5bKQLHZlcnNpb249MSB2YWxpZCBlbnZlbG9wZSzml6fjga7mpJzoqLzjgajlvqnlhYPjgYzlvJXjgY3ntprjgY3miJDlip/jgZnjgossTTMsYmFja3VwVjEuY29tcGF0LnRlc3QsTk9UX0VYRUNVVEVEDQpULTA4MCxQMyzjg53jg7zjgr/jg5bjg6t2MiBoYXNoLG1hbmlmZXN044GuYW5ub3RhdGlvbnPjgaDjgZExIGJ5dGXmlLnnq4Qs5LqL5YmN5qSc5p+744GnaGFzaCBtaXNtYXRjaOOAgeW+qeWFg+OCkuWni+OCgeOBquOBhCxNMyxiYWNrdXBWMi50ZXN0LE5PVF9FWEVDVVRFRA0KVC0wODEsUDMsR1BT6Zmk5aSW5Lu25pWwLGluY2x1ZGVHcHM9ZmFsc2XjgIFHUFPjgqTjg5njg7Pjg4gz5Lu2LEdQU+WOn+acrC/ms6joqJjjgajjgoLpmaTlpJbjgIHpmaTlpJbku7bmlbAz44Gu6KGo56S6LE0zLGJhY2t1cFYyLnRlc3QsTk9UX0VYRUNVVEVEDQpULTA4MixQMyzpg6jliIblvqnlhYPlho3oqabooYwsbG9jYWzmiJDlip8vR1BT5oiQ5YqfL2Fubm90YXRpb25z5aSx5pWXLOi/veWKoOS7tuaVsOOBqOWkseaVl+OCkumAmuefpeOAguWQjOOBmElE5ZCM5YaF5a6544Gvbm8tb3AsTTMsYmFja3VwVjIuaW5qZWN0RmFpbC50ZXN0LE5PVF9FWEVDVVRFRA0KVC0wODMsUDMs55Ww44K944O844K55ZCMSUTmi5LlkKYsR1BTdjEgSUTjgpJHUFN2MuOBqOOBl+OBpuaMh+WumixTT1VSQ0VfTUlTTUFUQ0jjgIHliKXjga7opqrjgbjoo5zotrPjgpLku5jjgZHjgarjgYQsTTEscmVjb3JkUmVmLnRlc3QsTk9UX0VYRUNVVEVEDQpULTA4NCxQNCzljbDliLfjgajnlLvlg4/jga7ljLrliKUs57K+56We6Z2i44KS55S76Z2i6KGo56S644GX44Gf5b6M44Gn5Y2w5Yi344GoUE5HLOS4oeWHuuWKm+OBp+aXouWumumdnuihqOekuuOAgeaYjuekuueiuuiqjeOBquOBl+OBp+WQq+acieOBl+OBquOBhCxNNixwcml2YWN5T3V0cHV0LmJyb3dzZXIsTk9UX0VYRUNVVEVEDQpULTA4NSxQNCznm7joq4fjgrPjg5Tjg7zmlofjga7ml6LlrposbWVudGFs6Ieq55Sx5paHK0dQU+i7jOi3oeOCkuaMgeOBpOiomOmMsizjgrPjg5Tjg7zmlofjgavkuKHogIXjgpLml6LlrprjgaflkKvjgoHjgarjgYQsTTYscHJpdmFjeU91dHB1dC5icm93c2VyLE5PVF9FWEVDVVRFRA0KVC0wODYsRyzlrp/oo4Xlvozjga5tYWlu44OB44Kn44OD44KvLOWtpue/kuOCs+ODvOODiS/np5HlrablvI8v5penMjgvM+OCv+ODluOBruW3ruWIhuavlOi8gyzmib/oqo3jgZXjgozjgZ/lsYDmiYDlt67liIbjga7jgb/jgILlrabnv5JQUiM0OeOBr+acquODnuODvOOCuCxNNyxnaXQgZGlmZiArIG9sZCBDSSxOT1RfRVhFQ1VURUQNClQtMDg3LFAzLOazqOiomHJlYWTjgqjjg6njg7wsSW5kZXhlZERC6Kqt5Ye65qip6ZmQ5ouS5ZCm44O756C05pCNLE5PX0FOU1dFUuOBp+OBquOBj1JFQURfRVJST1LjgIHml6LlrZjoqJjpjLLjga/mraPluLjooajnpLosTTIsYW5ub3RhdGlvblJlYWRNb2RlbC50ZXN0LE5PVF9FWEVDVVRFRA0KVC0wODgsUDMsR1BTIHYx5YWDUk9G5qyE54Sh44GXLEdQU3Yx5Yid5pyf44GrbWVudGFs44CB5b6M5pelUk9GLOWFg+W9ouW8j05PX0ZJRUxEX0lOX1NDSEVNQeOBqOW+jOaXpeWbnuetlOOCkuWMuuWIhixNNSxncHNWMURldGFpbC5icm93c2VyLE5PVF9FWEVDVVRFRA0KVC0wODksUDMs5q2j6KaPUk9G6KiC5q2j6ZmQ5a6aLE1BTlVBTCBST0bjgpJhbm5vdGF0aW9uU3RvcmXjgafov73liqAsQkFEX0ZJRUxE44Gn5ouS5ZCm44CBY29ycmVjdFNhdmVkUm9m44Gu44G/5q2j6KaPLE0yLGFubm90YXRpb25TY2hlbWEudGVzdCxOT1RfRVhFQ1VURUQNClQtMDkwLFAzLOiomOmMsuOCkuS/neWtmOOBl+azqOiomOOBoOOBkeWkseaVlyzopqpJROeiuuWumivms6joqJhRdW90YUV4Y2VlZGVkLOaIkOWKn+imqklE44Gu5YaN5L+d5a2Y44Gq44GX44CB5rOo6KiY44Gu44G/5YaN6Kmm6KGMLE00LHR3b1N0YWdlU2F2ZS5icm93c2VyLE5PVF9FWEVDVVRFRA0KVC0wOTEsUDQsSlNPTuWFseacieOBqOeUu+mdouWFseacieOBruWMuuWIpSxHUFPjgpLlkKvjgoB2MuODkOODg+OCr+OCouODg+ODlyzmnKrmmpflj7fljJYv5qmf5b6u5oOF5aCx44Gu6K2m5ZGK44Go5piO56S66YG45oqe44CC5Y2w5Yi344Go44Gv5YilLE0zLGJhY2t1cFVJLmJyb3dzZXIsTk9UX0VYRUNVVEVEDQpULTA5MixQNCxSUTIvUlEz5qC55oug5Yy65YiGLOacquWun+ihjOmgheebruOBjOOBguOCi+eZuuihqOahiCxSUTLoqK3oqIgv5a6f6KOF44CBUlEz5qSc5p+744Gv5pyq5a6f6KGM44Go5piO56S6LE03LHNsaWRlQXVkaXQubWFudWFsLE5PVF9FWEVDVVRFRA0K"
+}

@@ -1,0 +1,2241 @@
+{
+  "schemaVersion": 1,
+  "sourceRepository": "peanutsdx53-lgtm/runload-app-v2",
+  "sourceBranch": "main",
+  "sourceCommit": "1152d315f3cedddff8f5c86df01dd23bef8e6bb5",
+  "destinationRepository": "peanutsdx53-lgtm/run-app",
+  "migrationDate": "2026-11-12",
+  "scope": "Exact source Git blob copies except .github/workflows/*",
+  "copiedFileCount": 434,
+  "excludedWorkflowCount": 56,
+  "files": [
+    {
+      "path": "app.js",
+      "gitBlobSha": "5b2101b21ca6b3cb5c54c7d1988998930656d0a7",
+      "sizeBytes": 162732
+    },
+    {
+      "path": "assets/ASSET_REGISTER.md",
+      "gitBlobSha": "59ca31c9ba8c603c562e72f1c317050811d7d4d0",
+      "sizeBytes": 5179
+    },
+    {
+      "path": "assets/bodyRegionVisuals.js",
+      "gitBlobSha": "6c28aa89c0dd7c4fdb8ab7ede58a0b7b76d935e1",
+      "sizeBytes": 32375
+    },
+    {
+      "path": "assets/rof/rof-visual-high.png",
+      "gitBlobSha": "ca06cbf69c9deea7e559c285dd77db628f2c2c1e",
+      "sizeBytes": 11114
+    },
+    {
+      "path": "assets/rof/rof-visual-highest.png",
+      "gitBlobSha": "88ef8a05ba3d7588e2ed0101c7d6d1f15b106031",
+      "sizeBytes": 5438
+    },
+    {
+      "path": "assets/rof/rof-visual-low.png",
+      "gitBlobSha": "8106d01375080ffead896c5816bc71a357ae0685",
+      "sizeBytes": 8288
+    },
+    {
+      "path": "assets/rof/rof-visual-lowest.png",
+      "gitBlobSha": "98065f571c69d85ab741b36c353c41e3059bb556",
+      "sizeBytes": 8746
+    },
+    {
+      "path": "assets/rof/rof-visual-moderate.png",
+      "gitBlobSha": "a75560932db2e9addb1605557a099f70dfa8d20f",
+      "sizeBytes": 7957
+    },
+    {
+      "path": "core/activity/activityReference.js",
+      "gitBlobSha": "860463259479affce4711f38511cf3408f11b795",
+      "sizeBytes": 1898
+    },
+    {
+      "path": "core/activity/jogging.js",
+      "gitBlobSha": "cae1203fbc52f9719511bfff15c912624c47d1d8",
+      "sizeBytes": 754
+    },
+    {
+      "path": "core/activity/running.js",
+      "gitBlobSha": "1c1a6d04eddba42f343efc3ba310c2a7db172184",
+      "sizeBytes": 1127
+    },
+    {
+      "path": "core/activity/walking.js",
+      "gitBlobSha": "f6987ff4d833d378112fa27a9b6d160d7a0c154a",
+      "sizeBytes": 745
+    },
+    {
+      "path": "core/internal/mobileWalkJogSpeedModel.js",
+      "gitBlobSha": "107d60abfd8535531d3d896f7539666c3840ea34",
+      "sizeBytes": 24000
+    },
+    {
+      "path": "core/runningEvidence/runningEvidenceEngine.js",
+      "gitBlobSha": "23f9237da5f041939288f490fc3e04e2e89357cd",
+      "sizeBytes": 7827
+    },
+    {
+      "path": "core/runningEvidence/runningEvidenceProductBridge.js",
+      "gitBlobSha": "18c0ee4204c74da3c0ccc108f04c16a57c32eff1",
+      "sizeBytes": 6528
+    },
+    {
+      "path": "core/runningEvidence/runningEvidenceRegistry.js",
+      "gitBlobSha": "796b97b711b58df0e7958c95e53d906f833814cc",
+      "sizeBytes": 17568
+    },
+    {
+      "path": "docs/ACCEPTANCE_V02_29_GATES_20261102_現行証拠暫定再査定.md",
+      "gitBlobSha": "aa21e754d79d0236c7b123d07ec45551c8d715c3",
+      "sizeBytes": 14782
+    },
+    {
+      "path": "docs/APP_CODE_COMPLETION_7_STAGE_PLAN_20261110.md",
+      "gitBlobSha": "a45f011d0069b9f0040e72636e44dcd04a126bce",
+      "sizeBytes": 32998
+    },
+    {
+      "path": "docs/CONDITION_GESTURE_AND_DERIVED_SCREEN_PLAN_20261024.md",
+      "gitBlobSha": "121ca7467a7fc3a5f91727bedeb00490ac81b63e",
+      "sizeBytes": 4487
+    },
+    {
+      "path": "docs/ENGLISH_UI_PREVIEW_IMPLEMENTATION_20261111.md",
+      "gitBlobSha": "75d0f3109416c0469d53b2117cff0a2490879b9b",
+      "sizeBytes": 13236
+    },
+    {
+      "path": "docs/ENVIRONMENT_V4_BODY_EQUIPMENT_V4_HANDOFF_20261024.md",
+      "gitBlobSha": "7841e7eb6a833c3fc960811318c612edeaa37116",
+      "sizeBytes": 2336
+    },
+    {
+      "path": "docs/EXPLORATION_CSS_CASCADE_CLEANUP_20261104.md",
+      "gitBlobSha": "d3e4013d27d4fc246a4da2a7f509ca0c5111410e",
+      "sizeBytes": 3456
+    },
+    {
+      "path": "docs/EXPLORATION_FIELD_TERMINOLOGY_20261103.md",
+      "gitBlobSha": "dfe3df97963312bac281b92d281f524cb180539d",
+      "sizeBytes": 3517
+    },
+    {
+      "path": "docs/EXPLORATION_FOCUSED_RETURN_20261028.md",
+      "gitBlobSha": "c39a571af8bcab9a5caa2a5067516b9d4673b086",
+      "sizeBytes": 2164
+    },
+    {
+      "path": "docs/EXPLORATION_INQUIRY_REDESIGN_20261111.md",
+      "gitBlobSha": "2710c3cd8d88428a481e24be91bfcad8e5cb476e",
+      "sizeBytes": 3149
+    },
+    {
+      "path": "docs/EXPLORATION_LIFE_CONTEXT_20261028.md",
+      "gitBlobSha": "acfed05bb96b3c8ea57685e9a6ad30f877c27951",
+      "sizeBytes": 2060
+    },
+    {
+      "path": "docs/EXPLORATION_MODAL_KEYBOARD_ACCESS_20261029.md",
+      "gitBlobSha": "745a9fe80ae39eded24f8918cf9bb9d728776db4",
+      "sizeBytes": 1596
+    },
+    {
+      "path": "docs/EXPLORATION_SOURCE_SCOPE_20261028.md",
+      "gitBlobSha": "36da234fd7565a95b19e65a40dca33c7a1738590",
+      "sizeBytes": 2164
+    },
+    {
+      "path": "docs/EXPLORATION_THEME_EDITORIAL_QA_20261028.md",
+      "gitBlobSha": "99f80359993021bed4cdb850d29fff9a22832310",
+      "sizeBytes": 2851
+    },
+    {
+      "path": "docs/EXPLORATION_THEME_STATUS_20261028.csv",
+      "gitBlobSha": "c597adefa5fa51890738aca357f0a5571dd25ee9",
+      "sizeBytes": 5094
+    },
+    {
+      "path": "docs/EXPLORATION_V12_RELEASE_GATES_20261025.md",
+      "gitBlobSha": "a9a5b3c96c3f25fb2c71acdae1ce2363939eac27",
+      "sizeBytes": 5000
+    },
+    {
+      "path": "docs/EXPLORATION_V3_ACCEPTANCE_20261025.md",
+      "gitBlobSha": "ba24f6c714f90a577918a5751099edd51f18b061",
+      "sizeBytes": 5113
+    },
+    {
+      "path": "docs/FIRST_USE_ENGLISH_COPY_AND_I18N_PREPARATION_20261110.md",
+      "gitBlobSha": "f4e9bde5ff55fec7d614b3d0c14eea07ad453f6f",
+      "sizeBytes": 2476
+    },
+    {
+      "path": "docs/FOUNDATION_ROLLOUT_20261023.md",
+      "gitBlobSha": "97eacde17c30a0558c03dbca0668250d5b18410a",
+      "sizeBytes": 4814
+    },
+    {
+      "path": "docs/GPS_CODE_DESIGN_ASSURANCE_20261027.md",
+      "gitBlobSha": "49d9babf0d4659582908e518b85793d4b3a9aca6",
+      "sizeBytes": 6999
+    },
+    {
+      "path": "docs/GPS_MEASUREMENT_POLISH_AND_BACKGROUND_20261027.md",
+      "gitBlobSha": "2432a2a6d8113063f231f6ebac9e3ab56cf2af91",
+      "sizeBytes": 4006
+    },
+    {
+      "path": "docs/GPS_MEASUREMENT_V2_UI_HANDOFF_20261024.md",
+      "gitBlobSha": "c330030c4d9c638a12b7939366528756ec7e5c3d",
+      "sizeBytes": 3840
+    },
+    {
+      "path": "docs/GPS_MIGRATION_V35.md",
+      "gitBlobSha": "7cca62ddcb3509ba255f308722245096fe20ba33",
+      "sizeBytes": 10755
+    },
+    {
+      "path": "docs/GPS_SOFTWARE_CLOSEOUT_20261027.md",
+      "gitBlobSha": "6fae6d07eef5fc775d4c980cce556a3b0b3f65bb",
+      "sizeBytes": 5145
+    },
+    {
+      "path": "docs/GPX_SIMULATION_V33.md",
+      "gitBlobSha": "985cfff3e14658104bae02d1d7c2513be4a4524e",
+      "sizeBytes": 4883
+    },
+    {
+      "path": "docs/HOME_DASHBOARD_AUTOSAVE_ACTION_CONTRAST_20261111.md",
+      "gitBlobSha": "ba2d10cffa6105364dfea1997d42275b5f1f54dd",
+      "sizeBytes": 3222
+    },
+    {
+      "path": "docs/HOME_DASHBOARD_ROLLOUT.md",
+      "gitBlobSha": "a4847b7ec67d8bbf76fe1cf7be760f0fbb4e1c4f",
+      "sizeBytes": 5824
+    },
+    {
+      "path": "docs/HOME_REDESIGN_APPROVED_20261024.md",
+      "gitBlobSha": "a13ecd921e7ae4f64acba04b888edf84c08fb507",
+      "sizeBytes": 4083
+    },
+    {
+      "path": "docs/INSTALL.md",
+      "gitBlobSha": "9c8ab86225eace1c814336783df6447e5cdd1629",
+      "sizeBytes": 3857
+    },
+    {
+      "path": "docs/INTERPRETATION_V14_ACCEPTANCE_20261026.md",
+      "gitBlobSha": "36ec289ff92d7b879177030cff8f557f40ae5431",
+      "sizeBytes": 3469
+    },
+    {
+      "path": "docs/LEARNING_EXPLORATION_DENSITY_20261111.md",
+      "gitBlobSha": "12e17c88b9c69d8cc6fe6bc9e21821c427d5cb49",
+      "sizeBytes": 3518
+    },
+    {
+      "path": "docs/LEARNING_SCREEN_DENSITY_REVIEW_20261111.md",
+      "gitBlobSha": "0d13afd0fc3a8fc568bedc6e0914263bf4466a50",
+      "sizeBytes": 2513
+    },
+    {
+      "path": "docs/P10_LEARNING_MOBILE_UI_CONTRACT_20261110.md",
+      "gitBlobSha": "8f678619e19b0bab9ed4f2096e9fe2869eccd3a8",
+      "sizeBytes": 3553
+    },
+    {
+      "path": "docs/P11_1_LEARNING_THEME_DEPLOYMENT_REAUDIT_20261110.md",
+      "gitBlobSha": "c1ecfb6ea459e1d131f172aa1eda2f02a6dff19d",
+      "sizeBytes": 3869
+    },
+    {
+      "path": "docs/P11_UNIFIED_LEARNING_NAV_AND_COPY_AUDIT_20261110.md",
+      "gitBlobSha": "ae1f5648d9a516bdc361a97c8c335401ce8a48af",
+      "sizeBytes": 3868
+    },
+    {
+      "path": "docs/P12_LEARNING_CARDS_HELP_HEADER_FOOTER_20261110.md",
+      "gitBlobSha": "5a0dc6107e984d79cc8c2df5cc09d089576a9538",
+      "sizeBytes": 4404
+    },
+    {
+      "path": "docs/P13_HISTORY_GPS_LEARNING_COMPACTNESS_AND_NOTICES_20261110.md",
+      "gitBlobSha": "a583b15446afba109a5f9f4af1aac4606e41de68",
+      "sizeBytes": 4760
+    },
+    {
+      "path": "docs/P14_5_HISTORY_HOME_VISUAL_ACCEPTANCE_20261110.md",
+      "gitBlobSha": "970d0a829941efbf39747b7bf8824024fc07cdec",
+      "sizeBytes": 2830
+    },
+    {
+      "path": "docs/P14_IPHONE_HISTORY_CONDITION_NAV_CONSISTENCY_20261110.md",
+      "gitBlobSha": "c2bafacfb16f3f1af63b233d55445bff9ccc92b2",
+      "sizeBytes": 4634
+    },
+    {
+      "path": "docs/P9_PREMERGE_GATE_SCOPE_20261109.md",
+      "gitBlobSha": "56e23f30df7b9fea6a10ebcdb72d958cb49b450d",
+      "sizeBytes": 2200
+    },
+    {
+      "path": "docs/professor-m7-source-audit.json",
+      "gitBlobSha": "a377c1d4adef3e21a9278c7f04b98f9af0726df3",
+      "sizeBytes": 60274
+    },
+    {
+      "path": "docs/PUBLIC_USER_COPY_TERMINOLOGY_AUDIT_20261110.md",
+      "gitBlobSha": "d5f7439c4b52dda87876763ff54b8a10015166fa",
+      "sizeBytes": 3299
+    },
+    {
+      "path": "docs/RECORD_INPUT_PARITY_20261024.md",
+      "gitBlobSha": "e68194f023896bea81b901935c4a1b9ed3283786",
+      "sizeBytes": 4254
+    },
+    {
+      "path": "docs/RECORD_REDESIGN_APPROVED_20261024.md",
+      "gitBlobSha": "2ea67ac8e402e94ccd97b2be7d6dbe492e6879a6",
+      "sizeBytes": 4831
+    },
+    {
+      "path": "docs/REPOSITORY_NEUTRAL_POLICY_AND_RELEASE_SCOPE_20261110.md",
+      "gitBlobSha": "4920fe8abe4282b86525567b147241967934ff10",
+      "sizeBytes": 2995
+    },
+    {
+      "path": "docs/RESEARCH_AND_MIXED_SCOPE_20261027.md",
+      "gitBlobSha": "25b466cb73fedb2cc63ca5e99538bd311985af42",
+      "sizeBytes": 2740
+    },
+    {
+      "path": "docs/RESEARCH_CORE_BATCH_20261030.md",
+      "gitBlobSha": "39f090bddb4180b79f22dfd10a4ec9dd3283dcdb",
+      "sizeBytes": 8394
+    },
+    {
+      "path": "docs/RESEARCH_INFORMATION_PRESENTATION_GATE_20261025.md",
+      "gitBlobSha": "6538e671fd2153a1f2e7ff6507096b20ae91c5de",
+      "sizeBytes": 3010
+    },
+    {
+      "path": "docs/RESEARCH_R09_F04_20261102_ADOPTED_PDF_INTEGRITY.md",
+      "gitBlobSha": "aa729073fc4c615f7032147cfd43e21419bd5bfc",
+      "sizeBytes": 4106
+    },
+    {
+      "path": "docs/RESULT_PNG_PROVENANCE_20261029.md",
+      "gitBlobSha": "c5e62e377d3a8440621740d0cf46d9229ffb5a95",
+      "sizeBytes": 1954
+    },
+    {
+      "path": "docs/RESULT_POSTHOC_BILINGUAL_VISUAL_REVIEW_20261111.md",
+      "gitBlobSha": "c1ebcb4f51307d25ca3420b6e523d6c5510c9834",
+      "sizeBytes": 3702
+    },
+    {
+      "path": "docs/ROF_J_V4_IMPLEMENTATION_HANDOFF_20261024.md",
+      "gitBlobSha": "9d54ebd7f39bc2fac713825f5ad2499b60fa8eff",
+      "sizeBytes": 4416
+    },
+    {
+      "path": "docs/ROF_RESULT_DISCLOSURE_CONSOLIDATION_20261102.md",
+      "gitBlobSha": "0ea22d904ba8a605a3203dca8bb17057c3445e04",
+      "sizeBytes": 3709
+    },
+    {
+      "path": "docs/ROF_RESULT_NO_DELTA_UI_AUDIT_20261102.md",
+      "gitBlobSha": "ac2949d66cd7410519ef7de548b7db55e6124fc2",
+      "sizeBytes": 3545
+    },
+    {
+      "path": "docs/ROF_RESULT_SUBTLE_CAPTION_20261102.md",
+      "gitBlobSha": "e5cd5596529e0988b4b126235a221ce030d917fe",
+      "sizeBytes": 2681
+    },
+    {
+      "path": "docs/S02_CONDITION_ACHIEVEMENT_ADJUSTMENT_20261101.md",
+      "gitBlobSha": "1e71b3f7b4e5bc7a3fee97de36cc36b318ead6b1",
+      "sizeBytes": 3605
+    },
+    {
+      "path": "docs/S02_CONDITION_THEME_AUDIT_20261101.md",
+      "gitBlobSha": "1138b78290021389a3e0f3d0c82a97fd329c95ef",
+      "sizeBytes": 3313
+    },
+    {
+      "path": "docs/S02_DETAIL_COLORS_20261101.md",
+      "gitBlobSha": "8c4019a2b46c576b7e2b5f8be2a41006e46b684a",
+      "sizeBytes": 3883
+    },
+    {
+      "path": "docs/S02_DETAIL_FINAL_REVIEW_20261101.md",
+      "gitBlobSha": "b42cdf79fd328c8df232dd531c45b77f6769d8ff",
+      "sizeBytes": 3824
+    },
+    {
+      "path": "docs/S02_HOME_ADJUSTMENT_20261101.md",
+      "gitBlobSha": "d98a5ca4a61f0a7a865a544cd1c9fb99326635d5",
+      "sizeBytes": 1855
+    },
+    {
+      "path": "docs/S02_HOME_HEADER_BUTTONS_20261101.md",
+      "gitBlobSha": "034639fe93d03af6e2e95d19d1b2d00c078c483b",
+      "sizeBytes": 1460
+    },
+    {
+      "path": "docs/S02_HOME_SCREEN_GUIDE_IMPLEMENTATION_20261101.md",
+      "gitBlobSha": "70f4c5b8127a033937c048146251457300b6078a",
+      "sizeBytes": 2745
+    },
+    {
+      "path": "docs/S03_S04_REQUIRED_HEADER_AUDIT_20261101.md",
+      "gitBlobSha": "a9cd16a0be1852e4e562d0a8e2bb606011aec23c",
+      "sizeBytes": 6628
+    },
+    {
+      "path": "docs/S04_BODY_DENSITY_REFINEMENT_20261101.md",
+      "gitBlobSha": "83112b4e45cc759623b4b6ca77f25057a29f7d2b",
+      "sizeBytes": 4576
+    },
+    {
+      "path": "docs/S04_OPTIONAL_EMPTY_POPULATED_DENSITY_AUDIT_20261101.md",
+      "gitBlobSha": "a37183bfa462c9aee10b8ce9cf4c29239d3ee9a0",
+      "sizeBytes": 11015
+    },
+    {
+      "path": "docs/S04_S05_DEDUPLICATION_20261101.md",
+      "gitBlobSha": "ce5787e7b3dbbeef26db341fbc56e1b283c7b9dd",
+      "sizeBytes": 4658
+    },
+    {
+      "path": "docs/S06_ROF_ILLUSTRATION_DESCRIPTION_20261101.md",
+      "gitBlobSha": "b8874f157b369b68a2d5016793c20720f5010cb1",
+      "sizeBytes": 4841
+    },
+    {
+      "path": "docs/S07_S08_COURSE_BODY_UX_20261101.md",
+      "gitBlobSha": "88cdafb1762a6aa0cd59e1e1ed0e1b0f46c7df95",
+      "sizeBytes": 2919
+    },
+    {
+      "path": "docs/S08_COURSE_SAVE_SURFACE_SHARE_20261101.md",
+      "gitBlobSha": "1a9c3b3607d22e0289167000c562e7632a738213",
+      "sizeBytes": 4279
+    },
+    {
+      "path": "docs/S09_REVIEW_DENSITY_ICONS_20261101.md",
+      "gitBlobSha": "25acae546beca949a4982e3340f606819f7d8d36",
+      "sizeBytes": 4002
+    },
+    {
+      "path": "docs/SCIENCE_ENGINE_MIGRATION_20261027.md",
+      "gitBlobSha": "65fc3423617e0d4b56a8cb83877e7408351c6d58",
+      "sizeBytes": 4170
+    },
+    {
+      "path": "docs/SCIENTIFIC_R12_C12_20261102_4SOURCE_65POINT_REPLAY.md",
+      "gitBlobSha": "907e77cf4eb748c26e86640c9b90b093a9271a56",
+      "sizeBytes": 5722
+    },
+    {
+      "path": "docs/SCREEN_MAP.md",
+      "gitBlobSha": "82ddbf38d2880d0382bad546b52ce10e09e17671",
+      "sizeBytes": 4605
+    },
+    {
+      "path": "docs/SETTINGS_MODAL_DENSITY_AND_CROSS_SCREEN_CHECK_20261111.md",
+      "gitBlobSha": "ab46ead23a5b7f0009b79fbef99cf08a22052fb3",
+      "sizeBytes": 2880
+    },
+    {
+      "path": "docs/SIMULATION_UI_V34.md",
+      "gitBlobSha": "1bba1e93645437a1b0906ad93013f5d6a5610bcb",
+      "sizeBytes": 2600
+    },
+    {
+      "path": "docs/SLEEP_INPUT_V2_IMPLEMENTATION_HANDOFF_20261024.md",
+      "gitBlobSha": "4e79807eff6581b2d38d191ca8ee4a8c632718bd",
+      "sizeBytes": 4621
+    },
+    {
+      "path": "docs/SLEEP_UX_PARITY_AND_GPS_V2_DESIGN_20261024.md",
+      "gitBlobSha": "86e21ada24a8929b3dbf410fca710e1cdec83997",
+      "sizeBytes": 4122
+    },
+    {
+      "path": "docs/STARTUP_LATENCY_AND_BOOT_RECOVERY_20261110.md",
+      "gitBlobSha": "0aefd872ddd2f0367888ccd4077378c6bdf44928",
+      "sizeBytes": 3745
+    },
+    {
+      "path": "docs/UIUX_20261101_S09_S05_S07_実装と受入記録.md",
+      "gitBlobSha": "6885db64ac44c320b81e810d8e2cb430f82039dc",
+      "sizeBytes": 16153
+    },
+    {
+      "path": "docs/UIUX_20261101_継続改修と検証記録.md",
+      "gitBlobSha": "5433712ca38068927436105eb5a27b815ceafa48",
+      "sizeBytes": 4189
+    },
+    {
+      "path": "docs/UIUX_20261102_UX023_学習カード_実画像受入.md",
+      "gitBlobSha": "7eeff3dcca5c55a080993aad1e772dd6fffa4c1b",
+      "sizeBytes": 8076
+    },
+    {
+      "path": "docs/UIUX_20261102_工程19_全20画面横断受入_実装検証記録.md",
+      "gitBlobSha": "7ea116dbef012cf00c4d6562b17ccd66f398eef7",
+      "sizeBytes": 10097
+    },
+    {
+      "path": "docs/UIUX_20261102_第2回工程04-06_S05-S08_改修と監査.md",
+      "gitBlobSha": "c72bf2e9457201eed028467548f44910ed5d62e1",
+      "sizeBytes": 6720
+    },
+    {
+      "path": "docs/UIUX_20261102_第3回工程07-09_S09-S11_実装検証記録.md",
+      "gitBlobSha": "84be4b20b9a2fbfe3d0e4839826eb1be514ff710",
+      "sizeBytes": 13315
+    },
+    {
+      "path": "docs/UIUX_20261102_第4回工程10-12_S12-S14_実装検証記録.md",
+      "gitBlobSha": "3e8ca5930ade237c64c44955af923a0cb27f8a49",
+      "sizeBytes": 10846
+    },
+    {
+      "path": "docs/UIUX_20261102_第5回工程13-15_S15-S17_実装検証記録.md",
+      "gitBlobSha": "7fafa9cc38c50db59abc042d8fb84083d69a0ee5",
+      "sizeBytes": 10394
+    },
+    {
+      "path": "docs/UIUX_20261102_第6回工程16-18_GPS_シミュレーション_出力オフライン_実装検証記録.md",
+      "gitBlobSha": "feeb7dad71f4803a2c24d82112dd6f796d7f567c",
+      "sizeBytes": 11004
+    },
+    {
+      "path": "docs/UIUX_20261102_結果画面_身体タブ追補_視認性改修.md",
+      "gitBlobSha": "0ea8d088ae945ba3f5ddb68c27952d23afcf5aec",
+      "sizeBytes": 2352
+    },
+    {
+      "path": "docs/UIUX_20261102_結果画面3タブ_移動操作統合_監査記録.md",
+      "gitBlobSha": "4c70ebdec8406ed461357020d5e3c741ed5ec1c9",
+      "sizeBytes": 2524
+    },
+    {
+      "path": "docs/UIUX_スクリーンショット目視受入ゲート_20261102.md",
+      "gitBlobSha": "49fcc8ce6661947912e0800e5761640cf45c895c",
+      "sizeBytes": 3614
+    },
+    {
+      "path": "docs/UNIMPLEMENTED_PRIORITY_V27_20261026.md",
+      "gitBlobSha": "1bfe68767bc4409b2ca29fcc61402cec2254e39c",
+      "sizeBytes": 7398
+    },
+    {
+      "path": "docs/VISUAL_ACCEPTANCE.md",
+      "gitBlobSha": "fc8ea4effb8727a24d924d9466e51bd9c04d40dd",
+      "sizeBytes": 4452
+    },
+    {
+      "path": "docs/VISUAL_QA_GATE_V28_20261026.md",
+      "gitBlobSha": "a462e6802752d04b38a98ef125a139f55bef0545",
+      "sizeBytes": 3327
+    },
+    {
+      "path": "icons/icon-192.png",
+      "gitBlobSha": "9ace25991de63688001e1fd10a75b988d2de0433",
+      "sizeBytes": 9500
+    },
+    {
+      "path": "icons/icon-512.png",
+      "gitBlobSha": "5dd881705f9c511e543e4ef289bb533d135289a3",
+      "sizeBytes": 66145
+    },
+    {
+      "path": "icons/icon.svg",
+      "gitBlobSha": "97570fbcc15122794683221549c70e81314e2c00",
+      "sizeBytes": 492
+    },
+    {
+      "path": "index.html",
+      "gitBlobSha": "f9eeff0f2542dbd20ea02323b4c9f2056d5bbe05",
+      "sizeBytes": 7482
+    },
+    {
+      "path": "manifest.en.webmanifest",
+      "gitBlobSha": "265d499bbe97423eca45ce71a546c76762511260",
+      "sizeBytes": 1035
+    },
+    {
+      "path": "manifest.webmanifest",
+      "gitBlobSha": "e90509d76157d2a8145bf1e145a91b8920b3f639",
+      "sizeBytes": 1036
+    },
+    {
+      "path": "pwa.js",
+      "gitBlobSha": "0f2a9bb6a0fd03c72589d30b4c896d9a760453d2",
+      "sizeBytes": 6187
+    },
+    {
+      "path": "README.md",
+      "gitBlobSha": "668d7b777468376f1c4cc905250278c855417b16",
+      "sizeBytes": 10453
+    },
+    {
+      "path": "scripts/auditLocalDependencies.mjs",
+      "gitBlobSha": "798f0ce620ddc7f2de100625c4c798a14e3beb98",
+      "sizeBytes": 3423
+    },
+    {
+      "path": "scripts/auditPublicTerminology.mjs",
+      "gitBlobSha": "b89cbb7a28be20f1e56e49930fb50d2511fb9f8e",
+      "sizeBytes": 4881
+    },
+    {
+      "path": "scripts/auditRepositoryBindings.mjs",
+      "gitBlobSha": "d63b3fe35d2e6630fbd930da85ff0c7935907bbd",
+      "sizeBytes": 1876
+    },
+    {
+      "path": "styles.css",
+      "gitBlobSha": "b95814e523ab47b46d8bca10427a6aec44d5188e",
+      "sizeBytes": 146131
+    },
+    {
+      "path": "sw.js",
+      "gitBlobSha": "dc9a46ad0ab5ffd5950cd036627e8fe9474d6685",
+      "sizeBytes": 11445
+    },
+    {
+      "path": "tests/adoptedScienceSourceHashCurrentAudit.test.mjs",
+      "gitBlobSha": "f1ecb18b5012916897b3a035e984d8374d92397d",
+      "sizeBytes": 2165
+    },
+    {
+      "path": "tests/bGroupFirstUseResearchFlow.test.mjs",
+      "gitBlobSha": "bd9c3beafb625cf8f5c809f8c6fae125fcff7fae",
+      "sizeBytes": 1107
+    },
+    {
+      "path": "tests/bGroupLifeHistoryIntegrity.test.mjs",
+      "gitBlobSha": "184cad06d6db10a2f0bf2333de0b43e694497df4",
+      "sizeBytes": 3622
+    },
+    {
+      "path": "tests/bodyContextExperience.test.mjs",
+      "gitBlobSha": "2f58e65f8d9e8d41ec859feab052d608a9dc8071",
+      "sizeBytes": 6852
+    },
+    {
+      "path": "tests/bodyReferencePresentation.test.mjs",
+      "gitBlobSha": "755b4660575f6ca7d0f00219e499bbb11b2d6439",
+      "sizeBytes": 8412
+    },
+    {
+      "path": "tests/browserSmoke.mjs",
+      "gitBlobSha": "b66fd63a25eb0b47395be281fec92e51ac702698",
+      "sizeBytes": 148916
+    },
+    {
+      "path": "tests/c09ReflowDiagnosticBrowser.mjs",
+      "gitBlobSha": "2c3ab1c7b6b0e22c93d57d3cad344b7740663292",
+      "sizeBytes": 7634
+    },
+    {
+      "path": "tests/cGroupTrendBrowserSmoke.mjs",
+      "gitBlobSha": "2d7361a962bf98360c3645492f334565746437f0",
+      "sizeBytes": 4617
+    },
+    {
+      "path": "tests/cGroupTrendIntegrity.test.mjs",
+      "gitBlobSha": "6145aaf5cac55222b646dd41c4415141601ef096",
+      "sizeBytes": 1960
+    },
+    {
+      "path": "tests/conditionJourney.test.mjs",
+      "gitBlobSha": "7ae2175e1cc4b8a425482489963e86a28e2ca886",
+      "sizeBytes": 6147
+    },
+    {
+      "path": "tests/consultationBrowserSmoke.mjs",
+      "gitBlobSha": "0954c9a94e2ab50e34fff76f0df403de022d4ad9",
+      "sizeBytes": 16568
+    },
+    {
+      "path": "tests/consultationExperience.test.mjs",
+      "gitBlobSha": "123a7f8660ef1b9176ff6cfdb6680b237b6e69c1",
+      "sizeBytes": 9825
+    },
+    {
+      "path": "tests/contrastAccessibilityRegression.test.mjs",
+      "gitBlobSha": "6a0eda087fdf17ce133d13e99aa4cc8d4af8d84b",
+      "sizeBytes": 2189
+    },
+    {
+      "path": "tests/coursePresetStore.test.mjs",
+      "gitBlobSha": "aee81a675456445c933ff012dd63c4547139e910",
+      "sizeBytes": 5867
+    },
+    {
+      "path": "tests/currentMainWidthObservation.mjs",
+      "gitBlobSha": "a840cbc99d5c11cd9c69f318a3940a541fefaae1",
+      "sizeBytes": 6692
+    },
+    {
+      "path": "tests/dataManagement.test.mjs",
+      "gitBlobSha": "ade82964d20128db73ef0208be30fec1336d88aa",
+      "sizeBytes": 17849
+    },
+    {
+      "path": "tests/dataManagementBrowserSmoke.mjs",
+      "gitBlobSha": "add6d544810d8cb1a152c8683587d63bcf5fc3ab",
+      "sizeBytes": 12724
+    },
+    {
+      "path": "tests/englishResultExport.test.mjs",
+      "gitBlobSha": "81658888422b82dccb7c8ebb35616c6cb1acfa52",
+      "sizeBytes": 1599
+    },
+    {
+      "path": "tests/englishScienceAndConsentSemantics.test.mjs",
+      "gitBlobSha": "ae6d5aa28ea75af635865fb46237a02e0a27342c",
+      "sizeBytes": 5048
+    },
+    {
+      "path": "tests/englishSurfaceAuditBrowser.mjs",
+      "gitBlobSha": "a6771727a017a6ce58980701cc1002c930458e54",
+      "sizeBytes": 13171
+    },
+    {
+      "path": "tests/englishSurfaceRemainders.test.mjs",
+      "gitBlobSha": "e00add03248d7ee8b80ba46a6cd7a658f7c390a4",
+      "sizeBytes": 3404
+    },
+    {
+      "path": "tests/englishUi.test.mjs",
+      "gitBlobSha": "c244fa65f4fe84b88271e5ae6807529587ce6ad1",
+      "sizeBytes": 12442
+    },
+    {
+      "path": "tests/englishUiBrowser.mjs",
+      "gitBlobSha": "47275a2c3e3a25216f61a571f76a4a1e91dd8dbe",
+      "sizeBytes": 18138
+    },
+    {
+      "path": "tests/environmentExperience.test.mjs",
+      "gitBlobSha": "1363d3a32a405201acc4066faef151ed9b1ea2c0",
+      "sizeBytes": 2398
+    },
+    {
+      "path": "tests/environmentReflectionBridge.test.mjs",
+      "gitBlobSha": "a0adb315ee570158ae5997b450b64358cd9a40ea",
+      "sizeBytes": 2597
+    },
+    {
+      "path": "tests/explorationBodyBrowser.mjs",
+      "gitBlobSha": "d9b3b72faf696fc19dc4c983a3fdc4d30e9d64e6",
+      "sizeBytes": 13888
+    },
+    {
+      "path": "tests/explorationBodyInquiry.test.mjs",
+      "gitBlobSha": "4d7432e2b167ad7273f0a2da904afa4cf5a157c1",
+      "sizeBytes": 4523
+    },
+    {
+      "path": "tests/explorationComparisonInquiry.test.mjs",
+      "gitBlobSha": "39fea7ce32edfb461d52c332448fd8c51c7c7d1a",
+      "sizeBytes": 3989
+    },
+    {
+      "path": "tests/explorationConditionBrowser.mjs",
+      "gitBlobSha": "b184929405dc6ced6deca9ef22003cdcbe01aa82",
+      "sizeBytes": 15143
+    },
+    {
+      "path": "tests/explorationConditionInquiry.test.mjs",
+      "gitBlobSha": "30bb5bf8e438ddd772211471e274f2478403f269",
+      "sizeBytes": 5361
+    },
+    {
+      "path": "tests/explorationEvidenceScope.test.mjs",
+      "gitBlobSha": "0c1bd2533f0bdc1f7d474a4f4d789b5186fce09e",
+      "sizeBytes": 3671
+    },
+    {
+      "path": "tests/explorationExperience.test.mjs",
+      "gitBlobSha": "54cf89c3c61bd68f0ddb2c71f5da5cea499714d9",
+      "sizeBytes": 16151
+    },
+    {
+      "path": "tests/explorationInquiry.test.mjs",
+      "gitBlobSha": "b0b8557d9c19d41ab36c4e67fa56733705859220",
+      "sizeBytes": 3029
+    },
+    {
+      "path": "tests/explorationInquiryLayout.test.mjs",
+      "gitBlobSha": "60ddda12298f0a6d6fd155ee4d439ee6685a93a3",
+      "sizeBytes": 4168
+    },
+    {
+      "path": "tests/explorationLearning.test.mjs",
+      "gitBlobSha": "30dca0f3819530ea52c8702c2d423af324164b76",
+      "sizeBytes": 14426
+    },
+    {
+      "path": "tests/explorationLifeBrowser.mjs",
+      "gitBlobSha": "6ed985f291788b965cd00365f744096dae86a384",
+      "sizeBytes": 11240
+    },
+    {
+      "path": "tests/explorationLifeInquiry.test.mjs",
+      "gitBlobSha": "42b5411df9b25a99aade03cfdde0356b6ce1f8e0",
+      "sizeBytes": 4653
+    },
+    {
+      "path": "tests/explorationMentalBrowser.mjs",
+      "gitBlobSha": "fdffa3699d3789e8094c78548ed78255d4239885",
+      "sizeBytes": 12762
+    },
+    {
+      "path": "tests/explorationMentalInquiry.test.mjs",
+      "gitBlobSha": "9346b2e79b9de2ba870ae59894dd6319f5dca34f",
+      "sizeBytes": 3299
+    },
+    {
+      "path": "tests/explorationMergedCandidates.test.mjs",
+      "gitBlobSha": "b74d677893f9de4499b3025082ad06ba181ba5cb",
+      "sizeBytes": 4683
+    },
+    {
+      "path": "tests/explorationTopicBrowserSmoke.mjs",
+      "gitBlobSha": "e8b1ebbee14a2047758bb06e93bc90f9d37702a2",
+      "sizeBytes": 24339
+    },
+    {
+      "path": "tests/explorationTopicGuides.test.mjs",
+      "gitBlobSha": "554a26fe8fb82b086d7368517998bf3b432c8c0f",
+      "sizeBytes": 3542
+    },
+    {
+      "path": "tests/explorationWebkitSmoke.mjs",
+      "gitBlobSha": "9eb9f28178f081a5e54eb534c51b168405e858fe",
+      "sizeBytes": 8530
+    },
+    {
+      "path": "tests/firstUseBrowserSmoke.mjs",
+      "gitBlobSha": "419f11e4d0f7ff25a18c6f272cdb96fba470771e",
+      "sizeBytes": 12251
+    },
+    {
+      "path": "tests/firstUseExperience.test.mjs",
+      "gitBlobSha": "aa1652e8d346015d40b3cb46f2fe4ddf794ad664",
+      "sizeBytes": 6206
+    },
+    {
+      "path": "tests/gaitExperience.test.mjs",
+      "gitBlobSha": "44db9f27fceb76d9e460062a20ca36451b2b8822",
+      "sizeBytes": 3838
+    },
+    {
+      "path": "tests/gazendamSourceReconciliation.test.mjs",
+      "gitBlobSha": "1881764ea0847141f52013435d70e25db221b872",
+      "sizeBytes": 2595
+    },
+    {
+      "path": "tests/gpsAltitudeQuality.test.mjs",
+      "gitBlobSha": "1f45dad1e5f495b7510c6a67237c52503f03ee57",
+      "sizeBytes": 4149
+    },
+    {
+      "path": "tests/gpsCourseEvidence.test.mjs",
+      "gitBlobSha": "c179b59c336854da846f0bd26a958a1488309285",
+      "sizeBytes": 1992
+    },
+    {
+      "path": "tests/gpsDesignAssurance.test.mjs",
+      "gitBlobSha": "4df740dc5740944fbdf2159792837762e25cfd6e",
+      "sizeBytes": 1801
+    },
+    {
+      "path": "tests/gpsDynamicBrowserSmoke.mjs",
+      "gitBlobSha": "47c2b04a9eb90dd9329cf359e682bb80c1a9cd72",
+      "sizeBytes": 19554
+    },
+    {
+      "path": "tests/gpsDynamicLongitude.test.mjs",
+      "gitBlobSha": "27d3c72753d8cb93efb4de76b2ef01e0d9e7c586",
+      "sizeBytes": 1663
+    },
+    {
+      "path": "tests/gpsLiveMap.test.mjs",
+      "gitBlobSha": "eba0e6c05bd87b13c57df2c8aa6bc9aae26e9870",
+      "sizeBytes": 2080
+    },
+    {
+      "path": "tests/gpsLongTrack.test.mjs",
+      "gitBlobSha": "4a05e421547107a53fcae101bef8c16b58b521d5",
+      "sizeBytes": 5593
+    },
+    {
+      "path": "tests/gpsMeasurementPolish.test.mjs",
+      "gitBlobSha": "17f78080eeaaef7b1a70a1ea6b049fc84d925e7b",
+      "sizeBytes": 3969
+    },
+    {
+      "path": "tests/gpsReplayIndexedDbStore.test.mjs",
+      "gitBlobSha": "a617c72b57daec0879c9c872acb03decdb743ac8",
+      "sizeBytes": 10398
+    },
+    {
+      "path": "tests/gpsReplayReference.test.mjs",
+      "gitBlobSha": "28fd7536a0dd764916a57cd64e84d8833c350ab1",
+      "sizeBytes": 6206
+    },
+    {
+      "path": "tests/gpsRofReviewBrowser.mjs",
+      "gitBlobSha": "2dd36e64c250e369bbdb1199be5cf576dfdc158c",
+      "sizeBytes": 9333
+    },
+    {
+      "path": "tests/gpsSoftwareCloseout.test.mjs",
+      "gitBlobSha": "51f618523f69b06ddd2c2838a65de4439a363750",
+      "sizeBytes": 1469
+    },
+    {
+      "path": "tests/gpsStorageHealth.test.mjs",
+      "gitBlobSha": "49b5f9cbf70576b5539405b0b808e989929c3173",
+      "sizeBytes": 1707
+    },
+    {
+      "path": "tests/gpxImport.test.mjs",
+      "gitBlobSha": "3df5ebb78799a2fa914c2fa283d215763edce0f4",
+      "sizeBytes": 4615
+    },
+    {
+      "path": "tests/historyDiscoveryBrowser.mjs",
+      "gitBlobSha": "fc32f08f47e163669aa0013ba705ffbcf7a49991",
+      "sizeBytes": 11307
+    },
+    {
+      "path": "tests/historyExperience.test.mjs",
+      "gitBlobSha": "adc3ed1172b5dd8d3f05f8e4e6f55901bedc7315",
+      "sizeBytes": 7360
+    },
+    {
+      "path": "tests/historyInputFocus.test.mjs",
+      "gitBlobSha": "6a81ccc26392065007cf9762680807a1ced00de2",
+      "sizeBytes": 1439
+    },
+    {
+      "path": "tests/historyPerformance.test.mjs",
+      "gitBlobSha": "76da8328e14dfe44a601bcf9d5c1313b8403061c",
+      "sizeBytes": 1088
+    },
+    {
+      "path": "tests/homeDashboardLayout.test.mjs",
+      "gitBlobSha": "04befb8aebf7937fd65cbcb5df34e3378637e2fb",
+      "sizeBytes": 6013
+    },
+    {
+      "path": "tests/homeExperience.test.mjs",
+      "gitBlobSha": "114b350c6179aeecf53933ff8dec65d7c8e3b9ba",
+      "sizeBytes": 12360
+    },
+    {
+      "path": "tests/integrationGpsPosthocExportBrowser.mjs",
+      "gitBlobSha": "ca365e1e576693f11fa51b06032b2966617082d3",
+      "sizeBytes": 12440
+    },
+    {
+      "path": "tests/integrationI0Boundary.test.mjs",
+      "gitBlobSha": "86643e9e99f4ab704c34878d507ba2cf6422e729",
+      "sizeBytes": 2713
+    },
+    {
+      "path": "tests/integrationI1Contracts.test.mjs",
+      "gitBlobSha": "bbadcffe0e10134bf69f7d2fb1c82bab00943375",
+      "sizeBytes": 2152
+    },
+    {
+      "path": "tests/integrationI2Disclosure.test.mjs",
+      "gitBlobSha": "0718fc0919d5f1a477a3596222ec26877d4abcae",
+      "sizeBytes": 2637
+    },
+    {
+      "path": "tests/integrationI2PrivateExportBrowser.mjs",
+      "gitBlobSha": "71d2c2e467fd93fe350e656a92d8fb4e35654f81",
+      "sizeBytes": 14397
+    },
+    {
+      "path": "tests/integrationI3RoutePrivacy.test.mjs",
+      "gitBlobSha": "02493eee8ad0a6ea85892bf256ed4e6c56cd61ca",
+      "sizeBytes": 2428
+    },
+    {
+      "path": "tests/integrationLearningJourneyBrowser.mjs",
+      "gitBlobSha": "e32c11bdaad03e4065df6a8f0e08d1840821a2fd",
+      "sizeBytes": 11191
+    },
+    {
+      "path": "tests/interpretationBrowserSmoke.mjs",
+      "gitBlobSha": "affeb0354cefa5237156c4d6c9a03f2a44925b01",
+      "sizeBytes": 26351
+    },
+    {
+      "path": "tests/interpretationExperience.test.mjs",
+      "gitBlobSha": "a19bc45381fba6d8af030e936b3a9d0d2e2f519a",
+      "sizeBytes": 6062
+    },
+    {
+      "path": "tests/learningCrossCourse.test.mjs",
+      "gitBlobSha": "47168fb4dcb654f2615517559e3f68d4fb45b358",
+      "sizeBytes": 4238
+    },
+    {
+      "path": "tests/learningCrossCourseBrowser.mjs",
+      "gitBlobSha": "f72f78c4ef7e693e97f69fd11f83f3d254b282cb",
+      "sizeBytes": 7003
+    },
+    {
+      "path": "tests/learningFatigue.test.mjs",
+      "gitBlobSha": "3502b03a4fd3efd2a94579da01cd4dbb2725bd9f",
+      "sizeBytes": 3557
+    },
+    {
+      "path": "tests/learningFatigueBrowser.mjs",
+      "gitBlobSha": "effca437f69f5a99d0badde995280bcbde88be44",
+      "sizeBytes": 6286
+    },
+    {
+      "path": "tests/learningFoundation.test.mjs",
+      "gitBlobSha": "2f8b49f5987791e9c9d1feca074c5b3975dd0d7f",
+      "sizeBytes": 3470
+    },
+    {
+      "path": "tests/learningFoundationBrowser.mjs",
+      "gitBlobSha": "411ace7ed292b62e39b7d813ea3769a2c2ca9764",
+      "sizeBytes": 12567
+    },
+    {
+      "path": "tests/learningMotion.test.mjs",
+      "gitBlobSha": "d2cbaea4dfe4e3bfaadb8da089b72f2e09934e6b",
+      "sizeBytes": 3505
+    },
+    {
+      "path": "tests/learningMotionBrowser.mjs",
+      "gitBlobSha": "23efe5a4b600f0c92b63727dfc3f233650a4514f",
+      "sizeBytes": 6618
+    },
+    {
+      "path": "tests/learningOfflineOriginDownBrowser.mjs",
+      "gitBlobSha": "cd4c6eea34469f16efb296f2bfdd447a714aca78",
+      "sizeBytes": 6637
+    },
+    {
+      "path": "tests/learningOrigin.test.mjs",
+      "gitBlobSha": "83c70a288490a6bcd286c49cf28c84e79482ee02",
+      "sizeBytes": 2610
+    },
+    {
+      "path": "tests/learningOriginBrowser.mjs",
+      "gitBlobSha": "82fd6b85997ac07200fc9b5e6417173db43b887a",
+      "sizeBytes": 6389
+    },
+    {
+      "path": "tests/learningRunningContent.test.mjs",
+      "gitBlobSha": "2f2d2967a6721e0f90578a9d346b04aca4e1c5b5",
+      "sizeBytes": 2540
+    },
+    {
+      "path": "tests/literatureDirectionAdoption.test.mjs",
+      "gitBlobSha": "67968fb018be9922a2f000c09a314d64c2d5c148",
+      "sizeBytes": 4886
+    },
+    {
+      "path": "tests/livePagesSmoke.mjs",
+      "gitBlobSha": "e38c1b75304df9872d71bee1250f656391029b57",
+      "sizeBytes": 6648
+    },
+    {
+      "path": "tests/manualRunLock.test.mjs",
+      "gitBlobSha": "e2cfa880b6fdaa20e7681c91de132b75c2b5560a",
+      "sizeBytes": 2862
+    },
+    {
+      "path": "tests/manualRunLockBrowserSmoke.mjs",
+      "gitBlobSha": "8a82dfe1ba66b40e02fa65b63d05089478a65a6b",
+      "sizeBytes": 8525
+    },
+    {
+      "path": "tests/manualRunStore.test.mjs",
+      "gitBlobSha": "6ed735ab517a834026334e8be66491d8d3abc71b",
+      "sizeBytes": 18158
+    },
+    {
+      "path": "tests/measurementExperience.test.mjs",
+      "gitBlobSha": "8f99f861e6bdd9800e0341d58d21724fda71a883",
+      "sizeBytes": 8010
+    },
+    {
+      "path": "tests/mobileInputFocus.test.mjs",
+      "gitBlobSha": "5e943e36d959f03808c51acc37f57e50962f7109",
+      "sizeBytes": 1424
+    },
+    {
+      "path": "tests/noteRunLink.test.mjs",
+      "gitBlobSha": "ca68a6760d20499084960e486f9be1d40736ab19",
+      "sizeBytes": 2934
+    },
+    {
+      "path": "tests/offlineShellBrowserSmoke.mjs",
+      "gitBlobSha": "e69998192a97013853e764d96fda0691ea54f95a",
+      "sizeBytes": 11177
+    },
+    {
+      "path": "tests/p0Science65CurrentSourceSnapshot.test.mjs",
+      "gitBlobSha": "c2af75bdbd3fdb26e3dfb6f3e67a93c12e48f8f0",
+      "sizeBytes": 4137
+    },
+    {
+      "path": "tests/p10LearningCoherenceBrowser.mjs",
+      "gitBlobSha": "1f79a60ffc0dfc3a807675ea2f3f06446158f6fe",
+      "sizeBytes": 6280
+    },
+    {
+      "path": "tests/p10LearningUI.test.mjs",
+      "gitBlobSha": "a0ceb24fbe4f0f6adf94d6c365c012cb2252560e",
+      "sizeBytes": 1504
+    },
+    {
+      "path": "tests/p11NavLearningAudit.test.mjs",
+      "gitBlobSha": "48562d116b6e6f96f4f13aad4febcac4a553e9c4",
+      "sizeBytes": 3174
+    },
+    {
+      "path": "tests/p11UnifiedLearningBrowser.mjs",
+      "gitBlobSha": "7028c5b480e869fcc86af9d69ee95d890e38306a",
+      "sizeBytes": 11816
+    },
+    {
+      "path": "tests/p12ScreenCoherence.test.mjs",
+      "gitBlobSha": "3a6b356975da3ec2f80bd4b22c6372417121ae06",
+      "sizeBytes": 2918
+    },
+    {
+      "path": "tests/p13ScreenRefinement.test.mjs",
+      "gitBlobSha": "cbf5e5bd104976cfe7d791b4ca7ce758e0d9d1da",
+      "sizeBytes": 4656
+    },
+    {
+      "path": "tests/p14VisualCoherence.test.mjs",
+      "gitBlobSha": "6e1f6f403f868fb133033e25daf54468f53c700d",
+      "sizeBytes": 4546
+    },
+    {
+      "path": "tests/p5NavigationAndContent.test.mjs",
+      "gitBlobSha": "78b25b79e4dcdb1779b873d07b69a22bc6859dbc",
+      "sizeBytes": 2499
+    },
+    {
+      "path": "tests/p5VisualCaptureBrowser.mjs",
+      "gitBlobSha": "054d9f64cb2d0538946b56da0739b53d94f3902f",
+      "sizeBytes": 4589
+    },
+    {
+      "path": "tests/p6BResultVisualBrowser.mjs",
+      "gitBlobSha": "e0720b54f04f6069681982818d2c3e4e29150d9d",
+      "sizeBytes": 8338
+    },
+    {
+      "path": "tests/p6CRecordHistoryBrowser.mjs",
+      "gitBlobSha": "45d91b3f6939238433aeb88eed83062ed454b179",
+      "sizeBytes": 11258
+    },
+    {
+      "path": "tests/p6DRecordDetailsBrowser.mjs",
+      "gitBlobSha": "50985e25120d69c6e749b488cb1a0b47be37f080",
+      "sizeBytes": 10964
+    },
+    {
+      "path": "tests/p6ERemainingScreensBrowser.mjs",
+      "gitBlobSha": "222d126cdb5c8bb6ee3cf1f5c745d09a6595ddea",
+      "sizeBytes": 8403
+    },
+    {
+      "path": "tests/p6IntegratedZoomDiagnostic.mjs",
+      "gitBlobSha": "3342fdf17e79091f034304bcffa0fbc5b57eed53",
+      "sizeBytes": 5669
+    },
+    {
+      "path": "tests/p6VisualAndCopyBrowser.mjs",
+      "gitBlobSha": "34c2b826c99b62aab9d4750b72660df295495d25",
+      "sizeBytes": 6986
+    },
+    {
+      "path": "tests/p7WordingBoundaries.test.mjs",
+      "gitBlobSha": "62e07b1c817ac9f1e663cf563ac9656038e9bf2f",
+      "sizeBytes": 4522
+    },
+    {
+      "path": "tests/p8AbnormalStorageBrowser.mjs",
+      "gitBlobSha": "a6984ed43328e1d0b0e1615e3d3d069754ad8433",
+      "sizeBytes": 11408
+    },
+    {
+      "path": "tests/postHocBilingualCopy.test.mjs",
+      "gitBlobSha": "07e44b3ac5024bcd15d3d3802b675d484752db44",
+      "sizeBytes": 1494
+    },
+    {
+      "path": "tests/preregisteredPublishedReferenceAudit.test.mjs",
+      "gitBlobSha": "fcbbbc82a60f923a0eb671ceab653a871b64611e",
+      "sizeBytes": 4434
+    },
+    {
+      "path": "tests/professorAnnotationBrowser.mjs",
+      "gitBlobSha": "1841d4e2d174a934629bfcf32058d4f02ea700cf",
+      "sizeBytes": 18741
+    },
+    {
+      "path": "tests/professorAnnotationCapacity.test.mjs",
+      "gitBlobSha": "2d50128f269a4d4b5a8cf69aeb56b52239ace3a7",
+      "sizeBytes": 1036
+    },
+    {
+      "path": "tests/professorAnnotationSchema.test.mjs",
+      "gitBlobSha": "4666c6f7b70341d8c7e71187010fb7e481d794f1",
+      "sizeBytes": 12681
+    },
+    {
+      "path": "tests/professorM6Browser.mjs",
+      "gitBlobSha": "518cb8016e14d0ce1f17984928e35ede75589c86",
+      "sizeBytes": 12607
+    },
+    {
+      "path": "tests/professorM6Policies.test.mjs",
+      "gitBlobSha": "6ca75e1b08e0ce5a5134126fb0aa8027030bbf50",
+      "sizeBytes": 3891
+    },
+    {
+      "path": "tests/professorM7EvidenceGate.mjs",
+      "gitBlobSha": "9fb00c8330d43ab60ed377943fe2f53ce45bd42f",
+      "sizeBytes": 2993
+    },
+    {
+      "path": "tests/professorMentalBrowser.mjs",
+      "gitBlobSha": "6b31ec2a8d1e7a3b1237089358ca5ff7c76a6e55",
+      "sizeBytes": 29195
+    },
+    {
+      "path": "tests/professorMentalExperience.test.mjs",
+      "gitBlobSha": "f80a1a7988565f37c80b6f506a5a904a5b30d2a0",
+      "sizeBytes": 3735
+    },
+    {
+      "path": "tests/professorPortableV2.test.mjs",
+      "gitBlobSha": "6c42ed5c6181bc87eaa8572aa5aecd559185fcd4",
+      "sizeBytes": 3788
+    },
+    {
+      "path": "tests/professorPortableV2Browser.mjs",
+      "gitBlobSha": "6c1cc1175399f89d40713e7e25a27c8afade824e",
+      "sizeBytes": 29030
+    },
+    {
+      "path": "tests/professorPostHocBrowser.mjs",
+      "gitBlobSha": "9cc0c8fef545747942ff5732be2064e97cf5a436",
+      "sizeBytes": 31101
+    },
+    {
+      "path": "tests/professorPostHocCore.test.mjs",
+      "gitBlobSha": "551ed9b3c5f072854cb096f0f8fd906dcddd28e4",
+      "sizeBytes": 7548
+    },
+    {
+      "path": "tests/professorRecordRef.test.mjs",
+      "gitBlobSha": "dc619efc839fb4ef5d98606efb93e64917b3aeeb",
+      "sizeBytes": 8088
+    },
+    {
+      "path": "tests/professorRecordRefBrowser.mjs",
+      "gitBlobSha": "55a66ba7c521efb78140a47902f7b0ec9fedd361",
+      "sizeBytes": 6380
+    },
+    {
+      "path": "tests/publicTerminologyContract.test.mjs",
+      "gitBlobSha": "83874b32e4154b3818afe7f026cc05fa93916423",
+      "sizeBytes": 3938
+    },
+    {
+      "path": "tests/recordDraftReview.test.mjs",
+      "gitBlobSha": "509eba6c9b10cee5b1f28ea2d8481c68c3dd01aa",
+      "sizeBytes": 5870
+    },
+    {
+      "path": "tests/recordExperience.test.mjs",
+      "gitBlobSha": "7cf78ba1d1c044a0f8cf05deaea85c20c4284b96",
+      "sizeBytes": 14107
+    },
+    {
+      "path": "tests/recordOptionalDensityAuditBrowser.mjs",
+      "gitBlobSha": "68de9c1ec97fece900eaae5e876a664e1d0eeed8",
+      "sizeBytes": 14569
+    },
+    {
+      "path": "tests/recordReviewExperience.test.mjs",
+      "gitBlobSha": "7b0396b8b1b0c092ebaedd0d57b99027fab79cae",
+      "sizeBytes": 10843
+    },
+    {
+      "path": "tests/recordReviewVisualBrowser.mjs",
+      "gitBlobSha": "76d50197b0b80ccd95f06075832e5cbfbb468c24",
+      "sizeBytes": 6548
+    },
+    {
+      "path": "tests/referenceEvidenceInfo.test.mjs",
+      "gitBlobSha": "816ce4fdc1d50636d4dafb2a21f41660f7f8a0ed",
+      "sizeBytes": 8972
+    },
+    {
+      "path": "tests/regionEvidenceBrowserSmoke.mjs",
+      "gitBlobSha": "b6f9e16f7f1f114188590b675884fd1a46dcdc64",
+      "sizeBytes": 14692
+    },
+    {
+      "path": "tests/regionReferenceComparison.test.mjs",
+      "gitBlobSha": "b676fbfd45b8a92fd3f1acf93ee5d148cde6c172",
+      "sizeBytes": 5172
+    },
+    {
+      "path": "tests/repositoryNeutralPolicy.test.mjs",
+      "gitBlobSha": "7380cc93f88a00d1046c070775b60f03f2ab6bea",
+      "sizeBytes": 2711
+    },
+    {
+      "path": "tests/researchCoreIntegration.test.mjs",
+      "gitBlobSha": "bae058359bdd946fe8ecf5ec906d1564db615498",
+      "sizeBytes": 6405
+    },
+    {
+      "path": "tests/researchCoreLockWiring.test.mjs",
+      "gitBlobSha": "c68d0be8fd145bee79edc4b26342fa49f3b1b6a8",
+      "sizeBytes": 1858
+    },
+    {
+      "path": "tests/researchCoreNoteEdit.test.mjs",
+      "gitBlobSha": "25a9e34d0efa73f9411ae937d803247955656f87",
+      "sizeBytes": 2802
+    },
+    {
+      "path": "tests/researchCoreNoteSafety.test.mjs",
+      "gitBlobSha": "997e89bb30c345db4f8a1b5b8756599d21bda67d",
+      "sizeBytes": 2137
+    },
+    {
+      "path": "tests/restAndRofMobileBrowser.mjs",
+      "gitBlobSha": "6ecca49cf6b4c4a18aefad33765f01c8fb88e798",
+      "sizeBytes": 7657
+    },
+    {
+      "path": "tests/restDayScreenContract.test.mjs",
+      "gitBlobSha": "e59ae663aaa209c24338b8e80f5c877cddd55f98",
+      "sizeBytes": 3755
+    },
+    {
+      "path": "tests/resultAnnotationBilingualVisualBrowser.mjs",
+      "gitBlobSha": "cb81f8106c02cccc7f5ffcd6ea677a998b6034ea",
+      "sizeBytes": 9867
+    },
+    {
+      "path": "tests/resultExperience.test.mjs",
+      "gitBlobSha": "e0f560d00635f5217c373f883a9f20a3c0cd47c6",
+      "sizeBytes": 12847
+    },
+    {
+      "path": "tests/rofExperience.test.mjs",
+      "gitBlobSha": "2abbfb9d7a2ac78c0c1885d1eda0016f9497f437",
+      "sizeBytes": 10971
+    },
+    {
+      "path": "tests/rofJScale.test.mjs",
+      "gitBlobSha": "2a46677223a6b3adb6e3925d764528e5c6e6f575",
+      "sizeBytes": 2521
+    },
+    {
+      "path": "tests/rofTimingLayoutBrowser.mjs",
+      "gitBlobSha": "16e74bc5355e19e3eab3bb7b2508b214969029b0",
+      "sizeBytes": 9266
+    },
+    {
+      "path": "tests/runQuestionContinuation.test.mjs",
+      "gitBlobSha": "2e6d51a3ff51529889f12dc0e7f1c7c9780669cc",
+      "sizeBytes": 4722
+    },
+    {
+      "path": "tests/runReflection.test.mjs",
+      "gitBlobSha": "75cac2d09228c11f52692c1adc4b5262c11f4c79",
+      "sizeBytes": 3688
+    },
+    {
+      "path": "tests/s02ConditionAchievementBrowser.mjs",
+      "gitBlobSha": "423bb2361033db5dda6990117de9910f94a88403",
+      "sizeBytes": 14865
+    },
+    {
+      "path": "tests/s02ConditionAchievementPresentation.test.mjs",
+      "gitBlobSha": "f0687c08bed51fc829b35dbff6c73d0c06845014",
+      "sizeBytes": 2389
+    },
+    {
+      "path": "tests/s02HomeGuideBrowser.mjs",
+      "gitBlobSha": "7f9d86baf5463e31eaf2e21b7355287ffe5467fd",
+      "sizeBytes": 11630
+    },
+    {
+      "path": "tests/s02HomePreviewRemoval.test.mjs",
+      "gitBlobSha": "ea21afc868e1efd5d311993f586467926ed6cb11",
+      "sizeBytes": 1358
+    },
+    {
+      "path": "tests/s02HomeReadFailurePresentation.test.mjs",
+      "gitBlobSha": "37641e1dcbdbf5145ba1cb3b16dc11320ca14e2e",
+      "sizeBytes": 1568
+    },
+    {
+      "path": "tests/s02HomeScreenGuide.test.mjs",
+      "gitBlobSha": "0d0834d1b63098d73ae06c2c246ee82fa6b604de",
+      "sizeBytes": 1685
+    },
+    {
+      "path": "tests/s03s04RecordManualBrowser.mjs",
+      "gitBlobSha": "dd9da44e944186036632d568c58bc3ce330e3c9d",
+      "sizeBytes": 12208
+    },
+    {
+      "path": "tests/scienceEngineParity.test.mjs",
+      "gitBlobSha": "e34a4247953351eb2b3ec02ace8ee3dbc88ddc79",
+      "sizeBytes": 6040
+    },
+    {
+      "path": "tests/scienceOutsideDomainCurrent24.test.mjs",
+      "gitBlobSha": "5c26a953cc475ba5db6440cc24de747f2b643cac",
+      "sizeBytes": 3845
+    },
+    {
+      "path": "tests/sciencePrimaryTables45SourceAudit.test.mjs",
+      "gitBlobSha": "aebc44986d2cf4396bd4a6b04dec184e7d2139e2",
+      "sizeBytes": 4150
+    },
+    {
+      "path": "tests/scienceReferenceBoundaryBatch.test.mjs",
+      "gitBlobSha": "b36ad5a73da84afda29fe426fcdb7a1522b52d05",
+      "sizeBytes": 2386
+    },
+    {
+      "path": "tests/screenDesign20PopulatedBrowser.mjs",
+      "gitBlobSha": "8c00a6b672536c94b8d09e847579f7a459e1b33b",
+      "sizeBytes": 19060
+    },
+    {
+      "path": "tests/settingsExperience.test.mjs",
+      "gitBlobSha": "0b2635d934544e3e4894b49611f0d2935918d612",
+      "sizeBytes": 7221
+    },
+    {
+      "path": "tests/settingsLegalLayoutBrowser.mjs",
+      "gitBlobSha": "e08e3672b018155110a7e7eac8b4e479d0fe2780",
+      "sizeBytes": 6516
+    },
+    {
+      "path": "tests/simulationExperience.test.mjs",
+      "gitBlobSha": "296a6fbe55783000745c068939eac3c44d17a1c6",
+      "sizeBytes": 8959
+    },
+    {
+      "path": "tests/startupFast.test.mjs",
+      "gitBlobSha": "7647f127ae5debe1fc90bc87589cbe8d014ffcca",
+      "sizeBytes": 2994
+    },
+    {
+      "path": "tests/startupFastBrowser.mjs",
+      "gitBlobSha": "f28e4c5e3ef6eb7d9789ebfc28d45c0fc3ba88fa",
+      "sizeBytes": 5566
+    },
+    {
+      "path": "tests/storageRaceAudit.test.mjs",
+      "gitBlobSha": "76fd28455e37697cebed6c379f4ded809f61143e",
+      "sizeBytes": 1616
+    },
+    {
+      "path": "tests/twoRunCycleBrowserSmoke.mjs",
+      "gitBlobSha": "ca3b0a43bc1df0b9061a63e28b5a5390e3809cf3",
+      "sizeBytes": 34619
+    },
+    {
+      "path": "tests/uiContracts.test.mjs",
+      "gitBlobSha": "b1d351670180435649e7a9d33bd5905edd3b5eb1",
+      "sizeBytes": 13138
+    },
+    {
+      "path": "tests/uiux02Stage0406Browser.mjs",
+      "gitBlobSha": "ec2991ecf536a3d6343d000065a00fdcfb7f21df",
+      "sizeBytes": 6908
+    },
+    {
+      "path": "tests/uiux03TargetBrowser.mjs",
+      "gitBlobSha": "234d259594f353719e9f908cf8010ee431bb38f6",
+      "sizeBytes": 13092
+    },
+    {
+      "path": "tests/uiux04TargetBrowser.mjs",
+      "gitBlobSha": "3203e3f692277dee62e2cc0d6d2411736dc323b2",
+      "sizeBytes": 9726
+    },
+    {
+      "path": "tests/uiux05Contracts.test.mjs",
+      "gitBlobSha": "b802e1f52ef95e804f5aba221d981f10bd05703f",
+      "sizeBytes": 2585
+    },
+    {
+      "path": "tests/uiux05TargetBrowser.mjs",
+      "gitBlobSha": "73a98f5d8ffe7748e274b669157ca6b29161086c",
+      "sizeBytes": 7534
+    },
+    {
+      "path": "tests/uiux06Contracts.test.mjs",
+      "gitBlobSha": "72dcbcb17296c2ae84a5fdaca138d6d810cbbe6c",
+      "sizeBytes": 3656
+    },
+    {
+      "path": "tests/uiux06TargetBrowser.mjs",
+      "gitBlobSha": "61a579a9917e92bdf4b67ee1b6130111e473b03c",
+      "sizeBytes": 8575
+    },
+    {
+      "path": "ui/actionIntentStore.js",
+      "gitBlobSha": "7208841e426739781a4d050de216a8a9ff9771ab",
+      "sizeBytes": 2990
+    },
+    {
+      "path": "ui/annotationBackup.js",
+      "gitBlobSha": "1f9e4f4f559767a3473c03d5c1f44913f2bab25a",
+      "sizeBytes": 13452
+    },
+    {
+      "path": "ui/annotationEditor.css",
+      "gitBlobSha": "fc8ec7b31accd75f35a264dbc15722d973be88ff",
+      "sizeBytes": 7019
+    },
+    {
+      "path": "ui/annotationEditor.js",
+      "gitBlobSha": "52a3b232a30af86312906f6420a155e44041cf26",
+      "sizeBytes": 21064
+    },
+    {
+      "path": "ui/annotationEditorCore.js",
+      "gitBlobSha": "9ff315339e90d470a376c9e7043e85e49d90037b",
+      "sizeBytes": 13072
+    },
+    {
+      "path": "ui/annotationReadModel.js",
+      "gitBlobSha": "e9e8e94d1ce148512f188bd6daffaec207d8a75a",
+      "sizeBytes": 1584
+    },
+    {
+      "path": "ui/annotationSchema.js",
+      "gitBlobSha": "bee248721e379ac41a8fe51ba4da1d544d70e44a",
+      "sizeBytes": 12680
+    },
+    {
+      "path": "ui/annotationStore.js",
+      "gitBlobSha": "6bad2bd663b90c2311c790742ef800890e59fb83",
+      "sizeBytes": 14645
+    },
+    {
+      "path": "ui/bodyContextExperience.css",
+      "gitBlobSha": "2b012aab8b62ee4ed558eeeca162d9fb1953860c",
+      "sizeBytes": 17150
+    },
+    {
+      "path": "ui/bodyContextExperience.js",
+      "gitBlobSha": "3288baf9b19d1988767000285f8cb11757f9dc28",
+      "sizeBytes": 11902
+    },
+    {
+      "path": "ui/bodyReferencePresentation.js",
+      "gitBlobSha": "4e14779c668d6a49e69750d42e4f449428d273ed",
+      "sizeBytes": 6326
+    },
+    {
+      "path": "ui/conditionInsights.js",
+      "gitBlobSha": "fa22975b1cc13b3ffe38cb66d7a56d95a23766f5",
+      "sizeBytes": 4328
+    },
+    {
+      "path": "ui/conditionJourney.css",
+      "gitBlobSha": "caa03aaa2a9f790ba0b29782d094b85e01c66242",
+      "sizeBytes": 11204
+    },
+    {
+      "path": "ui/conditionJourney.js",
+      "gitBlobSha": "fcce014cc02db254281417ecae38646cdc745558",
+      "sizeBytes": 12264
+    },
+    {
+      "path": "ui/consultationExperience.css",
+      "gitBlobSha": "763e8ee5caea544828eb03ef389b02ad5d67cefb",
+      "sizeBytes": 23345
+    },
+    {
+      "path": "ui/consultationExperience.js",
+      "gitBlobSha": "c54c545b4fe43d627e594b7fcb5e455cfa2e280a",
+      "sizeBytes": 35107
+    },
+    {
+      "path": "ui/coursePresetStore.js",
+      "gitBlobSha": "420841c926f6590251bcbaa35a96db29f9e68332",
+      "sizeBytes": 7457
+    },
+    {
+      "path": "ui/dataManagement.css",
+      "gitBlobSha": "8216f8c6e40df3cac5a158d1f6e6bfdc5683fd42",
+      "sizeBytes": 3384
+    },
+    {
+      "path": "ui/dataManagement.js",
+      "gitBlobSha": "67b33306dab4a034ed6fa01fc917f7dbe7769b91",
+      "sizeBytes": 16028
+    },
+    {
+      "path": "ui/dataManagementUi.js",
+      "gitBlobSha": "39e4da808fdba629345448be356439690e4a1b19",
+      "sizeBytes": 8205
+    },
+    {
+      "path": "ui/englishConsultationReport.js",
+      "gitBlobSha": "a27edb350fec08689833a5df684b2c8c138df63c",
+      "sizeBytes": 6827
+    },
+    {
+      "path": "ui/englishCurriculumCopy.js",
+      "gitBlobSha": "2532320d5a8db81ce57d9da6de37b66cf0b88136",
+      "sizeBytes": 21135
+    },
+    {
+      "path": "ui/englishCurriculumFatigue.js",
+      "gitBlobSha": "7e261d73554dacc32e58fe450e4c3a607151451c",
+      "sizeBytes": 21910
+    },
+    {
+      "path": "ui/englishCurriculumMotion.js",
+      "gitBlobSha": "f177da15b1efb17cd5c2e82ec20fc7cc0ede8b50",
+      "sizeBytes": 20785
+    },
+    {
+      "path": "ui/englishCurriculumPace.js",
+      "gitBlobSha": "fe85127ea29001789f8fa7438514e895b45334c2",
+      "sizeBytes": 22529
+    },
+    {
+      "path": "ui/englishErrorsCopy.js",
+      "gitBlobSha": "2e063add1501c2af47fe8578cbd934626dc2a478",
+      "sizeBytes": 9961
+    },
+    {
+      "path": "ui/englishFinalAnnotation.js",
+      "gitBlobSha": "612a1522508773ee7cd29e74ef535abbdfff0efe",
+      "sizeBytes": 11400
+    },
+    {
+      "path": "ui/englishFinalAppShell.js",
+      "gitBlobSha": "e8259e92c28d709eb3b1bc598d05468fff4d5ba9",
+      "sizeBytes": 20087
+    },
+    {
+      "path": "ui/englishFinalBackup.js",
+      "gitBlobSha": "68d9dc952e978a029d8a25c316b156a67ff76e19",
+      "sizeBytes": 10460
+    },
+    {
+      "path": "ui/englishFinalConditions.js",
+      "gitBlobSha": "d3fcda4d3f010a0efc5410b0e181259d27a48ec4",
+      "sizeBytes": 17507
+    },
+    {
+      "path": "ui/englishFinalGpsSimulation.js",
+      "gitBlobSha": "7764e1abb574f44cd492ccb987c518604c23f2e6",
+      "sizeBytes": 20435
+    },
+    {
+      "path": "ui/englishFinalHomeData.js",
+      "gitBlobSha": "4073597808d429f77aa4b7598325964c1134eff6",
+      "sizeBytes": 9771
+    },
+    {
+      "path": "ui/englishFinalInquiry.js",
+      "gitBlobSha": "af4a2f09121920d6803b80ecb4760d04e85a701d",
+      "sizeBytes": 20008
+    },
+    {
+      "path": "ui/englishFinalOnboarding.js",
+      "gitBlobSha": "09404c314b1379170a9d69bff756c20157f4feb0",
+      "sizeBytes": 9881
+    },
+    {
+      "path": "ui/englishFinalRecording.js",
+      "gitBlobSha": "1e457ba59a991cc3410b63390bc34667fbdda31c",
+      "sizeBytes": 13891
+    },
+    {
+      "path": "ui/englishGpsExplorationCopy.js",
+      "gitBlobSha": "51a9955cdb88df703087aa2796c59795b5750399",
+      "sizeBytes": 27477
+    },
+    {
+      "path": "ui/englishGuideCopy.js",
+      "gitBlobSha": "3bc0d77f84e686c5816c569ddb469bffecf08936",
+      "sizeBytes": 9162
+    },
+    {
+      "path": "ui/englishLearningCopy.js",
+      "gitBlobSha": "5b37103fbb228db1357a942c4d33e5acc778c787",
+      "sizeBytes": 22513
+    },
+    {
+      "path": "ui/englishLegalDocuments.js",
+      "gitBlobSha": "c9ae9ea4cf362e41b60fd5654a0489971b43d714",
+      "sizeBytes": 17801
+    },
+    {
+      "path": "ui/englishRecordHistoryCopy.js",
+      "gitBlobSha": "61ccadb4b7ecc70b4436ef3ed1c11e391e71c369",
+      "sizeBytes": 10852
+    },
+    {
+      "path": "ui/englishResultCopy.js",
+      "gitBlobSha": "61393653e100c3a29cbe0672d65c665d6cc44d3a",
+      "sizeBytes": 10606
+    },
+    {
+      "path": "ui/englishResultExport.js",
+      "gitBlobSha": "54ae3a6e4e3eb903a5f26ef77be22ad618a51d20",
+      "sizeBytes": 3333
+    },
+    {
+      "path": "ui/englishSettingsCopy.js",
+      "gitBlobSha": "93fc22af248d28e9db69d870aa1bd05f5ae00b5f",
+      "sizeBytes": 4904
+    },
+    {
+      "path": "ui/englishSharingCopy.js",
+      "gitBlobSha": "e75080ea6a53f1c5410526784be6ec1644a48a9f",
+      "sizeBytes": 13922
+    },
+    {
+      "path": "ui/englishSurfaceRemainders.js",
+      "gitBlobSha": "2a4d4da4501135bfd8f93455ac67d868a6f51c08",
+      "sizeBytes": 18547
+    },
+    {
+      "path": "ui/englishUi.js",
+      "gitBlobSha": "771094d9d684e8dfef52a513e67996a899a18c59",
+      "sizeBytes": 21343
+    },
+    {
+      "path": "ui/environmentExperience.css",
+      "gitBlobSha": "259ae34a52826623526acf442571c767fde99080",
+      "sizeBytes": 7080
+    },
+    {
+      "path": "ui/environmentExperience.js",
+      "gitBlobSha": "edd5f2e92cece6d820c5064cc60ef565c8124658",
+      "sizeBytes": 8270
+    },
+    {
+      "path": "ui/explorationBodyInquiry.js",
+      "gitBlobSha": "b6c776ac0b66e2499f7cb668c26968e56c99c719",
+      "sizeBytes": 6711
+    },
+    {
+      "path": "ui/explorationComparisonInquiry.js",
+      "gitBlobSha": "f01bf8482df75fd60cc9aa06170201de4da983a0",
+      "sizeBytes": 5521
+    },
+    {
+      "path": "ui/explorationConditionInquiry.js",
+      "gitBlobSha": "e29a903e450ecf1bee1c424bb1760ff714e9b34f",
+      "sizeBytes": 8028
+    },
+    {
+      "path": "ui/explorationExperience.css",
+      "gitBlobSha": "c5614d20ad39366fd1d220ff4762b146f79792bb",
+      "sizeBytes": 52235
+    },
+    {
+      "path": "ui/explorationExperience.js",
+      "gitBlobSha": "58cfab220e282bbf362eb2a11e238231c2c44ed3",
+      "sizeBytes": 56327
+    },
+    {
+      "path": "ui/explorationInquiry.js",
+      "gitBlobSha": "047a55ed758d5a33974c2ae65af0177a31730aae",
+      "sizeBytes": 3413
+    },
+    {
+      "path": "ui/explorationLifeInquiry.js",
+      "gitBlobSha": "d53701a8e99a9be21bc07ff96f631bdb513afa2d",
+      "sizeBytes": 7829
+    },
+    {
+      "path": "ui/explorationLinkPolicy.js",
+      "gitBlobSha": "9358d7fe18a69a8b2c0580f6383078ae48fee4b1",
+      "sizeBytes": 4721
+    },
+    {
+      "path": "ui/explorationMentalInquiry.js",
+      "gitBlobSha": "a8a259122d35d8c7c0caf343e9b3af90e1b45671",
+      "sizeBytes": 5646
+    },
+    {
+      "path": "ui/explorationReadAdapter.js",
+      "gitBlobSha": "f03ce2a215295838ccf5e0d94151a89675ef8dd7",
+      "sizeBytes": 6960
+    },
+    {
+      "path": "ui/explorationTopicGuides.js",
+      "gitBlobSha": "c262efd7a10d7d12e9fc83bfe905eb73d74ab7eb",
+      "sizeBytes": 13131
+    },
+    {
+      "path": "ui/explorationTopicView.js",
+      "gitBlobSha": "1f2985b20f8c84f9148e6e77461016d58bb55af8",
+      "sizeBytes": 3070
+    },
+    {
+      "path": "ui/firstUseExperience.css",
+      "gitBlobSha": "0285184609c3c5e2b5ba2c76d8e1b8cf4b4f3f4b",
+      "sizeBytes": 13996
+    },
+    {
+      "path": "ui/firstUseExperience.js",
+      "gitBlobSha": "9987fe3b18f5976c0b0532c6c239188bc0b1c286",
+      "sizeBytes": 13453
+    },
+    {
+      "path": "ui/gaitExperience.css",
+      "gitBlobSha": "e02665259c0a2b99d7da2dbd4bb8ca06ff44fdf4",
+      "sizeBytes": 5477
+    },
+    {
+      "path": "ui/gaitExperience.js",
+      "gitBlobSha": "4fe7d3cc84f6b7f37b17ddb6a02ce9535c72672a",
+      "sizeBytes": 8659
+    },
+    {
+      "path": "ui/gpsCourseEvidence.js",
+      "gitBlobSha": "51c7e5e6c156e2b7ded262b1119e122861c7741b",
+      "sizeBytes": 1290
+    },
+    {
+      "path": "ui/gpsDynamicResult.css",
+      "gitBlobSha": "ba21fc6155f30d02d30cf93adedc4fd757538754",
+      "sizeBytes": 17047
+    },
+    {
+      "path": "ui/gpsDynamicResult.js",
+      "gitBlobSha": "09f726141254476f6be5221060cee945bc428231",
+      "sizeBytes": 16601
+    },
+    {
+      "path": "ui/gpsEnergyDisplay.js",
+      "gitBlobSha": "8ab82ea94518b9065a300a560d4444324af4294f",
+      "sizeBytes": 1225
+    },
+    {
+      "path": "ui/gpsLiveMap.js",
+      "gitBlobSha": "00d843aaa4e45261af0e050cb699d0ac12c572a4",
+      "sizeBytes": 6252
+    },
+    {
+      "path": "ui/gpsMeasurementCore.js",
+      "gitBlobSha": "2e384cc6bc52a8e7daa530d60cc8e3fc879ae871",
+      "sizeBytes": 15473
+    },
+    {
+      "path": "ui/gpsMeasurementEnergy.js",
+      "gitBlobSha": "bf82615b49535ea73464895327d773355fbfd57f",
+      "sizeBytes": 5286
+    },
+    {
+      "path": "ui/gpsMeasurementValidation.js",
+      "gitBlobSha": "41c8547cd6e97dd42e0466eea1f12b4ec097520c",
+      "sizeBytes": 3366
+    },
+    {
+      "path": "ui/gpsPlatform.js",
+      "gitBlobSha": "946f628b48dc04ba1d1ec524a8ef41943df29b9b",
+      "sizeBytes": 456
+    },
+    {
+      "path": "ui/gpsReplayIndexedDbStore.js",
+      "gitBlobSha": "242f16dd7ca7dc7c22810977ed20a961c3c0ed82",
+      "sizeBytes": 16306
+    },
+    {
+      "path": "ui/gpsReplayReference.js",
+      "gitBlobSha": "a22d31be498fe8920aec1cfca09de24d2b88b70f",
+      "sizeBytes": 5245
+    },
+    {
+      "path": "ui/gpsStorageHealth.js",
+      "gitBlobSha": "64595af938e326567033157585fa1961b3547802",
+      "sizeBytes": 2100
+    },
+    {
+      "path": "ui/gpxImport.js",
+      "gitBlobSha": "af4d643c8010f89f8c6530ae3cdaab7853edb9d3",
+      "sizeBytes": 13655
+    },
+    {
+      "path": "ui/historyExperience.css",
+      "gitBlobSha": "0476be9a88d6489838ceb388f9473f12be569702",
+      "sizeBytes": 24528
+    },
+    {
+      "path": "ui/historyExperience.js",
+      "gitBlobSha": "537ae103accfed93b46160d3195a66f0807196a0",
+      "sizeBytes": 20178
+    },
+    {
+      "path": "ui/historyInlineStyles.js",
+      "gitBlobSha": "fec7e4f1baa109f69f447d7296a48ff65070c1cd",
+      "sizeBytes": 24791
+    },
+    {
+      "path": "ui/homeDashboardDrag.js",
+      "gitBlobSha": "aa530d7829e71a56f4e2039412995f85dcc15147",
+      "sizeBytes": 5890
+    },
+    {
+      "path": "ui/homeDashboardLayout.js",
+      "gitBlobSha": "d458531b2dd482451805c62f81fe5745c56ee59a",
+      "sizeBytes": 5222
+    },
+    {
+      "path": "ui/homeExperience.css",
+      "gitBlobSha": "3cd3ceeccec3394c168a14b641f0424abba2a511",
+      "sizeBytes": 54097
+    },
+    {
+      "path": "ui/homeExperience.js",
+      "gitBlobSha": "91bf8740e02bf29955986a90a6700cee3ca9bbdf",
+      "sizeBytes": 31028
+    },
+    {
+      "path": "ui/interpretationExperience.css",
+      "gitBlobSha": "ba18539a3786363f791236987e49c35ae3441aaa",
+      "sizeBytes": 2792
+    },
+    {
+      "path": "ui/interpretationRules.js",
+      "gitBlobSha": "6c3b04244f58118f4c033dbb8d84023880664cda",
+      "sizeBytes": 4467
+    },
+    {
+      "path": "ui/interpretationView.js",
+      "gitBlobSha": "d65fd1f175136a00cedf4a37e88317d1347434bb",
+      "sizeBytes": 4617
+    },
+    {
+      "path": "ui/learningExperience.css",
+      "gitBlobSha": "e406fbf4b691aeadeacaf9baa1032ef220c2df88",
+      "sizeBytes": 20374
+    },
+    {
+      "path": "ui/learningExperience.js",
+      "gitBlobSha": "24e013a2781e9f4db2afbb1cf0cb7d37015d4e6b",
+      "sizeBytes": 24246
+    },
+    {
+      "path": "ui/learningFatigueLesson.js",
+      "gitBlobSha": "8ed30ede0f40244d21d8aa8bdcbb9df35c893bfd",
+      "sizeBytes": 19202
+    },
+    {
+      "path": "ui/learningMotionLesson.js",
+      "gitBlobSha": "95df01880da88d87202ce454a2dde4a860ee244c",
+      "sizeBytes": 18282
+    },
+    {
+      "path": "ui/learningOriginLesson.js",
+      "gitBlobSha": "55bdcda6a16d779b42be454694e1d875e9cadb19",
+      "sizeBytes": 15163
+    },
+    {
+      "path": "ui/learningPresentation.js",
+      "gitBlobSha": "cc142cd19c321bbff27883511863288e36c13e56",
+      "sizeBytes": 3270
+    },
+    {
+      "path": "ui/legalDocuments.js",
+      "gitBlobSha": "6e2a7f8c3d6190040e066d11f6bfa68675b50ef2",
+      "sizeBytes": 19541
+    },
+    {
+      "path": "ui/manualRunCanonical.js",
+      "gitBlobSha": "a46b04fc7932a97f222873f05b652b4d702df141",
+      "sizeBytes": 8006
+    },
+    {
+      "path": "ui/manualRunLock.js",
+      "gitBlobSha": "1c01c3cb5b4a2d39626e0d72dceb9e9c371b692f",
+      "sizeBytes": 1065
+    },
+    {
+      "path": "ui/manualRunStore.js",
+      "gitBlobSha": "a498a3a6e53eaf42c6b5a42bc784108aa54474f8",
+      "sizeBytes": 15896
+    },
+    {
+      "path": "ui/measurementExperience.css",
+      "gitBlobSha": "08caed0919495820977991c17a8a84d426b9b4be",
+      "sizeBytes": 33485
+    },
+    {
+      "path": "ui/measurementExperience.js",
+      "gitBlobSha": "1c8d58281da40534d301c5d7a10ec5251abe4969",
+      "sizeBytes": 15238
+    },
+    {
+      "path": "ui/mentalExperience.css",
+      "gitBlobSha": "6d941bca3a9ce47ea5378e74a49f62c672d21165",
+      "sizeBytes": 2526
+    },
+    {
+      "path": "ui/mentalExperience.js",
+      "gitBlobSha": "0ded2be1fa47d00c7f4d2626bd8b6da72a1d3db0",
+      "sizeBytes": 6093
+    },
+    {
+      "path": "ui/mentalSaveFlow.js",
+      "gitBlobSha": "fa8cfb5de58f786155bf9835b4dec418bfb1cef0",
+      "sizeBytes": 2523
+    },
+    {
+      "path": "ui/mobileInputFocus.css",
+      "gitBlobSha": "9fda32853e813df98c1d6c4d37116d8e597b91b5",
+      "sizeBytes": 922
+    },
+    {
+      "path": "ui/noteRunLink.js",
+      "gitBlobSha": "4ed3c07abf62ec1d3c6959b4637ee1d4764bd2c6",
+      "sizeBytes": 1564
+    },
+    {
+      "path": "ui/portableDataV2.js",
+      "gitBlobSha": "0e7dfd892792b33baf6561de01c612fbc9c75254",
+      "sizeBytes": 9831
+    },
+    {
+      "path": "ui/recordDraftReview.js",
+      "gitBlobSha": "273ee6ba5e271cb9995e8dd1ca8c668f7054d14d",
+      "sizeBytes": 7811
+    },
+    {
+      "path": "ui/recordExperience.css",
+      "gitBlobSha": "1878d71070b86c2fcd56490ed098be22c6a3a884",
+      "sizeBytes": 49382
+    },
+    {
+      "path": "ui/recordExperience.js",
+      "gitBlobSha": "4eef70cface0ef27816cb260e4b5b5d30751c596",
+      "sizeBytes": 24376
+    },
+    {
+      "path": "ui/recordIcons.js",
+      "gitBlobSha": "506f41c69d810666631cb1d68100a0e7adb78e55",
+      "sizeBytes": 1204
+    },
+    {
+      "path": "ui/recordRef.js",
+      "gitBlobSha": "018b9e958eedec03c82ea27a552c946526b072ca",
+      "sizeBytes": 6029
+    },
+    {
+      "path": "ui/recordReviewExperience.css",
+      "gitBlobSha": "7e797a9b28d8d5edfbb2d46b748be4bf804c6888",
+      "sizeBytes": 22341
+    },
+    {
+      "path": "ui/recordReviewExperience.js",
+      "gitBlobSha": "075d01e89c320dd8c2b694eeaf6395fc3336d56d",
+      "sizeBytes": 12132
+    },
+    {
+      "path": "ui/referenceEvidenceInfo.js",
+      "gitBlobSha": "c1520d2c8bc37c765c0a1b5036f47b68fe1403af",
+      "sizeBytes": 7849
+    },
+    {
+      "path": "ui/regionReferenceComparison.js",
+      "gitBlobSha": "d4abef97cd175745bdf97e0e6309a1b03ac26025",
+      "sizeBytes": 3285
+    },
+    {
+      "path": "ui/restDayStore.js",
+      "gitBlobSha": "49c6dc12f98613e7d0f70be8d7b81d8d8eb915d8",
+      "sizeBytes": 3492
+    },
+    {
+      "path": "ui/resultExperience.css",
+      "gitBlobSha": "314cf9df45ab6f8667e47bb40b8ddb1c14448741",
+      "sizeBytes": 29302
+    },
+    {
+      "path": "ui/resultExperience.js",
+      "gitBlobSha": "d60dc1b1d0038b178cecc729e7348b366688c25f",
+      "sizeBytes": 48442
+    },
+    {
+      "path": "ui/resultInlineStyles.js",
+      "gitBlobSha": "95d75351884b080b3b1772b40b91da2d6141e362",
+      "sizeBytes": 45477
+    },
+    {
+      "path": "ui/resultSharingPolicy.js",
+      "gitBlobSha": "13362090811ea6a9d1fab1784c43677e0b0a0b68",
+      "sizeBytes": 1144
+    },
+    {
+      "path": "ui/rofExperience.css",
+      "gitBlobSha": "6a5da83c2858f30aae88b82b8af59e5e4736c42c",
+      "sizeBytes": 20317
+    },
+    {
+      "path": "ui/rofExperience.js",
+      "gitBlobSha": "85bcf4b2de8d41552cce873a6b4dba327b7643b6",
+      "sizeBytes": 17751
+    },
+    {
+      "path": "ui/rofJScale.js",
+      "gitBlobSha": "c0d7ad6824ff9baa02214c1418a4c5ce5f20e0bb",
+      "sizeBytes": 1772
+    },
+    {
+      "path": "ui/runQuestionContinuation.js",
+      "gitBlobSha": "46678c8c81aeaf8c0f3bff30200cce40f075a333",
+      "sizeBytes": 3101
+    },
+    {
+      "path": "ui/runReflection.js",
+      "gitBlobSha": "4700f7a1c9c3257af2076398c25207ff8e48bf0c",
+      "sizeBytes": 3553
+    },
+    {
+      "path": "ui/screenCoherenceP12.css",
+      "gitBlobSha": "bdaecc5dfaf6bdd45669aab72f3188fa87e84538",
+      "sizeBytes": 7330
+    },
+    {
+      "path": "ui/screenCoherenceP14.css",
+      "gitBlobSha": "5a3f74d1b50189691c3dc2a1a8c98d8a77f9fab4",
+      "sizeBytes": 9108
+    },
+    {
+      "path": "ui/screenRefinementP13.css",
+      "gitBlobSha": "32a3e597fdb17dc544220268067dbd781c0c4a14",
+      "sizeBytes": 6957
+    },
+    {
+      "path": "ui/settingsExperience.css",
+      "gitBlobSha": "01e412b545bc921260913058991a0ae72d14281a",
+      "sizeBytes": 17855
+    },
+    {
+      "path": "ui/settingsExperience.js",
+      "gitBlobSha": "a99186dd6d142d5b130faf4da0acbb97eeafcbf7",
+      "sizeBytes": 13629
+    },
+    {
+      "path": "ui/simulationExperience.css",
+      "gitBlobSha": "b51abfacee36e22534861489c1f5c08a0ba76a3c",
+      "sizeBytes": 24169
+    },
+    {
+      "path": "ui/simulationExperience.js",
+      "gitBlobSha": "de4f679059481f62c4ad25ec162df036063fb61b",
+      "sizeBytes": 25707
+    },
+    {
+      "path": "ui/unifiedLearningShell.css",
+      "gitBlobSha": "4203c59b3fae1d8cd8c0e23573904af74995f0bd",
+      "sizeBytes": 9319
+    }
+  ],
+  "excludedWorkflowPaths": [
+    ".github/workflows/app-code-completion-gate.yml",
+    ".github/workflows/b-group-support-acceptance.yml",
+    ".github/workflows/c-group-optional-functions-acceptance.yml",
+    ".github/workflows/c09-focused-zoom.yml",
+    ".github/workflows/current-20-screen-design-acceptance.yml",
+    ".github/workflows/english-preview-acceptance.yml",
+    ".github/workflows/english-surface-inventory.yml",
+    ".github/workflows/exploration-editorial-qa.yml",
+    ".github/workflows/gps-rof-review-acceptance.yml",
+    ".github/workflows/history-cross-month-acceptance.yml",
+    ".github/workflows/integration-i0.yml",
+    ".github/workflows/integration-i1.yml",
+    ".github/workflows/integration-i2.yml",
+    ".github/workflows/learning-foundation.yml",
+    ".github/workflows/p0-storage-legacy-acceptance.yml",
+    ".github/workflows/p0-two-run-continuity.yml",
+    ".github/workflows/p10-learning-ui.yml",
+    ".github/workflows/p11-unified-learning-audit.yml",
+    ".github/workflows/p5-visual-and-navigation.yml",
+    ".github/workflows/p6-integrated-zoom.yml",
+    ".github/workflows/p6-visual-density.yml",
+    ".github/workflows/p6b-result-visual.yml",
+    ".github/workflows/p6c-record-history.yml",
+    ".github/workflows/p6d-record-details.yml",
+    ".github/workflows/p6e-remaining-screens.yml",
+    ".github/workflows/p8-abnormal-states.yml",
+    ".github/workflows/p8-additional-screen-widths.yml",
+    ".github/workflows/p8-font200-all-screens.yml",
+    ".github/workflows/p8-learning-widths.yml",
+    ".github/workflows/p9-crossdomain-premerge.yml",
+    ".github/workflows/professor-annotation-store.yml",
+    ".github/workflows/professor-m6.yml",
+    ".github/workflows/professor-m7.yml",
+    ".github/workflows/professor-mental-m4.yml",
+    ".github/workflows/professor-portable-v2.yml",
+    ".github/workflows/professor-posthoc-m5.yml",
+    ".github/workflows/professor-record-ref.yml",
+    ".github/workflows/public-terminology-audit.yml",
+    ".github/workflows/record-optional-density-audit.yml",
+    ".github/workflows/research-interpretation-audit.yml",
+    ".github/workflows/rest-and-rof-mobile-acceptance.yml",
+    ".github/workflows/result-annotation-bilingual-visual.yml",
+    ".github/workflows/rof-date-layout-visual-acceptance.yml",
+    ".github/workflows/s02-condition-achievements-visual-acceptance.yml",
+    ".github/workflows/s02-home-guide-visual-acceptance.yml",
+    ".github/workflows/s03s04-record-manual-visual.yml",
+    ".github/workflows/s09-review-visual.yml",
+    ".github/workflows/settings-legal-layout.yml",
+    ".github/workflows/startup-performance.yml",
+    ".github/workflows/ui-browser.yml",
+    ".github/workflows/ui-smoke.yml",
+    ".github/workflows/uiux02-stages0406-visual.yml",
+    ".github/workflows/uiux03-targeted-visual.yml",
+    ".github/workflows/uiux04-targeted-visual.yml",
+    ".github/workflows/uiux05-targeted-visual.yml",
+    ".github/workflows/uiux06-targeted-visual.yml"
+  ]
+}
