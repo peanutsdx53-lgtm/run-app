@@ -1,0 +1,104 @@
+import {renderDataBackup,renderDataDelete,makeDataUi} from "./dataManagementUi.js?v=20261111-settings-dialog-v1";
+// RunLoad v2 settings: local-only opt-in preferences. No legal consent is recorded here.
+export const PROFILE_KEY='runload-v2-user-profile-v1';
+export const DISPLAY_KEY='runload-v2-display-preferences-v1';
+const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const purposeOptions=Object.freeze([['','選択しない'],['health','健康のため'],['record','ランニングの記録'],['learn','身体への理解・探究'],['other','その他']]);
+const ageOptions=Object.freeze([['','回答しない'],['under18','18歳未満'],['18-29','18〜29歳'],['30-39','30〜39歳'],['40-49','40〜49歳'],['50-59','50〜59歳'],['60plus','60歳以上']]);
+const within=(value,min,max)=>{const n=Number(value);return value!==''&&Number.isFinite(n)&&n>=min&&n<=max?n:null};
+function parse(storage,key){try{const v=JSON.parse(storage?.getItem(key)||'null');return v&&typeof v==='object'&&!Array.isArray(v)?v:null}catch{return null}}
+const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+const validProfile=x=>plain(x)&&Object.keys(x).every(k=>['nickname','purpose','heightCm','weightKg','ageBand'].includes(k))&&
+ typeof x.nickname==='string'&&x.nickname.length<=40&&purposeOptions.some(([v])=>v===x.purpose)&&
+ [x.heightCm,x.weightKg].every((v,i)=>v===null||typeof v==='number'&&Number.isFinite(v)&&v>=(i===0?80:15)&&v<=(i===0?250:400))&&
+ ageOptions.some(([v])=>v===x.ageBand);
+const validDisplay=x=>plain(x)&&Object.keys(x).every(k=>['textSize','motion','language'].includes(k))&&
+ ['standard','large'].includes(x.textSize)&&['system','reduce'].includes(x.motion)&&(x.language===undefined||['ja','en'].includes(x.language));
+// Best-effort compare-and-save. localStorage does not offer atomic cross-tab CAS.
+const saveVerified=(storage,key,data,valid,expectedRaw)=>{
+ try{
+  if(!storage||typeof storage.getItem!=='function'||typeof storage.setItem!=='function')throw Error('unavailable');
+  const previous=storage.getItem(key);
+  if(expectedRaw!==undefined&&previous!==expectedRaw)
+   return {ok:false,message:'別の画面で設定が変更されています。再読込してから保存してください。'};
+  if(previous!==null){
+   let stored;try{stored=JSON.parse(previous);}catch{return {ok:false,message:'保存済みの設定が破損しています。元のデータを保護しました。'};}
+   if(!valid(stored))return {ok:false,message:'保存済みの設定形式を確認できません。元のデータを保護しました。'};
+  }
+  if(storage.getItem(key)!==previous)
+   return {ok:false,message:'保存中に別の変更がありました。元の情報は上書きしていません。'};
+  const next=JSON.stringify(data);
+  storage.setItem(key,next);
+  if(storage.getItem(key)!==next)
+   return {ok:false,message:'保存した内容を確認できませんでした。再読込してください。'};
+  return {ok:true,raw:next};
+ }catch{return {ok:false,message:'保存領域に書き込めませんでした。以前の内容を再確認してください。'};}
+};
+export function loadProfile(storage,legacy={}){
+ const saved=parse(storage,PROFILE_KEY)||{};
+ const nickname=String(saved.nickname??legacy.nickname??'').slice(0,40);
+ const purpose=purposeOptions.some(x=>x[0]===saved.purpose)?saved.purpose:(purposeOptions.some(x=>x[0]===legacy.purpose)?legacy.purpose:'');
+ return {nickname,purpose,heightCm:within(saved.heightCm??'',80,250),weightKg:within(saved.weightKg??'',15,400),ageBand:ageOptions.some(x=>x[0]===saved.ageBand)?saved.ageBand:'',};
+}
+export function saveProfile(storage,raw,expectedRaw=undefined){
+ const nickname=String(raw.nickname??'').trim();
+ if(nickname.length>40)return {ok:false,message:'表示名は40文字以内にしてください。'};
+ const height=String(raw.heightCm??'').trim(),weight=String(raw.weightKg??'').trim();
+ if(height!==''&&within(height,80,250)===null)return {ok:false,message:'身長は80〜250cmの範囲で入力してください。'};
+ if(weight!==''&&within(weight,15,400)===null)return {ok:false,message:'体重は15〜400kgの範囲で入力してください。'};
+ const profile={nickname,purpose:purposeOptions.some(x=>x[0]===raw.purpose)?raw.purpose:'',heightCm:height===''?null:Number(height),weightKg:weight===''?null:Number(weight),ageBand:ageOptions.some(x=>x[0]===raw.ageBand)?raw.ageBand:''};
+ const result=saveVerified(storage,PROFILE_KEY,profile,validProfile,expectedRaw);
+ return result.ok?{...result,value:profile}:result;
+}
+export function loadDisplay(storage){const stored=parse(storage,DISPLAY_KEY),s=stored&&validDisplay(stored)?stored:{};return {textSize:s.textSize==='large'?'large':'standard',motion:s.motion==='reduce'?'reduce':'system',language:s.language==='en'?'en':'ja',theme:'dark'};}
+export function saveDisplay(storage,settings,expectedRaw=undefined){
+ const data={textSize:settings.textSize==='large'?'large':'standard',motion:settings.motion==='reduce'?'reduce':'system',language:settings.language==='en'?'en':'ja'};
+ const result=saveVerified(storage,DISPLAY_KEY,data,validDisplay,expectedRaw);
+ return result.ok?{...result,value:{...data,theme:'dark'}}:result;
+}
+export function applyDisplay(settings,root){if(!root)return;root.classList.toggle('rl-text-large',settings.textSize==='large');root.classList.toggle('rl-reduce-motion',settings.motion==='reduce');root.lang=settings.language==='en'?'en':'ja';}
+export const PURPOSE_OPTIONS=purposeOptions;
+export const AGE_OPTIONS=ageOptions;
+const choice=(name,options,selected)=>options.map(([value,label])=>`<option value="${escape(value)}" ${selected===value?'selected':''}>${escape(label)}</option>`).join('');
+const item=(symbol,title,desc,body,{hint='',open=false}={})=>`<details class="s2-item" ${open?'open':''}><summary><span class="s2-item-icon" aria-hidden="true">${symbol}</span><span class="s2-item-copy"><strong>${title}</strong><small>${desc}</small></span>${hint?`<em class="s2-indicator">${hint}</em>`:''}<span class="s2-chevron" aria-hidden="true">⌄</span></summary><div class="s2-item-content">${body}</div></details>`;
+const group=(icon,title,children)=>{const tones={'表示と言語':'aqua','利用者情報':'mint','記録と測定':'blue','データとプライバシー':'violet','アプリとヘルプ':'slate'};return `<section class="s2-panel" data-settings-tone="${tones[title]||'aqua'}"><header class="s2-panel-head"><span class="s2-panel-icon" aria-hidden="true">${icon}</span><h2>${title}</h2></header><div class="s2-rows">${children.join('')}</div></section>`;};
+export function renderSettings({profile,display,notice='',dataUi}){
+ const p=profile||loadProfile(null),d=display||loadDisplay(null),management=dataUi||makeDataUi();
+ const textOptions=`<div class="s2-choice-row" role="group" aria-label="文字サイズ"><button type="button" data-settings-text="standard" aria-pressed="${d.textSize==='standard'}">標準</button><button type="button" data-settings-text="large" aria-pressed="${d.textSize==='large'}">大きめ</button></div>`;
+ const motionOptions=`<div class="s2-choice-row" role="group" aria-label="画面の動き"><button type="button" data-settings-motion="system" aria-pressed="${d.motion==='system'}">端末に合わせる</button><button type="button" data-settings-motion="reduce" aria-pressed="${d.motion==='reduce'}">動きを抑える</button></div>`;
+ const languageOptions=`<div class="s2-choice-row" role="group" aria-label="表示言語 / Display language"><button type="button" data-settings-language="ja" aria-pressed="${d.language!=='en'}">日本語</button><button type="button" data-settings-language="en" aria-pressed="${d.language==='en'}">English</button></div>`;
+ const purposeChoices=choice('purpose',purposeOptions,p.purpose);
+ const profileForm=`<div class="s3-profile-intro"><span class="s3-optional-mark">すべて任意</span><p>必要な項目だけ入力できます。情報はこの端末に保存し、自動送信しません。</p></div>
+ <form data-settings-profile-form class="s3-profile-form">
+ <div class="s3-field s3-full"><label for="s3-nickname">表示名 <small>任意</small></label><input id="s3-nickname" name="nickname" maxlength="40" autocomplete="nickname" value="${escape(p.nickname)}" placeholder="例：ランナー / 未入力でもOK"></div>
+ <div class="s3-field s3-full s4-purpose-field"><label for="s4-purpose">走る目的 <small>一つ選択・任意</small></label><div class="s4-purpose-select"><span class="s4-purpose-icon" aria-hidden="true">↗</span><select id="s4-purpose" name="purpose">${purposeChoices}</select><span class="s4-purpose-chevron" aria-hidden="true"></span></div><p class="s4-purpose-help">選択肢は必要なときだけ表示します。</p></div>
+ <div class="s3-profile-metrics"><div class="s3-field"><label for="s3-height">身長 <small>任意</small></label><div class="s3-measure"><input id="s3-height" name="heightCm" type="number" inputmode="decimal" min="80" max="250" step="0.1" value="${p.heightCm??''}" placeholder="未入力"><span aria-hidden="true">cm</span></div></div><div class="s3-field"><label for="s3-weight">体重 <small>任意</small></label><div class="s3-measure"><input id="s3-weight" name="weightKg" type="number" inputmode="decimal" min="15" max="400" step="0.1" value="${p.weightKg??''}" placeholder="未入力"><span aria-hidden="true">kg</span></div></div></div>
+ <div class="s3-field s3-full"><label for="s3-age">年齢帯 <small>任意</small></label><select id="s3-age" name="ageBand">${choice('ageBand',ageOptions,p.ageBand)}</select></div>
+ <div class="s3-profile-action"><button class="s2-save s3-save-primary" type="submit"><span aria-hidden="true">✓</span> プロフィールを保存</button><p>登録した情報は、後から設定画面で変更できます。</p></div>
+ </form>`;
+ const groups=[
+  group('◈','表示と言語',[
+   item('文','文字サイズ','読みやすい大きさに調整',textOptions,{hint:'変更可能'}),
+   item('◌','画面の動き','端末の設定を尊重',motionOptions,{hint:'変更可能'}),
+   item('あ','表示言語','日本語・English',languageOptions,{hint:d.language==='en'?'English':'日本語'}),
+   item('☾','外観','ダークモードを標準で使用',`<div class="s2-theme-preview"><span class="s2-theme-mini s2-dark-mini">☾ <b>ダーク</b> <small>使用中</small></span><span class="s2-theme-mini s2-light-mini">☀ <b>ライト</b> <small>対応予定</small></span></div><p>ライトモードは人体図・グラフまで対応した後に公開します。</p>`,{hint:'ダーク'})
+  ]),
+  group('♧','利用者情報',[
+   item('♙','プロフィール','身長・体重・目的などの任意情報',profileForm,{hint:'編集できます'})
+  ]),
+  group('◉','記録と測定',[
+   item('◎','位置情報','GPS測定時の権限・位置情報',`<p>位置情報へのアクセスはGPS測定を利用する際に端末が確認します。権限は端末・ブラウザ側で変更できます。この設定画面では位置情報の許可を変更できません。</p>`,{hint:'案内'})
+  ]),
+  group('▤','データとプライバシー',[
+   item('▣','バックアップ・復元','記録と設定をファイルで管理',renderDataBackup(management),{hint:'利用可能'}),
+   item('×','データの削除','端末内の記録を削除',renderDataDelete(management,d.language),{hint:'確認が必要'}),
+   item('§','利用規約・プライバシー','利用条件と情報の取扱い',`<div class="s2-choice-row"><button type="button" class="s2-inline-btn" data-legal-open="terms">利用規約を読む</button><button type="button" class="s2-inline-btn" data-legal-open="privacy">プライバシーポリシーを読む</button></div><p>文書の閲覧だけで同意済みになることはありません。</p>`,{hint:'全文を確認'})
+  ]),
+  group('ⓘ','アプリとヘルプ',[
+   item('⇩','アプリをインストール','ホーム画面やPCに追加',`<button type="button" class="s2-inline-btn" data-install-app>インストール方法を見る →</button>`,{hint:'案内あり'}),
+   item('?','初回ガイド','使い始めの案内を再確認',`<button type="button" class="s2-inline-btn" data-onboard-open>初回ガイドを開く →</button>`,{hint:'案内あり'}),
+   item('ⓘ','このアプリについて','アプリの現在の状態',`<p>手入力した走行やGPSで測定した記録を端末に保存できます。身体部位別の参考値は医学的な診断や傷害の予測を示すものではありません。</p>`,{hint:'アプリ情報'})
+  ])
+ ];
+ return `<div class="s2-page" data-settings-v2><header class="s2-heading"><div><h1>設定</h1></div><details class="rl-screen-help"><summary aria-label="設定画面の使い方">？</summary><p>表示・利用者情報・記録・バックアップとプライバシーを管理します。保存と削除の操作はそれぞれの項目で確認できます。</p></details><div class="s2-locale"><span>${d.language==='en'?'English':'日本語'}</span><span class="s2-status-dot" aria-hidden="true"></span><strong>暗い画面</strong></div></header>${notice?`<p class="s2-notice" role="status">${escape(notice)}</p>`:''}<div class="s2-grid"><div class="s2-column">${groups.slice(0,3).join('')}</div><div class="s2-column">${groups.slice(3).join('')}</div></div><p class="s2-footer">${d.language==='en'?'English':'日本語版'} · 設定はこの端末に保存されます</p></div>`;
+}

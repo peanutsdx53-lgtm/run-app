@@ -1,0 +1,158 @@
+/* P12 screen coherence. Settings provides the baseline:
+   help 44x44, border #579eab, background #12485b, radius 11px. */
+.home-v3 .home-head .home-heading-actions{
+ display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:nowrap
+}
+.home-v3 .home-head .home-heading-actions > .hx-help-toggle{
+ flex:0 0 44px;display:grid;place-items:center;
+ width:44px;height:44px;min-width:44px;min-height:44px;
+ padding:0;margin:0;border:1px solid #579eab;border-radius:11px;
+ background:#12485b;color:#cff8f5;font-size:20px;font-weight:850;line-height:1;
+ white-space:nowrap;cursor:pointer
+}
+.home-v3 .home-head .home-heading-actions > .hx-help-toggle[aria-expanded="true"]{
+ background:#176276;border-color:#89e8e7
+}
+.home-v3 .home-head .home-heading-actions > .hx-help-toggle:focus-visible{
+ outline:3px solid #a4f7ed;outline-offset:3px
+}
+.home-v3 .home-head .dashboard-edit-trigger{min-height:44px;padding:8px 13px}
+@media(max-width:380px){
+ .home-v3 .home-head{flex-wrap:nowrap}
+ .home-v3 .home-head h1{min-width:0}
+ .home-v3 .home-heading-actions{flex-wrap:nowrap!important;gap:6px}
+}
+
+/* Screen title and a single interactive help affordance. */
+.lr-root .lr-page-heading{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ min-height:53px;margin:0 0 14px;padding:5px 3px 10px;position:relative;z-index:10
+}
+.lr-root .lr-page-heading h1{
+ margin:0;font-size:1.65rem;line-height:1.3;font-weight:900;color:#f2f9fd
+}
+.lr-root .lr-page-heading .lr-screen-help{margin-left:auto;position:relative;flex:0 0 44px}
+.lr-root .lr-page-heading .lr-screen-help>summary{
+ display:grid;place-items:center;width:44px;height:44px;
+ border:1px solid #579eab;border-radius:11px;background:#12485b;
+ color:#cff8f5;font-size:20px;line-height:1;font-weight:850;cursor:pointer
+}
+.lr-root .lr-page-heading .lr-screen-help[open]>summary{
+ background:#176276;border-color:#89e8e7
+}
+.lr-root .lr-page-heading .lr-screen-help-content{
+ position:absolute;top:calc(100% + 8px);right:0;
+ width:min(330px,calc(100vw - 38px));z-index:45;
+ padding:14px 15px;border:1px solid #5399aa;
+ border-radius:12px;background:#0b3447;color:#e9fbff;
+ box-shadow:0 15px 32px #001522c4;
+ font-size:.83rem;line-height:1.65;max-height:min(65vh,480px);overflow-y:auto
+}
+.lr-root .lr-screen-help-content strong{display:block;color:#8ce6e2;margin:0 0 6px}
+.lr-root .lr-screen-help-content p{margin:0 0 8px;color:#e9fbff;line-height:1.65}
+.lr-root .lr-screen-help-content p:last-child{margin-bottom:0}
+.lr-root .lr-intro{gap:8px;padding:19px 22px}
+.lr-root .lr-intro h2{margin:0;color:#f5fcff;font-size:clamp(1.12rem,2.2vw,1.38rem)}
+.lr-root .lr-intro p{line-height:1.65}
+.lr-root .lr-catalog{align-items:stretch;gap:14px;margin-top:14px}
+
+/* Layered navy course cards, coordinated with Home cards. */
+.lr-root .lr-course{
+ --lr-glow:rgba(57,188,202,.21);--lr-accent:#64dcd9;
+ position:relative;isolation:isolate;overflow:hidden;
+ display:flex;flex-direction:column;align-items:stretch;gap:12px;
+ min-height:252px;padding:20px 20px 18px;
+ border:1px solid #416d7d;border-radius:20px;
+ background:radial-gradient(ellipse at 96% 0%,var(--lr-glow),transparent 55%),
+  linear-gradient(145deg,#153949,#0b2839 88%);
+ box-shadow:0 13px 27px #0004,0 2px 8px #0003
+}
+.lr-root .lr-course[data-lr-course="movement"]{
+ --lr-accent:#9cbbea;--lr-glow:rgba(104,145,226,.21)
+}
+.lr-root .lr-course[data-lr-course="fatigue"]{
+ --lr-accent:#b4e1bd;--lr-glow:rgba(88,183,132,.2)
+}
+.lr-root .lr-course::after{
+ content:"";position:absolute;inset:0 auto auto 0;height:3px;width:100%;
+ background:linear-gradient(90deg,var(--lr-accent),transparent 79%);pointer-events:none
+}
+.lr-root .lr-course-top{display:flex;align-items:center;gap:12px}
+.lr-root .lr-course-icon{
+ display:grid;place-items:center;flex:none;width:46px;height:46px;
+ border:1px solid #ffffff24;border-radius:13px;background:#ffffff14;color:var(--lr-accent)
+}
+.lr-root .lr-course-icon svg{width:27px;height:27px;display:block}
+.lr-root .lr-course-meta{
+ min-width:0;flex:1;display:flex;flex-wrap:wrap;align-items:center;
+ gap:7px;justify-content:space-between
+}
+.lr-root .lr-course .lr-number{color:var(--lr-accent);font-size:.73rem;font-weight:800;line-height:1.4}
+.lr-root .lr-course .lr-status{
+ flex:none;color:#d7f4f1;background:#0b3444;border:1px solid #4b7b89;font-size:.72rem
+}
+.lr-root .lr-course h2{
+ color:#f4fbfd;font-size:clamp(1.03rem,1.9vw,1.16rem);line-height:1.5
+}
+.lr-root .lr-course p{color:#c0dbe4;font-size:.85rem;line-height:1.7;margin:0}
+.lr-root .lr-course .lr-action{
+ display:flex;justify-content:space-between;align-items:center;gap:12px;
+ margin-top:auto;min-height:46px;width:100%;font-size:.85rem;
+ background:#174c5e;border:1px solid #569ba6;color:#eaffff;text-align:left;
+ white-space:normal;overflow-wrap:anywhere;padding:11px 13px
+}
+.lr-root .lr-course .lr-action::after{
+ content:"›";font-size:1.45rem;line-height:.9;flex:0 0 auto;color:var(--lr-accent)
+}
+.lr-root .lr-course .lr-action:hover{background:#1b6374;border-color:#79d1d0}
+.lr-root .lr-support-card{
+ position:relative;overflow:hidden;display:grid;gap:10px;
+ margin-top:15px;padding:19px 20px;
+ background:radial-gradient(ellipse at 100% 0%,#5b9ec425,transparent 48%),
+  linear-gradient(145deg,#113447,#0b293b);
+ border:1px solid #416d7d;border-radius:20px;box-shadow:0 9px 20px #0003
+}
+.lr-root .lr-support-card .lr-support-symbol{
+ display:grid;place-items:center;width:40px;height:40px;border-radius:11px;
+ background:#ffffff13;color:#8fd6e8;border:1px solid #ffffff20;font-size:1.35rem
+}
+.lr-root .lr-support-card .lr-action{justify-self:start}
+.lr-root .lr-support-card .lr-eyebrow{color:#8fd6e8}
+.lr-root .lr-support-card h2{font-size:1.14rem}
+@media(max-width:800px){
+ .lr-root .lr-course{min-height:218px;padding:16px 17px;gap:10px}
+ .lr-root .lr-course-icon{width:42px;height:42px}
+ .lr-root .lr-page-heading{margin-bottom:11px}
+ .lr-root .lr-support-card{padding:16px 17px}
+}
+@media(max-width:370px){
+ .lr-root .lr-course-meta{justify-content:flex-start}
+ .lr-root .lr-course{min-height:0}
+}
+
+/* Only help stays in the Exploration header; reflection moves below content. */
+.ex-page .ex-heading .ex-heading-actions{margin-left:auto;display:flex;gap:9px}
+.ex-page .ex-heading .ex-top-help{
+ display:grid;place-items:center;flex:0 0 44px;
+ width:44px;height:44px;min-width:44px;min-height:44px;
+ padding:0;background:#12485b;border:1px solid #579eab;
+ border-radius:11px;color:#cff8f5!important;font-size:20px;font-weight:850;line-height:1
+}
+.ex-page .ex-heading .ex-top-help:focus-visible{
+ outline:3px solid #a4f7ed;outline-offset:3px
+}
+.ex-page .ex-reflection-footer{
+ display:flex;align-items:center;justify-content:space-between;gap:14px;
+ margin:17px 0 6px;padding:18px 19px;border:1px solid #416d7d;
+ border-radius:18px;background:radial-gradient(ellipse at 100% 0%,#236b7b36,transparent 55%),#103244;
+ box-shadow:0 8px 20px #0003
+}
+.ex-page .ex-reflection-footer strong{display:block;color:#e9fbfd;font-size:1rem;font-weight:850}
+.ex-page .ex-reflection-footer p{margin:6px 0 0;color:#bfd6df;font-size:.83rem;line-height:1.65}
+.ex-page .ex-reflection-footer .ex-header-memo{
+ flex:0 0 auto;min-height:44px;border-radius:12px
+}
+@media(max-width:470px){
+ .ex-page .ex-reflection-footer{padding:15px;flex-wrap:wrap;gap:11px}
+ .ex-page .ex-reflection-footer .ex-header-memo{margin-left:auto}
+}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#061725">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="走行記録">
+  <link rel="manifest" href="./manifest.webmanifest?v=20261110-public-copy-v1">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png">
+  <meta name="description" content="走行記録を振り返り、自分のペースで探究する">
+  <title>走行記録と振り返り</title>
+  <link rel="stylesheet" href="./styles.css?v=20261109-p6e-mobilezoom-v1">
+  <link rel="stylesheet" href="./ui/homeExperience.css?v=20261111-home-autosave-refine-v2">
+  <link rel="stylesheet" href="./ui/recordExperience.css?v=20261109-p6d-recorddetails-v1">
+  <link rel="stylesheet" href="./ui/simulationExperience.css?v=20261109-p6e-crossscreen-v1">
+  <link rel="stylesheet" href="./ui/gaitExperience.css?v=20261109-p6d-recorddetails-v1">
+  <link rel="stylesheet" href="./ui/environmentExperience.css?v=20261109-p6d-recorddetails-v1">
+  <link rel="stylesheet" href="./ui/bodyContextExperience.css?v=20261109-p6d-recorddetails-v1">
+  <link rel="stylesheet" href="./ui/recordReviewExperience.css?v=20261109-p6c-recordhistory-v1">
+  <link rel="stylesheet" href="./ui/rofExperience.css?v=20261109-p6-integrated-zoom-v1">
+  <link rel="stylesheet" href="./ui/measurementExperience.css?v=20261109-p6e-crossscreen-v1">
+  <link rel="stylesheet" href="./ui/gpsDynamicResult.css?v=20261028-gps-overflow-v1">
+  <link rel="stylesheet" href="./ui/settingsExperience.css?v=20261109-p6e-crossscreen-v1">
+  <link rel="stylesheet" href="./ui/dataManagement.css?v=20261111-settings-dialog-v1">
+  <link rel="stylesheet" href="./ui/mentalExperience.css?v=20261108-professor-m4-v1">
+  <link rel="stylesheet" href="./ui/firstUseExperience.css?v=20261111-settings-dialog-v1">
+  <link rel="stylesheet" href="./ui/explorationExperience.css?v=20261111-exploration-inquiry-v1">
+  <link rel="stylesheet" href="./ui/learningExperience.css?v=20261111-learning-density-v1">
+  <link rel="stylesheet" href="./ui/interpretationExperience.css?v=20261026-interpret-v14">
+  <link rel="stylesheet" href="./ui/conditionJourney.css?v=20261109-p6e-crossscreen-v1">
+  <link rel="stylesheet" href="./ui/consultationExperience.css?v=20261109-p6e-crossscreen-v1">
+  <link rel="stylesheet" href="./ui/unifiedLearningShell.css?v=20261111-learning-density-v1">
+  <link rel="stylesheet" href="./ui/screenCoherenceP12.css?v=20261110-p12-card-help-v1">
+  <link rel="stylesheet" href="./ui/screenRefinementP13.css?v=20261110-p13-compact-v1">
+  <link rel="stylesheet" href="./ui/screenCoherenceP14.css?v=20261110-p14-visual-v4">
+  <link rel="stylesheet" href="./ui/mobileInputFocus.css?v=20261026-ios-input-v25">
+
+  <style>
+    .boot-screen{box-sizing:border-box;min-height:100vh;min-height:100dvh;padding:32px 20px calc(32px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;text-align:center;background:radial-gradient(ellipse at 50% 32%,#103951 0%,#061b2a 57%,#061725 100%);color:#f0fbfd;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}
+    .boot-emblem{display:grid;place-items:center;width:72px;height:72px;border:1px solid #4bafb8;border-radius:24px;background:#124053;box-shadow:0 9px 35px #00141f70;color:#77e4e6;font-size:34px}
+    .boot-name{margin:5px 0 0;color:#f1fcfe;font-size:clamp(1.18rem,4vw,1.5rem);font-weight:750;letter-spacing:.015em}
+    .boot-description{max-width:330px;min-height:1.5em;margin:0;color:#bcdae2;font-size:.91rem;line-height:1.7}
+    .boot-dots{display:flex;align-items:center;gap:9px;margin:3px 0}
+    .boot-dots span{width:24px;height:4px;background:#2c6273;border-radius:5px;animation:boot-pulse 1.35s ease-in-out infinite alternate}
+    .boot-dots span:nth-child(2){animation-delay:.23s}.boot-dots span:nth-child(3){animation-delay:.46s}
+    .boot-help{max-width:350px;margin:0;color:#c8dfe5;font-size:.81rem;line-height:1.8}
+    .boot-retry{border:1px solid #7be5e3;border-radius:12px;background:#72dfe3;color:#052234;padding:11px 21px;min-height:44px;font:750 .9rem system-ui,-apple-system,sans-serif;cursor:pointer}
+    .boot-retry:focus-visible{outline:3px solid white;outline-offset:3px}
+    .boot-screen [hidden]{display:none!important}
+    .boot-screen[data-state="failed"] .boot-dots{display:none}
+    @keyframes boot-pulse{from{background:#2c6273;opacity:.6}to{background:#73e2e1;opacity:1}}
+    @media(prefers-reduced-motion:reduce){.boot-dots span{animation:none}.boot-dots span:first-child{background:#73e2e1}}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <section class="boot-screen" id="boot-screen" aria-label="アプリの起動状態" aria-busy="true">
+      <div class="boot-emblem" aria-hidden="true">◷</div>
+      <h1 class="boot-name">走行記録と振り返り</h1>
+      <p class="boot-description" id="boot-status" role="status" aria-live="polite">画面を準備しています</p>
+      <div class="boot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="boot-help" id="boot-help" hidden>通信や端末の保存領域に時間がかかっている可能性があります。記録を削除する必要はありません。</p>
+      <button class="boot-retry" id="boot-retry" type="button" hidden>再読み込み</button>
+    </section>
+  </div>
+  <noscript><p>画面を利用するにはJavaScriptを有効にしてください。</p></noscript>
+  <script>
+    (function(){
+      const boot=document.getElementById("boot-screen"),status=document.getElementById("boot-status"),help=document.getElementById("boot-help"),retry=document.getElementById("boot-retry");
+      let state="loading";
+      const timers=[
+        setTimeout(()=>{if(state==="loading")status.textContent="画面の準備を続けています";},4000),
+        setTimeout(()=>{if(state==="loading"){status.textContent="通常より時間がかかっています";help.hidden=false;retry.hidden=false;}},12000)
+      ];
+      const clear=()=>timers.forEach(clearTimeout);
+      function ready(){if(state!=="loading")return;state="ready";clear();window.dispatchEvent(new Event("runload:boot-ready"));}
+      function fail(){if(state!=="loading")return;state="failed";clear();boot.dataset.state="failed";boot.setAttribute("aria-busy","false");status.textContent="画面を開けませんでした";help.textContent="通信状態を確認して再読み込みしてください。保存済みの記録を削除する必要はありません。";help.hidden=false;retry.hidden=false;}
+      retry.addEventListener("click",()=>location.reload());
+      window.runloadBoot={get isReady(){return state==="ready";},ready,fail};
+      window.addEventListener("unhandledrejection",()=>fail());
+      window.addEventListener("error",event=>{
+        if(event.target===window||(event.target instanceof HTMLScriptElement&&event.target.src.includes("/app.js")))fail();
+      },true);
+    })();
+  </script>
+  <script type="module" src="./app.js?v=20261111-home-autosave-v1"></script>
+  <script type="module" src="./pwa.js?v=20261111-home-autosave-v1"></script>
+</body>
+</html>

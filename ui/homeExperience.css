@@ -1,0 +1,820 @@
+/* Home redesign, 2026-10-24. Scope is home-v3; other screens keep their own styles. */
+.app-shell:has(.home-v3){--hx-txt:#f1f8fc;--hx-muted:#b3cad5}
+/* Home-level shell follows the approved dark dashboard visual language. */
+.app-shell:has(.home-v3) .sidebar{background:linear-gradient(180deg,#0c2533,#071923);border-right-color:#254655}
+.app-shell:has(.home-v3) .side-link{color:#b8d5df}
+.app-shell:has(.home-v3) .side-link:hover,.app-shell:has(.home-v3) .side-link.is-active{color:#85eff0;background:#1e5666}
+.app-shell:has(.home-v3) .topbar{display:none}
+.app-shell:has(.home-v3) .main-content{width:100%}
+.home-v3{width:100%;min-width:0}
+.app-shell:has(.home-v3) .main-frame{background:radial-gradient(ellipse at 90% 0%,#256072 0%,transparent 42%),linear-gradient(145deg,#091824,#0d2634 50%,#091620);min-height:100vh}
+.app-shell:has(.home-v3) .main-content{background:transparent;color:var(--hx-txt);max-width:1500px;margin:auto;padding-top:22px}
+.app-shell:has(.home-v3) .topbar{background:#0b1f2def;border-bottom-color:#36536a}
+.app-shell:has(.home-v3) .topbar-section{color:#f1f8fc}
+.app-shell:has(.home-v3) .mobile-nav{background:#0c1d2bef;border-top-color:#2e5263}
+.app-shell:has(.home-v3) .mobile-link{color:#c0cbd5}
+.app-shell:has(.home-v3) .mobile-link.is-active{color:#55dce3}
+.home-v3{max-width:1300px;margin:0 auto;padding:0 8px 32px;color:var(--hx-txt)}
+.home-v3 .home-head{padding:6px 0 18px;margin:0;display:flex;align-items:center;gap:10px;justify-content:space-between}
+.home-v3 .home-head h1{font-size:1.65rem;font-weight:900;letter-spacing:.03em;color:#f2f9fd;margin:0}
+.home-v3 .home-heading-actions{display:flex;gap:8px;align-items:center}
+.home-v3 .home-heading-actions button{cursor:pointer}
+.home-v3 .hx-preview-toggle{border:1px solid #4b6b77;background:#1d3949;color:#d2f0f4;border-radius:11px;padding:10px 12px;font-size:.78rem;font-weight:800}
+.home-v3 .dashboard-edit-trigger{border:1px solid #5a8698;background:#284c5d;color:#e5f9ff;min-height:40px;border-radius:11px;padding:9px 13px;font-weight:800}
+.home-v3 .dashboard-custom-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;align-items:stretch}
+.home-v3 .dashboard-widget{min-width:0}
+.home-v3 .dashboard-widget--wide{grid-column:1/-1}
+.home-v3 .dashboard-widget--half{grid-column:span 1}
+.home-v3 .dashboard-widget-content{height:100%}
+.home-v3 .hx-card{height:100%;color:#f1f9fc;min-width:0;overflow:hidden;box-sizing:border-box;position:relative;isolation:isolate;border-radius:20px;padding:21px 23px;background:#153443;border:1px solid #3b6574;box-shadow:0 13px 27px #0004,0 2px 8px #0003}
+.home-v3 .hx-head{display:flex;align-items:center;gap:10px;position:relative;z-index:2}
+.home-v3 .hx-head h2{margin:0;color:inherit;font-size:1rem;font-weight:850}
+.home-v3 .hx-symbol{display:grid;place-items:center;flex:0 0 auto;width:36px;height:36px;border-radius:11px;background:#ffffff19;border:1px solid #ffffff1c;color:#85ecf4}
+.home-v3 .hx-icon{width:21px;height:21px;display:block}
+.home-v3 .hx-sample,.home-v3 .hx-right{margin-left:auto;white-space:nowrap;font-size:.69rem;font-weight:850;color:#bee2e5;border:1px solid #81dbe358;border-radius:30px;padding:5px 8px;background:#0a3d4b80}
+.home-v3 .hx-title-button{display:block;width:100%;background:transparent;border:0;padding:0;margin:0;color:inherit;text-align:left;cursor:pointer}
+.home-v3 .hx-title-button:focus-visible,.home-v3 a:focus-visible,.home-v3 button:focus-visible{outline:3px solid #65e1e8;outline-offset:3px}
+.home-v3 .hx-latest{min-height:194px;background:radial-gradient(circle at 93% 4%,#1a9caa88,transparent 35%),linear-gradient(115deg,#12374b,#0b2737 65%,#124655)}
+.home-v3 .hx-latest:before{content:"";pointer-events:none;position:absolute;right:-25px;bottom:-185px;width:420px;height:350px;border-radius:50%;border:1px solid #4ddfd329;box-shadow:0 0 0 27px #7deee80b,0 0 0 65px #7deee806,0 0 0 110px #7deee806}
+.home-v3 .hx-latest:after{content:"";position:absolute;bottom:0;left:0;width:66%;height:3px;background:linear-gradient(90deg,#45eacb,#8ac7e9,transparent);box-shadow:0 0 21px #52f8d58a}
+.home-v3 .hx-latest-empty{display:flex;align-items:center;gap:19px;margin-top:28px;min-height:82px;position:relative;z-index:1}
+.home-v3 .hx-runmark{flex:0 0 auto;display:grid;place-items:center;width:77px;height:77px;border-radius:18px;background:linear-gradient(140deg,#35d2c82f,#aee6ed0b);border:1px solid #80dbe449;box-shadow:0 14px 20px #00172244}
+.home-v3 .hx-runmark .hx-icon{width:41px;height:41px}
+.home-v3 .hx-latest-empty strong{display:block;font-size:1.4rem;line-height:1.4}
+.home-v3 .hx-latest-empty p{font-size:.79rem;color:#c0d9e0;margin:8px 0 0}
+.home-v3 .hx-latest-fig{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px;max-width:680px}
+.home-v3 .hx-latest-fig>div{padding:14px 12px;background:#ffffff10;border:1px solid #ffffff20;border-radius:13px}
+.home-v3 .hx-latest-fig small{display:block;color:#b4dce3;font-size:.75rem;margin-bottom:4px}
+.home-v3 .hx-latest-fig strong{font-size:1.85rem;font-weight:900;white-space:nowrap}
+.home-v3 .hx-latest-fig em{font-style:normal;font-size:.78rem;color:#c3e0e6}
+.home-v3 .hx-condition{min-height:295px;background:radial-gradient(circle at 95% -24%,#35adc144,transparent 42%),linear-gradient(125deg,#123f53,#082738 85%);border-color:#348b9f}
+.home-v3 .hx-condition:before{content:"";position:absolute;right:-110px;top:-110px;width:310px;height:300px;border:1px solid #a6fcff16;border-radius:50%;box-shadow:0 0 0 34px #7cf8e90a,0 0 0 69px #8aeaf506;pointer-events:none}
+.home-v3 .hx-condition-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:19px;position:relative;z-index:1}
+.home-v3 .hx-condition-stats>div{min-width:0;padding:13px 10px;background:#ffffff0d;border:1px solid #ffffff21;border-radius:13px}
+.home-v3 .hx-condition-stats small{font-size:.71rem;display:block;color:#b3d0dc;white-space:nowrap}
+.home-v3 .hx-condition-stats strong{font-size:1.16rem;font-weight:900;display:block;margin-top:9px;white-space:nowrap;letter-spacing:-.03em}
+.home-v3 .hx-condition-stats em{font-style:normal;font-size:.74rem;color:#c1d8e3}
+.home-v3 .hx-chart-label{display:flex;justify-content:space-between;font-size:.73rem;font-weight:800;color:#cde9f0;margin-top:18px;position:relative}
+.home-v3 .hx-chart-label span{color:#9fbac6;font-size:.65rem}
+.home-v3 .hx-bars{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;height:83px;margin-top:6px;position:relative;z-index:1}
+.home-v3 .hx-bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-height:0;gap:5px;border-bottom:1px solid #7db3c153}
+.home-v3 .hx-bar{display:block;align-self:stretch;min-height:0;border-radius:5px 5px 0 0;background:linear-gradient(180deg,#8fe9f1,#2099ba);box-shadow:0 0 16px #43d3e54d}
+.home-v3 .hx-bar.hx-missing{height:1px!important;min-height:1px;background:#668d9f;opacity:.5;box-shadow:none}
+.home-v3 .hx-bar-col small{font-size:.64rem;color:#b4ccd7;line-height:1.4}
+.home-v3 .hx-achievement{min-height:238px;background:radial-gradient(circle at 96% 0%,#db91335c,transparent 48%),linear-gradient(120deg,#473121,#23232b 69%,#43301f);border-color:#a77b48}
+.home-v3 .hx-achievement .hx-symbol{color:#ffd27c;background:#d7a45421}
+.home-v3 .hx-ach-main{display:flex;align-items:center;gap:18px;margin-top:18px;position:relative;z-index:1}
+.home-v3 .hx-medal{width:88px;height:88px;flex:0 0 88px;display:grid;place-items:center;font-size:3rem;color:#70441a;text-shadow:0 1px #ffe7ae;background:radial-gradient(circle at 32% 22%,#fff1aa,#d58c2f 53%,#7d4d20);clip-path:polygon(50% 0%,65% 11%,83% 7%,94% 27%,100% 49%,89% 69%,82% 87%,60% 87%,50% 100%,36% 86%,15% 86%,7% 64%,0% 42%,9% 23%,29% 15%);filter:drop-shadow(0 8px 10px #0007)}
+.home-v3 .hx-medal.hx-unearned{background:linear-gradient(145deg,#f6d18a,#75552f);filter:grayscale(.6);opacity:.62}
+.home-v3 .hx-ach-data{flex:1;min-width:0;display:grid;gap:7px}
+.home-v3 .hx-ach-data>small{color:#e6ca9c;font-size:.76rem;line-height:1.45}
+.home-v3 .hx-ach-data strong{font-size:1.5rem;line-height:1.35}
+.home-v3 .hx-ach-data strong em{font-style:normal;font-size:.82rem;color:#e4c7a6}
+.home-v3 .hx-progress{height:9px;background:#ffffff24;border-radius:20px;overflow:hidden}
+.home-v3 .hx-progress span{display:block;height:100%;background:linear-gradient(90deg,#ffe585,#ff9c33);border-radius:20px}
+.home-v3 .hx-awards{display:flex;gap:9px;margin-top:12px;padding-left:5px;position:relative}
+.home-v3 .hx-awards span{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;color:#e5b35d;font-size:1.05rem;border:1px solid #f0c8796b;background:#ffc97220}
+.home-v3 .hx-awards .locked{filter:grayscale(1);opacity:.4}
+.home-v3 .hx-shortcuts{min-height:153px;background:linear-gradient(135deg,#183446,#102a39);border-color:#3e6270}
+.home-v3 .hx-shortcut-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.home-v3 .hx-shortcut{display:flex;gap:10px;align-items:center;min-width:0;padding:12px 14px;border:1px solid #ffffff1d;background:#ffffff0b;border-radius:14px;text-decoration:none;color:#e1f6fc;font-weight:850;font-size:.85rem}
+.home-v3 .hx-shortcut span{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#ffffff15}
+.home-v3 .hx-shortcut-map{color:#8cebc6}.home-v3 .hx-shortcut-sim{color:#c7b0ff}.home-v3 .hx-shortcut-share{color:#ffca93}
+.home-v3 .hx-shortcut strong{color:#f2f8fa}
+.home-v3 .hx-shortcut:hover{background:#ffffff1a;transform:translateY(-2px)}
+.home-v3 .hx-optional{min-height:160px;background:linear-gradient(130deg,#15394c,#142e3d)}
+.home-v3 .hx-optional p{margin-top:20px;font-size:.82rem;line-height:1.6;color:#b8d2dd}
+.home-v3 .hx-demo-activity{height:80px;margin:20px 5px 0;display:flex;align-items:flex-end;gap:15px}
+.home-v3 .hx-demo-activity span{background:linear-gradient(#74d9ed,#1a86b4);flex:1;border-radius:5px 5px 0 0}
+.home-v3 .hx-warning{color:#ffddaa;font-size:.75rem}
+.home-v3 .hx-preview-banner{padding:9px 12px;border:1px solid #7fd3d787;border-radius:12px;background:#1a607168;color:#f2ffff;font-size:.78rem;margin-bottom:12px}
+.home-v3 .dashboard-edit-toolbar{background:#193a4b;border-color:#487585;border-radius:14px}
+.home-v3 .dashboard-edit-toolbar strong,.home-v3 .dashboard-edit-toolbar p{color:#eefafd}
+.home-v3 .dashboard-edit-toolbar .btn{border-color:#537d8a;background:#254a5b;color:#f3feff}
+.home-v3 .dashboard-edit-toolbar .btn.primary{background:#148d9a;color:#fff}
+.home-v3 .dashboard-custom-grid--editing .dashboard-widget{background:#0c2634;border:1px dashed #62b8c8}
+.home-v3 .dashboard-custom-grid--editing .dashboard-widget-content>.hx-card{border:0;box-shadow:none}
+.home-v3 .dashboard-widget-controls{background:#214556}
+.home-v3 .widget-edit-label{color:#e2f9fc}
+.home-v3 .widget-edit-actions button{background:#183848;color:#e4f7fa;border-color:#507e8e}
+.home-v3 .dashboard-storage-warning{background:#594031;color:#fff0da;border-color:#bd8054}
+.app-shell:has(.home-v3) .hx-overlay{position:fixed;z-index:110;inset:0;background:#02090dba;display:grid;place-items:center;padding:16px;overflow:auto}
+.app-shell:has(.home-v3) .hx-dialog{width:min(100%,530px);max-height:calc(100vh - 32px);overflow:auto;padding:23px;background:linear-gradient(145deg,#123b50,#071e2c);color:#f2fbff;border:1px solid #5495a3;border-radius:21px;box-shadow:0 23px 80px #000b}
+.app-shell:has(.home-v3) .hx-dialog-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.app-shell:has(.home-v3) .hx-dialog-head h2{margin:0;font-size:1.3rem}
+.app-shell:has(.home-v3) .hx-dialog-head button{border:1px solid #8db8c3;background:#254d60;color:white;border-radius:10px;padding:5px 12px;font-size:1.3rem;cursor:pointer}
+.app-shell:has(.home-v3) .hx-dialog h3{margin:14px 0 8px;font-size:.92rem}
+.app-shell:has(.home-v3) .hx-dialog p{color:#cde2eb;line-height:1.55}
+.app-shell:has(.home-v3) .hx-dialog-trend{border:1px solid #ffffff28;background:#ffffff08;border-radius:12px;padding:10px 14px;margin:15px 0}
+.app-shell:has(.home-v3) .hx-dialog .hx-bars{height:110px;margin:5px 0 12px}
+.app-shell:has(.home-v3) .hx-dialog form{display:grid;gap:11px}
+.app-shell:has(.home-v3) .hx-dialog form label{font-size:.82rem;font-weight:750;display:grid;gap:5px}
+.app-shell:has(.home-v3) .hx-dialog input,.app-shell:has(.home-v3) .hx-dialog select,.app-shell:has(.home-v3) .hx-dialog textarea{width:100%;box-sizing:border-box;border:1px solid #a0c6cd;border-radius:9px;padding:10px;color:#12303b;background:#fff;font-size:1rem}
+.app-shell:has(.home-v3) .hx-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.app-shell:has(.home-v3) .hx-dialog-foot{display:flex;justify-content:flex-end;gap:8px}
+.app-shell:has(.home-v3) .hx-dialog-foot button{border:1px solid #69919c;background:#28495a;color:#f0faff;padding:10px 15px;border-radius:9px;cursor:pointer}
+.app-shell:has(.home-v3) .hx-dialog-foot .hx-save{background:#169cab}
+.app-shell:has(.home-v3) .hx-dialog-foot button:disabled{opacity:.45}
+.app-shell:has(.home-v3) .hx-dialog-notice{font-size:.73rem}
+.app-shell:has(.home-v3) .hx-ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0}
+.app-shell:has(.home-v3) .hx-ach-grid span{border-radius:10px;padding:15px 8px;border:1px solid #c69c6073;background:#b38d4a21;font-size:.83rem}
+@media(max-width:800px){
+ .app-shell:has(.home-v3) .main-content{padding:11px 12px calc(86px + env(safe-area-inset-bottom))}
+ .app-shell:has(.home-v3) .topbar{height:12px;overflow:hidden;padding:0;border:0}
+ .app-shell:has(.home-v3) .topbar>*{display:none}
+ .home-v3{padding:0 0 22px}
+ .home-v3 .home-head{display:flex;align-items:center;padding:4px 1px 15px}
+ .home-v3 .home-head h1{font-size:1.45rem}
+ .home-v3 .home-heading-actions{gap:5px}
+ .home-v3 .home-heading-actions .btn{font-size:.75rem;min-height:36px;padding:7px 11px}
+ .home-v3 .hx-preview-toggle{font-size:.7rem;padding:8px 9px}
+ .home-v3 .dashboard-custom-grid{grid-template-columns:minmax(0,1fr);gap:12px}
+ .home-v3 .dashboard-widget--half,.home-v3 .dashboard-widget--wide{grid-column:1/-1}
+ .home-v3 .hx-card{padding:16px 15px;border-radius:19px}
+ .home-v3 .hx-latest{min-height:176px}
+ .home-v3 .hx-latest-empty{gap:13px;margin-top:22px}
+ .home-v3 .hx-runmark{width:60px;height:60px;border-radius:15px}
+ .home-v3 .hx-runmark .hx-icon{width:35px;height:35px}
+ .home-v3 .hx-latest-empty strong{font-size:1.06rem}
+ .home-v3 .hx-latest-empty p{font-size:.72rem}
+ .home-v3 .hx-latest-fig{gap:6px;margin-top:19px}
+ .home-v3 .hx-latest-fig>div{padding:12px 7px}
+ .home-v3 .hx-latest-fig strong{font-size:1.17rem}
+ .home-v3 .hx-latest-fig em{font-size:.68rem}
+ .home-v3 .hx-condition{min-height:264px}
+ .home-v3 .hx-condition-stats{gap:5px;margin-top:15px}
+ .home-v3 .hx-condition-stats>div{padding:11px 7px}
+ .home-v3 .hx-condition-stats small{font-size:.65rem}
+ .home-v3 .hx-condition-stats strong{font-size:.98rem}
+ .home-v3 .hx-bars{gap:7px;height:76px}
+ .home-v3 .hx-achievement{min-height:220px}
+ .home-v3 .hx-medal{width:67px;height:67px;flex-basis:67px;font-size:2.15rem}
+ .home-v3 .hx-ach-data strong{font-size:1.23rem}
+ .home-v3 .hx-ach-data strong em{font-size:.7rem}
+ .home-v3 .hx-shortcuts{min-height:151px}
+ .home-v3 .hx-shortcut-grid{gap:7px}
+ .home-v3 .hx-shortcut{padding:9px 3px;min-height:83px;flex-direction:column;text-align:center;gap:5px}
+ .home-v3 .hx-shortcut span{width:35px;height:35px}
+ .home-v3 .hx-shortcut strong{font-size:.68rem;white-space:nowrap}
+ .home-v3 .hx-head h2{font-size:.95rem}
+ .home-v3 .hx-symbol{width:31px;height:31px}
+ .home-v3 .hx-icon{width:20px;height:20px}
+ .home-v3 .dashboard-custom-grid--editing .dashboard-widget-content{padding:5px}
+ .app-shell:has(.home-v3) .mobile-nav{box-shadow:0 -10px 20px #020e18aa}
+}
+@media(max-width:365px){
+ .home-v3 .hx-shortcut strong{font-size:.6rem}
+ .home-v3 .hx-condition-stats strong{font-size:.84rem}
+ .home-v3 .hx-preview-toggle{padding:7px}
+ .home-v3 .home-heading-actions .btn{font-size:.66rem;padding:7px 8px}
+}
+@media(prefers-reduced-motion:reduce){.home-v3 *{transition-duration:.001ms!important}}
+
+/* Narrow phones: preserve Japanese value and shortcut readability. */
+@media(max-width:400px){
+ .home-v3 .hx-condition-stats strong{font-size:clamp(.7rem,3.2vw,.88rem);letter-spacing:-.055em}
+ .home-v3 .hx-shortcut strong{white-space:normal;overflow-wrap:anywhere;line-height:1.3}
+}
+
+/* 2026-10-24 home dialogs and achievements: typography and compact date.
+   Achievement data remains read-only until the real achievements engine is wired. */
+.app-shell:has(.home-v3) .hx-dialog form label{font-size:.92rem;line-height:1.45}
+.app-shell:has(.home-v3) .hx-dialog form input,
+.app-shell:has(.home-v3) .hx-dialog form select,
+.app-shell:has(.home-v3) .hx-dialog form textarea{font-size:1rem;min-height:46px}
+.app-shell:has(.home-v3) .hx-dialog input[type="date"]{
+  width:min(100%,260px);
+  min-height:50px;
+  font-size:1.0625rem;
+  font-weight:750;
+  font-variant-numeric:tabular-nums;
+}
+.app-shell:has(.home-v3) .hx-dialog p{font-size:.94rem;line-height:1.65}
+.app-shell:has(.home-v3) .hx-dialog .hx-dialog-notice{font-size:.875rem}
+.app-shell:has(.home-v3) .hx-ach-grid{gap:12px}
+.app-shell:has(.home-v3) .hx-ach-grid span{font-size:.95rem;line-height:1.5;padding:15px 12px}
+.home-v3 .hx-ach-data>small{font-size:.86rem;line-height:1.55}
+.home-v3 .hx-ach-data strong em{font-size:.89rem}
+@media(max-width:400px){
+ .app-shell:has(.home-v3) .hx-ach-dialog .hx-ach-grid{grid-template-columns:minmax(0,1fr)}
+ .app-shell:has(.home-v3) .hx-dialog{padding:18px}
+}
+
+/* Condition / achievement dialogs: share the approved dark record form language.
+   Safari iOS date controls have intrinsic min-content sizes; explicitly bound
+   both the grid track and native picker inside the modal content box. */
+#app .hx-overlay{
+ padding:12px;
+ padding-left:max(12px,env(safe-area-inset-left));
+ padding-right:max(12px,env(safe-area-inset-right));
+ overscroll-behavior:contain;
+ touch-action:pan-y;
+}
+#app .hx-dialog{
+ box-sizing:border-box;
+ width:min(530px,calc(100vw - 24px));
+ max-width:100%;
+ max-height:calc(100dvh - 24px);
+ min-width:0;
+ padding:clamp(15px,4vw,23px);
+ overflow-x:hidden;
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ touch-action:pan-y;
+}
+#app .hx-dialog form{
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ width:100%;
+ min-width:0;
+}
+#app .hx-dialog form label,
+#app .hx-dialog .hx-form-grid{
+ min-width:0;
+ max-width:100%;
+}
+#app .hx-dialog .hx-form-grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;
+}
+#app .hx-dialog form input,
+#app .hx-dialog form select,
+#app .hx-dialog form textarea{
+ display:block;
+ box-sizing:border-box;
+ min-width:0;
+ max-width:100%;
+ width:100%;
+ min-height:50px;
+ font-size:16px;
+ line-height:1.4;
+ color:#f3fcff;
+ background:#092737;
+ border:1px solid #6393a3;
+ border-radius:11px;
+ color-scheme:dark;
+ padding:11px 12px;
+}
+#app .hx-dialog form input:focus-visible,
+#app .hx-dialog form select:focus-visible,
+#app .hx-dialog form textarea:focus-visible{
+ outline:2px solid #71e9e9;outline-offset:2px;
+}
+#app .hx-dialog form label.hx-date-row{
+ display:flex;
+ flex-direction:row;
+ align-items:center;
+ justify-content:flex-start;
+ gap:14px;
+ min-width:0;
+ width:100%;
+}
+#app .hx-dialog form .hx-date-row>span{
+ flex:0 0 34px;
+ white-space:nowrap;
+ font-size:.95rem;
+ font-weight:800;
+}
+#app .hx-dialog form .hx-date-row>input[type="date"]{
+ display:block;
+ box-sizing:border-box;
+ min-width:0;
+ max-width:calc(100% - 48px);
+ width:220px;
+ flex:0 1 220px;
+ min-height:50px;
+ font-size:16px;
+ padding:10px 7px 10px 11px;
+ font-weight:760;
+ font-variant-numeric:tabular-nums;
+ -webkit-appearance:auto;
+}
+#app .hx-dialog-trend{min-width:0;max-width:100%;overflow:hidden}
+#app .hx-dialog .hx-no-sleep{
+ margin:0;padding:8px 0 4px;
+ color:#b8d0db;
+ font-size:.88rem;
+ line-height:1.5;
+}
+#app .hx-dialog .hx-dialog-head{gap:12px;min-width:0}
+#app .hx-dialog .hx-dialog-head h2{font-size:1.28rem;min-width:0}
+#app .hx-dialog .hx-dialog-foot{flex-wrap:wrap}
+body.runload-dialog-open{overflow:hidden;overscroll-behavior:none}
+@media(max-width:360px){
+ #app .hx-dialog{padding:14px}
+ #app .hx-dialog .hx-date-row{gap:9px}
+ #app .hx-dialog form .hx-date-row>input[type="date"]{
+   max-width:calc(100% - 43px);padding:9px 4px;font-size:16px
+ }
+}
+
+/* Touch dragging is exclusive to the dashboard edit handle. Regular scrolling remains
+   possible anywhere else, including inside the condition form. */
+.dashboard-custom-grid--dragging{touch-action:none;overscroll-behavior:none}
+.dashboard-touch-drag-active body{overscroll-behavior:none}
+
+
+/* 2026-10-24: confirmed sleep entry design v2. Primary input = bedtime/wake time;
+   secondary input = self-reported total; both retain the provenance of the value. */
+#app .hx-dialog [hidden]{display:none!important}
+#app .hx-sleep-section{min-width:0;display:grid;gap:14px}
+#app .hx-sleep-head h3{margin:0 0 2px;font-size:1rem;color:#f1fcff}
+#app .hx-sleep-modes{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;
+ background:#081e2c;border:1px solid #457384;border-radius:13px;
+ padding:5px;min-width:0;
+}
+#app .hx-sleep-modes>button{
+ min-width:0;min-height:48px;padding:9px 5px;border:1px solid transparent;
+ background:transparent;border-radius:9px;color:#b7d3dd;line-height:1.25;
+ font-size:clamp(.76rem,3.2vw,.94rem);font-weight:800;cursor:pointer;
+}
+#app .hx-sleep-modes>button.is-selected{
+ color:#f4feff;background:linear-gradient(120deg,#0990a5,#08758f);
+ border-color:#62dfe3;box-shadow:0 3px 12px #00151f88
+}
+#app .hx-sleep-modes>button:focus-visible{outline:2px solid #85ebf0;outline-offset:2px}
+#app .hx-time-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;min-width:0}
+#app .hx-dialog form label.hx-time-card{
+ box-sizing:border-box;min-width:0;max-width:100%;padding:13px 10px;
+ border:1px solid #4d7b89;border-radius:14px;
+ background:linear-gradient(145deg,#194456,#103545);
+ display:flex;flex-direction:column;align-items:stretch;gap:8px;
+}
+#app .hx-time-card .hx-time-label{font-size:.9rem;color:#e4f6fa;font-weight:800;display:flex;align-items:center;gap:6px}
+#app .hx-time-card .hx-icon{width:18px;height:18px;color:#9adfe9}
+#app .hx-dialog .hx-time-card input[type=time]{
+ -webkit-appearance:auto;appearance:auto;
+ display:block;box-sizing:border-box;min-width:0;max-width:100%;width:100%;
+ min-height:50px;padding:9px 5px;border:1px solid #6096a4;border-radius:10px;
+ background:#082839;color:#f5fcff;color-scheme:dark;
+ font-size:clamp(16px,4vw,19px);font-weight:800;
+ font-variant-numeric:tabular-nums;
+}
+#app .hx-time-card small{color:#b2d0d9;font-size:.68rem;line-height:1.45;min-height:2em}
+#app .hx-day-details{margin-top:10px}
+#app .hx-day-details summary{
+ cursor:pointer;color:#87d7e5;font-size:.82rem;
+ padding:6px 2px;min-height:38px;
+}
+#app .hx-day-options{display:grid;gap:7px;padding:10px;
+ background:#092b3b;border:1px solid #366b7e;border-radius:11px}
+#app .hx-dialog form label.hx-day-radio{
+ display:flex;flex-direction:row;align-items:center;gap:9px;font-size:.9rem;
+ min-height:40px;cursor:pointer;color:#d8eaf0
+}
+#app .hx-dialog .hx-day-radio input[type=radio]{
+ appearance:auto;min-height:18px;height:18px;width:18px;max-width:18px;
+ accent-color:#36d1db;flex:0 0 18px;padding:0;margin:0;
+}
+#app .hx-duration-entry{
+ display:grid;gap:9px;min-width:0;border:1px solid #4d7b89;border-radius:14px;
+ padding:14px;background:linear-gradient(145deg,#194456,#103545);
+}
+#app .hx-duration-entry input{max-width:200px}
+#app .hx-duration-entry small{font-size:.82rem;color:#b3d2df}
+#app .hx-sleep-result{
+ min-width:0;padding:15px 16px;display:grid;gap:5px;
+ background:linear-gradient(120deg,#0b4050,#0a3445);
+ border:1px solid #307e8c;border-radius:14px;color:#f1fcff;
+}
+#app .hx-sleep-result>div{font-size:.77rem;color:#c5e6eb;font-weight:700}
+#app .hx-sleep-result>strong{color:#85eee8;font-size:clamp(1.45rem,5vw,1.8rem);line-height:1.35;font-variant-numeric:tabular-nums}
+#app .hx-sleep-result>p{margin:0;font-size:.79rem;color:#c6e5e8;line-height:1.4}
+#app .hx-sleep-result>small{font-size:.73rem;color:#9bc5d2;line-height:1.4}
+#app .hx-form-error:not([hidden]){display:block;margin:0;color:#ffcfb8;
+ padding:9px 11px;border:1px solid #b77a65;background:#462e33;border-radius:8px;font-size:.9rem}
+.home-v3 .hx-condition-stats .hx-wake-time{display:block;margin-top:4px;color:#a8d7df;font-size:.7rem;white-space:nowrap}
+@media(max-width:370px){
+ #app .hx-dialog form label.hx-time-card{padding:10px 6px}
+ #app .hx-dialog .hx-time-card input[type=time]{padding:7px 3px;font-size:16px}
+ #app .hx-time-card small{font-size:.63rem}
+}
+
+
+/* Platform-neutral clock readout: keep native time input interactive but
+   show a consistent HH:MM value rather than device-specific AM/PM formatting. */
+#app .hx-time-control{
+ position:relative;display:flex;align-items:center;justify-content:space-between;
+ height:52px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+ padding:0 8px 0 10px;border:1px solid #6096a4;border-radius:10px;
+ background:#082839;color:#f5fcff;gap:3px;
+}
+#app .hx-time-control>span{
+ display:block;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis;
+ font-size:clamp(14px,3.9vw,19px);font-weight:800;font-variant-numeric:tabular-nums;
+}
+#app .hx-time-clock{width:17px;height:17px;flex:0 0 17px;color:#9adbe8;pointer-events:none}
+#app .hx-dialog .hx-time-card .hx-time-control>input[type=time]{
+ position:absolute;inset:0;width:100%;max-width:100%;min-width:0;
+ height:100%;min-height:0;padding:0;margin:0;border:0;opacity:0;
+ cursor:pointer;z-index:1;font-size:16px;
+}
+#app .hx-time-control:focus-within{outline:2px solid #7aedeb;outline-offset:2px}
+#app .hx-dialog-trend{margin-top:22px;margin-bottom:0}
+@media(max-width:355px){
+ #app .hx-time-control{padding:0 5px;gap:2px}
+ #app .hx-time-control>span{font-size:14px}
+ #app .hx-time-clock{width:15px;height:15px;flex-basis:15px}
+}
+
+
+/* 2026-10-24 parity polish: use the iPhone's native wheel, Android's familiar
+   picker, and a visible keyboard-editable native control on pointer-fine PCs.
+   Saved values and the HH:MM readout stay platform-independent. */
+#app .hx-dialog .hx-duration-entry{min-width:0}
+#app .hx-duration-entry>strong{font-size:.92rem;color:#f2fcff}
+#app .hx-duration-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0}
+#app .hx-dialog form .hx-duration-grid>label{display:grid;gap:7px;min-width:0;color:#cde6ee}
+#app .hx-dialog form .hx-duration-grid input[type=number]{
+ box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:52px;
+ padding:9px 12px;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;
+ background:#092737;color:#f4fcff;border:1px solid #6295a5;border-radius:11px;
+}
+#app .hx-duration-picks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;min-width:0}
+#app .hx-duration-picks>button{
+ min-width:0;min-height:46px;padding:8px 2px;border-radius:10px;border:1px solid #507b8a;
+ background:#103b4b;color:#e7f8fd;font-size:.86rem;font-weight:750;cursor:pointer;white-space:nowrap;
+}
+#app .hx-duration-picks>button[aria-pressed=true]{
+ border-color:#77e6e7;background:#087f94;color:#fff;
+}
+#app .hx-duration-picks>button:focus-visible{outline:2px solid #7aece8;outline-offset:2px}
+@media(min-width:801px) and (hover:hover) and (pointer:fine){
+ #app .hx-time-control{padding:0 3px}
+ #app .hx-time-control>span,#app .hx-time-control>.hx-time-clock{display:none}
+ #app .hx-dialog .hx-time-card .hx-time-control>input[type=time]{
+  position:relative;inset:auto;opacity:1;display:block;
+  width:100%;height:100%;max-width:100%;min-width:0;
+  padding:0 8px;background:transparent;color:#f3fcff;color-scheme:dark;
+  font-size:17px;line-height:1.3;font-variant-numeric:tabular-nums;
+ }
+}
+@media(max-width:350px){
+ #app .hx-duration-picks{gap:5px}
+ #app .hx-duration-picks>button{font-size:.76rem;min-height:44px}
+}
+
+/* V29: use the existing achievement visual language with real saved-run data. */
+.home-v3 .hx-achievement,.home-v3 .hx-ach-main,.home-v3 .hx-ach-data{min-width:0}
+.home-v3 .hx-ach-data strong,.home-v3 .hx-ach-data small{overflow-wrap:anywhere}
+.home-v3 .hx-ach-grid span.is-unearned{opacity:.69;border-color:#71818c6c;background:#51606a22}
+@media(max-width:420px){.home-v3 .hx-ach-main{gap:12px}.home-v3 .hx-medal{width:64px;height:64px;flex-basis:64px;font-size:2.3rem}.home-v3 .hx-ach-data strong{font-size:1.32rem}}
+
+/* B-F09: an explicitly selected dated record can be removed without wiping
+   unrelated days, questions or reflections. Destructive action stays separate. */
+#app .hx-delete-record{margin-top:16px;padding:13px;border:1px solid #8d9bb0;border-radius:12px;background:#1c3546}
+#app .hx-delete-record p{margin:0 0 12px;line-height:1.6;overflow-wrap:anywhere}
+#app .hx-delete-record button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;max-width:100%;padding:9px 14px;margin:0 7px 8px 0;border:1px solid #83aab5;background:#214858;color:#f3fbfe;border-radius:10px;white-space:normal;cursor:pointer}
+#app .hx-delete-record [data-condition-delete-confirm]{border-color:#f2b5a2;background:#723a38;color:#fff}
+#app .hx-delete-record button:focus-visible{outline:3px solid #a8eee9;outline-offset:3px}
+
+/* C-F18: optional observed history, no fabricated zero days or health score. */
+.home-v3 .hx-run-trend-list{padding:0;margin:12px 0;list-style:none;display:grid;gap:10px}
+.home-v3 .hx-run-trend-point{display:grid;grid-template-columns:minmax(0,100px) minmax(50px,1fr) minmax(0,68px);gap:9px;align-items:center;font-size:.79rem;color:#e5f6fa}
+.home-v3 .hx-run-trend-date{overflow-wrap:anywhere;color:#b9dce3}
+.home-v3 .hx-run-trend-bar{height:12px;border-radius:8px;background:#183c4d;border:1px solid #476f7d;overflow:hidden}
+.home-v3 .hx-run-trend-bar>span{display:block;height:100%;background:#39bcc8;border-radius:8px}
+.home-v3 .hx-run-trend-point strong{text-align:right;font-variant-numeric:tabular-nums}
+.home-v3 .hx-run-trend-source,.home-v3 .hx-run-trend-limit{font-size:.76rem;line-height:1.65;color:#bddee5;overflow-wrap:anywhere}
+@media(max-width:390px){.home-v3 .hx-run-trend-point{grid-template-columns:minmax(0,83px) minmax(24px,1fr) 65px;gap:6px;font-size:.69rem}}
+
+/* S02: contextual action appears only in a readable empty running-record state.
+   Home widget editing, ordering and global navigation are unchanged. */
+.home-v3 .hx-latest--start{min-height:218px}
+.home-v3 .hx-latest--start .hx-latest-empty{max-width:56%;margin-top:27px}
+.home-v3 .home-latest-action{position:absolute;z-index:4;right:24px;top:72px;width:38%;display:grid;gap:7px;padding:14px 15px;border-radius:14px;border:1px solid #5295a3;background:#0c3443dd}
+.home-v3 .home-latest-action p{margin:0;color:#c3e7ea;font-size:.79rem;line-height:1.45}
+.home-v3 .home-latest-action a{min-height:49px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;background:#168f99;border:1px solid #61cfd2;color:#fff;font-weight:850;font-size:.89rem;text-decoration:none}
+.home-v3 .home-latest-action small{font-size:.69rem;color:#b1d3db}
+@media(max-width:800px){
+ .home-v3 .hx-latest--start{min-height:0}
+ .home-v3 .hx-latest--start .hx-latest-empty{max-width:none;min-height:68px;margin-top:15px}
+ .home-v3 .home-latest-action{position:relative;inset:auto;width:100%;margin-top:13px;padding:11px 12px;gap:5px}
+ .home-v3 .home-latest-action a{min-height:49px}
+ .home-v3 .home-latest-action p{font-size:.73rem}
+}
+@media(max-width:360px){
+ .home-v3 .hx-latest--start .hx-latest-empty{gap:10px}
+ .home-v3 .hx-latest--start .hx-runmark{width:50px;height:50px;flex-basis:50px}
+ .home-v3 .hx-latest--start .hx-latest-empty strong{font-size:1rem;line-height:1.4}
+ .home-v3 .hx-latest--start .hx-latest-empty p{font-size:.69rem}
+ .home-v3 .hx-latest--start .hx-runmark .hx-icon{width:32px;height:32px}
+ .home-v3 .hx-shortcut-grid{grid-template-columns:1fr;gap:7px}
+ .home-v3 .hx-shortcut{display:flex;flex-direction:row;min-height:53px;text-align:left;justify-content:flex-start;padding:8px 12px}
+ .home-v3 .hx-shortcut strong{font-size:.76rem;white-space:nowrap}
+ .home-v3 .home-latest-action a{font-size:.82rem}
+}
+
+/* S02 approved optional screen help: no automatic display or persisted state. */
+.home-v3 .hx-help-toggle{border:1px solid #5493a4;background:#123d4e;color:#e9f9fb;border-radius:11px;font-weight:800;font-size:.79rem;padding:10px 12px;min-height:44px;white-space:nowrap;cursor:pointer}
+.home-v3 .hx-help-toggle[aria-expanded="true"]{background:#185363;border-color:#8de1e3}
+.home-v3 .hx-help-toggle:focus-visible,.home-v3 .hx-guide-close:focus-visible{outline:3px solid #8dece9;outline-offset:3px}
+.home-v3 .hx-screen-guide{background:linear-gradient(135deg,#133646,#0c2937);border:1px solid #52899a;border-radius:18px;box-shadow:0 12px 25px #0003;color:#f0f7fb;padding:20px 22px;margin:0 0 16px;min-width:0}
+.home-v3 .hx-guide-bar{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;min-width:0}
+.home-v3 .hx-guide-bar>div{min-width:0}
+.home-v3 .hx-guide-eyebrow{display:block;font-size:.7rem;color:#7ee2e6;font-weight:800}
+.home-v3 .hx-guide-bar h2{font-size:1.21rem;margin:4px 0;outline-offset:4px}
+.home-v3 .hx-guide-bar p{font-size:.76rem;color:#bbd5dd;line-height:1.6;margin:0}
+.home-v3 .hx-guide-close{border:1px solid #6f93a0;background:transparent;color:#d6edf3;border-radius:9px;min-height:44px;padding:8px 11px;white-space:nowrap;cursor:pointer}
+.home-v3 .hx-guide-steps{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 0;padding:0}
+.home-v3 .hx-guide-steps>li{display:flex;gap:11px;align-items:flex-start;background:#ffffff0c;padding:14px;border:1px solid #ffffff24;border-radius:12px;min-width:0}
+.home-v3 .hx-guide-steps>li>span{flex:none;font-size:.85rem;font-weight:900;color:#91e8e5}
+.home-v3 .hx-guide-steps>li>div{min-width:0}
+.home-v3 .hx-guide-steps strong{display:block;font-size:.89rem}
+.home-v3 .hx-guide-steps p{font-size:.75rem;line-height:1.65;color:#bfdae1;margin:7px 0 0;overflow-wrap:break-word}
+.home-v3 .hx-guide-note{font-size:.74rem;color:#b8d6dc;line-height:1.6;margin:14px 0 0}
+@media(max-width:800px){
+ .home-v3 .hx-help-toggle{font-size:.7rem;padding:8px;min-height:44px}
+ .home-v3 .hx-screen-guide{padding:16px 14px;margin-bottom:12px}
+ .home-v3 .hx-guide-bar h2{font-size:1.05rem}
+ .home-v3 .hx-guide-bar p{font-size:.74rem}
+ .home-v3 .hx-guide-steps{grid-template-columns:minmax(0,1fr);gap:8px;margin-top:12px}
+ .home-v3 .hx-guide-steps>li{padding:11px 10px;gap:10px}
+ .home-v3 .hx-guide-steps p{font-size:.75rem;margin-top:3px}
+ .home-v3 .hx-guide-steps strong{font-size:.84rem}
+ .home-v3 .hx-guide-note{font-size:.73rem}
+}
+@media(max-width:350px){
+ .home-v3 .home-heading-actions{gap:4px}
+ .home-v3 .hx-help-toggle{font-size:.62rem;padding:7px}
+ .home-v3 .hx-guide-bar{flex-wrap:wrap}
+ .home-v3 .hx-guide-close{min-height:44px}
+}
+
+/* S02 final header balance: make Edit and screen-help equally tappable.
+   Do not change the navigation, guide contents or dashboard preferences. */
+.home-v3 .home-head .home-heading-actions > .hx-help-toggle,
+.home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger{
+  box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;border:1px solid #5493a4;background:#123d4e;color:#e9f9fb;
+  border-radius:11px;padding:10px 13px;font-weight:800;font-size:.79rem;
+  line-height:1.25;white-space:nowrap;
+}
+.home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger{min-width:88px}
+.home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger[aria-pressed="true"]{background:#185363;border-color:#8de1e3}
+.home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger:disabled{opacity:.6;cursor:not-allowed}
+.home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger:focus-visible{outline:3px solid #8dece9;outline-offset:3px}
+@media(max-width:800px){
+ .home-v3 .home-head .home-heading-actions > .hx-help-toggle,
+ .home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger{min-height:44px;font-size:.72rem;padding:9px 10px}
+ .home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger{min-width:80px}
+}
+@media(max-width:350px){
+ .home-v3 .home-head .home-heading-actions > .hx-help-toggle,
+ .home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger{min-height:44px;font-size:.67rem;padding:8px 7px}
+ .home-v3 .home-head .home-heading-actions > .dashboard-edit-trigger{min-width:70px}
+}
+
+/* S02 condition + achievement: semantic empty state and 4 named milestones */
+.home-v3 .hx-condition .hx-title-button,.home-v3 .hx-achievement .hx-title-button{min-height:44px;display:flex;align-items:center}
+.home-v3 .hx-condition .hx-title-button .hx-head,.home-v3 .hx-achievement .hx-title-button .hx-head{width:100%}
+.home-v3 .hx-condition-empty{min-height:83px;margin:8px 0 0;padding:15px 16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:6px;position:relative;z-index:1;border:1px dashed #6da8b5a0;border-radius:12px;background:#ffffff0b}
+.home-v3 .hx-condition-empty strong{font-size:.87rem;line-height:1.45;color:#f1fcff}
+.home-v3 .hx-condition-empty p{margin:0;font-size:.73rem;line-height:1.55;color:#c3dbe2}
+.home-v3 .hx-condition-source{font-size:.71rem;line-height:1.45;color:#b9d9e1;margin:9px 0 0}
+.home-v3 .hx-achievement{display:flex;flex-direction:column}
+.home-v3 .hx-ach-main{margin-top:15px}
+.home-v3 .hx-awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:17px;padding-left:0}
+.home-v3 .hx-awards .hx-award-item{min-height:51px;display:flex;align-items:center;gap:10px;padding:8px 10px;box-sizing:border-box;min-width:0;border:1px solid #d3ab6a52;border-radius:12px;background:#fff8e909;filter:none;opacity:1}
+.home-v3 .hx-awards .hx-award-item.locked{filter:none;opacity:1;border-color:#d3bc9140}
+.home-v3 .hx-awards .hx-award-item.won{background:#f7bd5630;border-color:#edc5759e}
+.home-v3 .hx-awards .hx-award-item .hx-award-symbol{flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border-radius:9px;color:#ffd37e;border:1px solid #edc5755e;background:#ffc97216}
+.home-v3 .hx-awards .hx-award-item.locked .hx-award-symbol{color:#c6a97f;background:#ffffff0a;border-color:#d3bc9140}
+.home-v3 .hx-awards .hx-award-copy{min-width:0;display:flex;flex-direction:column;gap:3px}
+.home-v3 .hx-awards .hx-award-copy strong{font-size:.76rem;line-height:1.35;color:#f6e9d6;font-weight:800}
+.home-v3 .hx-awards .hx-award-copy small{font-size:.67rem;line-height:1.35;color:#cfbfae}
+.home-v3 .hx-awards .hx-award-item.won .hx-award-copy small{color:#ffe0a4}
+.home-v3 .hx-ach-source{font-size:.71rem;line-height:1.55;color:#dbcbb8;margin:12px 0 0}
+@media(max-width:800px){
+ .home-v3 .hx-condition-empty{min-height:76px;padding:12px 13px}
+ .home-v3 .hx-awards{gap:7px;margin-top:14px}
+ .home-v3 .hx-awards .hx-award-item{gap:7px;padding:8px;min-height:49px}
+ .home-v3 .hx-awards .hx-award-copy strong{font-size:.73rem}
+}
+@media(max-width:360px){
+ .home-v3 .hx-awards .hx-award-item{gap:6px;padding:7px 5px}
+ .home-v3 .hx-awards .hx-award-item .hx-award-symbol{flex-basis:26px;width:26px;height:26px}
+ .home-v3 .hx-awards .hx-award-copy strong{font-size:.67rem}
+ .home-v3 .hx-awards .hx-award-copy small{font-size:.62rem}
+ .home-v3 .hx-ach-main{gap:10px}
+ .home-v3 .hx-ach-data>small{font-size:.68rem}
+}
+
+/* S02 condition: restful violet/indigo, distinct from orange Achievement and teal navigation.
+   Accent is decorative/operational, not a wellness indicator or scientific rating. */
+.home-v3 .hx-condition{
+ background:radial-gradient(circle at 94% -20%,#b6a0fb33,transparent 45%),linear-gradient(130deg,#3a315e 0%,#29294b 52%,#1a253f 100%);
+ border-color:#8a79bd;
+}
+.home-v3 .hx-condition:before{border-color:#c4b7ff1f;box-shadow:0 0 0 34px #c1abff0b,0 0 0 69px #a7a4f50c}
+.home-v3 .hx-condition .hx-symbol{color:#ddceff;background:#bda1fa24;border-color:#cbb7f644}
+.home-v3 .hx-condition .hx-right{color:#f1e9ff;background:#7b65b34f;border-color:#bea8f095}
+.home-v3 .hx-condition-stats>div{background:#ffffff0b;border-color:#cab6ff36}
+.home-v3 .hx-condition-stats small,.home-v3 .hx-condition-stats em{color:#d1c8ed}
+.home-v3 .hx-condition-stats .hx-wake-time{color:#d1c4ef}
+.home-v3 .hx-condition .hx-chart-label{color:#f1e9ff}
+.home-v3 .hx-condition .hx-chart-label span{color:#c7bee5}
+.home-v3 .hx-condition .hx-bar{background:linear-gradient(180deg,#d5c1ff,#8e7bd5);box-shadow:0 0 14px #b2a2f944}
+.home-v3 .hx-condition .hx-bar.hx-missing{background:#8a82a7;box-shadow:none}
+.home-v3 .hx-condition .hx-bar-col{border-bottom-color:#c7b7f557}
+.home-v3 .hx-condition-empty{border-color:#b1a0e4a6;background:#c6b8fa0c}
+.home-v3 .hx-condition-empty p,.home-v3 .hx-condition-source{color:#d6cbea}
+.home-v3 .hx-condition .hx-condition-explore{border-color:#b5a2e58c;background:#7360aa3b;color:#f4eaff}
+.home-v3 .hx-condition .hx-condition-explore:focus-visible{outline-color:#dfc4ff}
+/* Scope the form theme to the condition dialog. The Achievement dialog is unchanged. */
+#app .hx-dialog.hx-condition-dialog{
+ background:linear-gradient(150deg,#302c51 0%,#202745 58%,#171e36 100%);
+ border:1px solid #a492d5;color:#f6f3ff;
+}
+#app .hx-condition-dialog .hx-dialog-head h2{color:#f8f4ff}
+#app .hx-condition-dialog .hx-dialog-head button{background:#51476f;border-color:#ac9bce;color:#fff}
+#app .hx-condition-dialog h3{color:#f6f1ff}
+#app .hx-condition-dialog form input,#app .hx-condition-dialog form select,#app .hx-condition-dialog form textarea{
+ background:#1d2340;color:#faf7ff;border-color:#8a80b7;color-scheme:dark;
+}
+#app .hx-condition-dialog form input:focus-visible,#app .hx-condition-dialog form select:focus-visible,#app .hx-condition-dialog form textarea:focus-visible{outline-color:#d1b6ff}
+#app .hx-condition-dialog .hx-sleep-modes{background:#1a1d37;border-color:#786da2}
+#app .hx-condition-dialog .hx-sleep-modes>button{color:#d7cbed}
+#app .hx-condition-dialog .hx-sleep-modes>button.is-selected{background:linear-gradient(125deg,#8065c7,#6453a7);border-color:#c7b0ff;color:#fff;box-shadow:0 4px 12px #0c0b2277}
+#app .hx-condition-dialog .hx-sleep-modes>button:focus-visible{outline-color:#dfc4ff}
+#app .hx-condition-dialog form label.hx-time-card{background:linear-gradient(145deg,#3b365d,#262c4c);border-color:#786fa3}
+#app .hx-condition-dialog .hx-time-card .hx-time-label{color:#f5ebff}
+#app .hx-condition-dialog .hx-time-card .hx-icon,#app .hx-condition-dialog .hx-time-clock{color:#ccbcff}
+#app .hx-condition-dialog .hx-time-control{background:#1c2340;border-color:#8981b5;color:#fff}
+#app .hx-condition-dialog .hx-time-control:focus-within{outline-color:#d6bbff}
+#app .hx-condition-dialog .hx-time-card small{color:#d2c7e7}
+#app .hx-condition-dialog .hx-day-details summary{color:#d4bdfd}
+#app .hx-condition-dialog .hx-day-options{background:#222743;border-color:#766c9b}
+#app .hx-condition-dialog .hx-day-radio input[type=radio]{accent-color:#a995ee}
+#app .hx-condition-dialog .hx-duration-entry{background:linear-gradient(145deg,#3b365d,#262c4c);border-color:#786fa3}
+#app .hx-condition-dialog .hx-duration-entry input[type=number]{background:#1c2340;border-color:#8981b5;color:#fff}
+#app .hx-condition-dialog .hx-duration-picks>button{background:#332e50;border-color:#8176ab;color:#f2eaff}
+#app .hx-condition-dialog .hx-duration-picks>button[aria-pressed=true]{background:#7560b5;border-color:#c7b0ff}
+#app .hx-condition-dialog .hx-sleep-result{background:linear-gradient(125deg,#37335e,#272c50);border-color:#9585c6}
+#app .hx-condition-dialog .hx-sleep-result>strong{color:#dfc6ff}
+#app .hx-condition-dialog .hx-sleep-result>div,#app .hx-condition-dialog .hx-sleep-result>p,#app .hx-condition-dialog .hx-sleep-result>small{color:#e0d5f2}
+#app .hx-condition-dialog .hx-dialog-trend{border-color:#9d8acb66;background:#bca8fc0d}
+#app .hx-condition-dialog .hx-dialog-foot button{background:#4a4167;border-color:#9c8ec1;color:#fff;min-height:44px}
+#app .hx-condition-dialog .hx-dialog-foot .hx-save{background:#7861be;border-color:#c0a6ff;color:#fff;font-weight:850}
+#app .hx-condition-dialog .hx-dialog-foot button:focus-visible{outline:3px solid #d9bdff;outline-offset:2px}
+
+/* S02 detail polish: concise achievement milestones; no ranking or medical score. */
+#app .hx-ach-dialog .hx-dialog-head button,#app .hx-condition-dialog .hx-dialog-head button{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:11px;flex-shrink:0}
+#app .hx-ach-dialog .hx-ach-summary{margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#app .hx-ach-dialog .hx-ach-summary>div{padding:13px 14px;border:1px solid #c5a37874;border-radius:12px;background:#f4b44c14;min-width:0}
+#app .hx-ach-dialog .hx-ach-summary small{display:block;color:#eed3b3;font-size:.76rem;line-height:1.45}
+#app .hx-ach-dialog .hx-ach-summary strong{display:block;color:#fff1db;font-size:1.24rem;line-height:1.35;margin-top:5px;font-variant-numeric:tabular-nums}
+#app .hx-ach-dialog .hx-ach-section-title{color:#ffe0ad;font-size:.96rem;line-height:1.45;margin:18px 0 10px}
+#app .hx-ach-dialog .hx-ach-grid.hx-ach-milestones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+#app .hx-ach-dialog .hx-ach-milestone{min-width:0;display:grid;grid-template-columns:27px minmax(0,1fr);grid-template-rows:auto auto;column-gap:9px;row-gap:3px;align-items:center;box-sizing:border-box;padding:11px;border-radius:12px;border:1px solid #c5a37870;background:#fff0d912}
+#app .hx-ach-dialog .hx-ach-milestone.is-earned{border-color:#e8bf78b8;background:#ffbd4a23}
+#app .hx-ach-dialog .hx-ach-milestone.is-unearned{border-color:#b7a18a6b;background:#a99a8510}
+#app .hx-ach-dialog .hx-ach-milestone-symbol{grid-column:1;grid-row:1/3;display:grid;place-items:center;width:27px;height:27px;border-radius:8px;color:#ffda96;background:#c58e4742;font-size:.95rem}
+#app .hx-ach-dialog .hx-ach-milestone.is-unearned .hx-ach-milestone-symbol{color:#cfbeaa;background:#a99a851a}
+#app .hx-ach-dialog .hx-ach-milestone-label{grid-column:2;grid-row:1;color:#f9efe3;font-size:.875rem;line-height:1.4;min-width:0;overflow-wrap:anywhere}
+#app .hx-ach-dialog .hx-ach-milestone-status{grid-column:2;grid-row:2;justify-self:start;display:inline-flex;align-items:center;min-width:0;color:#ffe3ad;font-weight:800;font-size:.72rem;line-height:1.35}
+#app .hx-ach-dialog .hx-ach-milestone.is-unearned .hx-ach-milestone-status{color:#cfc3b5}
+#app .hx-ach-dialog .hx-ach-limit{color:#d8cfc4;font-size:.875rem;line-height:1.7;margin:13px 0 0;overflow-wrap:anywhere}
+@media(max-width:800px){
+ #app .hx-ach-dialog .hx-ach-grid.hx-ach-milestones{grid-template-columns:minmax(0,1fr);gap:8px}
+ #app .hx-ach-dialog .hx-ach-milestone{grid-template-columns:32px minmax(0,1fr) auto;grid-template-rows:auto;min-height:55px;padding:11px 12px}
+ #app .hx-ach-dialog .hx-ach-milestone-symbol{grid-row:1;grid-column:1;width:32px;height:32px}
+ #app .hx-ach-dialog .hx-ach-milestone-label{grid-row:1;grid-column:2;font-size:.875rem;overflow-wrap:anywhere}
+ #app .hx-ach-dialog .hx-ach-milestone-status{grid-row:1;grid-column:3;justify-self:end;font-size:.74rem;white-space:nowrap}
+}
+@media(max-width:360px){
+ #app .hx-ach-dialog .hx-ach-summary>div{padding:10px 9px}
+ #app .hx-ach-dialog .hx-ach-summary strong{font-size:1.07rem}
+ #app .hx-ach-dialog .hx-ach-milestone{grid-template-columns:28px minmax(0,1fr) auto;column-gap:6px;padding:9px 8px}
+ #app .hx-ach-dialog .hx-ach-milestone-symbol{width:28px;height:28px}
+ #app .hx-ach-dialog .hx-ach-milestone-label{font-size:.875rem}
+ #app .hx-ach-dialog .hx-ach-milestone-status{font-size:.69rem}
+ #app .hx-ach-dialog .hx-ach-limit{font-size:.875rem}
+}
+
+/* S02 consistency correction: keep native date-picker behavior; recolor only
+   the Condition's custom date surface to match its approved indigo theme. */
+#app .hx-dialog.hx-condition-dialog .rl-date-control{
+ background:#202440;border-color:#a99be0;color:#faf6ff;
+}
+#app .hx-dialog.hx-condition-dialog .rl-date-value{color:#faf6ff}
+#app .hx-dialog.hx-condition-dialog .rl-date-icon{color:#d2c1ff}
+#app .hx-dialog.hx-condition-dialog .rl-date-control:focus-within{
+ outline:2px solid #e1c9ff;outline-offset:2px;border-color:#e1c9ff;
+}
+/* Achievement details: visually connect the orange/gold dashboard card with
+   its detail dialog, preserving achievement meaning and readable status text. */
+#app .hx-dialog.hx-ach-dialog{
+ background:radial-gradient(circle at 94% 3%,#c8823833,transparent 42%),linear-gradient(150deg,#3b2d27 0%,#2b2529 54%,#1b202b 100%);
+ border:1px solid #c7945b;color:#fff2de;
+}
+#app .hx-dialog.hx-ach-dialog .hx-dialog-head h2{color:#fff1da}
+#app .hx-dialog.hx-ach-dialog .hx-dialog-head button{
+ background:#5b4335;border-color:#d2a773;color:#fff4e6;
+}
+#app .hx-dialog.hx-ach-dialog .hx-dialog-head button:focus-visible{
+ outline:3px solid #ffe0a1;outline-offset:2px;
+}
+#app .hx-dialog.hx-ach-dialog .hx-ach-summary>div{border-color:#c6a277a1;background:#e6a64e1b}
+#app .hx-dialog.hx-ach-dialog .hx-ach-summary small{color:#f0d1ad}
+#app .hx-dialog.hx-ach-dialog .hx-ach-summary strong{color:#fff0d8}
+#app .hx-dialog.hx-ach-dialog .hx-ach-section-title{color:#ffd797}
+#app .hx-dialog.hx-ach-dialog .hx-ach-milestone{border-color:#c5a0777a;background:#f0ae4b15}
+#app .hx-dialog.hx-ach-dialog .hx-ach-milestone.is-earned{border-color:#edc27da6;background:#ffbd4a2d}
+#app .hx-dialog.hx-ach-dialog .hx-ach-milestone.is-unearned{border-color:#bda68d68;background:#95836d18}
+#app .hx-dialog.hx-ach-dialog .hx-ach-milestone-status{color:#ffdf9e}
+#app .hx-dialog.hx-ach-dialog .hx-ach-milestone.is-unearned .hx-ach-milestone-status{color:#ddcebc}
+#app .hx-dialog.hx-ach-dialog .hx-ach-limit{color:#e0d2c2}
+
+/* All Condition-dialog focus rings follow the approved lavender palette. */
+#app .hx-dialog.hx-condition-dialog .hx-dialog-head button:focus-visible,
+#app .hx-dialog.hx-condition-dialog .hx-dialog-head button:focus{outline:3px solid #e1c9ff;outline-offset:2px}
+
+/* P6 integrated zoom: wrap home heading actions only when their actual width is insufficient.
+   Preserve current one-line desktop and normal mobile layout. */
+@media(max-width:800px){
+ .home-v3 .home-head{flex-wrap:wrap}
+ .home-v3 .home-heading-actions{min-width:0;max-width:100%;flex-wrap:wrap}
+}
+
+/* English dashboard: long translated captions may wrap inside their own cards.
+   The Japanese three-column compact layout is unchanged. Never hide clipped text. */
+html[lang="en"] .home-v3 .hx-condition-stats > div{min-width:0;}
+html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
+ white-space:normal;overflow-wrap:anywhere;line-height:1.4;
+}
+@media(max-width:700px){
+ html[lang="en"] .home-v3 .hx-condition-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+ html[lang="en"] .home-v3 .hx-condition-stats > div:last-child{grid-column:1/-1;}
+}
+
+
+/* Dark-home interaction audit: iOS Safari may retain :hover after touch.
+   Override the generic pale widget hover without losing foreground contrast. */
+#app .home-v3 .widget-edit-actions button:not(:disabled){
+ background:#183848;color:#e4f7fa;-webkit-text-fill-color:#e4f7fa;
+ -webkit-tap-highlight-color:rgba(92,224,228,.22);
+}
+#app .home-v3 .widget-edit-actions button:is(:hover,:active,:focus):not(:disabled){
+ background:#28596a;border-color:#91dfeb;color:#fff;-webkit-text-fill-color:#fff;
+}
+#app .home-v3 .dashboard-edit-toolbar .btn:is(:hover,:active,:focus),
+#app .home-v3 .home-heading-actions .dashboard-edit-trigger:is(:hover,:active,:focus){
+ background:#28596a;border-color:#8bdbe7;color:#fff;-webkit-text-fill-color:#fff;
+}
+/* Legal-document header pattern: fixed title/44px close and scrollable body. */
+#app .home-v3 .hx-overlay{
+ padding:max(8px,env(safe-area-inset-top,0px)) 8px max(8px,env(safe-area-inset-bottom,0px));
+ overflow:hidden;overscroll-behavior:contain;
+}
+#app .home-v3 .hx-dialog{
+ display:grid;grid-template-rows:minmax(58px,auto) minmax(0,1fr);
+ padding:0;max-height:calc(100dvh - 16px);overflow:hidden;min-height:0;
+}
+#app .home-v3 .hx-dialog .hx-dialog-head{
+ position:relative;z-index:1;min-height:58px;min-width:0;
+ padding:8px 16px;background:#0c2535;border-bottom:1px solid #355e6e;
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+#app .home-v3 .hx-dialog .hx-dialog-head h2{
+ min-width:0;margin:0;font-size:clamp(16px,2.5vw,18px);
+ line-height:1.4;overflow-wrap:anywhere;color:#f4ffff;
+}
+#app .home-v3 .hx-dialog .hx-dialog-scroll{
+ min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;
+ overscroll-behavior:contain;scrollbar-gutter:stable;
+ padding:clamp(15px,4vw,23px);
+}
+#app .home-v3 .hx-dialog.hx-condition-dialog .hx-dialog-head .hx-dialog-close,
+#app .home-v3 .hx-dialog.hx-ach-dialog .hx-dialog-head .hx-dialog-close{
+ -webkit-appearance:none;appearance:none;flex:none;
+ width:44px;height:44px;min-width:44px;min-height:44px;
+ display:grid;place-items:center;padding:0;
+ border-radius:12px;border:1px solid #65a7b3;
+ background:#16485b;color:#eaffff;-webkit-text-fill-color:#eaffff;
+ font-size:24px;font-weight:600;line-height:1;cursor:pointer;
+}
+#app .home-v3 .hx-dialog .hx-dialog-head .hx-dialog-close:is(:hover,:active,:focus){
+ background:#206074;color:#fff;-webkit-text-fill-color:#fff;
+}
+#app .home-v3 .hx-dialog .hx-dialog-foot button:is(:hover,:active,:focus):not(:disabled){
+ color:#fff;-webkit-text-fill-color:#fff;
+}
+@media(max-width:520px){
+ #app .home-v3 .hx-dialog .hx-dialog-head{padding:8px 14px}
+ #app .home-v3 .hx-dialog .hx-dialog-scroll{padding:16px 14px}
+}
+
+/* Auto-save toolbar has only one action; the obsolete three-column
+   mobile grid must not shrink Restore Defaults on 320px. */
+#app .home-v3 .dashboard-edit-buttons [data-home-reset]{
+ min-height:44px;padding:9px 13px;font-size:.77rem;line-height:1.35;
+}
+@media(max-width:800px){
+ #app .home-v3 .dashboard-edit-buttons{
+  width:100%;grid-template-columns:minmax(0,1fr);
+ }
+ #app .home-v3 .dashboard-edit-buttons [data-home-reset]{width:100%;font-size:.76rem}
+}

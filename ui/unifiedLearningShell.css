@@ -1,0 +1,198 @@
+/* Unified dark shell: learning matches existing Home / Inquiry / Settings.
+   This file is last in the stylesheet order to supersede legacy light rules. */
+.app-shell .topbar{display:none!important}
+@media(max-width:800px){
+ .app-shell .mobile-nav{
+  display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  grid-auto-rows:minmax(54px,auto)!important;height:auto!important;
+  min-height:65px!important;align-items:stretch!important;
+  padding:5px 3px calc(7px + env(safe-area-inset-bottom,0px))!important;
+  background:#0c1d2bf5!important;border-top:1px solid #2e5263!important;
+  box-shadow:0 -4px 20px #04131f80!important;color:#bfd7e1!important
+ }
+ .app-shell .mobile-link{
+  display:grid!important;justify-items:center;align-content:center;
+  min-height:48px!important;height:auto!important;min-width:0;
+  padding:5px 1px!important;gap:3px!important;font-size:.65rem!important;
+  line-height:1.3!important;font-weight:750!important;
+  white-space:normal!important;overflow-wrap:anywhere;
+  color:#c2d6df!important
+ }
+ .app-shell .mobile-link .nav-icon{
+  display:grid;place-items:center;width:23px;height:25px;min-width:0
+ }
+ .app-shell .mobile-link .nav-svg{display:block;width:21px;height:21px}
+ .app-shell .mobile-link.is-active{
+  color:#6eeae4!important;background:#174353!important;
+  box-shadow:inset 0 2px 0 #4ce6e1a3
+ }
+ .app-shell .main-content{
+  padding-bottom:max(calc(105px + env(safe-area-inset-bottom,0px)),calc(6.5rem + env(safe-area-inset-bottom,0px)))!important
+ }
+}
+@media(min-width:801px){
+ .app-shell .sidebar{background:linear-gradient(165deg,#0b3448,#061724 90%);border-right:1px solid #216078}
+ .app-shell .side-link{color:#bad6df}
+ .app-shell .side-link:is(:hover,.is-active){color:#6eeae4;background:#174353}
+}
+/* Shared navy and muted turquoise—not an isolated bright learning theme. */
+.app-shell:has(.lr-root){background:#061725;color:#eaf7fc}
+.app-shell:has(.lr-root) .main-frame{
+ background:radial-gradient(ellipse at 86% 0%,#19556b48,transparent 46%),#061725;
+ min-height:100dvh
+}
+.app-shell:has(.lr-root) .main-content{
+ background:transparent!important;color:#ecf8fb!important;
+ width:100%;max-width:1250px;padding-top:clamp(13px,2vw,24px)
+}
+.lr-root{
+ color:#eaf7fb;
+ --lr-text:#eaf7fb;--lr-muted:#bed6df;--lr-border:#326478;
+ --lr-card:#0f3042;--lr-accent:#69e2df
+}
+.lr-root .lr-hero{
+ background:radial-gradient(ellipse at 91% 0%,#216f7a55,transparent 43%),linear-gradient(145deg,#123b4b,#0a2434);
+ border:1px solid #356b7d;border-radius:18px;
+ color:#eaf7fb;box-shadow:0 11px 27px #0005;
+ padding:clamp(15px,2.5vw,24px)
+}
+.lr-root .lr-hero h1{color:#f5fcff;font-size:clamp(1.62rem,3vw,2rem);line-height:1.35}
+.lr-root .lr-hero p{color:#c4dde6}
+.lr-root .lr-hero .lr-eyebrow,
+.lr-root .lr-eyebrow{color:#6ae1df;letter-spacing:.04em}
+.lr-root .lr-hero :is(strong,a){color:#eaffff}
+.lr-root .lr-hero .lr-goal{background:#0c3747;border-left:3px solid #46c9c6;color:#e2f6f8}
+.lr-root .lr-course{
+ background:linear-gradient(145deg,#12394b,#0a2839 86%);
+ border:1px solid #376c7e;border-left:4px solid #5accca;
+ border-radius:17px;box-shadow:0 9px 21px #0004;
+ padding:clamp(15px,2.1vw,21px);gap:10px
+}
+.lr-root .lr-course h2{color:#f0fbff;font-size:1.08rem}
+.lr-root .lr-course p{color:#bdd5df}
+.lr-root .lr-number{color:#65e0df}
+.lr-root .lr-status,.lr-root .lr-support-status{
+ background:#194858;border:1px solid #397f8e;color:#c5f6f3
+}
+.lr-root .lr-action{
+ background:#178b99;border:1px solid #57cdcc;color:#f6ffff;
+ min-height:46px;border-radius:11px
+}
+.lr-root .lr-action:hover{background:#20a3ae;color:#fff}
+.lr-root .lr-secondary,.lr-root .lr-panel .lr-secondary{
+ background:#153d4e;border:1px solid #488894;color:#d7fafa
+}
+.lr-root .lr-secondary:hover{background:#205b69}
+.lr-root .lr-note,.lr-root .lr-source{color:#b2ced9}
+.lr-root .lr-back,.lr-root .lr-lesson .lr-back{color:#7de4e1}
+.lr-root .lr-panel,.lr-root .lr-chapter{
+ background:linear-gradient(155deg,#11364a,#0b2838);
+ border:1px solid #366979;border-radius:16px;color:#e8f6fa;
+ box-shadow:0 7px 23px #0003
+}
+.lr-root .lr-panel :is(h2,h3){color:#f1fbfc}
+.lr-root .lr-panel .lr-eyebrow{color:#69dfdc}
+.lr-root .lr-panel :is(p,li){color:#c9dfe6}
+.lr-root .lr-panel .lr-source{background:#0c2a3b;color:#b6d4df}
+.lr-root .lr-chapter>summary{color:#eafafd}
+.lr-root .lr-chapter-label{color:#6adbd7}
+.lr-root .lr-chapter-name{color:#f5feff}
+.lr-root .lr-chapter>.lr-panel{background:#0e2f41;border-top:1px solid #38687c;box-shadow:none}
+.lr-root .lr-chapter-controls{color:#bad2db}
+.lr-root .lr-chapter-controls button{
+ background:#153f51;border:1px solid #4d91a1;color:#e5fbfc
+}
+.lr-root .lr-goal-disclosure,.lr-root .lr-lesson-map{
+ background:#113548;border:1px solid #376d80;color:#e8faff
+}
+.lr-root .lr-goal-disclosure summary,.lr-root .lr-lesson-map>summary{color:#e3f9fb}
+.lr-root .lr-lesson-map>summary small{color:#bbd8df}
+.lr-root .lr-map-group{background:#0c2a3b;border:1px solid #376477}
+.lr-root .lr-map-group-label{color:#75dcd9}
+.lr-root .lr-map-group-links button,.lr-root .lr-lesson-index button{
+ background:#164154;border:1px solid #40798a;color:#e3faff
+}
+.lr-root .lr-map-group-links button:hover,.lr-root .lr-lesson-index button:hover{background:#1e586b}
+.lr-root .lr-lesson-index{background:#103447;border-color:#326b7e}
+.lr-root .lr-question{
+ background:#0b2c3d;border:1px solid #366b80;color:#eaf9fc
+}
+.lr-root .lr-question .lr-question-number{color:#6ae1dc}
+.lr-root .lr-question .lr-question-prompt{color:#f2fdff}
+.lr-root .lr-question>label{
+ background:#12384a;border:1px solid #3c6676;color:#e8f7fb
+}
+.lr-root .lr-question>label:has(input:checked){background:#185268;border-color:#69dad7}
+.lr-root .lr-formula,.lr-root .lr-comparison>div,.lr-root .lr-pace-profile,
+.lr-root .lr-motion-methods article,.lr-root .lr-fatigue-cycle article,
+.lr-root .lr-fatigue-scenarios article,.lr-root .lr-motion-figure,
+.lr-root .lr-motion-cycle,.lr-root .lr-hint{
+ background:#12394b;color:#e6f8fc;border:1px solid #356879
+}
+.lr-root .lr-formula,.lr-root .lr-calc,.lr-root .lr-comparison strong,
+.lr-root .lr-pace-profile h3,.lr-root .lr-fatigue-cycle h3,
+.lr-root .lr-fatigue-scenarios h3{color:#87e7e3}
+.lr-root .lr-track{background:#24495d}
+.lr-root .lr-help-disclosure summary{color:#8ce7e4}
+.lr-root .lr-goal-disclosure>.lr-goal{background:#133e50;color:#e6f7fa}
+.lr-root .lr-pathway{border-left:4px solid #55c4c5}
+.lr-root .lr-feedback{background:#173f50;color:#e2f8fb;border:1px solid #397b86}
+.lr-root .lr-feedback[data-correct=true]{background:#164b45;color:#dcfff1;border-color:#5baf9c}
+.lr-root .lr-relearn,.lr-root .lr-panel .lr-outline{
+ background:#194b5e;color:#e5faff;border-color:#4b98a6
+}
+.lr-root .lr-slider-label{color:#e3f6f9}
+.lr-root :is(a,button,summary,input):focus-visible{outline:3px solid #f4c059;outline-offset:3px}
+@media(max-width:800px){
+ .app-shell:has(.lr-root) .main-content{
+  padding:14px 12px max(calc(105px + env(safe-area-inset-bottom,0px)),6.5rem)!important
+ }
+ .lr-root .lr-hero,.lr-root .lr-course{padding:16px 17px}
+ .lr-root .lr-hero p{line-height:1.6}
+ .lr-root .lr-catalog{gap:11px}
+ .lr-root .lr-progress-panel{padding:13px}
+}
+
+/* P11.1: complete subordinate lesson surfaces that kept legacy light accents.
+   Keep neutral inputs legible, and make disclosure symbols match the shared shell. */
+.lr-root .lr-motion-cycle span{
+ background:#194757;border-color:#467c8e;color:#e8f9fc
+}
+.lr-root .lr-motion-cycle strong,
+.lr-root .lr-motion-methods article h3,
+.lr-root .lr-pace-profile p,
+.lr-root .lr-pace-profile h3{color:#87e7e3}
+.lr-root .lr-motion-figure figcaption{color:#c4dbe5}
+.lr-root .lr-chapter>summary:before,
+.lr-root .lr-lesson-map>summary:before{color:#79e5df}
+.lr-root .lr-pace-profile ol,
+.lr-root .lr-motion-methods article p,
+.lr-root .lr-fatigue-scenarios article p{color:#d5e7ed}
+.lr-root .lr-partial-inputs input,
+.lr-root .lr-fallback-label select{
+ background:#102f41;color:#effcff;border:1px solid #5e9cad;
+ color-scheme:dark
+}
+.lr-root .lr-track>span{background:linear-gradient(90deg,#168ca9,#36c7c6)}
+
+/* Learning begins with a plain lesson title instead of intro/checklist cards. */
+.lr-root .lr-lesson-title{margin:0 2px 2px;color:#f1fbfc;font-size:clamp(1.18rem,2.6vw,1.5rem);line-height:1.42;font-weight:850;overflow-wrap:anywhere}
+.lr-root .lr-catalog{margin-top:0}
+/* Dark-theme practice buttons: legible on default, iOS pressed and focus states. */
+.lr-root .lr-panel .lr-partial-form button.lr-action{
+ -webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;
+ background:#126879;border:1px solid #64c9cc;color:#f8ffff;-webkit-text-fill-color:#f8ffff;
+}
+.lr-root .lr-panel .lr-partial-form button.lr-action:is(:hover,:active,:focus){
+ background:#0c5366;border-color:#8be4e3;color:#fff;-webkit-text-fill-color:#fff;
+}
+.lr-root .lr-panel .lr-partial-form button.lr-action.lr-outline{
+ background:#173f51;border:1px solid #579fab;color:#e7fbff;-webkit-text-fill-color:#e7fbff;
+}
+.lr-root .lr-panel .lr-partial-form button.lr-action.lr-outline:is(:hover,:active,:focus){
+ background:#215668;border-color:#8bd6db;color:#fff;-webkit-text-fill-color:#fff;
+}
+.lr-root .lr-panel .lr-partial-form button.lr-action:focus-visible{
+ outline:3px solid #acebe6;outline-offset:3px;
+}
+.lr-root .lr-panel .lr-partial-form button.lr-action:disabled{opacity:.55;cursor:not-allowed}

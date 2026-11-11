@@ -1,0 +1,147 @@
+/* P13: user-observed iPhone refinements; non-destructive presentation changes. */
+
+/* One compact GPS section at the very end of History. The content remains
+   reachable, while records, backup and storage operations are not forced open. */
+.gps-history-section{max-width:1320px;margin:18px auto 30px;color:#e7f6f9;min-width:0}
+.gps-history-disclosure{
+ border:1px solid #3b7486;border-radius:20px;
+ background:linear-gradient(145deg,#103747,#0a2738);
+ box-shadow:0 10px 25px #00111e4d;overflow:hidden;min-width:0
+}
+.gps-history-disclosure>summary{
+ display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+ padding:17px 19px;min-height:64px;list-style:none;cursor:pointer;
+ background:linear-gradient(105deg,#153e50,#0e2e40);
+ color:#edfaff;font-weight:850
+}
+.gps-history-disclosure>summary::-webkit-details-marker,
+.gps-history-tools>summary::-webkit-details-marker{display:none}
+.gps-history-disclosure>summary:focus-visible,.gps-history-tools>summary:focus-visible{
+ outline:3px solid #a4f7ed;outline-offset:-4px
+}
+.gps-history-heading{flex:1 1 190px;font-size:1.05rem;min-width:0}
+.gps-history-count{
+ padding:5px 10px;background:#0a3445;border:1px solid #518fa0;
+ color:#c3efef;border-radius:999px;font-size:.8rem;white-space:nowrap
+}
+.gps-history-chevron{
+ color:#80dedf;font-size:1.35rem;line-height:1;
+ transition:transform .17s ease;flex:0 0 auto
+}
+.gps-history-disclosure[open]>summary .gps-history-chevron{transform:rotate(180deg)}
+.gps-history-content{padding:14px 18px 18px;display:grid;gap:12px;min-width:0}
+.gps-history-content>.gps-history-privacy{margin:0;color:#a9c8d1;font-size:.8rem;line-height:1.6}
+.gps-history-content>.gps-history-empty{
+ margin:0;padding:14px;border:1px dashed #4a8090;border-radius:12px;
+ color:#c3dce3;background:#0b2938;font-size:.88rem
+}
+.gps-history-item{
+ display:flex;align-items:flex-start;gap:10px;justify-content:space-between;flex-wrap:wrap;
+ padding:14px;border:1px solid #396e80;border-radius:14px;
+ background:#0c2b3d;min-width:0
+}
+.gps-history-item>span{display:grid;gap:6px;flex:1 1 220px;min-width:0}
+.gps-history-item strong{font-size:.86rem;line-height:1.5}
+.gps-history-item small{color:#a7c6d0;font-size:.75rem;line-height:1.6;overflow-wrap:anywhere}
+.gps-history-item>div{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.gps-history-item button,.gps-history-item a{
+ display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+ padding:9px 12px;border-radius:10px;border:1px solid #508b9a;
+ background:#164353;color:#dbf6f5;font-weight:750;font-size:.8rem;text-decoration:none
+}
+.gps-history-item aside{width:100%;padding:10px;border-radius:10px;background:#34302b}
+.gps-v2-history{display:grid;gap:10px}
+.gps-v2-history h3{margin:3px 0;color:#c2e7e8;font-size:.91rem}
+.gps-history-tools{min-width:0;border:1px solid #315f70;border-radius:14px;background:#0a2636}
+.gps-history-tools>summary{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:13px 15px;min-height:49px;cursor:pointer;list-style:none;
+ color:#d5eff0;font-weight:800;font-size:.87rem
+}
+.gps-history-tools>summary:after{content:"⌄";color:#8ee3e3;font-size:1.2rem;line-height:1}
+.gps-history-tools[open]>summary:after{transform:rotate(180deg)}
+.gps-history-tools>summary small{margin-left:auto;color:#99beca;font-size:.72rem;font-weight:550}
+.gps-history-tools-content{display:grid;gap:12px;padding:0 12px 13px;min-width:0}
+.gps-history-tools-content>.gps-history-backup,.gps-history-tools-content>.gps-history-capacity{
+ margin:0;border:1px solid #335c6e;border-radius:13px;background:#0e2b3d;
+ padding:14px;min-width:0;display:grid;gap:10px
+}
+.gps-history-tools-content h3{margin:0;font-size:.95rem;color:#e7f8f9}
+.gps-history-tools-content p{margin:0;color:#b9d1d9;font-size:.78rem;line-height:1.65}
+.gps-history-tools-content .gps-history-backup-actions{
+ display:flex;flex-wrap:wrap;gap:8px
+}
+.gps-history-tools-content .gps-history-backup-actions>*{
+ flex:1 1 175px;max-width:100%;min-height:44px;box-sizing:border-box
+}
+.gps-history-tools-content button,.gps-history-tools-content label{
+ cursor:pointer;border-radius:10px;padding:10px 12px;
+ border:1px solid #487c8c;background:#164153;color:#e2f8f9;font-size:.8rem;
+ font-weight:750;overflow-wrap:anywhere
+}
+.gps-history-tools-content label{display:grid;gap:8px}
+.gps-history-tools-content label input{min-width:0;width:100%;font-size:.8rem}
+.gps-history-tools-content [role="alert"],.gps-history-origin-warning{color:#ffddaa!important}
+@media(max-width:470px){
+ .gps-history-disclosure>summary{padding:15px 14px;gap:8px}
+ .gps-history-heading{flex:1 1 165px;font-size:.96rem}
+ .gps-history-content{padding:12px;gap:10px}
+ .gps-history-item{padding:12px}
+ .gps-history-item>div{width:100%}
+ .gps-history-item>div>*{flex:1 1 115px}
+ .gps-history-tools-content{padding:0 9px 10px}
+ .gps-history-tools>summary{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .gps-history-chevron{transition:none}
+}
+
+/* No redundant chapter menu, all-open switch or section-counter.
+   The user expands only the relevant chapter by its own summary. */
+.lr-root .lr-inquiry-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+ align-items:stretch;margin:15px 0 0
+}
+.lr-root .lr-inquiry-actions>.lr-action{
+ min-width:0;width:100%;min-height:48px;margin:0;
+ white-space:normal;overflow-wrap:anywhere;
+ display:flex;align-items:center;justify-content:center;
+ padding:12px 14px;text-align:center;line-height:1.55;
+ border-radius:12px
+}
+.lr-root .lr-inquiry-actions>.lr-action:first-child,
+.lr-root .lr-inquiry-actions>.lr-action:nth-child(2){
+ grid-column:1/-1;justify-content:center;font-weight:850
+}
+.lr-root .lr-inquiry-actions>.lr-action:nth-child(n+3){
+ font-size:.8rem;background:#103748;border-color:#426d7d;color:#bfe5ed
+}
+@media(max-width:410px){
+ .lr-root .lr-inquiry-actions{grid-template-columns:1fr}
+ .lr-root .lr-inquiry-actions>.lr-action{grid-column:1/-1}
+}
+
+/* A transient informational line rather than a persistent warning banner. */
+.ex-page .ex-learning-entry-hint{
+ display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+ margin:0 2px 13px;padding:11px 13px;
+ border:1px solid #3a788a;border-left:3px solid #48c9c9;
+ border-radius:12px;background:#0b3445;color:#e0f5f4
+}
+.ex-page .ex-learning-entry-hint>span{color:#77dedc;font-size:1.12rem;flex:0 0 auto}
+.ex-page .ex-learning-entry-hint p{
+ flex:1 1 205px;min-width:0;margin:0;
+ font-size:.8rem;line-height:1.6;color:#d8eeef
+}
+.ex-page .ex-learning-entry-hint a{
+ font-size:.78rem;color:#abf1ec;text-decoration:underline;text-underline-offset:3px
+}
+.ex-page .ex-learning-entry-hint button{
+ width:38px;height:38px;flex:0 0 auto;display:grid;place-items:center;
+ border:1px solid #528393;border-radius:9px;background:#123c50;
+ color:#d6f2f2;font-size:1.08rem;cursor:pointer
+}
+@media(max-width:420px){
+ .ex-page .ex-learning-entry-hint{padding:10px;gap:8px}
+ .ex-page .ex-learning-entry-hint p{flex-basis:calc(100% - 75px)}
+}

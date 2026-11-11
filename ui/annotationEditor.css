@@ -1,0 +1,46 @@
+.ax-page{--ax-bg:#092738;--ax-edge:#33758b;--ax-accent:#72eee3;max-width:970px;margin:0 auto 65px;padding:clamp(14px,3vw,32px);color:#e8f6fc;overflow-wrap:anywhere}.ax-page *{box-sizing:border-box}.ax-header{display:flex;align-items:start;gap:20px;margin-bottom:24px}.ax-header h1{font-size:clamp(24px,4vw,34px);margin:7px 0}.ax-header small{color:#97d9df}.ax-back,.ax-page a{color:#80efe5;text-underline-offset:4px}.ax-back{white-space:nowrap;padding:10px 0}.ax-card{background:linear-gradient(155deg,#103b51,#091f30 75%);border:1px solid var(--ax-edge);border-radius:17px;padding:clamp(16px,3vw,27px);margin-bottom:18px;box-shadow:0 9px 24px #0003;min-width:0}.ax-card h2{font-size:1.18rem;margin:0 0 15px;color:#e8faff}.ax-card p{line-height:1.7}.ax-record dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.ax-record dl>div{min-width:0;padding:9px 12px;border:1px solid #315367;border-radius:11px}.ax-record dt,.ax-compare small{display:block;color:#add5df;font-size:.82em}.ax-record dd{margin:6px 0 0;font-weight:690}.ax-page code{font-size:12px;overflow-wrap:anywhere}.ax-page details summary{cursor:pointer;min-height:38px;color:#a9f1e8}.ax-field{display:grid;gap:8px;min-width:0;margin-bottom:14px;font-size:.95rem}.ax-field>span,.ax-field legend{color:#d6eff4;font-weight:650}.ax-field input,.ax-field select,.ax-field textarea,.ax-page button{font:inherit}.ax-field input,.ax-field select,.ax-field textarea{min-height:44px;width:100%;max-width:100%;border:1px solid #6796a6;background:#092331;color:#f5fcfe;border-radius:10px;padding:10px 12px}.ax-field textarea{min-height:84px;resize:vertical}.ax-field option{color:#f5fcfe;background:#0b2c3d}.ax-field input:focus-visible,.ax-field select:focus-visible,.ax-field textarea:focus-visible,.ax-page button:focus-visible,.ax-page a:focus-visible{outline:3px solid #80f8e6;outline-offset:3px}.ax-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:15px 0 20px}.ax-compare>div{background:#071e2a;border:1px solid #3c7282;border-radius:12px;padding:14px;min-width:0}.ax-compare p{white-space:pre-wrap;overflow-wrap:anywhere}.ax-editor-fields{display:grid;gap:4px}.ax-editor-fields>.ax-field{max-width:760px}.ax-page fieldset{border:0;padding:0;margin:0;min-width:0}.ax-page fieldset>legend{font-weight:700;font-size:1.04rem;margin-bottom:15px}.ax-page .ax-section{border:1px solid #437d91;padding:12px;border-radius:11px;margin:10px 0}.ax-page .ax-section legend{padding:0 8px}.ax-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ax-caution{font-size:.89rem;color:#b9d8dc;padding:12px 0;border-top:1px solid #315669}.ax-buttons{display:flex;flex-wrap:wrap;gap:12px}.ax-buttons button,.ax-retry button{border-radius:10px;border:1px solid #76e6d8;padding:11px 17px;min-height:44px;background:linear-gradient(120deg,#0b737c,#106483);color:#fcffff;font-weight:760;cursor:pointer}.ax-buttons [data-ax-retract]{background:transparent;color:#fae0be;border-color:#b88a65}.ax-buttons button:disabled{cursor:not-allowed;opacity:.5}.ax-retry{margin-top:16px;padding:15px;border:1px solid #d0ae71;border-radius:12px}.ax-error,.ax-page [role=alert]{color:#ffe6bc}.ax-history li{line-height:1.7}.ax-footer{display:flex;flex-wrap:wrap;gap:18px;padding:16px 0}.ax-footnote{font-size:.86rem;color:#aed2da}.ax-page [data-ax-notice]{margin-top:12px;color:#b4f1e4;min-height:20px}@media(max-width:600px){.ax-header{display:block}.ax-record dl,.ax-compare,.ax-group{grid-template-columns:minmax(0,1fr)}.ax-buttons{display:grid}.ax-buttons button{width:100%}}@media(prefers-reduced-motion:reduce){.ax-page *{scroll-behavior:auto!important}}
+
+/* Post-hoc screen visual integration: the parent app chrome must never turn pale
+   while the nested cards remain dark. Scoped to the annotation route only. */
+body:has(#runload-annotation-editor),body:has(#runload-annotation-editor) #app,
+.app-shell:has(#runload-annotation-editor){background:#061725;color:#edf9fd;min-height:100dvh}
+.app-shell:has(#runload-annotation-editor) .main-frame,
+.app-shell:has(#runload-annotation-editor) .main-content{background:linear-gradient(160deg,#061725,#092737);color:#eaf8fc;min-width:0}
+.app-shell:has(#runload-annotation-editor) .main-content{padding-top:clamp(18px,3vw,34px);padding-bottom:calc(105px + env(safe-area-inset-bottom))}
+#runload-annotation-editor{display:block;min-width:0;min-height:80vh;color:#eaf8fc;color-scheme:dark;background:transparent}
+.ax-page{max-width:890px;margin:0 auto 24px;padding:clamp(12px,3vw,26px);color:#eaf8fc}
+.ax-header{display:grid;gap:4px;align-items:start;margin:0 0 20px}
+.ax-header .ax-back{display:inline-flex;align-items:center;width:fit-content;min-height:44px;padding:7px 4px;color:#9aede5;font-size:14px;font-weight:680;text-decoration:none}
+.ax-heading h1{margin:4px 0 6px;color:#f2fcff;font-size:clamp(24px,5.3vw,32px);line-height:1.28;letter-spacing:-.02em;overflow-wrap:anywhere}
+.ax-heading .ax-intro{margin:0;max-width:48ch;color:#b9d8e0;font-size:14px;line-height:1.65}
+.ax-card{background:linear-gradient(150deg,#10374a,#0a2536 82%);border-color:#386e80;box-shadow:0 7px 20px #0003;border-radius:16px;padding:clamp(14px,2.4vw,21px);margin-bottom:14px}
+.ax-record h2{margin:0 0 8px;font-size:14px;font-weight:740;color:#d6f1f4}
+.ax-record dl{gap:8px;margin:0 0 7px}
+.ax-record dl>div{padding:8px 10px;border-color:#335b70;background:#0b2d40}
+.ax-record dt{font-size:12px;color:#a6cad3}
+.ax-record dd{margin-top:3px;line-height:1.4;font-size:15px;font-weight:760}
+.ax-record-help{margin-top:8px}
+.ax-record-help summary{color:#99dfde;font-size:13px;line-height:1.45}
+.ax-record-help p{font-size:13px;color:#bfd9e0;line-height:1.7;margin:5px 0 0}
+.ax-form-card h2{font-size:19px;margin:0 0 11px}
+.ax-field-picker{max-width:620px}
+.ax-field-picker select{font-size:15px;min-height:50px}
+.ax-form-card>p{font-size:13px;color:#b9d8dd;line-height:1.6;margin:2px 0 10px}
+.ax-no-field{margin:14px 0 0;padding:14px;border:1px solid #315f72;border-radius:12px;background:#0a2a3d;color:#c9e5e8;font-size:14px;line-height:1.65}
+.ax-compare{margin:14px 0 16px}
+.ax-compare>div{background:#082738;border-color:#376778}
+.ax-compare p{font-size:14px;line-height:1.6}
+.ax-field input,.ax-field select,.ax-field textarea{color-scheme:dark;background:#071f2e;color:#f3fdff;accent-color:#44d5d1}
+.ax-buttons button,.ax-retry button{min-height:48px;white-space:normal;overflow-wrap:anywhere}
+.ax-footer{padding:12px 0 8px;gap:12px}
+.ax-footer a{font-size:14px;min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:600px){
+ .ax-page{padding:10px 12px 18px}
+ .ax-record dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .ax-record dl>div:last-child{grid-column:1/-1}
+ .ax-record dl>div{min-width:0;padding:8px 9px}
+ .ax-record dd{font-size:14px;overflow-wrap:anywhere}
+ .ax-compare,.ax-group{grid-template-columns:minmax(0,1fr)}
+ .ax-footer{display:grid;grid-template-columns:1fr}
+}
+@media print{.ax-header .ax-back,.ax-footer{display:none!important}}

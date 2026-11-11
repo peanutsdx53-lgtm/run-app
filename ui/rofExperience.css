@@ -1,0 +1,242 @@
+/* ROF-J approved v4: five original illustrations, descriptions and 11 integer ticks. */
+.record-v3.rv4-page{max-width:1140px;margin:0 auto;min-width:0;color:#eef8fc;}
+.rv4-page *{box-sizing:border-box}
+.rv4-page .rv4-head{margin-bottom:16px;align-items:center}
+.rv4-page .rv4-head>div{min-width:0}
+.rv4-page .rv4-head h1{margin:0;font-size:clamp(20px,4vw,26px);line-height:1.3}
+.rv4-page .rv4-head p{margin:5px 0 0;color:#aacdd8;font-size:12px}
+.rv4-card{min-width:0;border:1px solid #367988;background:linear-gradient(148deg,#1b5060,#103544 76%);border-radius:20px;padding:clamp(12px,3vw,24px);box-shadow:0 10px 25px #01172048}
+.rv4-title{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.rv4-title h2{font-size:17px;margin:0;font-weight:850}
+.rv4-title>span{border:1px solid #3c7786;border-radius:20px;background:#124957;color:#bcebed;font-size:12px;padding:5px 10px;white-space:nowrap}
+.rv4-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0}
+.rv4-tabs button{min-height:52px;min-width:0;border:1px solid #568695;border-radius:11px;background:#0a2c3c;color:#d1e8ed;font-weight:800;font-size:15px;cursor:pointer}
+.rv4-tabs button small{display:block;font-size:11px;color:inherit;opacity:.8;margin-top:3px}
+.rv4-tabs button[aria-selected=true]{color:white;background:linear-gradient(126deg,#059daa,#126a7e);border-color:#7ae3e6;box-shadow:inset 0 1px #bdfaff6b}
+.rv4-workspace{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;min-width:0;align-items:start}
+.rv4-current{padding:14px;display:flex;gap:15px;align-items:center;background:#082f3e;border:1px solid #37788a;border-radius:15px;min-width:0;min-height:95px}
+.rv4-current>output{display:block;flex:0 0 65px;text-align:center;color:#75eced;font-size:49px;line-height:1;font-weight:900;font-variant-numeric:tabular-nums}
+.rv4-current.is-empty>output{color:#a4c4cf}
+.rv4-current>div{min-width:0;display:grid;gap:5px}
+.rv4-current small{color:#b6d8e1;font-size:12px}
+.rv4-current strong{font-size:14px;line-height:1.45;color:white}
+.rv4-current p{margin:0;color:#b4d3dc;font-size:12px}
+.rv4-rail{min-width:0;background:#082c3a;border:1px solid #356979;border-radius:15px;padding:13px clamp(5px,2vw,15px)}
+.rv4-rail-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;color:#d3eaf0}
+.rv4-rail-top small{font-size:10px;color:#9ec9d5;text-align:right}
+.rv4-anchor-row{position:relative;display:block;height:132px;margin:0 27px;min-width:0}
+.rv4-anchor{position:absolute;top:0;left:var(--anchor-position);transform:translateX(-50%);width:60px;min-width:0;max-width:100%;padding:6px 1px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:transparent;border:1px solid transparent;color:#bfe0e8;border-radius:11px;cursor:pointer}
+.rv4-anchor[aria-pressed=true]{background:#145365;border-color:#4ac2d0}
+.rv4-picture{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-sizing:border-box;width:min(100%,72px);height:84px;border-radius:9px;background:#e9f1f2;padding:4px;isolation:isolate}
+.rv4-picture img{display:block;max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;object-position:center;position:relative;z-index:1}
+.rv4-picture img:not([src]),.rv4-picture img.is-error{display:none}
+.rv4-picture-fallback{display:none;position:absolute;inset:0;padding:5px;font-size:9px;color:#335665;line-height:1.3;text-align:center;align-items:center;justify-content:center}
+.rv4-picture:has(img.is-error) .rv4-picture-fallback{display:flex}
+.rv4-anchor>strong{font-size:clamp(8px,2.1vw,11px);font-weight:800;line-height:1.2;text-align:center;white-space:nowrap;letter-spacing:-.02em}
+.rv4-anchor>small{color:#b0cbd5;font-size:clamp(8px,2vw,11px);line-height:1.3;white-space:nowrap}
+.rv4-axis{margin:14px 13px 0;padding:0;min-width:0}
+.rv4-ticks{position:relative;height:19px;margin:0 14px;text-align:center;font-size:clamp(10px,2vw,12px);font-variant-numeric:tabular-nums;color:#b4d4db;font-weight:770;text-align:center}
+.rv4-ticks span{position:absolute;left:var(--tick-position);top:0;transform:translateX(-50%);width:22px;min-width:0;white-space:nowrap}
+.rv4-ticks .is-selected{color:#89f1ef;font-weight:950}
+.rv4-track{position:relative;height:45px;display:flex;align-items:center;min-width:0;padding:0 1px}
+.rv4-track:before{content:"";display:block;position:absolute;top:calc(50% - 3px);left:10px;right:10px;height:6px;background:#357583;border-radius:8px}
+.rv4-track input{position:relative;z-index:1;width:100%;height:42px;min-width:0;margin:0;appearance:none;background:transparent;cursor:pointer;touch-action:pan-y}
+.rv4-track input::-webkit-slider-runnable-track{height:6px;background:transparent}
+.rv4-track input::-webkit-slider-thumb{appearance:none;width:27px;height:27px;border-radius:50%;border:3px solid #0d5264;background:#8ff5ef;margin-top:-11px;box-shadow:0 0 0 3px #2bb8cb46}
+.rv4-track input::-moz-range-track{height:6px;background:transparent}
+.rv4-track input::-moz-range-thumb{width:22px;height:22px;border:3px solid #0d5264;border-radius:50%;background:#8ff5ef}
+.rv4-axis-ends{display:flex;justify-content:space-between;gap:7px;font-size:10px;color:#b4ced8;line-height:1.4;margin:2px 0 0}
+.rv4-axis-ends span:last-child{text-align:right}
+.rv4-tools{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:12px}
+.rv4-adjust{display:flex;gap:7px;align-items:center;min-width:0}
+.rv4-adjust button{min-width:44px;height:44px;border:1px solid #6594a4;background:#174858;color:#fff;font-size:20px;border-radius:10px;cursor:pointer}
+.rv4-adjust span{font-size:11px;color:#b6d2de;white-space:nowrap}
+.rv4-tools>[data-rof-v4-clear]{height:44px;border:1px solid #598a98;background:#204856;border-radius:10px;padding:0 12px;color:#edf6fa;font-size:12px;font-weight:800;cursor:pointer}
+.rv4-tools>[data-rof-v4-clear]:disabled{opacity:.52;cursor:not-allowed}
+.rv4-aside{min-width:0;display:grid;align-content:start;gap:12px}
+.rv4-description{min-width:0;border:1px solid #387788;background:#134454;border-radius:14px;padding:15px}
+.rv4-description>small{color:#91e0e6;font-size:12px;display:block;margin-bottom:8px}
+.rv4-description>strong{display:block;font-size:16px;color:#f5fbff;line-height:1.5}
+.rv4-description p{margin:7px 0 0;font-size:12px;line-height:1.6;color:#bdd7df}
+.rv4-rights{font-size:11px;color:#b4d2dc;line-height:1.55}
+.rv4-rights summary{cursor:pointer;min-height:33px;padding:6px 0;font-weight:800}
+.rv4-rights a{color:#81e4e8;margin-right:12px}
+.rv4-help{margin:0;color:#b7d2dc;line-height:1.6;font-size:11px}
+.rv4-done{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 15px;justify-self:end;background:#0a93a2;border-radius:11px;border:1px solid #63e5e7;color:#f9ffff;font-size:14px;font-weight:850;text-decoration:none}
+.rv4-page button:focus-visible,.rv4-page a:focus-visible,.rv4-page input:focus-visible{outline:2px solid #f4cc75;outline-offset:3px}
+@media(min-width:850px){.rv4-workspace{grid-template-columns:minmax(0,1fr) 270px;gap:17px}.rv4-current{grid-column:2;grid-row:1}.rv4-rail{grid-column:1;grid-row:1 / span 2;padding:18px}.rv4-aside{grid-column:2;grid-row:2}.rv4-picture{width:min(100%,103px);height:124px}.rv4-anchor{width:106px;padding:7px 3px 9px}.rv4-anchor>strong{font-size:12px}.rv4-anchor>small{font-size:11px}.rv4-rail-top{margin-bottom:20px}.rv4-anchor-row{height:185px;margin:0 57px}.rv4-axis{margin:20px 44px 0}}
+@media(max-width:355px){.rv4-card{padding:11px}.rv4-rail{padding:10px 5px}.rv4-picture{width:min(100%,50px);height:67px;padding:2px}.rv4-anchor{width:50px;padding:5px 0 8px}.rv4-anchor-row{margin:0 26px;height:124px}.rv4-current{padding:12px;gap:10px}.rv4-current>output{font-size:43px;flex-basis:51px}.rv4-title h2{font-size:15px}.rv4-rail-top{font-size:11px}.rv4-axis{margin:13px 12px 0;padding:0}.rv4-tools>[data-rof-v4-clear]{padding:0 8px}}
+/* User-declared timing: optional, readable without altering the authorized scale images. */
+.rv4-run-times,.rv4-timing{min-width:0;margin:10px 0;padding:12px;border:1px solid #508697;border-radius:12px;color:#e6f8f9;display:grid;gap:9px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.rv4-run-times legend,.rv4-timing legend{font-weight:800;font-size:14px;padding:0 6px}
+.rv4-run-times label,.rv4-timing label{display:grid;gap:6px;min-width:0;font-size:13px}
+.rv4-run-times input,.rv4-timing input,.rv4-timing select{min-width:0;max-width:100%;width:100%;min-height:44px;padding:9px;background:#102f40;color:#f5ffff;border:1px solid #5797a1;border-radius:9px;color-scheme:dark}
+.rv4-run-times p,.rv4-timing small{grid-column:1/-1;margin:0;font-size:12px;line-height:1.6;color:#bdd7df}
+.rv4-run-times input:focus-visible,.rv4-timing input:focus-visible,.rv4-timing select:focus-visible{outline:2px solid #f4cc75;outline-offset:2px}
+
+/* S06 phone feedback: score before metadata, no accidental iOS date overflow. */
+.rv4-page .rv4-optional-meta{margin:10px 0 14px;border:1px solid #508697;border-radius:12px;background:#0b3342;min-width:0}
+.rv4-page .rv4-optional-meta>summary{padding:12px 14px;min-height:44px;cursor:pointer;font-size:13px;font-weight:750;line-height:1.5;color:#e4f7fb;overflow-wrap:anywhere}
+.rv4-page .rv4-meta-body{display:grid;gap:10px;padding:0 10px 10px;min-width:0}
+.rv4-page .rv4-run-times,.rv4-page .rv4-timing{margin:0;min-width:0;width:100%;max-width:100%;padding:10px;grid-template-columns:minmax(0,1fr)}
+.rv4-page .rv4-run-times legend,.rv4-page .rv4-timing legend{max-width:100%;font-size:12px;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.rv4-page .rv4-run-times label,.rv4-page .rv4-timing label{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.rv4-page .rv4-run-times input,.rv4-page .rv4-timing input,.rv4-page .rv4-timing select{box-sizing:border-box;display:block;width:100%;min-width:0;max-width:100%;font-size:16px}
+.rv4-page .rv4-next-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center}
+.rv4-page .rv4-next-actions button{min-height:46px;border:1px solid #79cbd4;border-radius:11px;background:#1b5465;color:#f3ffff;padding:9px 13px;font-weight:750;cursor:pointer;overflow-wrap:anywhere}
+.rv4-page .rv4-next-actions button:focus-visible{outline:3px solid #f4cc75;outline-offset:3px}
+@media(max-width:800px){
+ .rv4-page .rv4-tabs{position:sticky;top:0;z-index:8;background:#123e4dcc;border:1px solid #447e8c;border-radius:12px;padding:6px;margin:10px 0;backdrop-filter:blur(8px)}
+ .rv4-page .rv4-current{min-height:70px;padding:10px;gap:10px}
+ .rv4-page .rv4-current>output{font-size:40px;flex-basis:47px}
+ .rv4-page .rv4-rail{padding:10px 7px}
+ .rv4-page .rv4-picture{height:64px}
+ .rv4-page .rv4-anchor-row{height:115px}
+ .rv4-page .rv4-axis{margin-top:9px}
+ .rv4-page .rv4-description{padding:11px}
+ .rv4-page .rv4-next-actions{display:grid;grid-template-columns:minmax(0,1fr);width:100%}
+ .rv4-page .rv4-next-actions button,.rv4-page .rv4-next-actions .rv4-done{width:100%;justify-self:stretch;max-width:100%;text-align:center}
+}
+
+/* S06 condition-style native time pickers. Native tap handling on iOS/Android,
+   editable controls on desktop, strict containment at 320/390 CSS pixels. */
+#app .rv4-page .rv4-run-times-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0}
+#app .rv4-page .rv4-run-time-card{min-width:0;max-width:100%;display:grid;gap:8px}
+#app .rv4-page .rv4-run-time-card>strong{font-size:13px}
+#app .rv4-page .rv4-run-time-picks{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;min-width:0}
+#app .rv4-page .rv4-run-time-picks label{min-width:0;max-width:100%;display:grid;gap:5px;font-size:12px}
+#app .rv4-page .rv4-run-time-picks input[type=date]{display:block;box-sizing:border-box;max-width:100%;min-width:0;width:100%;height:46px;padding:5px;border-radius:9px;border:1px solid #6699a6;background:#092b3a;color:#f4ffff;color-scheme:dark;font-size:16px}
+#app .rv4-page .rv4-native-time{display:flex;position:relative;align-items:center;justify-content:space-between;gap:5px;box-sizing:border-box;width:100%;max-width:100%;min-width:0;height:48px;padding:0 10px;border:1px solid #6699a6;border-radius:9px;background:#092b3a;color:#f4ffff}
+#app .rv4-page .rv4-native-time>span{min-width:0;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:750}
+#app .rv4-page .rv4-native-time svg{width:19px;min-width:19px;height:19px;stroke:currentColor;stroke-width:1.8;fill:none;pointer-events:none}
+#app .rv4-page .rv4-native-time input[type=time]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;min-width:0;max-width:100%;padding:0;border:0;font-size:16px;color-scheme:dark}
+#app .rv4-page .rv4-native-time:focus-within{outline:2px solid #7aedeb;outline-offset:2px}
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+ #app .rv4-page .rv4-native-time>span,#app .rv4-page .rv4-native-time svg{display:none}
+ #app .rv4-page .rv4-native-time input[type=time]{position:relative;opacity:1;inset:auto;padding:0 5px;background:transparent;color:#f4ffff}
+}
+@media(max-width:600px){
+ #app .rv4-page .rv4-run-times-grid{grid-template-columns:minmax(0,1fr)}
+ #app .rv4-page .rv4-run-time-picks{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:380px){
+ #app .rv4-page .rv4-run-time-picks{grid-template-columns:minmax(0,1fr)}
+}
+
+/* S06 conditional date source layout: a single run date reused throughout the form.
+   No inner fieldset frame around inputs, avoiding 100%-width content-box overlaps. */
+#app .rv4-page .rv4-run-times{display:block;box-sizing:border-box;width:100%;max-width:100%;min-width:0;padding:12px;border:0;background:transparent;margin:0}
+#app .rv4-page .rv4-run-times h3{margin:0 0 10px;font-size:14px;line-height:1.5;color:#eefcff;overflow-wrap:anywhere}
+#app .rv4-page .rv4-inherited-date{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px 9px;border:1px solid #497e8c;border-radius:10px;background:#0d3445;padding:11px;margin:0 0 12px;color:#e3f6fb;line-height:1.5;min-width:0}
+#app .rv4-page .rv4-inherited-date strong{white-space:nowrap;font-variant-numeric:tabular-nums;color:#9ef2ee}
+#app .rv4-page .rv4-inherited-date small{color:#b9d3de;font-size:11px}
+#app .rv4-page .rv4-run-times-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0;max-width:100%}
+#app .rv4-page .rv4-run-time-card{display:grid;min-width:0;max-width:100%;gap:7px}
+#app .rv4-page .rv4-run-time-card strong{line-height:1.4;font-size:12px;overflow-wrap:anywhere}
+#app .rv4-page .rv4-run-times .rv4-native-time{box-sizing:border-box;min-width:0;max-width:100%;width:100%;height:48px}
+#app .rv4-page .rv4-end-day{margin:12px 0 6px;min-width:0}
+#app .rv4-page .rv4-end-day summary{cursor:pointer;font-weight:700;line-height:1.5;padding:7px 0;font-size:12px}
+#app .rv4-page .rv4-day-rule{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+#app .rv4-page .rv4-day-rule label{display:flex;align-items:center;gap:6px;min-height:42px;padding:5px 10px;border:1px solid #558596;border-radius:9px;font-size:12px}
+#app .rv4-page .rv4-day-rule input{width:18px;height:18px;min-width:18px;margin:0}
+#app .rv4-page .rv4-end-day-caption{margin:6px 0;font-weight:700;color:#baf2ed}
+#app .rv4-page .rv4-run-times p{line-height:1.65;overflow-wrap:anywhere;max-width:100%;min-width:0}
+#app .rv4-page .rv4-timing{box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-inline-size:0}
+#app .rv4-page .rv4-meta-body{box-sizing:border-box;min-width:0;max-width:100%;width:100%;overflow:visible}
+#app .rv4-page .rv4-optional-meta{min-width:0;max-width:100%;box-sizing:border-box}
+@media(max-width:380px){
+ #app .rv4-page .rv4-run-times-grid{grid-template-columns:minmax(0,1fr)}
+}
+
+/* The response-time descriptor must not float on or intersect an inner fieldset
+   border at 320px: a standard contained section with heading replaces legend. */
+#app .rv4-page .rv4-timing{
+ box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;
+ width:100%;max-width:100%;min-width:0;margin:0;padding:12px 0 2px;
+ background:transparent;border:0;min-inline-size:0
+}
+#app .rv4-page .rv4-timing h3{margin:0;color:#e7f9fa;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+#app .rv4-page .rv4-timing label{min-width:0;max-width:100%}
+#app .rv4-page .rv4-timing select,#app .rv4-page .rv4-timing input{box-sizing:border-box;min-width:0;max-width:100%;width:100%;font-size:16px}
+#app .rv4-page .rv4-end-day-caption[hidden]{display:none}
+
+/* S06: selected illustration's explanation sits directly below its image row.
+   The exact attributed descriptor is retained, with controlled parenthetical wrap. */
+.rv4-page .rv4-rail .rv4-description{
+ display:grid;gap:5px;margin:9px 0 0;padding:11px 13px;
+ background:#154656;border:1px solid #3d8090;border-radius:11px;min-width:0;
+}
+.rv4-page .rv4-rail .rv4-description>small{
+ display:flex;flex-wrap:wrap;align-items:baseline;gap:4px;
+ margin:0;color:#a8dee4;font-size:12px;line-height:1.5;
+}
+.rv4-page .rv4-rail .rv4-description>small span{font-size:11px;color:#c4dbe2}
+.rv4-page .rv4-rail .rv4-description>strong{
+ display:flex;flex-wrap:wrap;gap:3px 10px;align-items:baseline;
+ color:#f5fbff;font-size:clamp(13px,1.35vw,17px);font-weight:820;line-height:1.45;
+ overflow-wrap:normal;word-break:keep-all;
+}
+.rv4-page .rv4-description-main,.rv4-page .rv4-description-detail{
+ display:inline-block;white-space:normal;word-break:keep-all;
+}
+.rv4-page .rv4-description-detail{font-size:.79em;font-weight:680;color:#d3e7ed}
+.rv4-page .rv4-rail-top small{max-width:58%;line-height:1.5}
+.rv4-page .rv4-aside{align-content:start}
+@media(max-width:800px){
+ .rv4-page .rv4-rail .rv4-description{margin-top:5px;padding:10px 11px}
+ .rv4-page .rv4-rail .rv4-description>strong{font-size:clamp(13px,3.6vw,16px);gap:2px 7px}
+ .rv4-page .rv4-description-detail{font-size:.76em}
+}
+@media(max-width:355px){
+ .rv4-page .rv4-rail .rv4-description{padding:9px}
+ .rv4-page .rv4-rail .rv4-description>strong{font-size:13px;gap:2px 5px}
+}
+
+/* S06 score summary: the original descriptor is shown verbatim but grouped
+   at the natural Japanese parenthetical boundary at every viewport. */
+.rv4-page .rv4-current strong[data-rof-v4-meaning]{
+ display:flex;flex-wrap:wrap;align-items:baseline;column-gap:7px;row-gap:1px;
+ line-height:1.5;overflow-wrap:normal;word-break:keep-all;
+}
+.rv4-page .rv4-current .rv4-description-main{font-size:1em}
+.rv4-page .rv4-current .rv4-description-detail{font-size:.83em;font-weight:680}
+
+
+/* P6-D S06: same header help, simpler vertical hierarchy and full ROF-J scale. */
+.rv4-page .rv4-head{margin-bottom:9px;align-items:center}
+.rv4-page .rv4-head>div{flex:1;min-width:0}
+.rv4-page .rv4-head .rv-screen-help{margin-left:auto}
+.rv4-page .rv4-card{padding:clamp(12px,1.7vw,19px)}
+.rv4-page .rv4-tabs{margin:10px 0 12px}
+.rv4-page .rv4-workspace{gap:10px}
+.rv4-page .rv4-rail-top{margin-bottom:9px}
+.rv4-page .rv4-optional-meta{margin:9px 0 12px}
+.rv4-page .rv4-aside{gap:8px}
+.rv4-page .rv4-rights summary{min-height:44px;display:flex;align-items:center}
+.rv4-page .rv4-next-actions .rv4-done{min-height:48px}
+@media(min-width:850px){
+ .rv4-page .rv4-rail-top{margin-bottom:13px}
+ .rv4-page .rv4-workspace{gap:12px}
+}
+@media(max-width:800px){
+ .rv4-page .rv4-head{gap:9px}
+ .rv4-page .rv4-head h1{font-size:clamp(18px,4.9vw,24px)}
+ .rv4-page .rv4-head p{font-size:11px}
+ .rv4-page .rv4-tabs button{min-height:48px}
+ .rv4-page .rv4-tools{flex-wrap:wrap}
+}
+
+/* P6 integrated zoom: score description should shrink instead of imposing
+   intrinsic grid width when text scaling reduces the available inline space. */
+.rv4-page .rv4-current>div{flex:1 1 0;min-width:0;grid-template-columns:minmax(0,1fr);overflow-wrap:anywhere}
+.rv4-page .rv4-current>div>*{min-width:0;max-width:100%;overflow-wrap:anywhere}
+
+/* P6 extreme zoom: permit Japanese score description to break when the
+   available row is narrower than a complete phrase. Preserve the original
+   ROF-J wording and the separation between text and selected value. */
+@media(max-width:800px){
+ .rv4-page .rv4-current strong[data-rof-v4-meaning],
+ .rv4-page .rv4-current strong[data-rof-v4-meaning] > span{
+   min-width:0;word-break:normal;overflow-wrap:anywhere
+ }
+}

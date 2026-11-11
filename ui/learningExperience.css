@@ -1,0 +1,249 @@
+.lr-root{color:#d8edf4;font:inherit;min-width:0}.lr-root a{color:inherit}.lr-root h1,.lr-root h2,.lr-root h3{margin:0;line-height:1.35}.lr-root p,.lr-root li{line-height:1.85}.lr-root p{margin:0}.lr-root .lr-hero{background:radial-gradient(ellipse at 90% 0,rgba(31,201,204,.22),transparent 45%),linear-gradient(145deg,#09253b,#0a1b2c);border:1px solid #25617a;border-radius:22px;padding:clamp(20px,3vw,38px);display:grid;gap:13px;box-shadow:0 12px 32px #041a2a24}.lr-root .lr-hero h1{color:#fff;font-size:clamp(1.7rem,3.2vw,2.35rem)}.lr-root .lr-hero p{max-width:78ch}.lr-root .lr-eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.11em;color:#6bdae0}.lr-root .lr-goal{background:#113b4f;border-left:3px solid #47c7c8;border-radius:6px;padding:12px 14px}.lr-root .lr-catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}.lr-root .lr-course{min-width:0;background:linear-gradient(145deg,#102e46,#09243a);border:1px solid #255c70;border-radius:19px;padding:22px;display:grid;align-content:start;gap:13px}.lr-root .lr-course h2{color:white;font-size:1.15rem}.lr-root .lr-course p{font-size:.87rem;color:#c2dfe8}.lr-root .lr-course-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.lr-root .lr-number{color:#67d3dc;font-size:.85rem;font-weight:800}.lr-root .lr-status{font-size:.71rem;background:#1a3f50;border:1px solid #457888;padding:5px 9px;border-radius:99px}.lr-root .lr-course:has(.lr-coming){opacity:.83}.lr-root .lr-coming{color:#b6c9d1;font-size:.78rem;border-top:1px solid #2d5565;padding-top:9px}.lr-root .lr-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid #41d2d0;border-radius:11px;background:#19acb7;color:#061f2d;font-weight:800;font-size:.85rem;padding:10px 15px;cursor:pointer;text-align:center;text-decoration:none}.lr-root .lr-action:hover{background:#65dddf}.lr-root .lr-secondary{background:transparent;color:#baf1f2;border-color:#488b99}.lr-root .lr-secondary:hover{background:#18465a}.lr-root .lr-note{margin-top:16px;font-size:.79rem;color:#486273}.lr-root .lr-lesson{display:grid;gap:16px}.lr-root .lr-back{color:#155b76;text-decoration:underline;text-underline-offset:3px;font-size:.88rem;font-weight:750}.lr-root .lr-lesson-index{display:flex;flex-wrap:wrap;gap:8px;background:#e8f5f9;border:1px solid #c9e7ef;border-radius:12px;padding:10px}.lr-root .lr-lesson-index button{border:1px solid #9bd1db;border-radius:9px;background:#fff;color:#16566d;font-weight:750;padding:8px 12px;min-height:40px}.lr-root .lr-lesson-index button:hover{background:#d8f4f3}.lr-root .lr-panel{color:#233c50;background:#fff;border:1px solid #d4e6ed;border-radius:18px;box-shadow:0 6px 24px #062f4910;padding:clamp(18px,2.7vw,29px);display:grid;gap:15px;min-width:0}.lr-root .lr-panel .lr-eyebrow{color:#047b89}.lr-root .lr-panel h2{font-size:1.3rem;color:#123247}.lr-root .lr-panel h3{font-size:.95rem}.lr-root .lr-formula{background:#eaf8f8;border:1px solid #bde5e6;padding:20px 14px;border-radius:12px;font-weight:800;color:#075d68;text-align:center}.lr-root .lr-comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.lr-root .lr-comparison>div{display:grid;gap:6px;border:1px solid #cce4ec;background:#f2fafb;padding:17px;border-radius:12px}.lr-root .lr-comparison strong{color:#067b8c}.lr-root .lr-slider-label{font-weight:750;display:flex;justify-content:space-between;gap:12px}.lr-root .lr-slider{accent-color:#058e9c;width:100%;min-height:38px;cursor:pointer}.lr-root .lr-bars{display:grid;gap:12px}.lr-root .lr-bars>div{display:grid;grid-template-columns:110px minmax(0,1fr) 45px;align-items:center;gap:10px}.lr-root .lr-bars span,.lr-root .lr-bars strong{font-size:.83rem}.lr-root .lr-track{height:22px;border-radius:7px;background:#e3f0f5;overflow:hidden}.lr-root .lr-track>span{height:100%;display:block;background:linear-gradient(90deg,#168ca9,#36c7c6);transition:width .1s ease}.lr-root .lr-calc{font-weight:800;font-size:1.05rem;color:#007b86}.lr-root .lr-panel ul{margin:0;padding-left:1.3em}.lr-root .lr-panel li+li{margin-top:7px}.lr-root .lr-source{background:#f2f7f9;padding:12px;border-radius:10px;color:#516c7a;font-size:.8rem}.lr-root .lr-question{border:1px solid #c6e1ea;border-radius:13px;padding:18px;display:grid;gap:11px}.lr-root .lr-question legend{padding:0 4px;font-weight:800;color:#134052}.lr-root .lr-question label{display:flex;gap:10px;align-items:flex-start;line-height:1.6;font-size:.89rem;cursor:pointer}.lr-root .lr-question input{accent-color:#007e90;flex:none;width:17px;height:17px;margin-top:4px}.lr-root .lr-feedback{color:#245368;background:#eef7f9;border:1px solid #b9dae5;border-radius:9px;padding:13px}.lr-root .lr-feedback[data-correct="true"]{background:#e9f7f2;border-color:#a8d3c0;color:#24604b}.lr-root .lr-actions{display:flex;flex-wrap:wrap;gap:10px}.lr-root .lr-review form{display:grid;gap:19px}.lr-root :is(a,button,input):focus-visible{outline:3px solid #ffc447;outline-offset:3px}.lr-root .lr-panel p,.lr-root .lr-note{overflow-wrap:anywhere}
+@media(max-width:800px){.mobile-nav:has(.mobile-link[href="#/learning"]){grid-template-columns:repeat(5,minmax(0,1fr))}.mobile-nav:has(.mobile-link[href="#/learning"]) .mobile-link{font-size:.74rem;min-width:0;overflow-wrap:anywhere}}
+@media(max-width:700px){.lr-root .lr-catalog,.lr-root .lr-comparison,.lr-root .lr-partial-inputs{grid-template-columns:1fr}.lr-root .lr-bars>div{grid-template-columns:85px minmax(0,1fr) 34px;gap:6px}.lr-root .lr-course{padding:17px}.lr-root .lr-panel{gap:12px}.mobile-nav:has(.mobile-link[href="#/learning"]){grid-template-columns:repeat(5,minmax(0,1fr))}.mobile-nav:has(.mobile-link[href="#/learning"]) .mobile-link{font-size:.74rem;min-width:0;overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){.lr-root .lr-track>span{transition:none}}
+
+/* Candidate lesson v0.2: arithmetic scaffolding, alternate input, and re-study controls. */
+.lr-root .lr-partial-form{display:grid;gap:14px;min-width:0}
+.lr-root .lr-partial-inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lr-root .lr-partial-inputs label{display:grid;gap:7px;font-size:.86rem;font-weight:750;min-width:0}
+.lr-root .lr-partial-inputs input,.lr-root .lr-fallback-label select{border:1px solid #7fa9bd;border-radius:10px;background:#fff;color:#15394b;padding:11px 12px;min-height:44px;min-width:0;width:100%;font-size:1rem}
+.lr-root .lr-fallback-label{display:grid;gap:7px;font-size:.87rem;font-weight:750;max-width:350px}
+.lr-root .lr-partial-form .lr-action{color:#062633}
+.lr-root .lr-panel .lr-outline{background:#fff;color:#116779;border-color:#5c99a6}
+.lr-root .lr-panel .lr-outline:hover{background:#e8f7f9}
+.lr-root .lr-panel .lr-secondary{background:#fff;color:#0b6376;border-color:#458e9d}
+.lr-root .lr-panel .lr-secondary:hover{background:#e7f5f8}
+.lr-root .lr-hint{background:#edf8fa;padding:12px;border:1px solid #aedee8;border-radius:9px;color:#194b5e}
+.lr-root .lr-relearn{justify-self:start;min-height:44px;padding:9px 13px;border:1px solid #388ca1;border-radius:10px;background:#e9f8fa;color:#07556b;font-weight:800;cursor:pointer}
+.lr-root .lr-relearn:hover{background:#d4eff5}
+.lr-root .lr-partial-form .lr-feedback{margin:0}
+.lr-root .lr-partial-form .lr-feedback[data-correct="true"]{background:#e9f7f2;border-color:#a8d3c0;color:#24604b}
+@media(max-width:700px){.lr-root .lr-partial-inputs{grid-template-columns:1fr}}
+
+/* L3: non-prescriptive running pace profiles. A textual, accessible three-card comparison. */
+.lr-root .lr-running-profiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.lr-root .lr-pace-profile{min-width:0;background:#f1fafb;border:1px solid #b9dce4;border-radius:12px;padding:16px;display:grid;align-content:start;gap:8px}
+.lr-root .lr-pace-profile h3{color:#12516a}
+.lr-root .lr-pace-profile ol{margin:0;padding-left:1.5rem}
+.lr-root .lr-pace-profile li{margin:0;overflow-wrap:anywhere}
+.lr-root .lr-pace-profile p{font-size:.88rem;font-weight:750;color:#13566f}
+.lr-root .lr-learning-support{margin-top:18px;border-left:4px solid #539ca9}
+@media(max-width:960px){.lr-root .lr-running-profiles{grid-template-columns:1fr}}
+
+/* L4: independent, accessible running motion lesson. Original schematic, not ideal-form guidance. */
+.lr-root .lr-motion-figure{display:grid;justify-items:center;gap:12px;padding:14px;margin:0;border:1px solid #c2dce6;border-radius:14px;background:#eef8fa;min-width:0}
+.lr-root .lr-motion-figure svg{display:block;max-width:460px;width:100%;height:auto;min-width:0}
+.lr-root .lr-motion-figure figcaption{color:#385f72;font-size:.84rem;max-width:52ch;overflow-wrap:anywhere;text-align:center}
+.lr-root .lr-motion-methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lr-root .lr-motion-methods article{background:#f2f9fb;border:1px solid #c6e3eb;border-radius:12px;padding:16px;display:grid;align-content:start;gap:10px;min-width:0;overflow-wrap:anywhere}
+.lr-root .lr-motion-methods article h3{color:#145772}
+@media(max-width:900px){.lr-root .lr-motion-methods{grid-template-columns:1fr}}
+
+/* L4 source-bounded gait-phase schematic: labels, not a timing or form prescription. */
+.lr-root .lr-motion-cycle{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px;background:#f4fafb;border:1px solid #bfdde5;border-radius:12px}
+.lr-root .lr-motion-cycle span{border:1px solid #85aeba;background:#fff;color:#175670;padding:8px 10px;border-radius:8px;font-weight:700}
+.lr-root .lr-motion-cycle strong{color:#146a74;font-weight:800;padding:6px}
+
+/* L5 fatigue/recovery: authored 3-stage learning visualization, no physiological curves or interventions. */
+.lr-root .lr-fatigue-cycle{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.lr-root .lr-fatigue-cycle article,.lr-root .lr-fatigue-scenarios article{display:grid;align-content:start;gap:9px;background:#f1f9fb;border:1px solid #c7e1ea;border-radius:13px;padding:17px;min-width:0;overflow-wrap:anywhere}
+.lr-root .lr-fatigue-step{display:inline-flex;justify-self:start;background:#d4ecf3;color:#17556e;padding:6px 10px;border-radius:999px;font-size:.82rem;font-weight:800}
+.lr-root .lr-fatigue-cycle h3,.lr-root .lr-fatigue-scenarios h3{color:#174f68;line-height:1.5}
+.lr-root .lr-fatigue-scenarios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(max-width:960px){.lr-root .lr-fatigue-cycle{grid-template-columns:1fr}}
+@media(max-width:700px){.lr-root .lr-fatigue-scenarios{grid-template-columns:1fr}}
+
+/* L6: role map and optional reading sequence; not a learned outcome or required gate. */
+.lr-root .lr-pathway{border-left:4px solid #5c96a8}
+.lr-root .lr-pathway ol{margin:0;padding-left:1.45rem;display:grid;gap:10px}
+.lr-root .lr-pathway li{overflow-wrap:anywhere;line-height:1.7}
+.lr-root .lr-cross-study{border-top:2px solid #c2e2e9}
+
+/* P5: only three actually implemented running courses appear as cards. */
+@media(min-width:1100px){.lr-root .lr-catalog{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:701px) and (max-width:1099px){.lr-root .lr-catalog{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.lr-root .lr-pathway{padding:12px 18px;margin-top:14px;gap:0}
+.lr-root .lr-help-disclosure summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;color:#0c6176;font-weight:780}
+.lr-root .lr-help-disclosure summary::-webkit-details-marker{display:none}
+.lr-root .lr-help-disclosure>div{display:grid;gap:10px;padding-top:6px}
+.lr-root .lr-learning-support{margin-top:15px}
+@media(max-width:700px){.lr-root .lr-catalog{grid-template-columns:1fr}.lr-root .lr-hero{padding:18px}.lr-root .lr-course{gap:10px}}
+
+/* P6 L01: concise first-view cards; complete lessons remain unchanged. */
+@media(max-width:700px){
+  .lr-root .lr-hero{padding:16px 17px;gap:7px}
+  .lr-root .lr-hero p{line-height:1.6}
+  .lr-root .lr-catalog{gap:12px;margin-top:13px}
+  .lr-root .lr-course{padding:15px 16px;gap:9px}
+  .lr-root .lr-course p{font-size:.84rem;line-height:1.6}
+  .lr-root .lr-action{min-height:48px}
+}
+
+/* P6 zoom: auto-size the learning bottom navigation instead of clipping enlarged labels. */
+@media(max-width:800px){
+ .app-shell:has(.lr-root) .mobile-nav{height:auto;min-height:63px;grid-auto-rows:minmax(45px,auto);align-items:stretch}
+ .app-shell:has(.lr-root) .mobile-link{height:auto;min-height:45px;align-content:center;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
+ .app-shell:has(.lr-root) .main-content{padding-bottom:max(calc(102px + env(safe-area-inset-bottom,0px)),calc(6rem + env(safe-area-inset-bottom,0px)))}
+}
+
+
+/* P10: align learning with the light RunLoad screen system, preserving contrast
+ * and large-text reflow. The 7-8 shortcuts become a compact section map.
+ * No question text, science, scoring formula or user-run content is changed.
+ */
+.lr-root{color:#254657}
+.lr-root .lr-hero{
+ background:linear-gradient(155deg,#f7fbfc 0%,#edf6f8 100%);
+ border:1px solid #cbdfe5;border-radius:18px;
+ box-shadow:0 5px 18px #0a304510;
+ padding:clamp(14px,2.5vw,23px);gap:8px;
+ color:#254657
+}
+.lr-root .lr-hero h1{
+ color:#183c4f;font-size:clamp(1.45rem,2.4vw,2rem);
+ line-height:1.35;letter-spacing:.005em;overflow-wrap:anywhere
+}
+.lr-root .lr-hero p{line-height:1.6;max-width:70ch}
+.lr-root .lr-hero .lr-eyebrow{color:#18738a;font-size:.75rem;letter-spacing:.025em}
+.lr-root .lr-hero .lr-goal{background:#e7f4f7;border-left:3px solid #55a8b2;color:#254657}
+.lr-root .lr-hero :is(a,strong){color:#143b50}
+.lr-root .lr-course{
+ background:#fff;border:1px solid #c9dce3;border-radius:15px;
+ box-shadow:0 3px 15px #0c355010;padding:17px 19px;gap:9px;
+ border-left:4px solid #8cc3cd;
+}
+.lr-root .lr-course h2{color:#153a4f;font-size:1.09rem;line-height:1.42}
+.lr-root .lr-course p{color:#4e6977;font-size:.87rem;line-height:1.55}
+.lr-root .lr-number{color:#156477;font-size:.76rem;letter-spacing:.02em}
+.lr-root .lr-status{background:#eef6f8;border:1px solid #b9d8df;color:#21596a;font-size:.74rem}
+.lr-root .lr-action{background:#197b90;color:#fff;border-color:#166f83;border-radius:11px;min-height:44px}
+.lr-root .lr-action:hover{background:#146b80}
+.lr-root .lr-secondary{background:#fff;color:#176478;border-color:#8fb8c4}
+.lr-root .lr-secondary:hover{background:#eef7f9}
+.lr-root .lr-catalog{gap:11px;margin-top:12px}
+.lr-root .lr-panel{border-color:#d0e1e7;box-shadow:0 3px 15px #0b32420b}
+.lr-root .lr-lesson{gap:12px;min-width:0}
+.lr-root .lr-lesson .lr-back{color:#185f71;min-height:40px;display:inline-flex;align-items:center}
+.lr-root .lr-goal-disclosure{background:#e8f3f6;border:1px solid #c5dfe5;border-radius:12px;min-width:0}
+.lr-root .lr-goal-disclosure summary{display:flex;align-items:center;min-height:44px;cursor:pointer;padding:9px 12px;font-weight:750;color:#175b6f}
+.lr-root .lr-goal-disclosure>.lr-goal{margin:0 10px 10px;border:0;border-radius:9px}
+.lr-root .lr-lesson-map{
+ background:#f7fbfc;border:1px solid #c7dee5;border-radius:14px;min-width:0;overflow:hidden
+}
+.lr-root .lr-lesson-map>summary{
+ list-style:none;display:flex;justify-content:space-between;align-items:center;
+ flex-wrap:wrap;gap:5px 14px;padding:11px 15px;min-height:48px;
+ cursor:pointer;color:#194d62
+}
+.lr-root .lr-lesson-map>summary::-webkit-details-marker{display:none}
+.lr-root .lr-lesson-map>summary:before{content:"▸";font-size:1rem;color:#176a7c;margin-right:4px}
+.lr-root .lr-lesson-map[open]>summary:before{content:"▾"}
+.lr-root .lr-map-summary-label{font-weight:800;margin-right:auto}
+.lr-root .lr-lesson-map summary small{color:#526d7b;font-size:.76rem}
+.lr-root .lr-lesson-map .lr-lesson-index{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:8px;margin:0;padding:10px;background:transparent;border:0
+}
+.lr-root .lr-map-group{min-width:0;border:1px solid #d9e8ec;background:#fff;border-radius:10px;padding:9px;display:grid;align-content:start;gap:6px}
+.lr-root .lr-map-group-label{font-size:.78rem;color:#30687c;font-weight:800}
+.lr-root .lr-map-group-links{display:grid;gap:6px}
+.lr-root .lr-map-group-links button{
+ background:#f1f8f9;border:1px solid #cee4e8;color:#18546a;
+ font-size:.84rem;text-align:left;min-height:44px;border-radius:9px;
+ padding:8px 10px;line-height:1.4;white-space:normal;overflow-wrap:anywhere
+}
+.lr-root .lr-question{
+ background:#fbfdfe;border:1px solid #c8dce2;
+ border-radius:13px;padding:clamp(13px,2vw,20px);
+ display:grid;gap:10px;min-width:0
+}
+.lr-root .lr-question[hidden],
+.lr-root .lr-quiz-pages>[hidden],
+.lr-root [data-lr-quiz-all][hidden],
+.lr-root form button[type="submit"][hidden]{display:none!important}
+.lr-root .lr-question .lr-question-number{
+ color:#1e7181;font-size:.82rem;font-weight:850;padding:0 8px;
+ letter-spacing:.025em;max-width:100%;line-height:1.5
+}
+.lr-root .lr-question .lr-question-prompt{
+ margin:1px 0 9px;color:#153d50;
+ font-size:clamp(1rem,2vw,1.18rem);font-weight:800;
+ line-height:1.5;overflow-wrap:anywhere
+}
+.lr-root .lr-question>label{
+ display:grid;grid-template-columns:25px minmax(0,1fr);
+ align-items:start;gap:10px;min-height:48px;
+ background:#fff;border:1px solid #deebef;border-radius:10px;
+ padding:11px 12px;font-size:.95rem;line-height:1.55;
+ overflow-wrap:anywhere
+}
+.lr-root .lr-question>label:has(input:checked){border-color:#318aa0;background:#edf8fa}
+.lr-root .lr-question input[type="radio"]{height:19px;width:19px;margin:3px 0 0}
+@media(max-width:700px){
+ .lr-root .lr-hero{padding:15px 16px;gap:7px}
+ .lr-root .lr-catalog{gap:9px;margin-top:10px}
+ .lr-root .lr-course{padding:14px 15px}
+ .lr-root .lr-panel{padding:16px 15px}
+ .lr-root .lr-lesson-map .lr-lesson-index{grid-template-columns:1fr}
+ .lr-root .lr-map-group{padding:8px}
+ .lr-root .lr-map-group-links{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .lr-root .lr-question>label{font-size:.91rem;padding:10px}
+}
+@media(max-width:370px){
+ .lr-root .lr-map-group-links{grid-template-columns:1fr}
+}
+
+
+
+/* P10 chapter-level disclosure: keep headings/scanning routes visible while
+   hiding extended exposition until requested, including at 200% text. */
+.lr-root .lr-chapter{
+ min-width:0;display:grid;gap:0;
+ background:#fff;border:1px solid #d0e1e7;border-radius:14px;
+ box-shadow:0 2px 9px #0b32420a;overflow:hidden
+}
+.lr-root .lr-chapter>summary{
+ min-height:56px;display:flex;align-items:center;flex-wrap:wrap;
+ gap:7px 14px;padding:12px 15px;cursor:pointer;
+ list-style:none;overflow-wrap:anywhere
+}
+.lr-root .lr-chapter>summary::-webkit-details-marker{display:none}
+.lr-root .lr-chapter>summary:before{content:"▸";font-size:1rem;color:#18758a}
+.lr-root .lr-chapter[open]>summary:before{content:"▾"}
+.lr-root .lr-chapter-label{font-size:.74rem;letter-spacing:.025em;color:#26778a;font-weight:800}
+.lr-root .lr-chapter-name{color:#173f54;font-size:clamp(.93rem,1.8vw,1.1rem);line-height:1.45}
+.lr-root .lr-chapter>.lr-panel{
+ border:0;border-top:1px solid #e0ecef;border-radius:0;
+ box-shadow:none;margin:0;padding:clamp(14px,2.1vw,24px)
+}
+.lr-root .lr-chapter:not([open])>.lr-panel{display:none!important}
+.lr-root .lr-chapter-controls{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:8px 15px;flex-wrap:wrap;color:#526c79;font-size:.83rem
+}
+.lr-root .lr-chapter-controls button{
+ min-height:44px;border:1px solid #8fb8c4;border-radius:10px;
+ color:#145d70;background:#fff;font-weight:800;padding:9px 14px;cursor:pointer
+}
+.lr-root .lr-chapter>summary:focus-visible,
+.lr-root .lr-chapter-controls button:focus-visible{outline:3px solid #efb448;outline-offset:3px}
+@media(max-width:700px){
+ .lr-root .lr-chapter>summary{padding:11px 12px;gap:5px 8px}
+ .lr-root .lr-chapter-name{flex-basis:100%;padding-left:20px}
+}
+
+/* P10 visual QA: expanded chapter already repeats its accessible title in
+   the accordion summary. Keep the original semantic header in the DOM for
+   assistive technology, but prevent doubled visible headings and scrolling
+   underneath the fixed app header after in-lesson navigation. */
+.lr-root .lr-chapter>.lr-panel>.lr-eyebrow:first-child,
+.lr-root .lr-chapter>.lr-panel>h2:first-of-type{
+ position:absolute!important;width:1px!important;height:1px!important;
+ padding:0!important;margin:-1px!important;overflow:hidden!important;
+ clip:rect(0,0,0,0)!important;clip-path:inset(50%)!important;
+ border:0!important;white-space:nowrap!important
+}
+.lr-root .lr-chapter>.lr-panel[id],
+.lr-root .lr-question,
+.lr-root .lr-lesson-map{scroll-margin-top:76px}
