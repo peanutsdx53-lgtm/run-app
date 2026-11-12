@@ -479,7 +479,7 @@ function recordExtras(){
  ${num("sectionGrade"+i,"傾斜 (%)",{max:100})}
  <label class="record-extra-field"><span>路面</span>${select("sectionSurface"+i,[["UNKNOWN","不明"],...surfaceLabels.map(([v,t])=>[v,t])])}</label>
  </div></div>`).join("");
- return `<div class="record-optional-stack" aria-label="旧版から引き継ぐ任意入力項目">
+ return `<div class="record-optional-stack" aria-label="走行条件などの任意入力項目">
  <details class="record-extra-section" data-record-section="course"><summary><span class="record-extra-step">2</span><span><strong>コースと走行条件</strong><small>保存コース相当の情報・坂・路面を入力</small></span><span class="record-extra-chevron" aria-hidden="true">⌄</span></summary>
  <div class="record-extra-content">
  <p class="record-extra-help">入力できる条件だけ記録できます。分からない場合は「不明」のままにしてください。コースの登録やGPSで測定したコースはまだ取り込めません。</p>
@@ -640,7 +640,7 @@ function recordExtras(){
  const selected=regionId&&resultExperience.OFFICIAL_NAMES.find(([id])=>id===regionId);
  const label=selected?'<p>確認したい部位：'+esc(selected[1])+'</p>':'';
  const link=recordId?'#/result?record='+encodeURIComponent(recordId):'#/result';
- return top+`<section class="card stack" data-body-detail-source="saved-only"><h2>部位ごとの参考値を確認する</h2>${label}<p>以前の表示例は実際の保存記録ではありません。部位別の数値・適用条件・文献の根拠は、保存済みの走行結果画面で確認してください。未保存の入力や活動種別が不明な記録から数値を推定しません。</p><p>文献由来の参考値は、本人の身体組織負荷・健康状態・傷害リスクの実測ではありません。</p><a class="btn primary" href="${esc(link)}">走行結果で確認する</a><a class="btn" href="#/history">保存済みの履歴を見る</a></section>`;
+ return top+`<section class="card stack" data-body-detail-source="saved-only"><h2>部位ごとの参考値を確認する</h2>${label}<p>部位別の参考値・適用条件・文献の根拠は、保存済みの走行結果画面で確認できます。未保存の入力や活動種別が不明な記録からは、数値を推定しません。</p><p>文献由来の参考値は、本人の身体組織負荷・健康状態・傷害リスクの実測ではありません。</p><a class="btn primary" href="${esc(link)}">走行結果で確認する</a><a class="btn" href="#/history">保存済みの履歴を見る</a></section>`;
 }
     let stopHomeDrag=null;
     function render(){
