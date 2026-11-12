@@ -8,7 +8,7 @@ import {compareSavedRuns,isComparableManualRun} from './runReflection.js';
 export const COMPARISON_INQUIRY=Object.freeze({
  id:'T08',category:'01',topic:'過去の走りとの比較',
  question:'以前の走りとの違いから、何が気になった？',
- role:'本人が明示選択した適格な走行記録の違いと限界から、暫定的な問いを形成する'
+ role:'自分で選んだ2件の走行について、比べられる内容と比べられない内容を確かめる'
 });
 const state=(status,reason,extra={})=>Object.freeze({status,reason,...extra});
 export function comparisonInquiryModel({currentRef=null,current=null,previousRef=null,previous=null,
