@@ -4,7 +4,9 @@ import {estimateGpsEnergy} from './gpsEnergyDisplay.js';
 import {checkReplayPoints,evaluateGpsReplayReference} from './gpsReplayReference.js';
 export const GPS_V2_DB='runload-v2-gps-dynamic-v2';
 export const GPS_V2_SUMMARIES='summaries',GPS_V2_DETAILS='details';
-export const GPS_V2_BACKUP_FORMAT='runload-gps-v2-backup';
+export const GPS_V2_BACKUP_FORMAT='gps-records-backup-v2';
+// Keep accepting the original exported format; the IndexedDB name must not change.
+const LEGACY_GPS_V2_BACKUP_FORMAT='runload-gps-v2-backup';
 const good=n=>typeof n==='number'&&Number.isFinite(n);
 const plain=x=>JSON.parse(JSON.stringify(x));
 const finite=(x,lo,hi)=>good(x)&&x>=lo&&x<=hi;
@@ -213,7 +215,7 @@ export async function exportGpsV2Backup(){
 export function inspectGpsV2Backup(text){
  if(typeof text!=='string'||text.length>50_000_000)return {ok:false,reason:'50MB以内のJSONを選んでください'};
  let data;try{data=JSON.parse(text);}catch{return {ok:false,reason:'バックアップを読み取れません'};}
- if(data?.format!==GPS_V2_BACKUP_FORMAT||data.version!==2||!Array.isArray(data.summaries)||
+ if(![GPS_V2_BACKUP_FORMAT,LEGACY_GPS_V2_BACKUP_FORMAT].includes(data?.format)||data.version!==2||!Array.isArray(data.summaries)||
     !Array.isArray(data.details)||data.summaries.length>GPS_RECORD_LIMIT||
     !data.summaries.every(validGpsV2Summary)||!data.details.every(validGpsV2Detail))
   return {ok:false,reason:'バックアップ形式が不正です'};
