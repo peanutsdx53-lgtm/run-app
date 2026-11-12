@@ -13,10 +13,11 @@ test('GPS closeout documentation lists workstages and real-device deferral (docu
 });
 
 test('live GPS functionality is independently covered by code and browser acceptance (008)',()=>{
- const workflow=read('.github/workflows/gps-rof-review-acceptance.yml');
- assert.match(workflow,/name: GPS ROF and confirmation acceptance/);
- assert.match(workflow,/node --test tests\/gpsReplayIndexedDbStore\.test\.mjs/);
+ const workflow=read('.github/workflows/run-app-regression.yml');
+ assert.match(workflow,/name: Run App regression/);
+ assert.match(workflow,/node --test tests\/\*\.test\.mjs/,'all science and GPS contracts execute');
  assert.match(workflow,/node tests\/gpsRofReviewBrowser\.mjs/);
+ assert.match(workflow,/engine: \[chromium, webkit\]/);
  for(const path of ['tests/gpsReplayIndexedDbStore.test.mjs','tests/measurementExperience.test.mjs','tests/gpsRofReviewBrowser.mjs']){
   const source=read(path);
   assert.match(source,/test\(|page\./,'runtime acceptance source exists: '+path);
