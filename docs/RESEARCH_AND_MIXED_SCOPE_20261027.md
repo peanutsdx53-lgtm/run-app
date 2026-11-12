@@ -18,4 +18,4 @@
 - 科学的根拠の原典4ファイルと既存エンジンの数式を変更しない。
 - 専用テストで混合距離・時間の矛盾と保存拒否、条件比較の歩容間誤流用、保存済み単独活動の正常系を確認。
 - 最新HEADでNode、Chromium、WebKit、PagesのCIを検証する。実機屋外走行の結果や混合の科学的妥当性を証明したことにはしない。
-- `docs/UNIMPLEMENTED_PRIORITY_V27_20261026.md` 等は作成当時の開発スナップショットであり、現行の機能一覧ではない。現状は `docs/INSTALL.md` と科学移植・GPSクローズ文書を参照。
+- 過去の未完成機能一覧は現在の機能実装状況を表さないため整理済み。現行の対応範囲は `docs/INSTALL.md`、作業状態は `docs/APP_CODE_COMPLETION_7_STAGE_PLAN_20261110.md`、本整理の判定根拠は `docs/APP_CLEANUP_WORKLOG.md` を参照。科学移植とGPSの根拠記録は保持する。
