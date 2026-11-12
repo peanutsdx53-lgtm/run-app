@@ -163,3 +163,24 @@ test('Home edit auto-save has a complete English sentence and exit action',()=>{
  assert.ok(app.includes(copy));
  assert.doesNotMatch(app,/data-home-save|data-home-cancel/,'obsolete manual-save controls must not reappear');
 });
+
+test('merged English dictionary retains identical translations without duplicating shell entries',()=>{
+ const pairs=[
+  ['探究','Explore'],
+  ['日々のコンディション','Daily Condition'],
+  ['プロフィール','Profile'],
+  ['平均速度','Average Speed'],
+  ['記録する','Record'],
+  ['結果を開く','Open Results'],
+  ['保存済みの履歴を見る','View Saved History'],
+  ['結果を見る','View Results']
+ ];
+ const ui=readFileSync(new URL('../ui/englishUi.js',import.meta.url),'utf8');
+ const explicit=ui.split(' ...ENGLISH_RECORD_HISTORY_COPY')[0];
+ for(const [source,english] of pairs){
+  assert.equal(ENGLISH_UI_TEXT[source],english,'dictionary must preserve active translation');
+  assert.equal(translateUiText(source),english,'visible translation must remain unchanged');
+  assert.equal(explicit.includes(JSON.stringify(source)+': '+JSON.stringify(english)),false,
+   'identical earlier override should not return: '+source);
+ }
+});
