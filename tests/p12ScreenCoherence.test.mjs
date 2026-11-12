@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261111-home-autosave-refine-v2';
+const cacheVersion='20261112-cleanup6-active-v2';
 
 test('P12: Home guide, learning header, History and Exploration controls preserve behavior',()=>{
  const home=read('app.js');
@@ -26,13 +26,13 @@ test('P12: Home guide, learning header, History and Exploration controls preserv
 
 test('P12: newest stylesheet, module imports and PWA precache share one release version',()=>{
  const html=read('index.html'),sw=read('sw.js'),css=read('ui/screenCoherenceP12.css'),app=read('app.js');
- const version='20261111-home-autosave-v1',presentationVersion='20261110-p14-visual-v4';
+ const version='20261112-public-copy-v1',pwaVersion='20261111-home-autosave-v1',presentationVersion='20261110-p14-visual-v4';
  const previous='20261110-p12-card-help-v1';
  assert.ok(html.indexOf('unifiedLearningShell.css')<html.indexOf('screenCoherenceP12.css'));
  assert.ok(html.indexOf('screenCoherenceP12.css')<html.indexOf('screenRefinementP13.css'));
  assert.ok(html.includes('ui/screenCoherenceP12.css?v='+previous));
  assert.ok(html.includes('app.js?v='+version),'missing HTML reference app.js');
- assert.ok(html.includes('pwa.js?v='+version),'missing HTML reference pwa.js');
+ assert.ok(html.includes('pwa.js?v='+pwaVersion),'missing HTML reference pwa.js');
  assert.ok(html.includes('ui/screenCoherenceP14.css?v='+presentationVersion),'missing HTML reference screenCoherenceP14.css');
  assert.ok(sw.includes('runload-ui-next-shell-'+cacheVersion));
  assert.ok(sw.includes('app.js?v='+version),'missing cached resource app.js');
