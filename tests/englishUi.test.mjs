@@ -159,18 +159,18 @@ test('Home edit auto-save has a complete English sentence and exit action',()=>{
  const copy='ハンドルを長押しして移動できます。上下ボタン・表示・サイズ変更も使えます。操作するとすぐに保存されます。';
  assert.equal(translateUiText(copy),'Long-press a handle to rearrange cards, or use Up/Down, show/hide and width controls. Each change is saved immediately.');
  assert.equal(translateUiText('編集を終了'),'Finish Editing');
- const app=read('app.js');
+ const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  assert.ok(app.includes(copy));
  assert.doesNotMatch(app,/data-home-save|data-home-cancel/,'obsolete manual-save controls must not reappear');
 });
 
-test('merged English dictionary retains identical translations without duplicating shell entries',()=>{
+test('merged English dictionary preserves effective translations without redundant earlier entries',()=>{
  const pairs=[
   ['探究','Explore'],
   ['日々のコンディション','Daily Condition'],
   ['プロフィール','Profile'],
   ['平均速度','Average Speed'],
-  ['記録する','Record'],
+  ['記録する','Record Activity'],
   ['結果を開く','Open Results'],
   ['保存済みの履歴を見る','View Saved History'],
   ['結果を見る','View Results']
@@ -180,7 +180,7 @@ test('merged English dictionary retains identical translations without duplicati
  for(const [source,english] of pairs){
   assert.equal(ENGLISH_UI_TEXT[source],english,'dictionary must preserve active translation');
   assert.equal(translateUiText(source),english,'visible translation must remain unchanged');
-  assert.equal(explicit.includes(JSON.stringify(source)+': '+JSON.stringify(english)),false,
+  assert.equal(explicit.split('\n').some(line=>line.trim().startsWith(JSON.stringify(source)+':')),false,
    'identical earlier override should not return: '+source);
  }
 });
