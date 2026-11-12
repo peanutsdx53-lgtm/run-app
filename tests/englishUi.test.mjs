@@ -206,3 +206,14 @@ test('earlier shell dictionary contains no keys already defined in later final U
   ['記録する','Record Activity']
  ])assert.equal(translateUiText(ja),en,'final translation remains unchanged: '+ja);
 });
+
+test('an unavailable Learning route has useful Japanese and English guidance',()=>{
+ const learning=readFileSync(new URL('../ui/learningExperience.js',import.meta.url),'utf8');
+ assert.match(learning,/この教材は利用できません/);
+ assert.doesNotMatch(learning,/未公開の教材や不明なリンクを、別の授業へ置き換えずにお知らせします/);
+ for(const [ja,en] of [
+  ['この教材は利用できません','This Lesson Is Unavailable'],
+  ['学習の一覧から利用できる教材を選んでください。','Choose an available lesson from the Learning list.'],
+  ['学習の一覧へ戻る','Back to Learning List']
+ ])assert.equal(translateUiText(ja),en);
+});
