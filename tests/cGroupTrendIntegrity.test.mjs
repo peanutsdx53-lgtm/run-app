@@ -10,7 +10,7 @@ test('C F18: optional trend shows only saved manual running data, including same
  const data={ok:true,records:[run(1,'2026-10-21',4),run(2,'2026-10-21',6),run(3,'2026-10-23',5),run(4,'2026-10-24',300,'gps'),run(5,'2026-10-25',7,'manual','walk')]};
  const html=trendCard(data);
  assert.equal((html.match(/class="hx-run-trend-point"/g)||[]).length,3,'two saved same-day runs remain independent');
- for(const x of ['4.00 km','6.00 km','5.00 km','2026-10-21','2026-10-23','保存済み手入力走行','未記録日は0kmにせず'])assert.match(html,new RegExp(x.replace('.','\\.')));
+ for(const x of ['4.00 km','6.00 km','5.00 km','2026-10-21','2026-10-23','保存済み手入力走行','活動1件ごと'])assert.match(html,new RegExp(x.replace('.','\\.')));
  assert.doesNotMatch(html,/300.00 km|7.00 km|2026-10-24|2026-10-25/);
  assert.equal(html.indexOf('4.00 km')<html.indexOf('5.00 km'),true);
 });
