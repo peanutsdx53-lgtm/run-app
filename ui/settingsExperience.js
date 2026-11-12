@@ -1,5 +1,5 @@
 import {renderDataBackup,renderDataDelete,makeDataUi} from "./dataManagementUi.js?v=20261111-settings-dialog-v1";
-// RunLoad v2 settings: local-only opt-in preferences. No legal consent is recorded here.
+// Local-only opt-in display preferences. Legal consent is handled separately.
 export const PROFILE_KEY='runload-v2-user-profile-v1';
 export const DISPLAY_KEY='runload-v2-display-preferences-v1';
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
