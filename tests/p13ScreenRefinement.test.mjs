@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {reviewView} from '../ui/recordReviewExperience.js';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261111-exploration-inquiry-v2';
+const cacheVersion='20261112-cleanup5-shadow-v1';
 const publicCopyVersion='20261110-public-copy-v1';
 
 test('P13 history help is right-aligned and GPS content is a single compact disclosure',()=>{
@@ -48,9 +48,9 @@ test('P13 transient learning entry preserves record fields and current optional 
 });
 
 test('P13 version and mobile style are cached with the active application',()=>{
- const version='20261111-exploration-inquiry-v2',presentationVersion='20261110-p14-visual-v4',previous='20261110-p13-compact-v1',index=read('index.html'),sw=read('sw.js'),app=read('app.js'),css=read('ui/screenRefinementP13.css');
+ const version='20261112-public-copy-v1',pwaVersion='20261111-home-autosave-v1',presentationVersion='20261110-p14-visual-v4',previous='20261110-p13-compact-v1',index=read('index.html'),sw=read('sw.js'),app=read('app.js'),css=read('ui/screenRefinementP13.css');
  assert.ok(index.includes('app.js?v='+version));
- assert.ok(index.includes('pwa.js?v='+version));
+ assert.ok(index.includes('pwa.js?v='+pwaVersion));
  assert.ok(index.includes('ui/screenCoherenceP14.css?v='+presentationVersion));
  assert.ok(sw.includes('runload-ui-next-shell-'+cacheVersion));
  assert.ok(sw.includes('app.js?v='+version));
