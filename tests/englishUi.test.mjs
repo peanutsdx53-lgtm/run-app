@@ -214,6 +214,6 @@ test('an unavailable Learning route has useful Japanese and English guidance',()
  for(const [ja,en] of [
   ['この教材は利用できません','This Lesson Is Unavailable'],
   ['学習の一覧から利用できる教材を選んでください。','Choose an available lesson from the Learning list.'],
-  ['学習の一覧へ戻る','Back to Learning List']
+  ['学習の一覧へ戻る','Back to Learning']
  ])assert.equal(translateUiText(ja),en);
 });
