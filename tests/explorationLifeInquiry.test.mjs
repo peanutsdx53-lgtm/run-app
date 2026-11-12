@@ -26,7 +26,7 @@ test('E6 explicit life origin preserves self-report versus time-in-bed versus un
  for(const [source,label,minute] of [
   ['duration','本人申告の睡眠時間','450分'],
   ['clock','就床から起床までの経過時間','450分'],
-  [undefined,'方法が確認できない旧記録','値の意味を確定できません']]){
+  [undefined,'記録方法を確認できないため、時間を比較しません','値の意味を確定できません']]){
   const conditions=life();
   conditions.entries[0].sleepSource=source;
   if(source==='clock')Object.assign(conditions.entries[0],{
