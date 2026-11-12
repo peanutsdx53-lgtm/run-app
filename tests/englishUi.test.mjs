@@ -184,3 +184,25 @@ test('merged English dictionary preserves effective translations without redunda
    'identical earlier override should not return: '+source);
  }
 });
+
+test('earlier shell dictionary contains no keys already defined in later final UI dictionaries',()=>{
+ const source=readFileSync(new URL('../ui/englishUi.js',import.meta.url),'utf8');
+ const original=source.split(' ...ENGLISH_RECORD_HISTORY_COPY')[0];
+ const early=new Set([...original.matchAll(/^\s*"([^"]+)"\s*:\s*"/gm)].map(m=>m[1]));
+ const laterFiles=[
+  'englishFinalAppShell.js','englishFinalOnboarding.js','englishFinalRecording.js',
+  'englishFinalConditions.js','englishFinalHomeData.js','englishFinalBackup.js',
+  'englishFinalAnnotation.js','englishFinalGpsSimulation.js','englishFinalInquiry.js'
+ ];
+ for(const name of laterFiles){
+  const later=readFileSync(new URL('../ui/'+name,import.meta.url),'utf8');
+  for(const match of later.matchAll(/^\s*"([^"]+)"\s*:\s*"/gm))
+   assert.equal(early.has(match[1]),false,'redundant earlier UI translation: '+match[1]+' in '+name);
+ }
+ for(const [ja,en] of [
+  ['距離・時間・ペース','Distance, Duration and Pace'],
+  ['記録内容の確認','Review Activity Record'],
+  ['保存済みの履歴を見る','View Saved History'],
+  ['記録する','Record Activity']
+ ])assert.equal(translateUiText(ja),en,'final translation remains unchanged: '+ja);
+});
