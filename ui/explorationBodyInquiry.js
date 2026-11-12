@@ -9,7 +9,7 @@ import {MENTAL_PHASES,MENTAL_BASIS} from './mentalExperience.js';
 export const BODY_INQUIRY=Object.freeze({
  id:'T04',category:'04',topic:'筋肉痛・違和感',
  question:'自分の身体についての記述を読み直して、次に何を確かめたい？',
- role:'本人が入力時と後日申告の出所・欠測・時点を吟味し、暫定的な問いを持つ'
+ role:'記録時の内容と後から追加した内容を分け、未回答の項目も確かめる'
 });
 const result=(status,reason,other={})=>Object.freeze({status,reason,...other});
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;', '>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
