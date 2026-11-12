@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 import {HISTORY_STYLES} from "../ui/historyInlineStyles.js";
+const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const styles=HISTORY_STYLES;
 const history=read("ui/historyExperience.js");
 const app=read("app.js");
