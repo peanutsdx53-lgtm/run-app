@@ -185,3 +185,18 @@ test('saved V2 course reports complete, partial and absent altitude honestly (02
  assert.equal(partly.elevationStatus,'partial','a missing altitude must not be presented as complete');
  assert.equal(partly.elevationPoints,full.route.length-1);
 });
+
+test('new GPS backups use neutral format; old versions remain readable with strict payload validation',()=>{
+ assert.equal(GPS_V2_BACKUP_FORMAT,'gps-records-backup-v2');
+ assert.doesNotMatch(GPS_V2_BACKUP_FORMAT,/runload/i);
+ const pair=prepareGpsV2Run(session(),{saveDetails:true,date:'2026-10-27'});
+ assert.equal(pair.ok,true);
+ const current={format:GPS_V2_BACKUP_FORMAT,version:2,summaries:[pair.summary],details:[pair.detail]};
+ const historical={...current,format:'runload-gps-v2-backup'};
+ assert.equal(inspectGpsV2Backup(JSON.stringify(current)).ok,true);
+ assert.equal(inspectGpsV2Backup(JSON.stringify(historical)).ok,true);
+ assert.equal(inspectGpsV2Backup(JSON.stringify({...current,format:'unspecified'})).ok,false);
+ assert.equal(inspectGpsV2Backup(JSON.stringify({...historical,version:3})).ok,false);
+ assert.equal(inspectGpsV2Backup(JSON.stringify({...historical,details:[]})).ok,false,
+  'legacy format may not bypass matching between GPS summary and detailed route');
+});
