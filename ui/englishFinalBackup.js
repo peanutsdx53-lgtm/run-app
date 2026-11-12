@@ -3,7 +3,7 @@
 export const ENGLISH_FINAL_BACKUP=Object.freeze({
  "運動記録・体調・メモ・設定などをJSONファイルに保存します。外部へ自動送信されません。": "Save activity records, conditions, notes and settings as a JSON file. Nothing is sent automatically.",
  "個人情報を含み、暗号化されません。": "Contains personal information and is not encrypted.",
- "保管先と共有先を確認してください。": "Check where the file is stored and who can access it.",
+ "第三者と共有せず、安全な場所に保管してください。": "Do not share this file with others. Store it securely.",
  "GPSを含めると自宅周辺の経路などの位置情報も保存されます。": "Including GPS also saves location information, such as routes near your home.",
  "保存内容と注意点": "Backup Contents and Precautions",
  "運動記録、体調、保存コース、メモ、プロフィール、表示設定、保存した精神面の任意回答・後日追記を含みます。": "Includes activity records, conditions, saved courses, notes, profile and display settings, and saved optional mental responses and later entries.",
