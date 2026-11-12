@@ -398,7 +398,7 @@ try{
  const [dl]=await Promise.all([page.waitForEvent('download',{timeout:12000}),save.click()]);
  assert.match(dl.suggestedFilename(),/隔離された補助回答/);
  const isolation=JSON.parse(await readFile(await dl.path(),'utf8'));
- assert.equal(isolation.format,'runload-v2-orphan-quarantine-inspection-only');
+ assert.equal(isolation.format,'orphan-annotations-inspection-only');
  assert.equal(isolation.events.length,1);
  console.log(JSON.stringify({gate:'M7-exact-counterexample',caseId:'T-048',
   engine,status:'PASS',uiOptIn:true,normalRestoreDenied:true,quarantineDownload:true}));
