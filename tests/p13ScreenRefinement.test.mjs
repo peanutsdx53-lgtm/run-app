@@ -5,7 +5,6 @@ import {reviewView} from '../ui/recordReviewExperience.js';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const cacheVersion='20261112-cleanup5-shadow-v1';
-const publicCopyVersion='20261110-public-copy-v1';
 
 test('P13 history help is right-aligned and GPS content is a single compact disclosure',()=>{
  const app=read('app.js'),hist=HISTORY_STYLES;
