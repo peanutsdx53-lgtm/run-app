@@ -61,6 +61,12 @@ try{
   if(a.version!==2||b.version!==2||a.gps!==null||a.annotations.events.length!==1||
    b.annotations.events.length!==2||full.annotationCount!==2||without.excludedGpsAnnotationCount!==1)
    throw Error('incorrect scope, privacy or format');
+  if(b.gps?.format!=='gps-records-backup-v2'||b.annotations?.format!=='running-annotation-backup-v1')
+   throw Error('new portable backup contains outdated nested format identifiers');
+  const historical={...b,gps:{...b.gps,format:'runload-gps-v2-backup'},
+   annotations:{...b.annotations,format:'runload-v2-annotation-backup'}};
+  if(!portable.inspectPortableBackup(JSON.stringify(historical)).ok)
+   throw Error('historical signed backup is no longer accepted');
   const parsed=portable.inspectPortableBackup(full.text);
   if(!parsed.ok||parsed.annotationCount!==2)throw Error('valid v2 backup rejected');
 
@@ -87,6 +93,8 @@ try{
   if(!isolated.ok||isolated.count!==1||isolated.restorable!==false||isolated.writeCount!==0||
      !JSON.parse(isolated.isolatedText).orphanRecordKeys.includes(e.recordKey))
    throw Error('T048 isolation contract violated '+JSON.stringify(isolated));
+  if(JSON.parse(isolated.isolatedText).format!=='orphan-annotations-inspection-only')
+   throw Error('inspection-only sidecar has stale public format name');
   if(portable.inspectPortableBackup(isolated.isolatedText).ok)throw Error('T048 sidecar importable');
   const orphanAfter48=await canonical.readCanonical();
   if(!orphanBefore48.ok||!orphanAfter48.ok||orphanBefore48.raw!==orphanAfter48.raw)throw Error('T048 source changed');
