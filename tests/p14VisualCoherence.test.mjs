@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261112-cleanup5-shadow-v1';
+const cacheVersion='20261112-cleanup6-active-v1';
 
 test('P14: History matches GPS card density, and Shadow DOM no longer adds blank viewport height',()=>{
  const history=HISTORY_STYLES;
@@ -71,9 +71,8 @@ test('P14: app, worker, and style versions are aligned without deleting local hi
  assert.ok(index.includes('ui/screenCoherenceP14.css?v='+v),'HTML missing screenCoherenceP14.css');
  assert.ok(sw.includes('ui/screenCoherenceP14.css?v='+v),'SW missing screenCoherenceP14.css');
  assert.ok(sw.includes('runload-ui-next-shell-'+cacheVersion));
- for(const p of ['ui/historyExperience.js','ui/historyInlineStyles.js']){
-  assert.ok(sw.includes(p+'?v='+v),'SW missing '+p);
- }
+ assert.ok(sw.includes('ui/historyExperience.js?v='+v),'SW missing current History view');
+ assert.match(sw,/ui\/historyInlineStyles\.js\?v=20261110-p14-visual-v3/,'SW must cache the exact History shadow-style import');
  assert.ok(app.includes('ui/historyExperience.js?v='+v));
  assert.doesNotMatch(app,/localStorage\.clear\(\)/);
 });
