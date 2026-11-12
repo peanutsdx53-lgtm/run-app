@@ -32,5 +32,5 @@ test('I3: new cache generation is aligned with the private route repair',()=>{
  const version=index.match(/app\.js\?v=([\w-]+)/)?.[1];
  assert.ok(version,'current versioned app entry is present');
  assert.ok(sw.includes('app.js?v='+version),'current app entry is precached');
- assert.match(sw,/runload-ui-next-shell-20261112-cleanup8-final-v1/);
+ assert.match(sw,/runload-ui-next-shell-20261112-cleanup8-final-v2/);
 });
