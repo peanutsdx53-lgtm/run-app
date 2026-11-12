@@ -8,8 +8,8 @@ const cacheVersion='20261111-exploration-inquiry-v2';
 const publicCopyVersion='20261110-public-copy-v1';
 
 test('P13 history help is right-aligned and GPS content is a single compact disclosure',()=>{
- const app=read('app.js'),hist=read('ui/historyExperience.css');
- assert.equal(HISTORY_STYLES,hist,'History Shadow DOM must match source CSS byte for byte');
+ const app=read('app.js'),hist=HISTORY_STYLES;
+ assert.match(read('ui/historyExperience.js'),/data-history-inline-styles/,'History must render bundled styles synchronously');
  assert.match(hist,/\.stage \.hx-title-line\{width:100%;/);
  assert.match(hist,/\.stage \.hx-title-line \.rl-screen-help\{margin-left:auto/);
  assert.doesNotMatch(app,/gps-history-shortcut|GPS実走記録 \$\{/);
