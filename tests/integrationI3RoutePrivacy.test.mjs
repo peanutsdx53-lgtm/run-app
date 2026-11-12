@@ -29,7 +29,8 @@ test('I3: the mental inquiry remains opt-in and is not a medical/ROF score',()=>
 });
 test('I3: new cache generation is aligned with the private route repair',()=>{
  const index=read('../index.html'),sw=read('../sw.js');
- assert.match(index,/app\.js\?v=20261111-exploration-inquiry-v2/);
- assert.match(sw,/runload-ui-next-shell-20261111-exploration-inquiry-v2/);
- assert.match(sw,/app\.js\?v=20261111-exploration-inquiry-v2/);
+ const version=index.match(/app\.js\?v=([\w-]+)/)?.[1];
+ assert.ok(version,'current versioned app entry is present');
+ assert.ok(sw.includes('app.js?v='+version),'current app entry is precached');
+ assert.match(sw,/runload-ui-next-shell-20261112-cleanup6-active-v2/);
 });
