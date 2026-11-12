@@ -1,4 +1,4 @@
-// RunLoad v2: presentation/interaction helpers for approved record v2 screens.
+// Presentation and interaction helpers for the current record screens.
 // Not a replacement for the authoritative v1 record/scientific storage contract.
 import {checkManualRequiredFields} from './recordDraftReview.js';
 import {recordIcon} from './recordIcons.js?v=20261101-review-density-v1';
