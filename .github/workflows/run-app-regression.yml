@@ -17,7 +17,7 @@ concurrency:
 jobs:
   static-and-science:
     name: Static, storage, scientific evidence and Node tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
 
   browser:
     name: ${{ matrix.engine }} UI and record continuity
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
     strategy:
       fail-fast: false
@@ -68,7 +68,7 @@ jobs:
 
   offline:
     name: Installed PWA offline storage and bilingual flow
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
