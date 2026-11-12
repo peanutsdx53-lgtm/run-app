@@ -2,7 +2,7 @@
 
 本リポジトリは、**本人が記録した走行の事実・本人申告・適格な文献参考値を区別して解釈する**日本語Webアプリの実装・内部評価用です。**GitHubでの公開は、一般向けの正式なリリースやアプリストアでの配布を意味しません。** 研究資料の原本や本人の実記録を無断で置換・移行しません。
 
-**現在の状態（2026-11-10）**：主要20画面、記録・結果・履歴・任意の問い、原著の条件を踏まえた部位内参考値、手入力・スマートフォン向けGPS測定、任意ROF-J、コース、仮の走歩比較、共有向け画面、ローカル保存、PNG出力、PWA・オフラインの実装があります。対象幅320/390/1440pxのChromium/WebKitブラウザ試験を行っています。全機能の実機品質と科学的・学術的な総合成立を表すものではありません。
+**現在の状態（2026-11-12）**：主要20画面、記録・結果・履歴・任意の問い、原著の条件を踏まえた部位内参考値、手入力・スマートフォン向けGPS測定、任意ROF-J、コース、仮の走歩比較、共有向け画面、ローカル保存、PNG出力、PWA・オフラインの実装があります。対象幅320/390/1440pxのChromium/WebKitブラウザ試験を行っています。全機能の実機品質と科学的・学術的な総合成立を表すものではありません。
 
 ## 研究目的と表示上の限界
 
@@ -37,7 +37,7 @@ English translations cover the first-use guide, manual recording, review, result
 
 **Legal-document limitation:** The original Japanese Terms of Use and Privacy Policy remain the authoritative legal text. English article-by-article *reference translations* are provided alongside the originals. These English reference texts have **not undergone independent legal review**. English language selection does not bypass explicit consent. Other untranslated strings may still occur in uncommon errors or dynamically constructed combinations; such strings should be reported rather than treated as certified English completeness.
 
-Automated regression: `node --test tests/englishUi.test.mjs tests/firstUseExperience.test.mjs tests/settingsExperience.test.mjs`, plus `RUNLOAD_BROWSER_ENGINE=chromium node tests/englishUiBrowser.mjs` and `RUNLOAD_BROWSER_ENGINE=webkit node tests/englishUiBrowser.mjs`. The full-app research and physical-device reviews are separate from the translation rollout. The older implementation history remains documented in [the English UI implementation notes](docs/ENGLISH_UI_PREVIEW_IMPLEMENTATION_20261111.md).
+Automated regression: `node --test tests/englishUi.test.mjs tests/firstUseExperience.test.mjs tests/settingsExperience.test.mjs`, plus `RUNLOAD_BROWSER_ENGINE=chromium node tests/englishUiBrowser.mjs` and `RUNLOAD_BROWSER_ENGINE=webkit node tests/englishUiBrowser.mjs`. The full-app research and physical-device reviews are separate from the translation rollout. The current language behavior, compatibility decisions and verified regression evidence are recorded in [the cleanup and acceptance worklog](docs/APP_CLEANUP_WORKLOG.md). Earlier preview-only drafts are retired.
 
 ## テスト再現（開発・内部評価）
 
@@ -74,8 +74,8 @@ node tests/offlineShellBrowserSmoke.mjs
 
 ## セキュリティと本人の記録
 
-記録は端末側の保存領域に格納します。共有端末、ブラウザデータ削除、プライベートブラウザ、端末容量不足などでは保存を保証できません。バックアップ出力は暗号化されず、GPS詳細を本人が保存した場合は位置情報を含み得ます。バックアップを他者へ不用意に送らず、安全な保存場所を選んでください。保存済みデータ削除は本人が確認手順を行った場合のみ実行します。開発・試験ではユーザー本人の実記録を削除・移行しません。
+記録は端末側の保存領域に格納します。共有端末、ブラウザデータ削除、プライベートブラウザ、端末容量不足などでは保存を保証できません。バックアップ出力は暗号化されず、GPS詳細を本人が保存した場合は位置情報を含み得ます。新しく保存するJSON内のGPS・注記の形式識別子は中立的な名称へ整理していますが、過去形式のバックアップも厳格な検証後に読み取れます。既存の端末内データベース名・保存キーは互換性のため変更していません。バックアップを他者へ不用意に送らず、安全な保存場所を選んでください。保存済みデータ削除は本人が確認手順を行った場合のみ実行します。開発・試験ではユーザー本人の実記録を削除・移行しません。
 
 ## 更新履歴
 
-本リポジトリの初期段階（2026-10-23〜26）はデモ主体でした。その後、科学計算・保存・GPS・PWA等を段階的に接続しています。初期の「すべて架空のデモ」「保存は未接続」「GPS開始不可」という説明は**現行コードには当てはまらない**ため、READMEの現状説明を本版へ更新しました。過去の設計経緯は `docs/` に残しています。
+本リポジトリの初期段階（2026-10-23〜26）はデモ主体でした。その後、科学計算・保存・GPS・PWA等を段階的に接続しています。初期の「すべて架空のデモ」「保存は未接続」「GPS開始不可」という説明は**現行コードには当てはまらない**ため、READMEの現状説明を本版へ更新しました。不要になった旧プレビューや旧CIの草稿は削除し、現行の変更根拠は `docs/APP_CLEANUP_WORKLOG.md` に集約しています。研究・科学・権利・移設時点の監査証拠は保護対象として区別します。
