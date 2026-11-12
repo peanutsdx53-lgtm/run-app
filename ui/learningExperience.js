@@ -1,5 +1,5 @@
 /**
- * RunLoad learning foundation (candidate implementation).
+ * Learning content and local-only reflection helpers.
  * Knowledge curriculum, not app-operation instructions or personal diagnosis.
  * No user records are read, edited or sent from this module.
  */
@@ -169,7 +169,7 @@ export function mountLearning(host,params){
  if(selected===ORIGIN_LESSON.id){mountOriginLesson(host);insertLearningHeading(host);enhanceLearningLesson(host,selected);return;}
  if(selected===MOTION_LESSON.id){mountMotionLesson(host);insertLearningHeading(host);enhanceLearningLesson(host,selected);return;}
  if(selected===FATIGUE_LESSON.id){mountFatigueLesson(host);insertLearningHeading(host);enhanceLearningLesson(host,selected);return;}
- host.innerHTML=selected===READY_LESSON.id?lesson():selected?'<section class="lr-panel"><h1>この授業はまだ利用できません</h1><p>未公開の教材や不明なリンクを、別の授業へ置き換えずにお知らせします。</p><a href="#/learning">学習の一覧へ戻る</a></section>':catalogue();
+ host.innerHTML=selected===READY_LESSON.id?lesson():selected?'<section class="lr-panel"><h1>この教材は利用できません</h1><p>学習の一覧から利用できる教材を選んでください。</p><a href="#/learning">学習の一覧へ戻る</a></section>':catalogue();
  insertLearningHeading(host);
  if(selected!==READY_LESSON.id)return;
  const jumpTo=id=>host.querySelector("#"+id)?.scrollIntoView({block:"start",behavior:"auto"});
