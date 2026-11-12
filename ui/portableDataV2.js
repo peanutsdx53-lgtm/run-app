@@ -104,7 +104,7 @@ export async function isolateOrphanBackup(storage,text,{consent=false}={}){
  }
  if(!missing.length)return fail('親のない注記はありません','NO_ORPHANS');
  const keys=new Set(missing);
- const isolated={format:'runload-v2-orphan-quarantine-inspection-only',version:1,
+ const isolated={format:'orphan-annotations-inspection-only',version:1,
   exportedAt:new Date().toISOString(),notice:'復元できない読み取り専用の隔離ファイル。個人情報を含む未暗号化JSONです。',
   orphanRecordKeys:missing,
   events:parsed.annotations.events.filter(e=>keys.has(e.recordKey)),
