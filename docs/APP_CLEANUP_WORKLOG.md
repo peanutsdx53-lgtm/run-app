@@ -199,3 +199,44 @@ GitHub上で更新後のファイルを再取得して、以下11項目の**文�
 - Node.jsの全 `tests/*.test.mjs` 実行、今回追加した `activePrecacheContract` 3試験、英語辞書試験、Chromium/WebKitでのオフライン利用・Shadow DOM・動的編集画面、インストール済みPWAの更新経路は**未実行**。静的照合をブラウザPASSとして扱わない。
 - 移設先 `run-app` はCI設定を持たず、旧リポジトリの既存PASSは現行SHAの証拠として使えない。第7回で最低限のCIを実装し、必要なテストとブラウザ試験を同一SHAで実行して結果を分類する。
 - 互換を保ったまま旧形式名を新しい外部出力名へ移行する課題と、研究/試験の歴史資料の整理は継続課題。表示・機械可読バックアップの禁止語ゼロはまだ最終認定できない。
+
+## 第7回：回帰試験・新リポジトリCI整備（2026-11-12）
+
+- 基点: `aed65c47c6159b191fd4b7e1f16c00d502a8066a`
+- 同一SHAで検証した実行コミット: `c6151c99095bedda23cf8fe4646be36a26f11672`
+- GitHub Actions: https://github.com/peanutsdx53-lgtm/run-app/actions/runs/43226441147
+- 実行結果: **completed / success**。5ジョブ中4ジョブ成功、`Optional deployed Pages byte and live browser check` は配信先URL設定がないため **skipped**。失敗と未実施は区別する。
+
+### 実装したCI
+- `.github/workflows/run-app-regression.yml` を新規作成。`main` へのpush、`main` 宛のPR、手動実行で回帰試験を起動。変更ファイルによるパスフィルタは設定しない。PWA/ROF-J/GPS/計算/翻訳/研究境界の変更をスキップさせないため。
+- GitHub Actions ランナーを `ubuntu-24.04`、Node.js 22、Playwright 1.56.1に固定。実際の初回失敗は `ubuntu-latest` が Ubuntu 26.04 を指し、採用版Playwrightが同OSのChromium/WebKitの依存パッケージ導入をサポートしなかったため。環境側の失敗として修正し、アプリ不具合と混同しない。
+- `static-and-science`: `scripts/auditLocalDependencies.mjs`、`scripts/auditPublicTerminology.mjs`、`node --test tests/*.test.mjs`。
+- `browser`: ChromiumとWebKitを独立したジョブで実行。GPS/ROF-Jの測定・レビュー、日英表示、現行20画面、二走行の記録・解釈・再訪（各エンジン**2回連続**）を検証。
+- `offline`: Chromiumで未キャッシュ初回起動を拒否し、インストール済みキャッシュ下で記録・結果・相談・探究・保存原本の不変性・英語切替と日本語への復帰を検証。
+- `deployed-pages`: 環境変数 `vars.RUNLOAD_PAGES_URL` が設定されている場合のみ、HTTPSの配信ファイルと稼働を検証する。今回未設定のため未実施。`pages build and deployment` の別ワークフロー成功は、実配信ファイルと最新コミットの完全一致を証明するものではない。
+- 旧版からの変更で誤ってキャンセル待ちが長引いたため、独立ジョブの検証開始を妨げる `cancel-in-progress` は解除。個々のチェック結果を対象SHAで確認する。
+
+### 実測したCI結果（同一SHA `c6151c99`）
+| ジョブ | 結論 | 確認事項 |
+|---|---|---|
+| Static, storage, scientific evidence and Node tests | **SUCCESS** | 全651テストPASS、FAIL 0。静的依存参照監査と公開文言監査も成功。科学参照、適用範囲外の拒否、保存・欠測・比較の契約テストを含む。 |
+| chromium UI and record continuity | **SUCCESS** | GPS/ROF-J、英語表示、20画面、二走行の保存から比較・再訪までを2回連続実行。 |
+| webkit UI and record continuity | **SUCCESS** | 同じ検証系をWebKitで実行し、二走行の試験を2回連続実行。 |
+| Installed PWA offline storage and bilingual flow | **SUCCESS** | オフラインでの保存・再読込、結果、相談、探究、英語切替、元の日本語メモとレコードIDの維持を確認。 |
+| Optional deployed Pages byte and live browser check | **SKIPPED** | `RUNLOAD_PAGES_URL` 未設定のため。未実施であってPASSではない。 |
+
+### テスト不合格の原因と補正
+- 初回実行時、651件中17件、後の版で13件の失敗を発見。古いワークフローファイル名、キャッシュ識別子、版番号、画面文言を固定した期待値が主な原因。一部は前工程で追加したテストの `read` 未定義や辞書後勝ち訳語の期待値誤りだった。
+- `tests/uiContracts.test.mjs`、`tests/gpsSoftwareCloseout.test.mjs`、`tests/repositoryNeutralPolicy.test.mjs`：実在しない旧リポジトリの4つのCIファイルへの参照を取り除き、**main/PRの無条件の実行・科学全件・Chromium/WebKit・GPS/ROF-J・二走行2回・オフライン・任意Pagesチェックを維持した**現行ワークフローへ契約を付け替えた。
+- `tests/integrationI3RoutePrivacy.test.mjs`、`tests/learningFatigue.test.mjs`、`tests/learningMotion.test.mjs`、`tests/learningFoundation.test.mjs`、`tests/p11NavLearningAudit.test.mjs`、`tests/p12ScreenCoherence.test.mjs`：古いアプリ版を固定した期待値を現行版へ更新、またはHTMLから取得した実版がService Workerにキャッシュされることを照合する方式へ更新。ルート切替時のセンシティブ表示封鎖、科学的な過剰断定の拒否、教材のクイズや操作の検査はそのまま保持。
+- `tests/englishUi.test.mjs`：未定義 `read` を有効な `readFileSync` へ修正。辞書合成後の `記録する → Record Activity` という実際の後勝ちの訳語を検証し、重複整理後も利用者の最終英訳が維持されることを確かめた。
+- `tests/cGroupTrendIntegrity.test.mjs`、`tests/s02ConditionAchievementPresentation.test.mjs`、`tests/s02HomePreviewRemoval.test.mjs`：旧説明文の存在テストを、現在の保存記録の出所表示・同日別走行・活動1件ごとの扱い・未記録日と0の区別・実績未達成の検査へ更新。過去の文言を戻すことでPASSさせたり、記録の保存条件を緩めたりしていない。
+- **この工程ではアプリ実行コード、科学数式、個人の保存原本を変更していない。** Git比較でワークフロー1件新規、テスト13件修正（結果を保存する台帳は別）。
+
+### 限界・未認定
+- 上記651件はテストによる設計整合性・技術的動作の確認であり、原著の全式・画像出典の独立再計算や科学的適用範囲の外部監査を証明しない。
+- 物理iOS/Androidでの屋外GPS、権限拒否/画面ロック/中断復帰、OSの読み上げ・文字拡大・タッチ確認は別工程。ブラウザのWebKit成功だけで実機試験を代用しない。
+- 英語版は実ブラウザで動作確認できたが、法的文書の独立英訳審査や、全ての珍しいエラー・組み合わせ文言が自然な英語であることの保証にはならない。
+- `RUNLOAD_PAGES_URL` 未設定で配信実サイトを対象にした読み戻し試験は未実施。公開ドメイン/URLを決めた上で環境変数を設定すれば再試験できる。
+- 製品の実際の「自己理解の向上」や傷害予防効果は、この内部試験によって示されたものではない。
+- 第8回：実ファイル・公開表示・機械可読出力・記録復元・旧資料の残余監査を行い、最終的に不要な実装/資料の物理削除と一致性確認を実施する。前述の未実施・未認定事項は残す。
