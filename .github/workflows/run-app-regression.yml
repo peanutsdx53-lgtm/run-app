@@ -10,10 +10,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: run-app-regression-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   static-and-science:
     name: Static, storage, scientific evidence and Node tests
