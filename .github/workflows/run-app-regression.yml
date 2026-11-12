@@ -1,0 +1,83 @@
+name: Run App regression
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: run-app-regression-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-and-science:
+    name: Static, storage, scientific evidence and Node tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify all local references
+        run: node scripts/auditLocalDependencies.mjs
+      - name: Check public terminology
+        run: node scripts/auditPublicTerminology.mjs
+      - name: Run all Node unit and contract tests
+        run: node --test tests/*.test.mjs
+
+  browser:
+    name: ${{ matrix.engine }} UI and record continuity
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install supported browser test tool
+        run: npm install --no-save playwright@1.56.1
+      - name: Install browser with OS dependencies
+        run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Verify bilingual interface
+        run: node tests/englishUiBrowser.mjs
+      - name: Verify 20-screen layouts
+        run: node tests/screenDesign20PopulatedBrowser.mjs
+      - name: Verify complete two-run cycle twice
+        run: |
+          for attempt in 1 2; do
+            echo "Two-run cycle verification attempt ${attempt}/2"
+            if node tests/twoRunCycleBrowserSmoke.mjs; then
+              echo "Two-run cycle PASS on attempt ${attempt}"
+            else
+              echo "Two-run cycle FAIL on attempt ${attempt}"
+              exit 1
+            fi
+          done
+
+  offline:
+    name: Installed PWA offline storage and bilingual flow
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install supported browser test tool
+        run: npm install --no-save playwright@1.56.1
+      - name: Install Chromium with OS dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Verify offline record, result, consultation, exploration and English
+        run: node tests/offlineShellBrowserSmoke.mjs
