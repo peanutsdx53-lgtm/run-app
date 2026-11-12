@@ -30,11 +30,11 @@ test('ROF-J diagrams and service worker never fetch the former repository',()=>{
  assert.equal(ROF_J_ANCHORS.length,5);
 });
 test('Deployment check and current-facing documentation have no former repository hardcoding',()=>{
- for(const path of ['README.md','docs/INSTALL.md','tests/livePagesSmoke.mjs','.github/workflows/ui-browser.yml']){
+ for(const path of ['README.md','docs/INSTALL.md','tests/livePagesSmoke.mjs','.github/workflows/run-app-regression.yml']){
   assert.doesNotMatch(read(path),previous,path);
  }
  assert.match(read('tests/livePagesSmoke.mjs'),/process\.env\.RUNLOAD_PAGES_URL/);
- assert.match(read('.github/workflows/ui-browser.yml'),/vars\.RUNLOAD_PAGES_URL != ''/);
+ assert.match(read('.github/workflows/run-app-regression.yml'),/vars\.RUNLOAD_PAGES_URL != ''/);
  assert.match(read('README.md'),/一般向けの正式なリリース/);
  assert.match(read('docs/INSTALL.md'),/一般向けに正式リリースしていません/);
 });
