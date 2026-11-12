@@ -54,3 +54,16 @@ test('M3 pure: ROF and source types remain independent of event restoration',asy
  assert.equal(a.timeBasis,'UNKNOWN');
  assert.equal((await inspectAnnotationBundle(bundle([a]))).ok,true);
 });
+
+test('new annotation backups use neutral format and strict validation accepts authentic old exports',async()=>{
+ const current=bundle([await event(1)]);
+ assert.equal(ANNOTATION_BACKUP_FORMAT,'running-annotation-backup-v1');
+ assert.doesNotMatch(JSON.stringify(current),/runload/i,'newly produced annotation JSON must not show the old brand');
+ const legacy={...current,format:'runload-v2-annotation-backup'};
+ assert.equal(inspectAnnotationBundleShape(legacy).ok,true);
+ assert.equal((await inspectAnnotationBundle(legacy)).ok,true,'old signed events stay verifiable');
+ assert.equal(inspectAnnotationBundleShape({...current,format:'unsupported-format'}).ok,false);
+ assert.equal(inspectAnnotationBundleShape({...legacy,version:2}).ok,false);
+ const corrupt={...legacy,events:[{...current.events[0],payload:{answer:'FELT'}}]};
+ assert.equal((await inspectAnnotationBundle(corrupt)).ok,false,'legacy header never bypasses signed event verification');
+});
