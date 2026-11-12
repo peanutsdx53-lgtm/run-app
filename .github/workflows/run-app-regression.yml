@@ -50,6 +50,8 @@ jobs:
         run: npm install --no-save playwright@1.56.1
       - name: Install browser with OS dependencies
         run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Verify GPS and ROF-J accepted-measurement path
+        run: node tests/gpsRofReviewBrowser.mjs
       - name: Verify bilingual interface
         run: node tests/englishUiBrowser.mjs
       - name: Verify 20-screen layouts
@@ -81,3 +83,22 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Verify offline record, result, consultation, exploration and English
         run: node tests/offlineShellBrowserSmoke.mjs
+
+  deployed-pages:
+    name: Optional deployed Pages byte and live browser check
+    if: ${{ vars.RUNLOAD_PAGES_URL != '' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      RUNLOAD_PAGES_URL: ${{ vars.RUNLOAD_PAGES_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium test runner
+        run: npm install --no-save playwright@1.56.1
+      - name: Install compatible browser
+        run: npx playwright install --with-deps chromium
+      - name: Verify matching deployed files and startup
+        run: node tests/livePagesSmoke.mjs
