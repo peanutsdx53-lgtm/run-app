@@ -30,7 +30,7 @@ export function renderDataBackup(ui){
  return '<div class="dm-stack" data-dm-ui>'
   +'<div class="dm-section"><h3>バックアップを作成</h3>'
   +'<p class="dm-lead">運動記録・体調・メモ・設定などをJSONファイルに保存します。外部へ自動送信されません。</p>'
-  +'<p class="dm-warning dm-critical"><strong>個人情報を含み、暗号化されません。</strong> 保管先と共有先を確認してください。</p>'
+  +'<p class="dm-warning dm-critical"><strong>個人情報を含み、暗号化されません。</strong> 第三者と共有せず、安全な場所に保管してください。</p>'
   +'<label class="dm-choice"><input type="checkbox" data-dm-include-gps '+(ui.includeGps?'checked':'')+'><span>GPS記録・走行経路も含める</span></label>'
   +'<p class="dm-gps-notice">GPSを含めると自宅周辺の経路などの位置情報も保存されます。</p>'
   +'<button class="dm-btn dm-primary" type="button" data-dm-export '+(ui.busy?'disabled':'')+'>バックアップファイルを保存</button>'
