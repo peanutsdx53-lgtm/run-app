@@ -103,6 +103,7 @@ test("settings copy gives explicit GPS disclosure, verification, and deliberate 
  const ui=makeDataUi(),backup=renderDataBackup(ui),remove=renderDataDelete(ui);
  assert.match(backup,/GPS記録・走行経路も含める/);
  assert.match(backup,/暗号化されません/);
+ assert.match(backup,/第三者と共有せず、安全な場所に保管してください/,'prominent warning should be visible before expanding details');
  assert.match(backup,/外部へ自動送信されません/);
  assert.match(backup,/<details class="dm-details"><summary>保存内容と注意点<\/summary>/);
  assert.match(remove,/<details class="dm-details"><summary>削除する情報・削除されない情報<\/summary>/);
