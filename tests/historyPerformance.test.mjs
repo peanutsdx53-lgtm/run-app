@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('history mounts exact CSS synchronously, without a deferred shadow-link fetch',()=>{
- assert.equal(HISTORY_STYLES,read('ui/historyExperience.css'));
+ assert.match(HISTORY_STYLES,/:host\{color-scheme:dark/);
+ assert.doesNotMatch(read('sw.js'),/\.\/ui\/historyExperience\.css/);
  const history=read('ui/historyExperience.js');
  assert.match(history,/data-history-inline-styles/);
  assert.doesNotMatch(history,/<link rel=/);
