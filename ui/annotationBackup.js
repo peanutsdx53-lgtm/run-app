@@ -6,7 +6,9 @@ import {openAnnotationStore,inspectAnnotationStore} from './annotationStore.js';
 import {ANNOTATION_MAX_BYTES,ANNOTATION_MAX_EVENTS,ANNOTATION_MAX_EVENT_BYTES,
  annotationUtf8Bytes,validateAnnotationEvent,digestAnnotationInput} from './annotationSchema.js';
 import {normalizeRecordRef} from './recordRef.js';
-export const ANNOTATION_BACKUP_FORMAT='runload-v2-annotation-backup';
+export const ANNOTATION_BACKUP_FORMAT='running-annotation-backup-v1';
+// Older exports remain readable; newly written files use the neutral public format.
+const LEGACY_ANNOTATION_BACKUP_FORMAT='runload-v2-annotation-backup';
 export const ANNOTATION_BACKUP_VERSION=1;
 const fail=(code,reason)=>({ok:false,code,reason});
 const ok=value=>({ok:true,value});
@@ -28,7 +30,7 @@ function makeBundle(events){
 }
 /** Pure structural + cryptographic validation, strict semantics and history ordering. */
 export function inspectAnnotationBundleShape(bundle){
- if(!strict(bundle,['format','version','events','heads','meta'])||bundle.format!==ANNOTATION_BACKUP_FORMAT||
+ if(!strict(bundle,['format','version','events','heads','meta'])||![ANNOTATION_BACKUP_FORMAT,LEGACY_ANNOTATION_BACKUP_FORMAT].includes(bundle.format)||
   bundle.version!==ANNOTATION_BACKUP_VERSION||!Array.isArray(bundle.events)||!Array.isArray(bundle.heads)||
   bundle.events.length>ANNOTATION_MAX_EVENTS||bundle.heads.length>ANNOTATION_MAX_EVENTS||
   !strict(bundle.meta,['key','schemaVersion','storeRevision','eventCount','totalBytes']))
