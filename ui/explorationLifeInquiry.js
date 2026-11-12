@@ -64,7 +64,7 @@ export function renderLifeInquiry(input={}){
   if(m.kind==='life'){
    const method=m.sleepSource==='self-reported'?'本人申告の睡眠時間':
     m.sleepSource==='time-in-bed'?'就床から起床までの経過時間':
-    '方法が確認できない旧記録（時間を比較しません）';
+    '記録方法を確認できないため、時間を比較しません';
    const duration=m.sleepMinutes!==null&&['self-reported','time-in-bed'].includes(m.sleepSource)
     ?String(m.sleepMinutes)+'分':'値の意味を確定できません';
    detail='<p>選択した生活記録：'+esc(m.day)+'。出所：'+esc(method)+'。値：'+esc(duration)+'。</p>'+
