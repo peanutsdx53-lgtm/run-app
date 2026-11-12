@@ -52,6 +52,8 @@ jobs:
         run: node tests/englishUiBrowser.mjs
       - name: Verify 20-screen layouts
         run: node tests/screenDesign20PopulatedBrowser.mjs
+      - name: Verify portable backup export, legacy restore and annotation provenance
+        run: node tests/professorPortableV2Browser.mjs
       - name: Verify complete two-run cycle twice
         run: |
           for attempt in 1 2; do
