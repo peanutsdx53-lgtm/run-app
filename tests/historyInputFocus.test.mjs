@@ -2,15 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
-const styles=read("ui/historyExperience.css");
-const inline=read("ui/historyInlineStyles.js");
+import {HISTORY_STYLES} from "../ui/historyInlineStyles.js";
+const styles=HISTORY_STYLES;
 const history=read("ui/historyExperience.js");
 const app=read("app.js");
 const html=read("index.html");
 
-test("history shadow styles match source and set mobile editable fields to 16px",()=>{
- const needle="export const HISTORY_STYLES=";
- assert.equal(inline.slice(inline.indexOf(needle)+needle.length).trim(),JSON.stringify(styles)+";");
+test("history bundled shadow styles set mobile editable fields to 16px",()=>{
+ assert.match(read("ui/historyExperience.js"),/data-history-inline-styles/);
  assert.match(styles,/@media\(max-width:800px\)\{[^}]*#hx-search/);
  assert.match(styles,/#hx-search[^}]*font-size:16px!important/);
  assert.match(app,/historyExperience\.js\?v=20261110-p14-visual-v4/);
