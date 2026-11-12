@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const source=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const version='20261111-home-autosave-v1';
-const cacheVersion='20261111-home-autosave-refine-v2';
+const version='20261112-public-copy-v1';
+const pwaVersion='20261111-home-autosave-v1';
+const cacheVersion='20261112-public-copy-v1';
 test('all 47 current startup modules load as one concurrent import batch',()=>{
  const app=source('app.js');
  const block=app.slice(app.indexOf('const ['),app.indexOf('const [initialGpsV2Cache,canonicalStartup]'));
@@ -46,9 +47,9 @@ test('PWA precache registration runs after the real first view and keeps full of
  assert.match(pwa,/window\.runloadBoot\.isReady/);
  assert.match(sw,new RegExp('runload-ui-next-shell-'+cacheVersion));
  assert.ok(sw.includes('app.js?v='+version));
- assert.ok(sw.includes('pwa.js?v='+version));
+ assert.ok(sw.includes('pwa.js?v='+pwaVersion));
  assert.ok(html.includes('app.js?v='+version));
- assert.ok(html.includes('pwa.js?v='+version));
+ assert.ok(html.includes('pwa.js?v='+pwaVersion));
  const assets=JSON.parse(sw.match(/const ASSETS=(\[[^\n]+\]);/)[1]);
  assert.ok(assets.length>=180,'do not remove required offline resources in the speed patch');
 });
