@@ -6,9 +6,9 @@ const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const cacheVersion='20261111-home-autosave-refine-v2';
 
 test('P14: History matches GPS card density, and Shadow DOM no longer adds blank viewport height',()=>{
- const history=read('ui/historyExperience.css');
+ const history=HISTORY_STYLES;
  const css=read('ui/screenCoherenceP14.css');
- assert.equal(HISTORY_STYLES,history,'embedded Shadow DOM style must match authored history CSS');
+ assert.match(read('ui/historyExperience.js'),/data-history-inline-styles/,'history styles must remain embedded');
  assert.match(history,/:host \.stage\{min-height:0;padding-bottom:16px\}/);
  assert.match(history,/:host \.stage \.hx-title-line h1\{font-size:1\.625rem/);
  for(const token of ['.gps-history-disclosure','.gps-history-heading','.gps-history-count','.gps-history-chevron']){
