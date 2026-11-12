@@ -348,7 +348,7 @@ body{background:#f4f8fc}
 .sheet-expand-hint{position:absolute;right:5px;top:8px;font-size:1rem;color:#617c90}
 .mobile-explore-sheet.is-hidden .sheet-expand-hint{display:none}
 }
-/* Vector-only RunLoad landscape. These are CSS shapes, not third-party or AI-rendered art. */
+/* Decorative landscape is drawn with CSS shapes; no external image assets are used. */
 .exploration-stage .tree-overview,
 .tree-overview{
  isolation:isolate;
