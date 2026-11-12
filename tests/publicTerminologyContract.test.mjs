@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {translateUiText} from '../ui/englishUi.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('Public screens do not expose project codenames or provisional labels',()=>{
  assert.doesNotMatch(read('ui/explorationExperience.js'),/研究Current|研究用の出典台帳|RunLoadで本人|RunLoadの本人|Runloadの効果/);
@@ -51,4 +52,30 @@ test('current GPS is the only runtime storage and reference path',()=>{
  assert.match(read('ui/dataManagement.js'),/local:snap.local,gps/);
  assert.match(read('ui/simulationExperience.js'),/detailSaved===true/);
  assert.match(read('sw.js'),/\.\/ui\/gpsMeasurementValidation\.js/);
+});
+
+test('public copy hides old-version language and academic placeholders without changing evidence protections',()=>{
+ const app=read('app.js');
+ assert.match(app,/aria-label="走行条件などの任意入力項目"/);
+ assert.match(app,/保存済みの走行結果画面で確認できます/);
+ assert.doesNotMatch(app,/旧版から引き継ぐ任意入力項目|以前の表示例は実際の保存記録ではありません/);
+ assert.match(app,/resultExperience\.mountResult/,'saved result remains the authorized presentation');
+ const body=read('ui/explorationBodyInquiry.js');
+ const compare=read('ui/explorationComparisonInquiry.js');
+ const life=read('ui/explorationLifeInquiry.js');
+ assert.doesNotMatch(body+compare,/暫定的な問い|研究上の仮用語/);
+ assert.match(body,/記録時の内容と後から追加した内容を分け/);
+ assert.match(compare,/比べられる内容と比べられない内容を確かめる/);
+ assert.match(life,/記録方法を確認できないため、時間を比較しません/);
+ assert.doesNotMatch(life,/方法が確認できない旧記録/);
+ assert.match(read('ui/explorationReadAdapter.js'),/source==='legacy-unknown'/,
+  'unknown recording-method rejection must remain active');
+ for(const [ja,en] of [
+  ['走行条件などの任意入力項目','Optional Running Details'],
+  ['記録時の内容と後から追加した内容を分け、未回答の項目も確かめる','Review Original and Later Entries Separately, Including Unanswered Items'],
+  ['自分で選んだ2件の走行について、比べられる内容と比べられない内容を確かめる','Review What Can and Cannot Be Compared Across Two Selected Runs'],
+  ['記録方法を確認できないため、時間を比較しません','Recording Method Unknown; Duration Not Compared']
+ ])assert.equal(translateUiText(ja),en,'English copy must match revised Japanese: '+ja);
+ assert.doesNotMatch(read('ui/englishFinalAppShell.js')+read('ui/englishFinalInquiry.js'),
+  /Optional Entries Retained From Previous Versions|Previous examples are not actual saved records|Form a Tentative Question/);
 });
