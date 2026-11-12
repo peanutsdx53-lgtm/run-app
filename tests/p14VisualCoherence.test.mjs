@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261111-home-autosave-refine-v2';
+const cacheVersion='20261112-cleanup5-shadow-v1';
 
 test('P14: History matches GPS card density, and Shadow DOM no longer adds blank viewport height',()=>{
  const history=HISTORY_STYLES;
@@ -63,11 +63,11 @@ test('P14: Condition journey matches violet home card, while Condition and Achie
 
 test('P14: app, worker, and style versions are aligned without deleting local history data',()=>{
  const index=read('index.html'),sw=read('sw.js'),app=read('app.js');
- const v='20261110-p14-visual-v4',entryV='20261111-home-autosave-v1';
+ const v='20261110-p14-visual-v4',entryV='20261112-public-copy-v1',pwaV='20261111-home-autosave-v1';
  assert.ok(index.includes('app.js?v='+entryV),'HTML missing app.js');
  assert.ok(sw.includes('app.js?v='+entryV),'SW missing app.js');
- assert.ok(index.includes('pwa.js?v='+entryV),'HTML missing pwa.js');
- assert.ok(sw.includes('pwa.js?v='+entryV),'SW missing pwa.js');
+ assert.ok(index.includes('pwa.js?v='+pwaV),'HTML missing pwa.js');
+ assert.ok(sw.includes('pwa.js?v='+pwaV),'SW missing pwa.js');
  assert.ok(index.includes('ui/screenCoherenceP14.css?v='+v),'HTML missing screenCoherenceP14.css');
  assert.ok(sw.includes('ui/screenCoherenceP14.css?v='+v),'SW missing screenCoherenceP14.css');
  assert.ok(sw.includes('runload-ui-next-shell-'+cacheVersion));
