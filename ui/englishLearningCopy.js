@@ -3,6 +3,9 @@
  * the linked study IDs, DOI URLs, model inputs, or any personal records.
  * Quantitative conditions / caveats are retained in the corresponding English copy. */
 export const ENGLISH_LEARNING_COPY=Object.freeze({
+ "この教材は利用できません": "This Lesson Is Unavailable",
+ "学習の一覧から利用できる教材を選んでください。": "Choose an available lesson from the Learning list.",
+ "学習の一覧へ戻る": "Back to Learning List",
  "平均ペースと平均速度の見方": "Understanding Average Pace and Average Speed",
  "平均ペースは1 km進むためにかかる平均時間です。平均速度は1時間に進む平均距離です。どちらも記録した距離と経過時間から求められます。": "Average pace is the average time required to cover 1 km. Average speed is the average distance covered per hour. Both are calculated from recorded distance and elapsed time.",
  "平均値には速く走った区間もゆっくり進んだ区間も含まれます。手入力された距離と経過時間の計算であり、GPS測定や身体負荷の判定ではありません。": "The average includes faster and slower segments. These are arithmetic results based on entered distance and elapsed time, not direct GPS measurements or assessments of physical load.",
