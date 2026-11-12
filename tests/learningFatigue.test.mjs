@@ -42,7 +42,7 @@ test('L5 running exertion, perceived fatigue and recovery is bounded general kno
  const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  assert.match(sw,/"\.\/ui\/learningFatigueLesson\.js\?v=20261111-explore-controls-v1"/);
- assert.match(sw,/runload-ui-next-shell-20261112-cleanup6-active-v2/);
+ assert.match(sw,/runload-ui-next-shell-20261112-cleanup8-final-v1/);
  assert.match(index,/learningExperience\.css\?v=20261111-learning-density-v1/);
  const current=index.match(/app\.js\?v=([\w-]+)/)?.[1];
  assert.ok(current,'app entry must be versioned');
