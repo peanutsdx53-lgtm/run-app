@@ -257,6 +257,15 @@ try{
   await enContext.addInitScript(()=>{
    localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:'en'}));
    localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({language:'en',textSize:'standard',motion:'system'}));
+   const locations=new Map();
+   Object.defineProperty(navigator,'geolocation',{configurable:true,value:{
+    watchPosition:(ok,err)=>{const id=locations.size+1;locations.set(id,{ok,err});return id;},
+    clearWatch:id=>locations.delete(id)
+   }});
+   window.__gpsStage2Error=code=>{for(const watcher of locations.values())watcher.err({code})};
+   window.__gpsStage2Fix=(latitude,t)=>{for(const watcher of locations.values())watcher.ok({
+    timestamp:t,coords:{latitude,longitude:139.9,accuracy:8,altitude:null,altitudeAccuracy:null}
+   })};
   });
   const enPage=await enContext.newPage(),errors=[];
   enPage.on('pageerror',e=>errors.push(e.message));
@@ -271,6 +280,30 @@ try{
    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage1-en-prep-'+mode.value.toLowerCase()+'.png'),
     fullPage:true,animations:'disabled'});
   }
+
+   if(width===320||width===390){
+    await enPage.locator('[data-gps-activity]').selectOption('JOGGING');
+    await enPage.locator('[data-gps-goal-mode]').selectOption('time');
+    await enPage.locator('[data-gps-goal-value]').fill('8');
+    await enPage.locator('[data-gps-action="start"]').click();
+    await enPage.locator('[data-gps-consent-confirm]').waitFor();
+    await enPage.locator('[data-gps-consent-confirm]').click();
+    await enPage.locator('[data-phase="running"]').waitFor();
+    await enPage.waitForFunction(()=>document.querySelector('[data-gps-status]')?.textContent.includes('Measuring'),null,{timeout:10000});
+    await enPage.waitForFunction(()=>document.querySelector('[data-gps-goal]')?.textContent.includes('Goal'),null,{timeout:10000});
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-running.png'),fullPage:true});
+    await enPage.evaluate(()=>window.__gpsStage2Error(2));
+    await enPage.locator('[data-gps-notice]').waitFor({state:'visible'});
+    assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'GPS error does not stop timer');
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-location-error.png'),fullPage:true});
+    await enPage.evaluate(()=>window.__gpsStage2Fix(37.5,Date.now()));
+    await enPage.locator('[data-gps-action="finish"]').click();
+    await enPage.locator('[data-gps-finish-dialog]').waitFor({state:'visible'});
+    await enPage.waitForFunction(()=>document.querySelector('#gps-finish-title')?.textContent.includes('End This Measurement'),null,{timeout:10000});
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-finish-confirm.png'),fullPage:true});
+    await enPage.locator('[data-gps-action="finish-cancel"]').click();
+    assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'English cancel preserves active session');
+   }
   assert.deepEqual(errors,[],'no English GPS browser errors');
   await enContext.close();
  }
