@@ -67,6 +67,24 @@ jobs:
         run: npm install --no-save playwright@1.56.1
       - name: Install browser with OS dependencies
         run: npx playwright install --with-deps ${{ matrix.engine }}
+      # Sensor-free GPS screenshots used for one-time design review only.
+      - name: Capture GPS recording and consent states using mocked location
+        run: node tests/gpsRofReviewBrowser.mjs
+      - name: Capture GPS saved-course replay and body panels using synthetic records
+        run: node tests/gpsDynamicBrowserSmoke.mjs
+      - name: Preserve GPS UI audit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gps-ui-audit-${{ matrix.engine }}
+          path: |
+            audit-output/gps-mobile/
+            screenshots/gps-audit-*.png
+            screenshots/gps-proposal-*.png
+            screenshots/*gps-dynamic-*.png
+            screenshots/gps-audit-*.json
+          retention-days: 2
+          if-no-files-found: warn
       - name: Capture bilingual onboarding layout and reject clipped controls
         run: node tests/onboardingBilingualLayoutBrowser.mjs
       - name: Preserve onboarding screenshots for visual review
