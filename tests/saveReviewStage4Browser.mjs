@@ -154,9 +154,9 @@ try{
   await capture(page,language,width,'gps-result-confirmed');
   // Reconstruct only the opaque ID, not the GPS route, as if acknowledgment
   // had been lost before a reload. The original parent must be read back.
-  await page.evaluate((id,date)=>{
+  await page.evaluate(({id,date})=>{
    sessionStorage.setItem('runload-v2-pending-gps-operation-v1',JSON.stringify({id,date}));
-  },id,stored.records.find(x=>x.id===id).date);
+  },{id,date:stored.records.find(x=>x.id===id).date});
   await page.goto(base+'measurement',{waitUntil:'networkidle'});
   await page.reload({waitUntil:'networkidle'});
   const recovery=page.locator('[data-gps-recovery]');
