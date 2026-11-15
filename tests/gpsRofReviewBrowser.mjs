@@ -199,6 +199,9 @@ try{
   const saveDetails=width!==768; // one opt-in for each activity, one RUNNING opt-out
   if(saveDetails){
    await page.locator('[data-gps-save-route]').check();
+   assert.equal(await page.locator('.gps-flag-review').getAttribute('open'),null,'flag notes start folded');
+   await page.locator('.gps-flag-review summary').click();
+   assert.equal(await page.locator('.gps-flag-review').getAttribute('open'),'','flag notes are available on demand');
    await page.locator('[data-gps-flag-note]').fill('保存する地点の気づき');
    await page.locator('[data-gps-flag-note]').dispatchEvent('change');
    await shot('stage1-running-details-opt-in');
