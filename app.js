@@ -1416,11 +1416,23 @@ function recordExtras(){
       let saved;try{saved=await manualRunLock.withManualRunWriteLock(()=>restDayStore.saveRestDay(onboardStorage,state.recordDraft))}
       catch{saved={ok:false,reason:'休養日の保存結果が不明です。日付と履歴を確認してください'}}
       finally{mentalSaveBusy=false}
-      if(!saved.ok){manualSaveNotice=saved.reason;render();return;}
+      if(!saved.ok){
+        // A failed acknowledgment does not mean the date-keyed rest record was
+        // never committed. Verify every user-entered field before reusing it.
+        const listing=restDayStore.readRestDays(onboardStorage);
+        const prior=listing.ok?listing.records.find(x=>x.date===state.recordDraft.date):null;
+        if(prior&&['memo','bodyObservation','environmentNote','shoeName'].every(
+          key=>prior[key]===String(state.recordDraft[key]??''))){
+          saved={ok:true,record:prior,duplicate:true};
+        }else{
+          manualSaveNotice='休養日の保存結果を確認できません。日付と履歴を確認し、同じ内容で再試行してください。';
+          render();return;
+        }
+      }
       manualSaveNotice='';state.recordReviewReturn=false;
       historyUi.month=saved.record.date.slice(0,7);historyUi.day=Number(saved.record.date.slice(-2));
       historyUi.type='rest';historyUi.query='';historyUi.selectedId=saved.record.id;
-      state.toast='休養日を保存しました。距離や部位別参考値は算出しません。';
+      state.toast=saved.duplicate?'既存の休養日を照合しました。重複して保存していません。':'休養日を保存しました。距離や部位別参考値は算出しません。';
       location.hash='#/history';return;
     }
     if(event.target.closest("[data-manual-run-save]")){
@@ -1444,7 +1456,7 @@ function recordExtras(){
             state.toast='保存後の照合で原本を確認しました。任意回答は必要に応じて後日入力してください。';
             location.hash='#/result?record='+encodeURIComponent(stableId);return;
           }
-          manualSaveNotice=(saved.reason||'保存結果が未確認です')+'。新しい親IDは作らず、同じ操作IDで再確認してください。';
+          manualSaveNotice=saved.code==='REQUEST_CONFLICT'?'保存操作IDに別の入力内容があります。履歴を確認してください。':'保存の結果を確認できません。入力と操作IDは保持しています。履歴を確認して同じ操作IDで再試行してください。';
           const y=window.scrollY;render();window.scrollTo(0,y);return;
         }
         clearManualSaveIdentity();
@@ -1463,7 +1475,7 @@ function recordExtras(){
           state.toast='不明だった保存結果を再照合し、原本を確認しました。';
           location.hash='#/result?record='+encodeURIComponent(stableId);return;
         }
-        manualSaveNotice='走行記録の保存結果は不明です。同じ操作IDを保持し、履歴と保存原本を再確認してください。';
+        manualSaveNotice='保存の結果を確認できません。入力と操作IDは保持しています。履歴を確認して同じ操作IDで再試行してください。';
         render();return;
       }finally{mentalSaveBusy=false}
     }
@@ -1709,7 +1721,7 @@ function recordExtras(){
             if(checked.ok){if(await finishConfirmed(checked))return;}
             else gpsSaveNotice='保存結果が未確認です。同じ操作IDを保持しています。保存済みの記録がないか確認してから再試行してください。';
           }else{
-            gpsSaveNotice=(saved.reason||'保存を確認できません')+'。保存操作IDは保持しています。';
+            gpsSaveNotice=saved.code==='REQUEST_CONFLICT'?'保存操作IDに異なるGPS記録があります。履歴を確認してください。':'GPSの保存を確認できません。入力と操作IDは保持しています。保存内容を確認して再試行してください。';
           }
         }catch{
           const checked=await gpsV2.verifyGpsV2Commit(snapshot,options);
