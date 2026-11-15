@@ -6,7 +6,11 @@
 // maxTrack bounds retained in-memory points, not the number of accepted fixes in a run.
 export const GPS_LIMITS=Object.freeze({accuracyM:50,maxSpeedMps:15,minMoveM:2,minFinishM:10,maxTrack:2000,altitudeAccuracyM:20,maxVerticalSpeedMps:3,maxElevationGrade:0.6,maxContinuousGapMs:30000});
 export const GPS_ALTITUDE_QUALITY=Object.freeze(['usable','missing','unknown-accuracy','low-accuracy','spike']);
-export const GPS_ACTIVITY=Object.freeze({WALK:'ウォーキング',JOGGING:'ジョギング',RUNNING:'ランニング',MIXED:'走る＋歩く'});
+// New sessions support exactly the three single-activity modes.
+export const GPS_ACTIVITY=Object.freeze({WALK:'ウォーキング',JOGGING:'ジョギング',RUNNING:'ランニング'});
+// Read-only compatibility: saved V2 histories and backups may contain old MIXED records.
+// Do not reuse this legacy dictionary for new-session selectors or validation.
+export const GPS_HISTORIC_ACTIVITY=Object.freeze({...GPS_ACTIVITY,MIXED:'走る＋歩く'});
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const range=(v,min,max)=>finite(v)&&v>=min&&v<=max;
 const rad=v=>v*Math.PI/180;
@@ -127,7 +131,7 @@ export function formatGpsClock(ms){const secs=Math.floor(Math.max(0,ms)/1000);re
 export function gpsPace(distanceM,elapsedMs){if(!(distanceM>=GPS_LIMITS.minFinishM&&elapsedMs>0))return '—';const seconds=Math.round(elapsedMs/1000/(distanceM/1000));return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;}
 export function createGpsSession({geo,now=()=>Date.now(),onChange=()=>{}}={}){
  const source=geo;let watchId=null,epoch=0;
- const s={phase:'ready',activity:'RUNNING',segmentActivity:'RUNNING',segments:[],distanceM:0,track:[],replayTrack:[],replayTrackAvailable:true,flags:[],startedAt:0,pausedAt:0,pausedMs:0,finishedAt:0,accepted:0,rejected:0,positionError:'',lastPosition:null,saveRoute:false,keepScreenAwake:false,bodyMassKg:null,trackSimplified:false,notice:'',goalMode:'free',goalValue:'',goalReached:false,finalized:false};
+ const s={phase:'ready',activity:'RUNNING',distanceM:0,track:[],replayTrack:[],replayTrackAvailable:true,flags:[],startedAt:0,pausedAt:0,pausedMs:0,finishedAt:0,accepted:0,rejected:0,positionError:'',lastPosition:null,saveRoute:false,keepScreenAwake:false,bodyMassKg:null,trackSimplified:false,notice:'',goalMode:'free',goalValue:'',goalReached:false,finalized:false};
  const changed=()=>onChange(s);
  const checkGoal=()=>{
   if(s.phase!=='running'||s.goalReached||s.goalMode==='free')return false;
@@ -163,7 +167,7 @@ export function createGpsSession({geo,now=()=>Date.now(),onChange=()=>{}}={}){
     if(s.replayTrack.length>=50000){s.replayTrack=[];s.replayTrackAvailable=false;}
     else s.replayTrack.push({t:accepted.t,km:s.distanceM/1000,breakBefore:check.gap,activeMs:gpsElapsedMs(s,now())});
    }
-   s.track.push({...accepted,km:s.distanceM/1000,breakBefore:check.gap,activity:s.segmentActivity});
+   s.track.push({...accepted,km:s.distanceM/1000,breakBefore:check.gap,activity:s.activity});
    if(s.track.length>GPS_LIMITS.maxTrack){s.track=compactGpsTrack(s.track);s.trackSimplified=true;}
    s.positionError=check.reason||'';checkGoal();changed();
   },(err)=>{
@@ -202,7 +206,6 @@ export function createGpsSession({geo,now=()=>Date.now(),onChange=()=>{}}={}){
  function setGoalValue(value){if(s.phase!=='ready')return false;s.goalValue=String(value).slice(0,16);return true;}
  function setBodyMassKg(value){if(s.phase!=='ready')return false;s.bodyMassKg=Number.isFinite(value)&&value>=25&&value<=180?value:null;return true;}
  function setKeepScreenAwake(value){if(s.phase!=='ready')return false;s.keepScreenAwake=value===true;changed();return true;}
- function setActivity(value){if(s.phase!=='ready'||!GPS_ACTIVITY[value])return false;s.activity=value;s.segmentActivity=value==='MIXED'?'RUNNING':value;changed();return true;}
- function setSegment(value){if(s.activity!=='MIXED'||!['WALK','JOGGING','RUNNING'].includes(value)||s.phase!=='running')return false;if(s.segmentActivity===value)return true;s.segmentActivity=value;s.lastPosition=null;s.nextGap=true;changed();return true;}
- return {state:s,start,pause,resume,finish,discard,setActivity,setKeepScreenAwake,setGoalMode,setGoalValue,setSegment,addFlag,setFlagNote,setBodyMassKg,stopWatch,checkGoal,elapsed:()=>gpsElapsedMs(s,now()),getSnapshot:()=>({...s,track:s.track.map(p=>({...p})),replayTrack:s.replayTrack.map(p=>({...p})),flags:s.flags.map(p=>({...p})),elapsedMs:gpsElapsedMs(s,now())})};
+ function setActivity(value){if(s.phase!=='ready'||!GPS_ACTIVITY[value])return false;s.activity=value;changed();return true;}
+ return {state:s,start,pause,resume,finish,discard,setActivity,setKeepScreenAwake,setGoalMode,setGoalValue,addFlag,setFlagNote,setBodyMassKg,stopWatch,checkGoal,elapsed:()=>gpsElapsedMs(s,now()),getSnapshot:()=>({...s,track:s.track.map(p=>({...p})),replayTrack:s.replayTrack.map(p=>({...p})),flags:s.flags.map(p=>({...p})),elapsedMs:gpsElapsedMs(s,now())})};
 }
