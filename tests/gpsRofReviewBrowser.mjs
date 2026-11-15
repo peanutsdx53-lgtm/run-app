@@ -144,6 +144,7 @@ try{
   assert.equal(saved.experience.memo,'測定後に本人が記録した気づき');
   assert.ok(saved.experience.beforeCapturedAt&&saved.experience.afterCapturedAt);
   assert.equal(saved.detailSaved,false,'route storage opt-in remains OFF');
+  await shot('04-saved-gps-result');
   await page.reload({waitUntil:'networkidle'});
   const result=page.locator('#runload-result-v4');
   if(!(await result.locator('[data-pane="fatigue"]').isVisible()))await result.locator('[data-tab="fatigue"]').click();
@@ -151,6 +152,15 @@ try{
   const fatigue=await result.locator('[data-pane="fatigue"]').innerText();
   assert.match(fatigue,/運動前/);assert.match(fatigue,/運動後/);
   assert.match(fatigue,/(^|\D)0(\D|$)/);assert.match(fatigue,/(^|\D)7(\D|$)/);
+  await page.goto(host+'history',{waitUntil:'networkidle'});
+  await page.locator('[data-gps-history-disclosure]').waitFor();
+  await shot('05-gps-history-closed');
+  const gpsDetails=page.locator('[data-gps-history-disclosure]');
+  if(await gpsDetails.getAttribute('open')===null)await gpsDetails.locator('summary').click();
+  await shot('05-gps-history-expanded');
+  const manage=page.locator('[data-gps-history-tools]');
+  if(await manage.getAttribute('open')===null)await manage.locator('summary').click();
+  await shot('05-gps-history-tools');
   assert.deepEqual(errors,[],'no browser errors');
   await ctx.close();
  }
