@@ -47,6 +47,7 @@ export const ENGLISH_FINAL_GPS_SIMULATION=Object.freeze({
  "仮のペース・走歩比率を実績へ自動転記しません。実際の距離・時間・活動種別を入力・保存し、単独活動で適格なら結果画面に文献参考値を表示します。混合運動の12部位統合値は算出しません。この画面では、計画と実際の記録を自動で照合しません。": "Hypothetical pace or run/walk ratios are not transferred into real records. Enter and save actual distance, time and activity type separately. Eligible single-type activities can show source-study references; mixed activities do not receive combined regional values. This screen does not automatically compare plans with actual records.",
  "GPSコースを読み込めませんでした": "Saved GPS Course Could Not Be Read",
  "保存済みのGPS軌跡を確認できませんでした": "Saved GPS Trace Could Not Be Verified",
+ "分/km": "min/km",
  "時間1〜600分・ペース2〜40分/km・各区間1〜60分の範囲で入力してください": "Enter 1–600 Minutes for Total Time, 2–40 min/km for Pace and 1–60 Minutes per Segment.",
  "コース未選択": "No Course Selected",
  "コース終点を超過：標高は外挿しません": "Beyond the Route End: Altitude Is Not Extrapolated",
