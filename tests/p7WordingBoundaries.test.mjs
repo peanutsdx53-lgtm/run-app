@@ -34,7 +34,7 @@ const targets=[
 ];
 test('P7 all 23 active design targets retain a source/wording entry, with cross-cutting states distinct from routes',()=>{
  assert.equal(targets.length,23);
- assert.equal(new Set(targets.map(x=>x[0])).size,24);
+ assert.equal(new Set(targets.map(x=>x[0])).size,23);
  for(const [id,path,token] of targets)assert.ok(src(path).includes(token),id+' '+path+' '+token);
 });
 test('P7 knowledge quiz is readable and 0, no response, read error remain different states',()=>{
