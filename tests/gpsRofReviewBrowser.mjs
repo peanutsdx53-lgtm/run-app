@@ -156,10 +156,10 @@ try{
   await page.locator('[data-gps-history-disclosure]').waitFor();
   await shot('05-gps-history-closed');
   const gpsDetails=page.locator('[data-gps-history-disclosure]');
-  if(await gpsDetails.getAttribute('open')===null)await gpsDetails.locator('summary').click();
+  if(await gpsDetails.getAttribute('open')===null)await gpsDetails.locator('summary').first().click();
   await shot('05-gps-history-expanded');
   const manage=page.locator('[data-gps-history-tools]');
-  if(await manage.getAttribute('open')===null)await manage.locator('summary').click();
+  if(await manage.getAttribute('open')===null)await manage.locator('summary').first().click();
   await shot('05-gps-history-tools');
   assert.deepEqual(errors,[],'no browser errors');
   await ctx.close();
