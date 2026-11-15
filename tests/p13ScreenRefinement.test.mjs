@@ -56,10 +56,11 @@ test('P13 version and mobile style are cached with the active application',()=>{
  for(const p of ['ui/historyExperience.js','ui/screenCoherenceP14.css'])assert.ok(sw.includes(p+'?v='+presentationVersion));
  assert.ok(sw.includes('ui/learningExperience.js?v=20261111-explore-controls-v1'));
  assert.ok(sw.includes('ui/explorationExperience.js?v=20261111-exploration-inquiry-v1'));
- for(const p of ['ui/recordReviewExperience.js','ui/screenRefinementP13.css'])assert.ok(sw.includes(p+'?v='+previous));
+ assert.ok(sw.includes('ui/recordReviewExperience.js?v='+version));
+ assert.ok(sw.includes('ui/screenRefinementP13.css?v='+previous));
  assert.ok(app.includes('ui/historyExperience.js?v='+presentationVersion));
  assert.ok(app.includes('ui/learningExperience.js?v=20261111-explore-controls-v1'));
  assert.ok(app.includes('ui/explorationExperience.js?v=20261111-exploration-inquiry-v1'));
- assert.ok(app.includes('ui/recordReviewExperience.js?v='+previous));
+ assert.ok(app.includes('ui/recordReviewExperience.js?v='+version));
  for(const token of ['.gps-history-disclosure','.gps-history-tools','.lr-inquiry-actions','.ex-learning-entry-hint'])assert.ok(css.includes(token));
 });
