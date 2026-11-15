@@ -820,3 +820,6 @@ html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
  #app .home-v3 .hx-overlay{padding-top:max(84px,calc(env(safe-area-inset-top,0px) + 24px));padding-bottom:max(16px,env(safe-area-inset-bottom,0px));align-items:start}
  #app .home-v3 .hx-dialog{max-height:calc(100dvh - max(84px,calc(env(safe-area-inset-top,0px) + 24px)) - max(16px,env(safe-area-inset-bottom,0px)))}
 }
+
+/* Place optional milestone help inside the clipped mobile dialog. */
+#app .home-v3 .hx-dialog .hx-ach-help>p{right:-60px;width:min(320px,calc(100vw - 82px));max-height:min(62dvh,400px);overflow-y:auto;overscroll-behavior:contain}
