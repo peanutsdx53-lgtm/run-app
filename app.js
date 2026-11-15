@@ -1108,7 +1108,12 @@ function recordExtras(){
   });
   app.addEventListener("change",(event)=>{
     if(event.target.matches('[data-gps-save-route]')){
-      if(currentPage()==='gps-review'&&ensureGps().state.phase==='finished')gpsSelfReport.saveRoute=event.target.checked;
+      if(currentPage()==='gps-review'&&ensureGps().state.phase==='finished'){
+        gpsSelfReport.saveRoute=event.target.checked;
+        const status=app.querySelector('[data-route-consent-status]');
+        if(status)status.textContent=gpsSelfReport.saveRoute
+         ?'本人が選択：位置・速度・フラッグを端末に保存':'保存しない（初期設定）';
+      }
       return;
     }
     if(event.target.matches("[data-onboard-terms],[data-onboard-privacy]")){
@@ -1403,10 +1408,14 @@ function recordExtras(){
      return;
     }
     if(event.target.closest("[data-rest-day-save]")){
+      if(mentalSaveBusy)return;
       if(state.recordReviewSource!=='manual'||state.recordType!=='rest'){
         manualSaveNotice='休養日以外の保存はこの操作ではできません';render();return;
       }
-      const saved=await manualRunLock.withManualRunWriteLock(()=>restDayStore.saveRestDay(onboardStorage,state.recordDraft));
+      mentalSaveBusy=true;setSaveReviewBusy(event.target.closest('[data-rest-day-save]'),true);
+      let saved;try{saved=await manualRunLock.withManualRunWriteLock(()=>restDayStore.saveRestDay(onboardStorage,state.recordDraft))}
+      catch{saved={ok:false,reason:'休養日の保存結果が不明です。日付と履歴を確認してください'}}
+      finally{mentalSaveBusy=false}
       if(!saved.ok){manualSaveNotice=saved.reason;render();return;}
       manualSaveNotice='';state.recordReviewReturn=false;
       historyUi.month=saved.record.date.slice(0,7);historyUi.day=Number(saved.record.date.slice(-2));
@@ -1422,6 +1431,7 @@ function recordExtras(){
       const stableId=manualSaveIdentity();
       if(!stableId){manualSaveNotice='保存操作IDを作成できないため保存を中止しました';render();return;}
       mentalSaveBusy=true;
+      setSaveReviewBusy(event.target.closest('[data-manual-run-save]'),true);
       try{
         const saved=await manualRunLock.withManualRunWriteLock(()=>canonical.mutate(s=>
           manualRunStore.saveManualRun(s,state.recordDraft,{
@@ -1439,7 +1449,7 @@ function recordExtras(){
         }
         clearManualSaveIdentity();
         const ref={sourceType:'MANUAL',recordId:saved.record.id};
-        const extra=await saveOptionalMentalAfterParent(ref,manualMental);
+        const extra=saved.duplicate?{ok:false,reason:'既存の親記録を照合しました。任意回答は結果画面から確認してください'}:await saveOptionalMentalAfterParent(ref,manualMental);
         selectedRunId=saved.record.id;manualSaveNotice="";state.recordReviewReturn=false;
         state.toast=extra.ok?"手入力の走行記録を保存しました":'走行記録は保存しましたが、任意の回答は確認できません。結果画面で再試行してください。';
         Object.assign(manualMental,mentalExperience.newMentalDraft());
@@ -1568,7 +1578,7 @@ function recordExtras(){
           // A later profile edit must not retroactively change this session.
           const mass=settingsExperience.loadProfile(onboardStorage).weightKg;
           gps.setBodyMassKg(typeof mass==='number'?mass:null);
-          gps.start();
+          if(gps.start()){clearGpsSaveOperation();gpsSaveNotice='';}
         }
         if(pending==='resume'&&gps.state.phase==='paused')gps.resume();
         refreshGpsTicker();if(gps.state.phase==='running')void requestGpsWakeLock();render();
