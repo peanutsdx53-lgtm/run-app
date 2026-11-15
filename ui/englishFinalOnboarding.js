@@ -65,7 +65,6 @@ export const ENGLISH_FINAL_ONBOARDING=Object.freeze({
  "身長（cm・任意）": "Height (cm, Optional)",
  "体重（kg・任意）": "Weight (kg, Optional)",
  "入力したプロフィールはこの端末に保存します。共有資料への掲載内容は共有時に確認できます。": "Profile information is stored on this device. Review what is included whenever you share a report.",
- "初回利用の設定とガイド": "First-use Setup and Guide",
  "初回利用の進行状況": "Setup Progress",
  "戻る": "Back",
  "次へ": "Next",
