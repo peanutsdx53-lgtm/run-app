@@ -1580,6 +1580,21 @@ function recordExtras(){
         if(gps.state.phase==='paused'){gpsConsentAction='resume';render();app.querySelector('[data-gps-consent-confirm]')?.focus();return;}
       }
       else if(action==='finish'){
+        // Native modal keeps background controls unfocusable and allows Escape.
+        // The timer/watcher are unaffected until the person confirms the end.
+        if(['running','paused'].includes(gps.state.phase)){
+          const dialog=app.querySelector('[data-gps-finish-dialog]');
+          if(dialog&&!dialog.open){dialog.showModal();dialog.querySelector('[data-gps-action="finish-cancel"]')?.focus();}
+        }
+        return;
+      }else if(action==='finish-cancel'){
+        app.querySelector('[data-gps-finish-dialog]')?.close();
+        app.querySelector('[data-gps-action="finish"]')?.focus();
+        return;
+      }else if(action==='finish-confirm'){
+        const dialog=app.querySelector('[data-gps-finish-dialog]');
+        if(!dialog?.open||!['running','paused'].includes(gps.state.phase))return;
+        dialog.close();
         if(gps.finish()){
           releaseGpsWakeLock();
           if(gps.state.distanceM>=10&&gps.state.accepted>=2){location.hash='#/gps-review';return;}
