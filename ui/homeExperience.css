@@ -813,7 +813,7 @@ html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
 /* U-20261115-03: reserve iOS top-chrome space; keep the title and close button crisp. */
 #app .home-v3 .hx-dialog.hx-condition-dialog .hx-dialog-head{background:#302c51;border-bottom-color:#8679ba}
 #app .home-v3 .hx-dialog.hx-ach-dialog .hx-dialog-head{background:#3b2d27;border-bottom-color:#ae8257}
-#app .home-v3 .hx-dialog .hx-ach-help{margin-left:auto;z-index:3}
+#app .home-v3 .hx-dialog .hx-ach-help{position:static;margin-left:auto}
 #app .home-v3 .hx-dialog .hx-ach-help>p span{display:block}
 #app .home-v3 .hx-dialog .hx-ach-help>p span+span{margin-top:8px}
 @media(max-width:800px){
@@ -822,4 +822,4 @@ html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
 }
 
 /* Place optional milestone help inside the clipped mobile dialog. */
-#app .home-v3 .hx-dialog .hx-ach-help>p{right:-60px;width:min(320px,calc(100vw - 82px));max-height:min(62dvh,400px);overflow-y:auto;overscroll-behavior:contain}
+#app .home-v3 .hx-dialog .hx-ach-help>p{right:14px;width:min(320px,calc(100% - 28px));max-height:min(62dvh,400px);overflow-y:auto;overscroll-behavior:contain}
