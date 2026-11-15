@@ -2,13 +2,10 @@
  * documents and versioned explicit consent remain unmodified. */
 export const ENGLISH_FINAL_ONBOARDING=Object.freeze({
  "表示言語": "Display Language",
- "日本語または英語でアプリを使用できます。日本語の利用規約・プライバシーポリシーが正式文書です。英語の参考訳も閲覧できます。": "You can use the app in Japanese or English. The Japanese Terms and Privacy Policy are authoritative; English reference translations are available to read.",
  "選択する": "Select",
- "最初の設定": "Initial Setup",
  "利用規約・プライバシー": "Terms and Privacy",
  "利用規約とプライバシー": "Terms of Use and Privacy",
  "利用を開始する前に、利用条件と個人情報の取扱いを確認してください。": "Review the conditions of use and how personal information is handled before using the app.",
- "利用開始前の確認": "Review Before Using the App",
  "運動時の注意、測定結果、記録の保存と共有、運営者の責任": "Exercise precautions, measurement results, storage, sharing and operator responsibilities",
  "保存する情報、GPS、外部サービスへの通信、削除と請求": "Stored data, GPS, external-service communications, deletion and requests",
  "全文を読む ›": "Read Full Document ›",
@@ -68,7 +65,6 @@ export const ENGLISH_FINAL_ONBOARDING=Object.freeze({
  "身長（cm・任意）": "Height (cm, Optional)",
  "体重（kg・任意）": "Weight (kg, Optional)",
  "入力したプロフィールはこの端末に保存します。共有資料への掲載内容は共有時に確認できます。": "Profile information is stored on this device. Review what is included whenever you share a report.",
- "初回利用の設定とガイド": "First-use Setup and Guide",
  "初回利用の進行状況": "Setup Progress",
  "戻る": "Back",
  "次へ": "Next",

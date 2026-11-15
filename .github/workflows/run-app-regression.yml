@@ -46,6 +46,16 @@ jobs:
         run: npm install --no-save playwright@1.56.1
       - name: Install browser with OS dependencies
         run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Capture bilingual onboarding layout and reject clipped controls
+        run: node tests/onboardingBilingualLayoutBrowser.mjs
+      - name: Preserve onboarding screenshots for visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: onboarding-${{ matrix.engine }}
+          path: audit-output/onboarding-${{ matrix.engine }}/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify GPS and ROF-J accepted-measurement path
         run: node tests/gpsRofReviewBrowser.mjs
       - name: Verify bilingual interface
