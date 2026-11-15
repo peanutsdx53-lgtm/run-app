@@ -232,6 +232,8 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  if((m=s.match(/^(\d+)分走る → (\d+)分歩く · (\d+)分サイクル$/)))
   return 'Run '+m[1]+' min → Walk '+m[2]+' min · '+m[3]+' min Cycle';
  if((m=s.match(/^走る(\d+)分 ＋ 歩く(\d+)分$/)))return 'Run '+m[1]+' min + Walk '+m[2]+' min';
+  if(element?.matches?.('[data-gps-accuracy]')&&(m=s.match(/^受信精度 ±(\d+)m$/)))
+   return 'GPS accuracy ±'+m[1]+' m';
   if(element?.matches?.('[data-gps-notice]')&&(m=s.match(/^フラッグ（(\d+)）を地図に記録しました。メモは測定終了後に追加できます。$/)))
    return 'Flag '+m[1]+' recorded on the map. You can add a note after measurement.';
   if(element?.matches?.('[data-gps-map-flags]')&&(m=s.match(/^⚑ フラッグ (\d+)件を地図に表示中$/)))
