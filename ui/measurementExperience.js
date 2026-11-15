@@ -5,6 +5,7 @@ import {GPS_ACTIVITY,formatGpsClock,gpsPace} from './gpsMeasurementCore.js';
 import {gpsEnergyDisplay} from './gpsEnergyDisplay.js';
 import {updateGpsLiveMap} from './gpsLiveMap.js';
 import {SURFACES} from './recordExperience.js';
+import {saveReviewScope} from './saveReviewShared.js?v=20261116-gps-stage4-v1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const descriptions={RUNNING:'連続した走行を記録します。速度の目標は自動設定しません。',JOGGING:'ゆっくり走ったことを記録します。走行速度による活動区分の自動判定は行いません。',WALK:'歩いた経路と時間を記録します。走行の12部位モデルは適用しません。'};
 const gpsIcon='<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>';
@@ -38,7 +39,7 @@ export function gpsGoalProgress(s,elapsedMs=0){
  return s.goalReached?'目標に到達しました。測定は自動で終了しません。'
   :'目標 '+value+' '+unit+' ／ 残り '+remaining;
 }
-export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml=''){
+export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml='',reviewUi={}){
  if(s.phase!=='finished')return '<section class="gps-v2 gps-review" data-gps-review><h1>GPS記録内容の確認</h1><p role="alert">終了したGPS測定がありません。未保存の記録は再読込後に復元できません。</p><a href="#/measurement">GPS測定へ戻る</a></section>';
  const data=format(s,elapsedMs);
  const ready=canSave(s);
@@ -52,10 +53,10 @@ export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml=''){
  mentalHtml+
  '<label class="gps-review-note">今回の気づき・メモ（任意）<textarea data-gps-note maxlength="500" rows="3" placeholder="次に確かめたいこと、気づいたことなど">'+esc(experience.memo||'')+'</textarea></label>'+
  '</section>'+
- '<section class="gps-v35-panel gps-review-save"><h2>保存する</h2><p class="gps-review-storage-note">記録の距離・時間と本人の任意回答をこの端末に保存します。位置情報を含むコース詳細は、次のチェックを入れた場合だけ追加保存します。</p>'+
+ '<section class="gps-v35-panel gps-review-save"><h2>保存する</h2>'+saveReviewScope({source:'gps',routeOptIn:experience.saveRoute===true,notice:reviewUi.notice||'',busy:!!reviewUi.saving})+'<p class="gps-review-storage-note">記録の距離・時間と本人の任意回答をこの端末に保存します。位置情報を含むコース詳細は、次のチェックを入れた場合だけ追加保存します。</p>'+
  '<label class="gps-live-checkbox"><input type="checkbox" data-gps-save-route '+(experience.saveRoute?'checked':'')+'><span><b>コースと動的結果用データを保存する</b><small>位置・速度・フラッグを含みます。初期OFFで、本人が選んだ場合だけ保存します。</small></span></label>'+
  (s.flags?.length?flagCards(s):'')+
- '<div class="gps-live-actions"><button type="button" data-gps-action="save" class="gps-v2-button gps-v2-primary" '+(ready?'':'disabled')+'>走行記録を保存する</button><a href="#/measurement" class="gps-v2-button gps-v2-secondary">測定終了画面に戻る</a></div>'+
+ '<div class="gps-live-actions"><button type="button" data-gps-action="save" class="gps-v2-button gps-v2-primary" '+(ready&&!reviewUi.saving?'':'disabled')+'>走行記録を保存する</button><a href="#/measurement" class="gps-v2-button gps-v2-secondary">測定終了画面に戻る</a></div>'+
  (!ready?'<p role="alert">有効なGPS移動距離が10m未満のため保存できません。</p>':'')+'</section></div>';
 }
 export function measurementPage(s,elapsedMs=0,experience={}){
