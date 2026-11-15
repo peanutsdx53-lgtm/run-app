@@ -168,6 +168,18 @@ try{
   assert.match(await page.locator('.gps-review-rof-before').innerText(),/0 \/ 10/);
   assert.match(await page.locator('.gps-review-provenance').innerText(),/0は回答済み、未回答は未回答のまま保存/);
   assert.match(await page.locator('.gps-review-storage-note').innerText(),/位置情報を含むコース詳細は/);
+  const surfaceSelect=page.locator('[data-gps-surface]');
+  assert.equal(await surfaceSelect.inputValue(),'UNKNOWN','surface is not inferred from GPS');
+  const surfaceOptions=await surfaceSelect.locator('option').evaluateAll(nodes=>nodes.map(el=>el.value));
+  assert.deepEqual(surfaceOptions,['UNKNOWN','paved','track','treadmill','soil','trail','naturalGrass','artificialTurf','sand'],
+    'GPS reports share all manual surface categories');
+  assert.match(await page.locator('.gps-review-surface').innerText(),/GPSでは測定していません/);
+  assert.equal(await page.locator('.gps-review-surface details').getAttribute('open'),null,'optional explanation starts folded');
+  const chosenSurface=width===320?'paved':width===390?'trail':width===414?'track':'UNKNOWN';
+  await surfaceSelect.selectOption(chosenSurface);
+  assert.equal(await surfaceSelect.inputValue(),chosenSurface);
+  const surfaceBox=await surfaceSelect.evaluate(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,w:innerWidth}});
+  assert.ok(surfaceBox.left>=0&&surfaceBox.right<=surfaceBox.w+1&&surfaceBox.width>=200,'surface selector fits '+JSON.stringify(surfaceBox));
   const rofTerm=await page.locator('[data-gps-rof-entry="after"] .gps-rof-term').evaluate(el=>({whiteSpace:getComputedStyle(el).whiteSpace,fragments:el.getClientRects().length}));
   assert.equal(rofTerm.whiteSpace,'nowrap','ROF-J name cannot split at a hyphen in narrow layout');
   assert.equal(rofTerm.fragments,1,'ROF-J scientific term must remain a single visual fragment');
@@ -181,6 +193,7 @@ try{
   await page.locator('.rv4-done').click();
   await page.locator('[data-gps-review]').waitFor();
   assert.match(await page.locator('[data-gps-rof-entry="after"]').innerText(),/7 \/ 10/);
+  assert.equal(await page.locator('[data-gps-surface]').inputValue(),chosenSurface,'return from ROF retains surface');
   await page.locator('[data-gps-note]').fill('測定後に本人が記録した気づき');
   assert.equal(await page.locator('[data-gps-save-route]').isChecked(),false);
   const saveDetails=width!==768; // one opt-in for each activity, one RUNNING opt-out
@@ -200,6 +213,7 @@ try{
   assert.equal(saved.experience.source,'USER_REPORTED');
   assert.equal(saved.experience.rofBefore,0);assert.equal(saved.experience.rofAfter,7);
   assert.equal(saved.experience.memo,'測定後に本人が記録した気づき');
+  assert.equal(saved.experience.surface,chosenSurface,'GPS surface preserved as optional self-report');
   assert.ok(saved.experience.beforeCapturedAt&&saved.experience.afterCapturedAt);
   assert.equal(saved.activity,selectedActivity,'saved activity matches the user selection');
   assert.equal(saved.detailSaved,saveDetails,'route storage is opt-in, never implicit');
