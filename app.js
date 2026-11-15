@@ -1,5 +1,5 @@
 import * as restDayStore from './ui/restDayStore.js';
-import {startEnglishUi} from './ui/englishUi.js?v=20261115-retire-whatif-v1';
+import {startEnglishUi} from './ui/englishUi.js?v=20261116-gps-stage4-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -59,7 +59,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/rofJScale.js"),
     import("./ui/rofExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/recordDraftReview.js"),
-    import("./ui/recordReviewExperience.js?v=20261110-p13-compact-v1"),
+    import("./ui/recordReviewExperience.js?v=20261116-gps-stage4-v1"),
     import("./ui/manualRunStore.js?v=20261030-rof-evidence-v2"),
     import("./ui/manualRunLock.js"),
     import("./ui/manualRunCanonical.js"),
@@ -69,9 +69,9 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/environmentExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/bodyContextExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
-    import("./ui/measurementExperience.js?v=20261116-gps-stage3-input-v1"),
+    import("./ui/measurementExperience.js?v=20261116-gps-stage4-v1"),
     import("./ui/gpsMeasurementCore.js?v=20261116-gps-stage2-controls-v1"),
-    import("./ui/gpsReplayIndexedDbStore.js?v=20261116-gps-stage3-input-v1"),
+    import("./ui/gpsReplayIndexedDbStore.js?v=20261116-gps-stage4-v1"),
     import("./ui/gpsDynamicResult.js?v=20261028-back-symmetry-v2"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
     import("./ui/resultExperience.js?v=20261110-public-copy-v1"),
