@@ -4,14 +4,16 @@
 import {GPS_ACTIVITY,formatGpsClock,gpsPace} from './gpsMeasurementCore.js';
 import {gpsEnergyDisplay} from './gpsEnergyDisplay.js';
 import {updateGpsLiveMap} from './gpsLiveMap.js';
+import {SURFACES} from './recordExperience.js';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const descriptions={RUNNING:'連続した走行を記録します。速度の目標は自動設定しません。',JOGGING:'ゆっくり走ったことを記録します。走行速度による活動区分の自動判定は行いません。',WALK:'歩いた経路と時間を記録します。走行の12部位モデルは適用しません。'};
 const gpsIcon='<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>';
 const opt=(data,selected)=>data.map(([key,label])=>`<option value="${key}" ${selected===key?'selected':''}>${label}</option>`).join('');
 function format(s,elapsedMs){const energy=gpsEnergyDisplay({...s,elapsedMs});return {distance:(s.distanceM/1000).toFixed(2),time:formatGpsClock(elapsedMs),pace:gpsPace(s.distanceM,elapsedMs),energy};}
 const canSave=s=>s.distanceM>=10&&s.accepted>=2;
-const flagCards=s=>`<details class="gps-flag-review" open><summary>⚑ フラッグのメモ <span>${s.flags.length}地点・任意</span></summary><div class="gps-flag-review-body"><p>地点の出来事を記録できます。メモと位置は「コースと動的結果用データを保存する」を選んだ場合だけ保存されます。</p>${s.flags.map((f,i)=>`<label class="gps-flag-note-card"><span class="gps-flag-note-heading"><b>⚑ ${i+1}</b><strong>${f.km.toFixed(2)} km の地点</strong></span><span class="gps-flag-note-label">この地点のメモ <small>省略可</small></span><textarea data-gps-flag-note="${esc(f.id)}" maxlength="240" rows="2" placeholder="例：上り坂に入った、足が重く感じた">${esc(f.note)}</textarea></label>`).join('')}</div></details>`;
+const flagCards=s=>`<details class="gps-flag-review"><summary><strong>⚑ フラッグのメモ</strong><span>${s.flags.length}地点・任意</span></summary><div class="gps-flag-review-body"><p>地点の出来事を記録できます。メモと位置は「コースと動的結果用データを保存する」を選んだ場合だけ保存されます。</p>${s.flags.map((f,i)=>`<label class="gps-flag-note-card"><span class="gps-flag-note-heading"><b>⚑ ${i+1}</b><strong>${f.km.toFixed(2)} km の地点</strong></span><span class="gps-flag-note-label">この地点のメモ <small>省略可</small></span><textarea data-gps-flag-note="${esc(f.id)}" maxlength="240" rows="2" placeholder="例：上り坂に入った、足が重く感じた">${esc(f.note)}</textarea></label>`).join('')}</div></details>`;
 const reportedScore=score=>Number.isInteger(score)&&score>=0&&score<=10?score+' / 10':'未回答';
+const gpsSurfaceChoices=[['UNKNOWN','不明・回答しない'],...SURFACES];
 // Time counts active session time even before the first accepted GPS position.
 // State text deliberately distinguishes a running timer from received GPS points.
 export function gpsMeasurementStatus(s){
@@ -43,8 +45,9 @@ export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml=''){
  return '<div class="gps-v2 gps-review" data-gps-review><header class="gps-v2-header"><a href="#/measurement" class="gps-v2-back" aria-label="測定終了画面へ戻る">‹</a><div><h1>GPS記録内容の確認</h1></div><details class="rl-screen-help"><summary aria-label="GPS記録内容の確認方法">？</summary><p>取得した測定内容を確認し、保存対象を選択します。軌跡の保存と、運動前後の疲労感・本人申告は区別して扱います。</p></details></header>'+
  '<section class="gps-v35-panel gps-review-facts"><h2>GPSで取得した記録</h2><dl><div><dt>活動</dt><dd>'+esc(GPS_ACTIVITY[s.activity])+'</dd></div><div><dt>GPS移動距離</dt><dd>'+data.distance+' km</dd></div><div><dt>測定した活動時間</dt><dd>'+data.time+'</dd></div><div><dt>平均ペース</dt><dd>'+data.pace+' /km</dd></div></dl></section>'+
  '<section class="gps-v35-panel gps-review-subjective"><h2>任意の記録</h2>'+
+ '<div class="gps-review-surface"><label for="gps-reported-surface"><span class="gps-review-surface-heading"><strong>路面（本人入力・任意）</strong><small>GPSでは測定していません</small></span><select id="gps-reported-surface" data-gps-surface>'+opt(gpsSurfaceChoices,experience.surface||'UNKNOWN')+'</select></label><details><summary>路面について</summary><p>GPSから路面は判定できません。本人が把握している場合だけ選択してください。複数の路面を通った場合や不確かな場合は「不明・回答しない」を選べます。路面の回答はGPS距離・時間・文献参考値を変更しません。</p></details></div>'+
  '<a href="#/gps-rof" class="gps-rof-link" data-gps-rof-entry="after"><span><strong>運動後の疲労感<b class="gps-rof-term">（ROF-J）</b></strong><small>任意・イラストで選択</small></span><output>'+reportedScore(experience.rofAfter)+'</output><span aria-hidden="true">›</span></a>'+
- '<p class="gps-review-rof-before">運動前：'+reportedScore(experience.rofBefore)+'</p>'+
+ '<p class="gps-review-rof-before"><span>運動前</span>: <output>'+reportedScore(experience.rofBefore)+'</output></p>'+
  '<p class="gps-review-provenance">疲労感は本人の任意回答（0〜10）です。0は回答済み、未回答は未回答のまま保存します。「運動前／後」の区分だけで実際の時間的前後差を判定しません。</p>'+
  mentalHtml+
  '<label class="gps-review-note">今回の気づき・メモ（任意）<textarea data-gps-note maxlength="500" rows="3" placeholder="次に確かめたいこと、気づいたことなど">'+esc(experience.memo||'')+'</textarea></label>'+
@@ -52,7 +55,6 @@ export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml=''){
  '<section class="gps-v35-panel gps-review-save"><h2>保存する</h2><p class="gps-review-storage-note">記録の距離・時間と本人の任意回答をこの端末に保存します。位置情報を含むコース詳細は、次のチェックを入れた場合だけ追加保存します。</p>'+
  '<label class="gps-live-checkbox"><input type="checkbox" data-gps-save-route '+(experience.saveRoute?'checked':'')+'><span><b>コースと動的結果用データを保存する</b><small>位置・速度・フラッグを含みます。初期OFFで、本人が選んだ場合だけ保存します。</small></span></label>'+
  (s.flags?.length?flagCards(s):'')+
- ''+
  '<div class="gps-live-actions"><button type="button" data-gps-action="save" class="gps-v2-button gps-v2-primary" '+(ready?'':'disabled')+'>走行記録を保存する</button><a href="#/measurement" class="gps-v2-button gps-v2-secondary">測定終了画面に戻る</a></div>'+
  (!ready?'<p role="alert">有効なGPS移動距離が10m未満のため保存できません。</p>':'')+'</section></div>';
 }

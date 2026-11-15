@@ -9,7 +9,7 @@ import {resultImageAnnotation} from '../ui/resultExperience.js';
 const finished=()=>({phase:'finished',distanceM:35,accepted:2,activity:'RUNNING',goalMode:'free',goalValue:'',flags:[],lastPosition:null,notice:'',saveRoute:false});
 test('UIUX06 S18: GPS review distinguishes valid ROF-J zero from absent after response',()=>{
  const html=gpsReviewPage(finished(),60000,{rofBefore:0,rofAfter:null,saveRoute:false,memo:'本人の疑問'});
- assert.match(html,/運動前：0 \/ 10/);
+ assert.match(html,/<span>運動前<\/span>: <output>0 \/ 10<\/output>/);
  assert.match(html,/未回答/);
  assert.match(html,/0は回答済み、未回答は未回答のまま保存/);
  assert.match(html,/実際の時間的前後差を判定しません/);

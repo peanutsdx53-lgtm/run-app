@@ -5,7 +5,7 @@ const nonblank=value=>value!==null&&value!==undefined&&String(value).trim()!==""
 const n=value=>nonblank(value)?Number(value):null;
 const finite=value=>typeof value==="number"&&Number.isFinite(value);
 const range=(value,min,max,errors,name)=>{const x=n(value);if(x!==null&&(!finite(x)||x<min||x>max))errors.push(name+"の入力値を確認してください");return x};
-const surfaceKeys=["paved","track","treadmill","soil","trail","naturalGrass","artificialTurf","sand"];
+export const surfaceKeys=Object.freeze(["paved","track","treadmill","soil","trail","naturalGrass","artificialTurf","sand"]);
 export const legacyRecordDraftFields=Object.freeze(["distance","hours","minutes","seconds","date","rofBefore","rofAfter","steps","stepsProvenance","activityGait","runningFormat","runWalkRunningDistanceKm","runWalkRunningDurationMinutes","courseName","gradeMode","surfaceMode","primarySurface","upPercent","downPercent","upGradePercent","downGradePercent","temperatureC","environmentNote","bodyObservation","shoeName","memo",...surfaceKeys.map(k=>"surface"+k),...Array.from({length:5},(_,i)=>["sectionShare"+i,"sectionDirection"+i,"sectionGrade"+i,"sectionSurface"+i]).flat()]);
 // Compare mixed running phases with measured totals, never calculate a mixed load.
 export function checkRunWalkBounds(d={}){

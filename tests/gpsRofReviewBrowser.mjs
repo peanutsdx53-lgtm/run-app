@@ -168,6 +168,18 @@ try{
   assert.match(await page.locator('.gps-review-rof-before').innerText(),/0 \/ 10/);
   assert.match(await page.locator('.gps-review-provenance').innerText(),/0は回答済み、未回答は未回答のまま保存/);
   assert.match(await page.locator('.gps-review-storage-note').innerText(),/位置情報を含むコース詳細は/);
+  const surfaceSelect=page.locator('[data-gps-surface]');
+  assert.equal(await surfaceSelect.inputValue(),'UNKNOWN','surface is not inferred from GPS');
+  const surfaceOptions=await surfaceSelect.locator('option').evaluateAll(nodes=>nodes.map(el=>el.value));
+  assert.deepEqual(surfaceOptions,['UNKNOWN','paved','track','treadmill','soil','trail','naturalGrass','artificialTurf','sand'],
+    'GPS reports share all manual surface categories');
+  assert.match(await page.locator('.gps-review-surface').innerText(),/GPSでは測定していません/);
+  assert.equal(await page.locator('.gps-review-surface details').getAttribute('open'),null,'optional explanation starts folded');
+  const chosenSurface=width===320?'paved':width===390?'trail':width===414?'track':'UNKNOWN';
+  await surfaceSelect.selectOption(chosenSurface);
+  assert.equal(await surfaceSelect.inputValue(),chosenSurface);
+  const surfaceBox=await surfaceSelect.evaluate(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,w:innerWidth}});
+  assert.ok(surfaceBox.left>=0&&surfaceBox.right<=surfaceBox.w+1&&surfaceBox.width>=200,'surface selector fits '+JSON.stringify(surfaceBox));
   const rofTerm=await page.locator('[data-gps-rof-entry="after"] .gps-rof-term').evaluate(el=>({whiteSpace:getComputedStyle(el).whiteSpace,fragments:el.getClientRects().length}));
   assert.equal(rofTerm.whiteSpace,'nowrap','ROF-J name cannot split at a hyphen in narrow layout');
   assert.equal(rofTerm.fragments,1,'ROF-J scientific term must remain a single visual fragment');
@@ -181,11 +193,16 @@ try{
   await page.locator('.rv4-done').click();
   await page.locator('[data-gps-review]').waitFor();
   assert.match(await page.locator('[data-gps-rof-entry="after"]').innerText(),/7 \/ 10/);
+  assert.equal(await page.locator('[data-gps-surface]').inputValue(),chosenSurface,'return from ROF retains surface');
   await page.locator('[data-gps-note]').fill('測定後に本人が記録した気づき');
   assert.equal(await page.locator('[data-gps-save-route]').isChecked(),false);
   const saveDetails=width!==768; // one opt-in for each activity, one RUNNING opt-out
   if(saveDetails){
    await page.locator('[data-gps-save-route]').check();
+   assert.equal(await page.locator('.gps-flag-review').getAttribute('open'),null,'flag notes start folded');
+   assert.equal(await page.locator('.gps-flag-review summary strong').evaluate(el=>getComputedStyle(el).whiteSpace),'nowrap','flag summary cannot wrap mid-word');
+   await page.locator('.gps-flag-review summary').click();
+   assert.equal(await page.locator('.gps-flag-review').getAttribute('open'),'','flag notes are available on demand');
    await page.locator('[data-gps-flag-note]').fill('保存する地点の気づき');
    await page.locator('[data-gps-flag-note]').dispatchEvent('change');
    await shot('stage1-running-details-opt-in');
@@ -200,6 +217,7 @@ try{
   assert.equal(saved.experience.source,'USER_REPORTED');
   assert.equal(saved.experience.rofBefore,0);assert.equal(saved.experience.rofAfter,7);
   assert.equal(saved.experience.memo,'測定後に本人が記録した気づき');
+  assert.equal(saved.experience.surface,chosenSurface,'GPS surface preserved as optional self-report');
   assert.ok(saved.experience.beforeCapturedAt&&saved.experience.afterCapturedAt);
   assert.equal(saved.activity,selectedActivity,'saved activity matches the user selection');
   assert.equal(saved.detailSaved,saveDetails,'route storage is opt-in, never implicit');
@@ -299,7 +317,7 @@ try{
     fullPage:true,animations:'disabled'});
   }
 
-   if(width===320||width===390){
+   { // All smartphone widths must review translated post-run input.
     await enPage.locator('[data-gps-activity]').selectOption('JOGGING');
     await enPage.locator('[data-gps-goal-mode]').selectOption('time');
     await enPage.locator('[data-gps-goal-value]').fill('8');
@@ -326,6 +344,32 @@ try{
     await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-finish-confirm.png'),fullPage:true});
     await enPage.locator('[data-gps-action="finish-cancel"]').click();
     assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'English cancel preserves active session');
+    await enPage.evaluate(()=>window.__gpsStage2Fix(37.50025,Date.now()+5000));
+    await enPage.waitForTimeout(1100);
+    await enPage.locator('[data-gps-action="finish"]').click();
+    await enPage.locator('[data-gps-finish-dialog]').waitFor({state:'visible'});
+    await enPage.locator('[data-gps-action="finish-confirm"]').click();
+    await enPage.locator('[data-gps-review]').waitFor();
+    await enPage.waitForFunction(()=>document.querySelector('.gps-review-surface-heading')?.textContent.includes('Not Measured by GPS'),null,{timeout:10000});
+    const englishChoices=await enPage.locator('[data-gps-surface] option').evaluateAll(nodes=>nodes.map(n=>n.textContent.trim()));
+    const englishFactLabels=await enPage.locator('.gps-review-facts dt').allTextContents();
+    assert.deepEqual(englishFactLabels.map(x=>x.trim()),['Activity','GPS Distance','Measured Active Duration','Average Pace'],'all GPS fact labels are translated');
+    assert.match(await enPage.locator('.gps-review-rof-before').innerText(),/Before Activity: Not answered/,'optional pre-fatigue is translated');
+    assert.equal(englishChoices.length,9);
+    assert.ok(englishChoices.every(t=>!/[ぁ-んァ-ン一-龯]/.test(t)),'untranslated English surface labels '+JSON.stringify(englishChoices));
+    assert.equal(await enPage.locator('[data-gps-surface]').inputValue(),'UNKNOWN');
+    const enGeometry=await enPage.evaluate(()=>{
+      const select=document.querySelector('[data-gps-surface]'),v=select.getBoundingClientRect();
+      const buttons=[...document.querySelectorAll('.gps-review button,.gps-review a')].filter(x=>x.getClientRects().length).map(x=>{const r=x.getBoundingClientRect();return {left:r.left,right:r.right}});
+      return {width:innerWidth,scroll:document.documentElement.scrollWidth,selectLeft:v.left,selectRight:v.right,buttons};
+    });
+    assert.ok(enGeometry.scroll<=enGeometry.width+2,'English GPS review overflow '+JSON.stringify(enGeometry));
+    assert.ok(enGeometry.selectLeft>=0&&enGeometry.selectRight<=enGeometry.width+1,'English surface selector fits '+JSON.stringify(enGeometry));
+    assert.ok(enGeometry.buttons.every(x=>x.left>=-1&&x.right<=enGeometry.width+1),'English controls fit '+JSON.stringify(enGeometry));
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage3-en-review-empty.png'),fullPage:true,animations:'disabled'});
+    await enPage.locator('[data-gps-surface]').selectOption('soil');
+    await enPage.locator('.gps-review-surface details summary').click();
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage3-en-review-surface-help.png'),fullPage:true,animations:'disabled'});
    }
   assert.deepEqual(errors,[],'no English GPS browser errors');
   await enContext.close();

@@ -2,6 +2,7 @@
 import {prepareGpsMeasurement,GPS_RECORD_LIMIT,validGpsCalendarDate,validGpsCreatedAt} from './gpsMeasurementValidation.js';
 import {estimateGpsEnergy} from './gpsEnergyDisplay.js';
 import {checkReplayPoints,evaluateGpsReplayReference} from './gpsReplayReference.js';
+import {surfaceKeys} from './recordDraftReview.js';
 export const GPS_V2_DB='runload-v2-gps-dynamic-v2';
 export const GPS_V2_SUMMARIES='summaries',GPS_V2_DETAILS='details';
 export const GPS_V2_BACKUP_FORMAT='gps-records-backup-v2';
@@ -55,19 +56,24 @@ const allowedActivity=a=>['RUNNING','JOGGING','WALK','MIXED'].includes(a);
  * Older v2 summaries without this field remain valid and unchanged. */
 const validGpsRof=x=>x===null||(Number.isInteger(x)&&x>=0&&x<=10);
 const validCaptured=x=>x===null||(typeof x==='string'&&x.length<=40&&Number.isFinite(Date.parse(x))&&new Date(x).toISOString()===x);
+// Optional newer self-report field. Older saved summaries and exported V2 backups
+// have the original key set; never synthesize a surface for those records.
+export const validGpsReportedSurface=x=>x==='UNKNOWN'||surfaceKeys.includes(x);
+const legacyExperienceKeys='afterCapturedAt,beforeCapturedAt,memo,rofAfter,rofBefore,source';
 export function validGpsExperience(e){
  return !!e&&e.source==='USER_REPORTED'&&validGpsRof(e.rofBefore)&&validGpsRof(e.rofAfter)&&
  validCaptured(e.beforeCapturedAt)&&validCaptured(e.afterCapturedAt)&&
  (e.rofBefore!==null||e.beforeCapturedAt===null)&&
  (e.rofAfter!==null||e.afterCapturedAt===null)&&
  typeof e.memo==='string'&&e.memo.length<=500&&
- Object.keys(e).sort().join(',')==='afterCapturedAt,beforeCapturedAt,memo,rofAfter,rofBefore,source';
+ (Object.keys(e).sort().join(',')===legacyExperienceKeys||
+  (Object.keys(e).sort().join(',')===legacyExperienceKeys+',surface'&&validGpsReportedSurface(e.surface)));
 }
 export function prepareGpsExperience(x){
  if(x===undefined||x===null)return {ok:true,experience:null};
  const e={source:'USER_REPORTED',rofBefore:x.rofBefore??null,rofAfter:x.rofAfter??null,
   beforeCapturedAt:x.beforeCapturedAt??null,afterCapturedAt:x.afterCapturedAt??null,
-  memo:x.memo??''};
+  memo:x.memo??'',...(Object.hasOwn(x,'surface')?{surface:x.surface}:{})};
  return validGpsExperience(e)?{ok:true,experience:e}:{ok:false,reason:'GPSの疲労感・本人メモの内容を確認してください'};
 }
 const validSummaryRegions=regions=>Array.isArray(regions)&&regions.length===12&&

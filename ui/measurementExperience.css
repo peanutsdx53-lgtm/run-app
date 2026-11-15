@@ -231,8 +231,9 @@
 .gps-flag-review{border:1px solid #4b8290;border-radius:15px;background:#0a2b3a;margin:18px 0;overflow:hidden}
 .gps-flag-review summary{display:flex;align-items:center;gap:8px;padding:13px 15px;cursor:pointer;font-weight:850;color:#e8ffff;background:#144253;list-style:none}
 .gps-flag-review summary::-webkit-details-marker{display:none}
-.gps-flag-review summary:after{content:"⌄";margin-left:auto;color:#9fd7df}
-.gps-flag-review summary span{margin-left:6px;font-size:.72rem;color:#b6d5dc;font-weight:650}
+ .gps-flag-review summary:after{content:"⌄";margin-left:auto;color:#9fd7df;flex:0 0 auto}
+.gps-flag-review summary strong{flex:0 1 auto;white-space:nowrap;font-size:clamp(.75rem,3.3vw,.9rem)}
+.gps-flag-review summary span{margin-left:auto;font-size:.72rem;color:#b6d5dc;font-weight:650;white-space:nowrap;flex:0 0 auto}
 .gps-flag-review-body{display:grid;gap:10px;padding:13px}
 .gps-flag-review-body>p{margin:0 0 2px;font-size:.72rem;color:#aacad3;line-height:1.65}
 .gps-flag-note-card{display:grid;gap:9px;background:#103949;border:1px solid #376e7f;border-radius:12px;padding:13px}
@@ -322,6 +323,16 @@
 .gps-review-rof-grid strong{font-size:.9rem}
 .gps-review-rof-grid output{font-size:1.4rem;font-weight:800;color:#80ecea}
 .gps-review-rof-grid small{font-size:.73rem;color:#bdd9e1;line-height:1.6}
+.gps-review-surface{min-width:0;margin:2px 0 16px;padding:14px;border:1px solid #528798;border-radius:13px;background:linear-gradient(145deg,#164557,#103445)}
+.gps-review-surface label{display:grid;gap:9px;min-width:0}
+.gps-review-surface-heading{display:flex;gap:6px 14px;flex-wrap:wrap;align-items:baseline;min-width:0}
+.gps-review-surface-heading strong{font-size:.9rem;color:#f4ffff}
+.gps-review-surface-heading small{font-size:.73rem;color:#bddde6;overflow-wrap:anywhere}
+.gps-review-surface select{box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;min-height:48px;border:1px solid #6ba5b3;border-radius:10px;background:#0a3041;color:#f4ffff;color-scheme:dark;font-size:16px;padding:10px 12px}
+.gps-review-surface select:focus-visible,.gps-review-surface summary:focus-visible{outline:3px solid #59e1dc;outline-offset:3px}
+.gps-review-surface details{margin-top:10px;color:#cee6ed}
+.gps-review-surface summary{width:fit-content;max-width:100%;padding:5px 0;cursor:pointer;font-size:.8rem;overflow-wrap:anywhere}
+.gps-review .gps-review-surface details p{margin:8px 0 0}
 .gps-review-note{display:grid;gap:8px;min-width:0;margin:12px 0;font-size:.88rem;font-weight:750}
 .gps-review-note textarea{display:block;min-width:0;max-width:100%;width:100%;box-sizing:border-box;border:1px solid #659eac;border-radius:10px;background:#082d3e;color:#f4ffff;font:inherit;font-size:16px;padding:12px;line-height:1.6}
 .gps-review .gps-live-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
