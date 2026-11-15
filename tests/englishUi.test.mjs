@@ -192,7 +192,7 @@ test('earlier shell dictionary contains no keys already defined in later final U
  const laterFiles=[
   'englishFinalAppShell.js','englishFinalOnboarding.js','englishFinalRecording.js',
   'englishFinalConditions.js','englishFinalHomeData.js','englishFinalBackup.js',
-  'englishFinalAnnotation.js','englishFinalGpsSimulation.js','englishFinalInquiry.js'
+  'englishFinalAnnotation.js','englishFinalGps.js','englishFinalInquiry.js'
  ];
  for(const name of laterFiles){
   const later=readFileSync(new URL('../ui/'+name,import.meta.url),'utf8');
