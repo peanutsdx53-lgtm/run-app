@@ -162,7 +162,6 @@ try{
  await record(page,'S15','consultation','#runload-consultation');
  await record(page,'S16','settings','[data-settings-v2]');
  await record(page,'S17','measurement','[data-measurement-v2],.gps-platform-unavailable');
- await record(page,'S18','simulation','.sm-page');
  await page.goto(host+'result?record='+encodeURIComponent(id),{waitUntil:'networkidle'});
  await page.locator('#runload-result-v4 .rv4-export-menu summary').click();
  await record(page,'S19','', '#runload-result-v4 .rv4-export-menu');
@@ -170,13 +169,13 @@ try{
  await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
  await record(page,'S20','', '[data-settings-v2]');
  await page.evaluate(()=>{document.documentElement.style.fontSize='';});
- // The previous 20-screen audit omitted the learning CATALOGUE, where
+ // The previous screen audit omitted the learning CATALOGUE, where
  // generated checklist counts and course-number subtitles were left in Japanese.
  await record(page,'LEARNING-CATALOG','learning','#runload-learning .lr-catalog');
  await record(page,'LEARNING-LESSON','learning?lesson=pace-basics','.lr-lesson');
  await ctx.close();
  const mainReports=reports.filter(x=>/^S\d\d$/.test(x.screen));
- assert.equal(mainReports.length,20,'all 20 actual screen states must be observed');
+ assert.equal(mainReports.length,19,'all 19 active screen states must be observed');
  assert.equal(reports.find(x=>x.screen==='S02')?.statsCount,3,'three actual Home condition summary cards must be checked');
  assert.equal(reports.some(x=>x.screen==='LEARNING-CATALOG'),true,'learning catalogue is a mandatory English surface');
  assert.equal(reports.some(x=>x.screen==='LEARNING-LESSON'),true,'learning detail is a mandatory English surface');

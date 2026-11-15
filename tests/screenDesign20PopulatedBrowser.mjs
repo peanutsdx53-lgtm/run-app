@@ -1,4 +1,4 @@
-/** Twenty Current screen design contracts, visibly grounded in real UI states.
+/** Current active screen contracts (19 after S18 retirement), visibly grounded in actual UI states.
  * This complements, not replaces, the 280-width observational matrix:
  * S19 (image output) & S20 (accessibility/offline) are cross-cutting states,
  * not fictitious independent standalone routes.
@@ -229,9 +229,6 @@ if(extended&&(!widths.length||widths.length>3||
    assert.match(await t.innerText(),smartphone?/GPS|測定/:/GPS測定はスマートフォン専用/);
    if(!smartphone)assert.equal(await page.locator('[data-gps-action="start"]').count(),0,'PC must not offer GPS start');
   });
-  await verify('S18','simulation','.sm-page',async t=>{
-   assert.match(await t.innerText(),/仮定|シミュレーション/);
-  });
   await verify('S19','result?record='+encodeURIComponent(run),'#runload-result-v4',async t=>{
    const button=t.locator('[data-download]');
    assert.equal(await button.count(),1);
@@ -254,24 +251,24 @@ if(extended&&(!widths.length||widths.length>3||
    assert.match(await t.innerText(),/文字サイズ/);
    assert.match(await t.innerText(),/インストール/);
   });
-  assert.equal(reports.filter(r=>r.width===width).length,20);
+  assert.equal(reports.filter(r=>r.width===width).length,19);
   await ctx.close();
  }
  const byScreen=Object.fromEntries([...new Set(reports.map(r=>r.screen))].map(s=>[s,reports.filter(r=>r.screen===s).length]));
- assert.equal(Object.keys(byScreen).length,20);
+ assert.equal(Object.keys(byScreen).length,19);
  assert.ok(Object.values(byScreen).every(n=>n===widths.length));
- const filename=font200?'p8-font200-current-20-'+engine+'-'+widths.join('-')+'.json':
-  extended?'p8-current-20-populated-'+engine+'-'+widths.join('-')+'.json':'current-20-populated-'+engine+'.json';
+ const filename=font200?'p8-font200-current-19-'+engine+'-'+widths.join('-')+'.json':
+  extended?'p8-current-19-populated-'+engine+'-'+widths.join('-')+'.json':'current-19-populated-'+engine+'.json';
  await writeFile(resolve(root,'audit-output',filename),JSON.stringify({
-  scope:font200?'p8_root_font_200_software_simulation_not_os_accessibility':
-   extended?'p8_extended_populated_visual_evidence_not_full_acceptance':'20_screen_state_coverage_not_full_acceptance',
+  scope:font200?'p8_root_font_200_software_emulation_not_os_accessibility':
+   extended?'p8_extended_populated_visual_evidence_not_full_acceptance':'19_active_screen_state_coverage_not_full_acceptance',
   sha:process.env.GITHUB_SHA||'',widths,byScreen,reports,fontReports
  },null,2));
  if(font200){
-  assert.equal(fontReports.length,20*widths.length,'every Current screen requires a 200% check');
+  assert.equal(fontReports.length,19*widths.length,'every Current screen requires a 200% check');
   const faults=fontReports.filter(x=>!x.ok);
   for(const bad of faults)console.error('::error::P8 root-font 200 overflow '+JSON.stringify(bad));
   assert.deepEqual(faults,[],'P8 200% root font simulated reflow failures');
  }
- console.log('PASS',engine,'20 Current design screen states x '+widths.length+' widths, '+reports.length+' observed cases');
+ console.log('PASS',engine,'19 active screen states x '+widths.length+' widths, '+reports.length+' observed cases');
 }finally{await browser.close();await new Promise(done=>server.close(done));}
