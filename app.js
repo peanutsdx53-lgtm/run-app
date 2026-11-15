@@ -1633,31 +1633,89 @@ function recordExtras(){
       }
       else if(action==='discard'){gps.discard();releaseGpsWakeLock();gpsController=null;gpsSelfReport=emptyGpsReport();gpsMental=mentalExperience.newMentalDraft();location.hash='#/record-start';return;}
       else if(action==='review'){if(gps.state.phase==='finished'){location.hash='#/gps-review';return;}}
-      else if(action==='save'){
+      else if(action==='recover'){
         if(mentalSaveBusy)return;
-        if(gps.state.phase!=='finished'||currentPage()!=='gps-review'){gps.state.notice='GPS記録の確認画面から保存してください';render();return;}
-        const saveRoute=gpsSelfReport.saveRoute===true;
-        const local=new Date(),date=`${local.getFullYear()}-${String(local.getMonth()+1).padStart(2,'0')}-${String(local.getDate()).padStart(2,'0')}`;
+        if(!gpsSaveOperation)return;
         mentalSaveBusy=true;
         try{
-          const saved=await gpsV2.saveGpsV2Run(gps.getSnapshot(),{saveDetails:saveRoute,date,experience:{
-            source:'USER_REPORTED',rofBefore:gpsSelfReport.rofBefore,rofAfter:gpsSelfReport.rofAfter,
-            beforeCapturedAt:gpsSelfReport.beforeCapturedAt,afterCapturedAt:gpsSelfReport.afterCapturedAt,
-            surface:gpsSelfReport.surface,memo:gpsSelfReport.memo
-          }});
-          if(saved.ok){
-            const ref={sourceType:'GPS_V2',recordId:saved.summary.id};
-            gpsV2Cache=await gpsV2.readGpsV2Summaries();
-            const extra=await saveOptionalMentalAfterParent(ref,gpsMental);
-            state.toast=extra.ok?'GPS実走の記録と本人申告を保存しました':'GPS走行記録は保存しましたが、任意回答は未確認です。結果で注記だけ再試行できます。';
-            gpsController=null;gpsSelfReport=emptyGpsReport();gpsMental=mentalExperience.newMentalDraft();
-            location.hash='#/result?gps='+encodeURIComponent(saved.summary.id);return;
+          const read=await gpsV2.readGpsV2RunById(gpsSaveOperation.id);
+          if(read.ok&&read.found){
+            const latest=await gpsV2.readGpsV2Summaries();
+            if(latest.ok&&latest.records.some(x=>x.id===read.summary.id)){
+              gpsV2Cache=latest;
+              clearGpsSaveOperation();
+              state.toast='以前のGPS保存結果を照合しました。本人の任意回答は結果画面で確認してください。';
+              location.hash='#/result?gps='+encodeURIComponent(read.summary.id);return;
+            }
+            gps.state.notice='保存済みのGPS記録を一覧で確認できません。履歴から確認してください。';
+          }else if(read.ok&&!read.found){
+            clearGpsSaveOperation();
+            gps.state.notice='前回のGPS記録は保存されていません。再読込前の測定値・経路は復元できません。';
+          }else{
+            gps.state.notice='保存先を確認できません。IDを保持しています。履歴と保存領域を確認してください。';
           }
-          gps.state.notice=saved.reason;
+        }catch{gps.state.notice='前回の保存状態を照合できません。履歴を確認してください。'}
+        finally{mentalSaveBusy=false}
+      }
+      else if(action==='save'){
+        if(mentalSaveBusy)return;
+        if(gps.state.phase!=='finished'||currentPage()!=='gps-review'){
+          gpsSaveNotice='終了したGPSの保存前確認から操作してください';render();return;
+        }
+        const operation=currentGpsSaveOperation();
+        if(!operation){
+          gpsSaveNotice='安全なGPS保存操作IDを作れません。保存は行っていません';render();return;
+        }
+        const snapshot=gps.getSnapshot();
+        const options={
+          requestId:operation.id,date:operation.date,saveDetails:gpsSelfReport.saveRoute===true,
+          experience:{source:'USER_REPORTED',rofBefore:gpsSelfReport.rofBefore,
+            rofAfter:gpsSelfReport.rofAfter,beforeCapturedAt:gpsSelfReport.beforeCapturedAt,
+            afterCapturedAt:gpsSelfReport.afterCapturedAt,surface:gpsSelfReport.surface,
+            memo:gpsSelfReport.memo}
+        };
+        const prepared=gpsV2.prepareGpsV2Run(snapshot,options);
+        if(!prepared.ok){gpsSaveNotice=prepared.reason;render();return;}
+        gpsSaveNotice='';
+        mentalSaveBusy=true;
+        setSaveReviewBusy(gpsAction,true);
+        app.querySelector('[data-gps-review]')?.setAttribute('aria-busy','true');
+        const finishConfirmed=async saved=>{
+          const listing=await gpsV2.readGpsV2Summaries();
+          if(!listing.ok||!listing.records.some(item=>item.id===saved.summary.id)){
+            gpsSaveNotice='GPS原本の保存は確認できましたが、一覧を確認できません。同じ操作IDを保持して再確認してください。';
+            return false;
+          }
+          gpsV2Cache=listing;
+          const ref={sourceType:'GPS_V2',recordId:saved.summary.id};
+          const extra=saved.duplicate
+           ?{ok:false,reason:'原本の再照合のため任意回答を再送信していません'}
+           :await saveOptionalMentalAfterParent(ref,gpsMental);
+          clearGpsSaveOperation();
+          state.toast=saved.duplicate
+           ?'同じGPS記録を再照合しました。重複保存はしていません。任意回答は結果で確認してください。'
+           :extra.ok?'GPS実走の記録と本人申告を保存しました'
+           :'GPS走行記録は保存しましたが、任意回答は未確認です。結果で注記だけ再試行できます。';
+          gpsController=null;gpsSelfReport=emptyGpsReport();gpsMental=mentalExperience.newMentalDraft();
+          gpsSaveNotice='';
+          location.hash='#/result?gps='+encodeURIComponent(saved.summary.id);
+          return true;
+        };
+        try{
+          const saved=await gpsV2.saveGpsV2Run(snapshot,options);
+          if(saved.ok){if(await finishConfirmed(saved))return;}
+          else if(saved.code==='WRITE_UNKNOWN'){
+            const checked=await gpsV2.verifyGpsV2Commit(snapshot,options);
+            if(checked.ok){if(await finishConfirmed(checked))return;}
+            else gpsSaveNotice='保存結果が未確認です。同じ操作IDを保持しています。保存済みの記録がないか確認してから再試行してください。';
+          }else{
+            gpsSaveNotice=(saved.reason||'保存を確認できません')+'。保存操作IDは保持しています。';
+          }
         }catch{
-          gps.state.notice='保存の結果を確認できません。GPS記録を重複保存せず履歴を確認してください';
-        }finally{mentalSaveBusy=false}
-
+          const checked=await gpsV2.verifyGpsV2Commit(snapshot,options);
+          if(checked.ok){if(await finishConfirmed(checked))return;}
+          else gpsSaveNotice='保存結果が未確認です。同じ操作IDを保持しました。履歴と保存原本を確認してから再試行してください。';
+        }finally{mentalSaveBusy=false;}
       }
       refreshGpsTicker();render();return;
     }
