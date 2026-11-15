@@ -74,6 +74,11 @@ try{
    if(width===390){
     await ach.locator('.hx-ach-help summary').click();
     assert.ok(await ach.locator('.hx-ach-help p').isVisible(),'limits can be read on demand');
+    const helpBox=await ach.evaluate(dialog=>{
+     const d=dialog.getBoundingClientRect(),h=dialog.querySelector('.hx-ach-help>p').getBoundingClientRect();
+     return {dialog:{left:d.left,right:d.right},help:{left:h.left,right:h.right}};
+    });
+    assert.ok(helpBox.help.left>=helpBox.dialog.left-1&&helpBox.help.right<=helpBox.dialog.right+1,'milestone help must not be clipped '+JSON.stringify(helpBox));
     await capture(page,'achievement-help',lang,width);
    }
    await page.goto(origin+'/#/course',{waitUntil:'networkidle'});
