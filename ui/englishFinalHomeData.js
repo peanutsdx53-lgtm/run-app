@@ -33,6 +33,7 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "この日の生活記録を削除…": "Delete Daily Record for This Day…",
  "睡眠・就床の記録推移": "Sleep and Time-in-Bed History",
  "保存済み手入力走行": "Saved Manual Runs",
+ "累計走行距離": "Total Running Distance",
  "4つの節目": "Four Milestones",
   "実績の対象と節目について": "About Milestone Records",
  "この端末に保存した手入力の走行記録だけが対象です。GPSの未保存データや入力途中の内容は含みません。": "Includes only saved manual runs, not unsaved GPS measurements or drafts.",
