@@ -200,6 +200,7 @@ try{
   if(saveDetails){
    await page.locator('[data-gps-save-route]').check();
    assert.equal(await page.locator('.gps-flag-review').getAttribute('open'),null,'flag notes start folded');
+   assert.equal(await page.locator('.gps-flag-review summary strong').evaluate(el=>getComputedStyle(el).whiteSpace),'nowrap','flag summary cannot wrap mid-word');
    await page.locator('.gps-flag-review summary').click();
    assert.equal(await page.locator('.gps-flag-review').getAttribute('open'),'','flag notes are available on demand');
    await page.locator('[data-gps-flag-note]').fill('保存する地点の気づき');
@@ -351,6 +352,9 @@ try{
     await enPage.locator('[data-gps-review]').waitFor();
     await enPage.waitForFunction(()=>document.querySelector('.gps-review-surface-heading')?.textContent.includes('Not Measured by GPS'),null,{timeout:10000});
     const englishChoices=await enPage.locator('[data-gps-surface] option').evaluateAll(nodes=>nodes.map(n=>n.textContent.trim()));
+    const englishFactLabels=await enPage.locator('.gps-review-facts dt').allTextContents();
+    assert.deepEqual(englishFactLabels.map(x=>x.trim()),['Activity','GPS Distance','Measured Active Duration','Average Pace'],'all GPS fact labels are translated');
+    assert.match(await enPage.locator('.gps-review-rof-before').innerText(),/Before Activity: Not answered/,'optional pre-fatigue is translated');
     assert.equal(englishChoices.length,9);
     assert.ok(englishChoices.every(t=>!/[ぁ-んァ-ン一-龯]/.test(t)),'untranslated English surface labels '+JSON.stringify(englishChoices));
     assert.equal(await enPage.locator('[data-gps-surface]').inputValue(),'UNKNOWN');
