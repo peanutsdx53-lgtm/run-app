@@ -48,6 +48,16 @@ async function verifyBounds(page,screen,width,language){
   assert.ok(item.right>item.left&&item.bottom>item.top,screen+' empty control '+JSON.stringify(item));
  }
  if(screen==='profile'){
+  const pair=await page.locator('.fu-profile-pair input').evaluateAll(els=>els.map(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right}}));
+  assert.equal(pair.length,2,'profile has two optional measurements');
+  if(width<=520){
+   assert.ok(pair[1].top>=pair[0].bottom+4,'mobile measurement inputs must be stacked in both languages: '+JSON.stringify(pair));
+   assert.ok(Math.abs(pair[0].left-pair[1].left)<=2&&Math.abs(pair[0].right-pair[1].right)<=2,'mobile inputs share full width');
+  }
+  const selectColors=await page.locator('.fu-profile-form select').evaluate(el=>{
+   const css=getComputedStyle(el);return {background:css.backgroundColor,color:css.color,appearance:css.appearance};
+  });
+  assert.equal(selectColors.appearance,'none','WebKit and Chromium select must use the same styled control');
   const footer=await page.locator('.fu-footer .fu-button').evaluateAll(els=>els.map(el=>{
    const r=el.getBoundingClientRect();return {text:el.textContent.trim(),left:r.left,right:r.right,top:r.top,bottom:r.bottom,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth};
   }));
