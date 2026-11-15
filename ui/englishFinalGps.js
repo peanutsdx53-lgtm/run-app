@@ -88,7 +88,6 @@ export const ENGLISH_FINAL_GPS=Object.freeze({
  "手入力の距離・時間と任意の本人申告": "Manually Entered Distance, Duration and Optional Self-reports",
  "本人が選択：位置・速度・フラッグを端末に保存": "Selected: Save Locations, Speeds and Flags on This Device",
  "保存しない（初期設定）": "Not Saved (Default)",
- "保存しない": "Not Saved",
  "保存内容と注意点": "Storage Details and Notes",
  "路面と疲労感・メモは本人申告であり、GPSから推定していません。位置情報を含む経路・速度・フラッグは、チェックを入れた場合だけ保存します。": "Surface, fatigue and notes are self-reports, not GPS inferences. Routes with locations, speeds and flags are saved only with your explicit selection.",
  "休養日に走行距離・時間・文献参考値はありません。記録は端末に保存します。": "Rest days have no running distance, duration or research reference values. The entry is stored on this device.",
