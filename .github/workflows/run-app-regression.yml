@@ -88,6 +88,16 @@ jobs:
           path: audit-output/gps-mobile/
           retention-days: 7
           if-no-files-found: warn
+      - name: Photograph bilingual save-before review, retry errors and GPS reload recovery
+        run: node tests/saveReviewStage4Browser.mjs
+      - name: Preserve stage 4 source-aware save, failed-write and recovery screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: save-stage4-${{ matrix.engine }}
+          path: audit-output/gps-stage4-save/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify bilingual interface
         run: node tests/englishUiBrowser.mjs
       - name: Verify 19 active screen states and retired S18 absence
