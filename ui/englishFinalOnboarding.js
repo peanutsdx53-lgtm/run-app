@@ -2,13 +2,10 @@
  * documents and versioned explicit consent remain unmodified. */
 export const ENGLISH_FINAL_ONBOARDING=Object.freeze({
  "表示言語": "Display Language",
- "日本語または英語でアプリを使用できます。日本語の利用規約・プライバシーポリシーが正式文書です。英語の参考訳も閲覧できます。": "You can use the app in Japanese or English. The Japanese Terms and Privacy Policy are authoritative; English reference translations are available to read.",
  "選択する": "Select",
- "最初の設定": "Initial Setup",
  "利用規約・プライバシー": "Terms and Privacy",
  "利用規約とプライバシー": "Terms of Use and Privacy",
  "利用を開始する前に、利用条件と個人情報の取扱いを確認してください。": "Review the conditions of use and how personal information is handled before using the app.",
- "利用開始前の確認": "Review Before Using the App",
  "運動時の注意、測定結果、記録の保存と共有、運営者の責任": "Exercise precautions, measurement results, storage, sharing and operator responsibilities",
  "保存する情報、GPS、外部サービスへの通信、削除と請求": "Stored data, GPS, external-service communications, deletion and requests",
  "全文を読む ›": "Read Full Document ›",
