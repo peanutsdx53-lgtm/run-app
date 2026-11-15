@@ -19,9 +19,10 @@ test('GPS design guard: consent, screen visibility, stale wake lock and opt-in s
 });
 test('GPS design guard: unsaved run is explicitly described as ephemeral',()=>{
  const gps=createGpsSession({geo:{watchPosition:()=>1,clearWatch:()=>{}},now:()=>1000000});
- assert.match(measurementPage(gps.getSnapshot()),/未保存の計測はアプリ終了・再読み込みで失われます/);
+ assert.match(measurementPage(gps.getSnapshot()),/未保存の測定はアプリ終了・再読み込みで失われます/);
  gps.start();
- assert.match(measurementPage(gps.getSnapshot()),/再読み込みや強制終了では未保存の測定を復元できません/);
+ assert.match(measurementPage(gps.getSnapshot()),/測定中に別画面へ移動すると一時停止します/);
+ assert.doesNotMatch(measurementPage(gps.getSnapshot()),/gps-live-disclaimer/);
 });
 test('GPS design evidence document separates simulation and real-world certification',()=>{
  const docs=read('docs/GPS_CODE_DESIGN_ASSURANCE_20261027.md');
