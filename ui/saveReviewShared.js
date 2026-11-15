@@ -16,7 +16,7 @@ export function saveReviewScope({source,rest=false,routeOptIn=false,notice='',bu
   <div class="sv4-review-head"><h2>保存前の確認</h2><span>端末内に保存</span></div>
   <dl><div><dt>記録の出所</dt><dd>${origin}</dd></div>
   <div><dt>保存する内容</dt><dd>${recorded}</dd></div>
-  <div><dt>位置情報を含む詳細</dt><dd>${route}</dd></div></dl>
+  <div><dt>位置情報を含む詳細</dt><dd data-route-consent-status>${route}</dd></div></dl>
   <details class="sv4-review-help"><summary>保存内容と注意点</summary><p>${detail}</p></details>
   ${notice?`<p class="sv4-save-notice" data-save-failure role="alert">${esc(notice)}</p>`:''}
   ${busy?'<p class="sv4-save-busy" role="status">保存結果を確認しています…</p>':''}
