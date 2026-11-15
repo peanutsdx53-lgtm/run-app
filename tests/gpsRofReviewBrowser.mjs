@@ -65,6 +65,10 @@ try{
   assert.equal(await page.locator('.gps-live-steps span').count(),3);
   assert.equal(await page.locator('.gps-live-steps .is-current').count(),1);
   await safe('ready');await shot('01-ready');
+  if(width===390){
+   await page.locator('[data-gps-activity]').selectOption('MIXED');
+   await shot('01-ready-mixed');
+  }
   assert.equal(await page.locator('[data-gps-rof="before"]').count(),0,'no inline fatigue selector');
   await page.locator('[data-gps-rof-entry="before"]').click();
   await page.locator('[data-rof-v4-root]').waitFor();
@@ -85,10 +89,23 @@ try{
   await page.locator('[data-phase="running"]').waitFor();
   assert.equal(await page.locator('.mobile-nav').isVisible(),false,'active GPS must hide bottom navigation');
   await safe('running');await shot('02-measuring');
+  await page.locator('[data-gps-action="pause"]').click();
+  await page.locator('[data-phase="paused"]').waitFor();
+  await shot('02-paused');
+  await page.locator('[data-gps-action="resume"]').click();
+  await page.locator('[data-gps-consent-confirm]').waitFor();
+  await shot('02-resume-consent');
+  await page.locator('[data-gps-consent-confirm]').click();
+  await page.locator('[data-phase="running"]').waitFor();
   const t=Date.now();
   await page.evaluate(ts=>window.__sampleGps(37.5,ts),t);
   await page.evaluate(ts=>window.__sampleGps(37.50025,ts),t+5000);
   await page.waitForTimeout(1250);
+  await shot('02-measuring-valid-fixes');
+  if(width===390){
+   await page.locator('[data-gps-segment]').selectOption('WALK');
+   await shot('02-mixed-walk-segment');
+  }
   await page.locator('[data-gps-action="finish"]').click();
   await page.locator('[data-gps-review]').waitFor();
   assert.ok(page.url().includes('#/gps-review'),'finished GPS review');
@@ -110,6 +127,11 @@ try{
   assert.match(await page.locator('[data-gps-rof-entry="after"]').innerText(),/7 \/ 10/);
   await page.locator('[data-gps-note]').fill('測定後に本人が記録した気づき');
   assert.equal(await page.locator('[data-gps-save-route]').isChecked(),false);
+  if(width===390){
+   await page.locator('[data-gps-save-route]').check();
+   await shot('03-review-route-opt-in');
+   await page.locator('[data-gps-save-route]').uncheck();
+  }
   await safe('populated review');await shot('03-review-filled');
   await page.locator('[data-gps-action="save"]').click();
   await page.locator('#runload-result-v4').waitFor();
