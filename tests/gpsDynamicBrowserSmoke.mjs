@@ -53,7 +53,7 @@ try{
       import('/ui/gpsLiveMap.js'),import('/ui/gpsDynamicResult.js')
     ]);
     const map=segmentPaths([{lat:0,lon:179.999,breakBefore:true},{lat:0,lon:-179.999}],worldPoint(0,-179.999,16),360,260,16);
-    const mapCoords=[...map.matchAll(/[-+]?\\d+\\.\\d+/g)].map(x=>Number(x[0]));
+    const mapCoords=[...map.matchAll(/[-+]?\d+\.\d+/g)].map(x=>Number(x[0]));
     const route=[{lat:0,lon:179.9,km:0},{lat:.04,lon:-179.9,km:22},{lat:.08,lon:-179.8,km:33}];
     const geom=routeGeometry(route);
     const xs=route.map(p=>geom.coords(p)[0]);
