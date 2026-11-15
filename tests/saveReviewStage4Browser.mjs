@@ -95,10 +95,12 @@ try{
     await capture(page,language,width,'manual-help-open');
     // Fail the first authoritative IndexedDB mutation, not the next retry.
     await page.evaluate(()=>{
-     const original=IDBDatabase.prototype.transaction;let failed=false;
+     const original=IDBDatabase.prototype.transaction;let failures=0;
      IDBDatabase.prototype.transaction=function(stores,mode,...rest){
-      if(!failed&&stores==='envelopes'&&mode==='readwrite'){
-       failed=true;throw Error('stage4 simulated manual save failure');
+      // Canonical writeTransaction retries without the durability hint once.
+      // Reject both transaction attempts to simulate a real failed save.
+      if(failures<2&&stores==='envelopes'&&mode==='readwrite'){
+       failures++;throw Error('stage4 simulated manual save failure');
       }
       return original.call(this,stores,mode,...rest);
      };
