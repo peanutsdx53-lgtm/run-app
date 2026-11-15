@@ -18,7 +18,7 @@ test('P5 source gates: learning, nav and scientific provenance preserved',()=>{
  assert.doesNotMatch(app,/class="rl-tools-menu"/,"obsolete topbar menu must be removed");
  assert.match(app,/\["settings","⚙","設定"\]/,"Settings restored in bottom nav");
  assert.match(app,/const mobileNav=\[[^;]*\["settings"/);
- assert.match(unified,/grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+ assert.match(unified,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
  assert.match(unified,/\.app-shell \.topbar\{display:none!important\}/);
  assert.doesNotMatch(learnCSS,/grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
  assert.match(explore,/data-ex-action="field-help"/);

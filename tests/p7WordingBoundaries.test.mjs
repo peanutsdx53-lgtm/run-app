@@ -1,4 +1,4 @@
-/** P7 source/markup gate for 24 design targets; not a substitute for visual or user evaluation. */
+/** P7 source/markup gate for 23 active design targets; not a substitute for visual or user evaluation. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -25,7 +25,6 @@ const targets=[
  ['S15','ui/consultationExperience.js','相談・共有'],
  ['S16','ui/settingsExperience.js','データとプライバシー'],
  ['S17','ui/measurementExperience.js','未保存'],
- ['S18','ui/simulationExperience.js','シミュレーション'],
  ['S19','ui/consultationExperience.js','共有レポート'],
  ['S20','ui/settingsExperience.js','文字サイズ'],
  ['L01','ui/learningExperience.js','補助教材'],
@@ -33,8 +32,8 @@ const targets=[
  ['L03','ui/learningExperience.js','回答を確認する'],
  ['L04','ui/explorationExperience.js','学習']
 ];
-test('P7 all 24 design targets retain a source/wording entry, with cross-cutting states distinct from routes',()=>{
- assert.equal(targets.length,24);
+test('P7 all 23 active design targets retain a source/wording entry, with cross-cutting states distinct from routes',()=>{
+ assert.equal(targets.length,23);
  assert.equal(new Set(targets.map(x=>x[0])).size,24);
  for(const [id,path,token] of targets)assert.ok(src(path).includes(token),id+' '+path+' '+token);
 });
