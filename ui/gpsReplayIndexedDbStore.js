@@ -47,6 +47,9 @@ function database(){
  const guarded=pending.catch(err=>{if(opening===guarded)opening=null;throw err;});
  opening=guarded;return guarded;
 }
+// Historical V2 records and portable backups may have MIXED. This is a
+// READ compatibility rule only: GPS_ACTIVITY/prepareGpsMeasurement prohibit
+// new MIXED sessions, but do not erase, relabel, or re-evaluate old evidence.
 const allowedActivity=a=>['RUNNING','JOGGING','WALK','MIXED'].includes(a);
 /** Optional self-report saved with GPS identity; not GPS-measured evidence.
  * Older v2 summaries without this field remain valid and unchanged. */

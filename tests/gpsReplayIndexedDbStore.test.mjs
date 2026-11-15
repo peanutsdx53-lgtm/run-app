@@ -46,12 +46,26 @@ test('partial or missing speed series refuses opt-in instead of silent downgrade
  s=session();s.replayTrack[1].breakBefore='false';
  assert.equal(prepareGpsV2Run(s,{saveDetails:true}).ok,false);
 });
-test('mixed runs can store summary but cannot produce mixed 12 region calculations',()=>{
- const s=session();s.activity='MIXED';
- const x=prepareGpsV2Run(s,{saveDetails:false});
- assert.equal(x.ok,true,x.reason);
- assert.equal(x.summary.finalReference.state,'MIXED_NOT_SUPPORTED');
- assert.equal(x.summary.finalReference.regions.every(v=>v.value===null),true);
+test('new MIXED saves are refused, but historical mixed V2 summary/detail and backup remain valid',()=>{
+ const now=session();now.activity='MIXED';
+ assert.equal(prepareGpsV2Run(now,{saveDetails:false}).ok,false);
+ assert.equal(prepareGpsV2Run(now,{saveDetails:true}).ok,false);
+ const stored=prepareGpsV2Run(session(),{saveDetails:true,date:'2026-10-27'});
+ assert.equal(stored.ok,true);
+ // A previous-release V2 persisted record keeps its original scientific refusal.
+ const historic={...stored.summary,activity:'MIXED',finalReference:{
+  ...stored.summary.finalReference,state:'MIXED_NOT_SUPPORTED',
+  regions:stored.summary.finalReference.regions.map(r=>({
+   ...r,value:null,calculationState:'NOT_CALCULABLE',reasonCode:'MIXED_NOT_SUPPORTED'
+  }))
+ }};
+ assert.equal(validGpsV2Summary(historic),true,'read existing mixed summary');
+ assert.equal(validGpsV2Pair(historic,stored.detail),true,'read existing mixed details without editing route');
+ const backup={format:GPS_V2_BACKUP_FORMAT,version:2,summaries:[historic],details:[stored.detail]};
+ assert.equal(inspectGpsV2Backup(JSON.stringify(backup)).ok,true,'restore old mixed backup');
+ const noDetail={...historic,detailSaved:false};
+ assert.equal(inspectGpsV2Backup(JSON.stringify({...backup,summaries:[noDetail],details:[]})).ok,true,'restore old summary-only mixed backup');
+ assert.equal(historic.finalReference.regions.every(x=>x.value===null),true);
 });
 test('v2 backup identifies bad detail, duplicates and wrong metadata',()=>{
  const x=prepareGpsV2Run(session(),{saveDetails:true});

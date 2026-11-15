@@ -68,9 +68,9 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261115-retire-whatif-v1';
     import("./ui/environmentExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/bodyContextExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
-    import("./ui/measurementExperience.js?v=20261109-p6e-crossscreen-v1"),
-    import("./ui/gpsMeasurementCore.js?v=20261027-measurement-polish-v2"),
-    import("./ui/gpsReplayIndexedDbStore.js?v=20261027-measurement-polish-v2"),
+    import("./ui/measurementExperience.js?v=20261116-gps3-stage1-v1"),
+    import("./ui/gpsMeasurementCore.js?v=20261116-gps3-stage1-v1"),
+    import("./ui/gpsReplayIndexedDbStore.js?v=20261116-gps3-stage1-v1"),
     import("./ui/gpsDynamicResult.js?v=20261028-back-symmetry-v2"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
     import("./ui/resultExperience.js?v=20261110-public-copy-v1"),
@@ -748,7 +748,7 @@ function recordExtras(){
    if(!gpsV2Cache.ok)gpsPanel.insertAdjacentHTML("beforeend",`<p role="alert">${esc(gpsV2Cache.reason)}</p>`);
    if(gpsV2Cache.ok){
     const recent=gpsV2Cache.records.slice().reverse();
-    const markup=recent.length?recent.map(r=>`<article class="gps-history-item"><span><strong>${esc(r.date)}｜${esc(gpsCore.GPS_ACTIVITY[r.activity])}</strong><small>${r.distanceKm.toFixed(2)} km ・ ${gpsCore.formatGpsClock(r.activeSeconds*1000)} ・ ${r.detailSaved?(r.activity==='MIXED'?'コース保存あり（動的結果は対象外）':'動的結果データあり'):'概要のみ'}</small></span><div><a class="btn soft" href="#/result?gps=${encodeURIComponent(r.id)}">結果を見る</a><a class="btn soft" href="${esc(annotationEditor.editorLink({sourceType:'GPS_V2',recordId:r.id}))}">この記録を補う（任意）</a><button data-gps-v2-delete="${esc(r.id)}">削除</button></div></article>`).join('') :'';
+    const markup=recent.length?recent.map(r=>`<article class="gps-history-item"><span><strong>${esc(r.date)}｜${esc(gpsCore.GPS_HISTORIC_ACTIVITY[r.activity]||"不明")}</strong><small>${r.distanceKm.toFixed(2)} km ・ ${gpsCore.formatGpsClock(r.activeSeconds*1000)} ・ ${r.detailSaved?(r.activity==='MIXED'?'コース保存あり（動的結果は対象外）':'動的結果データあり'):'概要のみ'}</small></span><div><a class="btn soft" href="#/result?gps=${encodeURIComponent(r.id)}">結果を見る</a><a class="btn soft" href="${esc(annotationEditor.editorLink({sourceType:'GPS_V2',recordId:r.id}))}">この記録を補う（任意）</a><button data-gps-v2-delete="${esc(r.id)}">削除</button></div></article>`).join('') :'';
     if(recent.length)gpsPanel.insertAdjacentHTML('beforeend','<section class="gps-v2-history">'+markup+'</section>');
    }
    if(gpsCount===0)gpsPanel.insertAdjacentHTML('beforeend','<p class="gps-history-empty">GPSで保存した記録はありません。</p>');
@@ -907,7 +907,6 @@ function recordExtras(){
     if(event.target.matches('[data-gps-activity]')){const gps=ensureGps();gps.setActivity(event.target.value);const y=window.scrollY;render();window.scrollTo(0,y);return;}
     if(event.target.matches('[data-gps-goal-mode]')){ensureGps().setGoalMode(event.target.value);const y=window.scrollY;render();window.scrollTo(0,y);return;}
     if(event.target.matches('[data-gps-goal-value]')){ensureGps().setGoalValue(event.target.value);return;}
-    if(event.target.matches('[data-gps-segment]')){ensureGps().setSegment(event.target.value);const y=window.scrollY;render();window.scrollTo(0,y);return;}
     if(event.target.matches("[data-onboard-purpose]"))onboardingState.purpose=event.target.value;
     if(event.target.matches("[data-cj-method],[data-cj-focus]")){
       if(event.target.matches("[data-cj-method]"))conditionUi.method=event.target.value;

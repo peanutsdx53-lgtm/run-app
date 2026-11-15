@@ -8,9 +8,38 @@ const sample=(latitude,longitude,t,accuracy=8)=>({timestamp:t,coords:{latitude,l
 function harness(){let time=1000000,callback,error,watch=0,clear=0;const geo={watchPosition:(ok,err)=>{callback=ok;error=err;return ++watch;},clearWatch:()=>{clear++}};
  const gps=createGpsSession({geo,now:()=>time});return {gps,emit:(lat,lon,offset=0,accuracy=8)=>callback(sample(lat,lon,time+offset,accuracy)),error:code=>error({code}),tick:ms=>time+=ms,stats:()=>({watch,clear})};}
 function measured(h){assert.equal(h.gps.start(),true);h.emit(37.5,139.9);h.tick(5000);h.emit(37.50025,139.9);h.tick(5000);h.gps.finish();return h.gps.getSnapshot();}
-test('GPS starts only after direct command; view never displays fabricated metrics',()=>{const h=harness();const html=measurementPage(h.gps.state,0);assert.match(html,/data-gps-action="start"/);assert.match(html,/data-gps-activity/);assert.match(html,/data-gps-map/);assert.match(html,/©/);assert.match(html,/data-gps-goal-mode/);assert.doesNotMatch(html,/data-gps-save-route/,'track storage choice is shown only after finishing');assert.doesNotMatch(html,/5\.21/);assert.equal(h.stats().watch,0);assert.equal(GPS_ACTIVITY.MIXED,'走る＋歩く');assert.match(activityDescription('WALK'),/12部位/);});
+test('GPS starts only after direct command; view never displays fabricated metrics',()=>{const h=harness();const html=measurementPage(h.gps.state,0);assert.match(html,/data-gps-action="start"/);assert.match(html,/data-gps-activity/);assert.match(html,/data-gps-map/);assert.match(html,/©/);assert.match(html,/data-gps-goal-mode/);assert.doesNotMatch(html,/data-gps-save-route/,'track storage choice is shown only after finishing');assert.doesNotMatch(html,/5\.21/);assert.equal(h.stats().watch,0);assert.deepEqual(Object.keys(GPS_ACTIVITY),['WALK','JOGGING','RUNNING']);assert.equal(GPS_ACTIVITY.MIXED,undefined);assert.doesNotMatch(html,/value="MIXED"|data-gps-segment/);assert.match(activityDescription('WALK'),/12部位/);});
 test('GPS position validation rejects accessor failures, poor accuracy, stale timestamp and speed spikes',()=>{assert.equal(snapshotPosition({get coords(){throw Error('permission')}}),null);const p=snapshotPosition(sample(37.5,139.9,1000000));assert.equal(checkGpsPoint(null,p).ok,true);assert.equal(checkGpsPoint(p,snapshotPosition(sample(37.5,139.9001,1005000,200))).ok,false);assert.equal(checkGpsPoint(p,snapshotPosition(sample(37.5,139.9001,999999))).ok,false);assert.equal(checkGpsPoint(p,snapshotPosition(sample(38,139.9,1000001))).ok,false);assert.equal(checkGpsPoint(p,snapshotPosition(sample(37.500001,139.9,1005000))).ok,false);});
-test('GPS start, pause, resume, mixed segment create disconnected route, clean watch',()=>{const h=harness();assert.equal(h.gps.setActivity('MIXED'),true);assert.equal(h.gps.start(),true);h.emit(37.5,139.9);h.tick(5000);h.emit(37.50025,139.9);assert.ok(h.gps.state.distanceM>20);assert.equal(h.gps.pause(),true);const d=h.gps.state.distanceM;h.tick(10000);assert.equal(h.gps.resume(),true);h.emit(37.5003,139.9);assert.equal(h.gps.state.distanceM,d,'resuming does not bridge missing GPS segment');h.tick(5000);assert.equal(h.gps.setSegment('WALK'),true);h.emit(37.50035,139.9);h.tick(5000);h.emit(37.50055,139.9);assert.ok(h.gps.state.distanceM>d);assert.equal(h.gps.finish(),true);const snap=h.gps.getSnapshot();assert.equal(snap.phase,'finished');assert.equal(snap.track.some(x=>x.breakBefore),true);assert.equal(snap.track.at(-1).activity,'WALK');assert.equal(h.stats().clear,2);assert.equal(Math.round(snap.elapsedMs/1000),15);assert.ok(gpsPace(snap.distanceM,snap.elapsedMs)!=='—');assert.equal(formatGpsClock(3610000),'01:00:10');});
+test('only walking, jogging and running can be started; pause gaps and flags remain intact',()=>{
+ const h=harness();
+ for(const mode of ['WALK','JOGGING','RUNNING'])assert.equal(h.gps.setActivity(mode),true,mode);
+ assert.equal(h.gps.setActivity('MIXED'),false,'no new mixed activity');
+ assert.equal(h.gps.setActivity('UNKNOWN'),false,'unknown activity refused');
+ assert.equal(h.gps.state.activity,'RUNNING','invalid input does not change selection');
+ assert.equal(h.gps.setActivity('JOGGING'),true);
+ assert.equal(h.gps.setSegment,undefined,'retired segment switching must be absent');
+ assert.equal(h.gps.start(),true);
+ h.emit(37.5,139.9);h.tick(5000);h.emit(37.50025,139.9);
+ assert.ok(h.gps.state.distanceM>20);
+ assert.equal(h.gps.addFlag(),true,'flag preserved for single-activity sessions');
+ assert.equal(h.gps.pause(),true);
+ const d=h.gps.state.distanceM;h.tick(10000);
+ assert.equal(h.gps.resume(),true);h.emit(37.5003,139.9);
+ assert.equal(h.gps.state.distanceM,d,'resuming does not bridge missing GPS segment');
+ h.tick(5000);h.emit(37.50055,139.9);
+ assert.ok(h.gps.state.distanceM>d);
+ assert.equal(h.gps.finish(),true);
+ const snap=h.gps.getSnapshot();
+ assert.equal(snap.phase,'finished');
+ assert.equal(snap.activity,'JOGGING');
+ assert.equal(snap.track.some(x=>x.breakBefore),true);
+ assert.ok(snap.track.every(x=>x.activity==='JOGGING'));
+ assert.equal(snap.flags.length,1);
+ assert.equal(h.stats().clear,2);
+ assert.equal(Math.round(snap.elapsedMs/1000),10);
+ assert.ok(gpsPace(snap.distanceM,snap.elapsedMs)!=='—');
+ assert.equal(formatGpsClock(3610000),'01:00:10');
+});
 test('GPS record preparation protects optional route and measured quality',()=>{
  const h=harness(),session=measured(h);
  const no=prepareGpsMeasurement(session,{saveRoute:false,date:'2026-10-26'});
@@ -96,4 +125,17 @@ test('GPS preflight shows current stage and does not show measurement before sta
  assert.match(screen,/gps-live-prep/);
  assert.match(screen,/data-gps-action="start"/);
  assert.doesNotMatch(screen,/data-gps-activity-description/);
+});
+
+test('synthetic or legacy mixed activity may not be prepared as a new GPS record',()=>{
+ const h=harness(),finished=measured(h);
+ for(const rejected of ['MIXED','INVALID','']){
+  const bad={...finished,activity:rejected};
+  assert.equal(prepareGpsMeasurement(bad,{saveRoute:false}).ok,false,rejected);
+  assert.equal(prepareGpsV2Run(bad,{saveDetails:false}).ok,false,rejected);
+ }
+ for(const activity of Object.keys(GPS_ACTIVITY)){
+  const ok={...finished,activity,track:finished.track.map(p=>({...p,activity}))};
+  assert.equal(prepareGpsV2Run(ok,{saveDetails:false}).ok,true,activity);
+ }
 });

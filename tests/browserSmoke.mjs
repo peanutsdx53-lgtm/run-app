@@ -1296,8 +1296,10 @@ try{
     assert.equal(await page.evaluate(()=>window.__gpsWakeRequests),0,'no wake lock without user opt-in');
     await page.locator('[data-gps-keep-awake]').check();
   }
-  await page.locator('[data-gps-activity]').selectOption('MIXED');
-  assert.equal(await page.locator('[data-gps-activity]').inputValue(),'MIXED','GPS activity selection is retained without adding a long explanatory paragraph');
+  assert.deepEqual(await page.locator('[data-gps-activity] option').evaluateAll(nodes=>nodes.map(n=>n.value)),['WALK','JOGGING','RUNNING'],'single-activity options only');
+  await page.locator('[data-gps-activity]').selectOption('JOGGING');
+  assert.equal(await page.locator('[data-gps-activity]').inputValue(),'JOGGING','chosen single activity is retained');
+  assert.equal(await page.locator('[data-gps-activity] option[value="MIXED"]').count(),0);
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-gps-v35-ready.png'),fullPage:true});
   assert.equal(await page.evaluate(()=>window.__gpsWatchCount),0,'no GPS watcher without explicit consent');
   await page.locator('[data-gps-action="start"]').click();
@@ -1338,7 +1340,7 @@ try{
   assert.equal(await page.locator('[data-gps-route]').count(),0,'no duplicated route preview during measurement');
   if(mode.name!=="desktop")assert.equal(await page.locator('.mobile-nav').isVisible(),false,'active GPS measurement hides main navigation');
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-gps-v35-running.png'),fullPage:true});
-  await page.locator('[data-gps-segment]').selectOption('WALK');
+  assert.equal(await page.locator('[data-gps-segment]').count(),0,'no segment switching in running measurement');
   await page.locator('[data-gps-action="pause"]').click();
   assert.equal(await page.locator('[data-gps-live-page]').getAttribute('data-phase'),'paused');
   if(mode.name==='desktop')await page.waitForFunction(()=>window.__gpsWakeReleases===1,null,{timeout:8000});
@@ -1382,14 +1384,14 @@ try{
   await page.locator('#runload-result-v4 .rv4-hero').waitFor();
   assert.match(await page.locator('#runload-result-v4 .rv4-header').innerText(),/結果/);
   assert.equal(await page.locator('#runload-result-v4 .rv4-mobile-tabs button').count(),3);
-  // MIXED GPS has no single-activity replay reference and must never offer a gate.
-  assert.equal(await page.locator('#runload-result-v4 [data-gps-dynamic-gate]').count(),0,
-    'mixed activity cannot enter dynamic reference');
+  // A single-activity GPS record with explicitly saved details may open dynamic results.
+  assert.equal(await page.locator('#runload-result-v4 [data-gps-dynamic-gate]').count(),1,
+    'opted-in JOGGING details retain access to GPS dynamic replay');
   await page.goto(host+'#/history',{waitUntil:'networkidle'});
   await page.locator('.gps-history-disclosure>summary').click();
   const v2History=page.locator('.gps-v2-history .gps-history-item').first();
   await v2History.waitFor();
-  assert.match(await v2History.innerText(),/コース保存あり/);
+  assert.match(await v2History.innerText(),/動的結果データあり/);
   const savedV2=await page.evaluate(async()=>new Promise((resolve,reject)=>{
     const op=indexedDB.open('runload-v2-gps-dynamic-v2');
     op.onerror=()=>reject(op.error);
