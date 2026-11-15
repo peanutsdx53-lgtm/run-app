@@ -82,7 +82,6 @@ export const ENGLISH_FINAL_GPS=Object.freeze({
  "GPSで取得した記録": "GPS-Measured Record",
  "活動": "Activity",
  "GPS移動距離": "GPS Distance",
- "運動前": "Before Activity",
  "測定した活動時間": "Measured Active Duration",
  "任意の記録": "Optional Entries",
  "路面（本人入力・任意）": "Surface (Optional Self-report)",
