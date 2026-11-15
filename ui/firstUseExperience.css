@@ -98,3 +98,9 @@ body > .fu-doc-backdrop .fu-doc-scroll{min-height:0;overflow-y:auto;overscroll-b
 @media(max-width:520px){
  .fu-profile-pair{grid-template-columns:minmax(0,1fr);gap:15px}
 }
+
+/* Height and weight use direct numeric entry; hide platform-specific white
+   spin controls while retaining inputmode=decimal and accessible number fields. */
+.fu-profile-form input[type="number"]{-moz-appearance:textfield;appearance:textfield}
+.fu-profile-form input[type="number"]::-webkit-inner-spin-button,
+.fu-profile-form input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
