@@ -93,6 +93,29 @@ try{
    if(width===390){
     await page.locator('.sv4-review-help summary').click();
     await capture(page,language,width,'manual-help-open');
+    // Fail the first authoritative IndexedDB mutation, not the next retry.
+    await page.evaluate(()=>{
+     const original=IDBDatabase.prototype.transaction;let failed=false;
+     IDBDatabase.prototype.transaction=function(stores,mode,...rest){
+      if(!failed&&stores==='envelopes'&&mode==='readwrite'){
+       failed=true;throw Error('stage4 simulated manual save failure');
+      }
+      return original.call(this,stores,mode,...rest);
+     };
+    });
+    await page.locator('[data-manual-run-save]').click();
+    await page.locator('[data-save-failure]').waitFor({timeout:14000});
+    await waitEnglish(page,language);
+    const identity=await page.evaluate(()=>sessionStorage.getItem('runload-v2-pending-manual-commit-id'));
+    assert.match(identity||'',/^run-v1-/,'manual retry ID preserved');
+    assert.equal(await page.locator('[data-manual-run-save]').isEnabled(),true,'retry remains available');
+    await capture(page,language,width,'manual-save-failure');
+    await page.locator('[data-manual-run-save]').click();
+    await page.locator('#runload-result-v4').waitFor({timeout:15000});
+    const savedId=new URLSearchParams(page.url().split('?')[1]).get('record');
+    assert.equal(savedId,identity,'manual retry uses original request ID');
+    assert.equal(await page.evaluate(()=>sessionStorage.getItem('runload-v2-pending-manual-commit-id')),null);
+    await capture(page,language,width,'manual-save-confirmed');
    }
    assert.deepEqual(errors,[],'manual screen errors '+language+' '+width);
    await ctx.close();
