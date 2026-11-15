@@ -186,11 +186,11 @@ export function latestCard(record=null,savedRuns=null){
  const body=recent?'<div class="hx-latest-fig"><div><small>距離</small><strong>'+escape(recent.distanceKm.toFixed(2))+' <em>km</em></strong></div><div><small>時間</small><strong>'+escape(time)+'</strong></div><div><small>平均ペース</small><strong>'+escape(pace)+' <em>/km</em></strong></div></div><a class="hx-condition-explore" href="#/result?record='+encodeURIComponent(recent.id)+'">保存した走行の結果を見る <span aria-hidden="true">›</span></a>'
   :savedRuns&&(!savedRuns.ok||!Array.isArray(savedRuns.records))?
    '<div class="hx-latest-empty" role="alert"><span class="hx-runmark">'+icon("run")+'</span><div><strong>走行記録を確認できません</strong><p>'+escape(savedRuns.reason||'保存済みの記録を読み取れません。端末の保存領域を確認してください。')+'</p><p>記録が0件という意味ではありません。元の記録は変更していません。</p></div></div>'
-  : '<div class="hx-latest-empty"><span class="hx-runmark">'+icon("run")+'</span><div><strong>走行記録はまだありません</strong><p>手入力した走行を保存すると、ここに表示されます。</p></div></div>';
+  : '<div class="hx-latest-empty"><div><strong>走行記録はまだありません</strong></div></div>';
  // Offer an optional record entry only in a readable empty state.
  // Do not override saved dashboard layout or show this when reads fail.
  const emptyRecordAction=!recent&&savedRuns?.ok===true&&Array.isArray(savedRuns.records)
-  ?'<div class="home-latest-action"><p>記録は自分のペースで始められます。</p><a href="#/record-start">走行を記録する <span aria-hidden="true">›</span></a><small>手入力またはGPSを選択</small></div>':'';
+  ?'<div class="home-latest-action"><a href="#/record-start">走行を記録する <span aria-hidden="true">›</span></a></div>':'';
  return '<section class="hx-card hx-latest'+(emptyRecordAction?' hx-latest--start':'')+'">'+head("最新の走行","run")+body+emptyRecordAction+'<div class="hx-orbit" aria-hidden="true"></div></section>';
 }
 export function conditionCard(storage){
@@ -203,7 +203,7 @@ export function conditionCard(storage){
  stat+'<div class="hx-chart-label">睡眠・就床の記録 <span>直近7日</span></div>'+
  (count===0?'<div class="hx-condition-empty" role="status"><strong>'+(state.canSave?'直近7日の記録はまだありません':'生活記録を確認できません')+'</strong><p>'+(state.canSave?'未記録日は0時間として扱いません。':'保存領域の状態を確認してください。')+'</p></div>'
  :sevenBars(entries)+'<p class="hx-condition-source">記録した日のみ表示します。未記録日は空欄です。</p>')+
- '<a class="hx-condition-explore" href="#/condition" aria-label="コンディションの歩みを開き、長期の変化とメモを確認">コンディションの歩みを見る <span aria-hidden="true">›</span></a>'+
+ '<a class="hx-condition-explore" href="#/condition" aria-label="睡眠・体調の記録を確認する">睡眠・体調の記録を見る <span aria-hidden="true">›</span></a>'+
  (!state.canSave?'<p class="hx-warning">'+escape(state.reason)+'</p>':"")+'</section>';
 }
 // Derived display-only milestones. The only source is a successfully read, saved

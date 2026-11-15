@@ -17,7 +17,18 @@ test('S02 guide is initially closed and accessible',()=>{
  const open=guide(true);
  assert.match(open,/role="region" aria-labelledby="home-screen-guide-title"/);
  assert.equal((open.match(/<li>/g)||[]).length,3);
- for(const title of ['走行を記録する','自分の記録に戻る','表示を自分好みに','生活コンディション'])assert.ok(open.includes(title));
+ for(const text of [
+  'ホームの使い方','走行を記録する','保存した走行を見る','ホームを編集する',
+  '下部の「記録」または「最新の走行」のボタンから、手入力かGPS測定を選びます。',
+  '最新の走行結果はこの画面から、過去の走行は「履歴」から確認できます。',
+  '右上の「編集」で、カードの順番・表示・サイズを変更できます。',
+  '「コンディション」の「開く」から、睡眠・就床時間や起床時の調子を記録・確認できます。'
+ ])assert.ok(open.includes(text),"missing direct home instruction: "+text);
+ for(const removed of [
+  '画面ガイド · ホーム','この画面でできること','すべて記録する必要はありません',
+  '入力しない日があっても問題ありません','睡眠などの数値だけで健康状態を判断'
+ ])assert.ok(!open.includes(removed),"old indirect guidance must be removed: "+removed);
+ assert.equal((open.match(/<h2 id="home-screen-guide-title"/g)||[]).length,1,"single visible guide heading");
  assert.doesNotMatch(open,/傷害を減らす|自己理解が向上する/);
  assert.match(app,/data-home-guide-close/);
  assert.match(app,/focus\(\{preventScroll:true\}\)/);

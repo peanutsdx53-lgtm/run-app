@@ -141,9 +141,18 @@ test("S02 contextual recording entry never invents records or conceals read fail
  const empty=latestCard(null,{ok:true,records:[]});
  assert.ok(empty.includes('href="#/record-start"'));
  assert.match(empty,/走行記録はまだありません/);
+ assert.match(empty,/走行を記録する/);
+ for(const text of ["記録は自分のペースで始められます。","手入力またはGPSを選択","手入力した走行を保存すると、ここに表示されます。"]){
+  assert.ok(!empty.includes(text),"empty state must not repeat guidance: "+text);
+ }
+ assert.ok(!empty.includes('hx-runmark'),"empty state omits secondary runner icon");
+ assert.equal((empty.match(/href="#\/record-start"/g)||[]).length,1,"one record CTA");
  const failed=latestCard(null,{ok:false,reason:"読み取り失敗"});
  assert.ok(!failed.includes('href="#/record-start"'));
  assert.match(failed,/読み取り失敗/);
+ assert.match(failed,/走行記録を確認できません/);
+ assert.match(failed,/記録が0件という意味ではありません/);
+ assert.ok(!failed.includes("走行記録はまだありません"),"read failure is not a zero-record state");
  const withRun=latestCard({id:"run-v1-11111111-1111-4111-8111-111111111111",source:"manual",type:"run",distanceKm:3,durationSeconds:1000},{ok:true,records:[]});
  assert.ok(!withRun.includes('href="#/record-start"'));
 });
@@ -172,6 +181,8 @@ test('live home cards never synthesize template figures from an empty or corrupt
   assert.doesNotMatch(html,/7\.20|5:50|42\.0|獲得 2 件|表示例|サンプル値/);
  }
  assert.match(conditionCard(empty),/直近7日の記録はまだありません/);
+ assert.match(conditionCard(empty),/睡眠・体調の記録を見る/);
+ assert.doesNotMatch(conditionCard(empty),/コンディションの歩み/);
  assert.match(conditionCard(bad),/生活記録を確認できません/);
 });
 

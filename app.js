@@ -55,7 +55,7 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
   ]=await Promise.all([
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
-    import("./ui/homeExperience.js?v=20261111-home-autosave-v1"),
+    import("./ui/homeExperience.js?v=20261115-home-copy-v1"),
     import("./ui/rofJScale.js"),
     import("./ui/rofExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/recordDraftReview.js"),
@@ -98,7 +98,7 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
     import("./ui/interpretationView.js?v=20261026-interpret-v14"),
     import("./ui/interpretationRules.js?v=20261026-interpret-v14"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
-    import("./ui/conditionJourney.js?v=20261026-condition-v15"),
+    import("./ui/conditionJourney.js?v=20261115-home-copy-v1"),
     import("./ui/conditionInsights.js?v=20261026-condition-v15")
   ]);
   // Independent IndexedDB stores can initialize together. Wait for canonical data
@@ -382,16 +382,14 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
   function homeScreenGuide(){
     if(!homeUi.guideOpen)return '<section id="home-screen-guide" hidden aria-label="ホーム画面の使い方"></section>';
     return `<section id="home-screen-guide" class="hx-screen-guide" role="region" aria-labelledby="home-screen-guide-title">
-      <div class="hx-guide-bar"><div><span class="hx-guide-eyebrow">画面ガイド · ホーム</span>
-      <h2 id="home-screen-guide-title" tabindex="-1">この画面でできること</h2>
-      <p>必要な項目だけ使えます。すべて記録する必要はありません。</p></div>
+      <div class="hx-guide-bar"><div><h2 id="home-screen-guide-title" tabindex="-1">ホームの使い方</h2></div>
       <button type="button" class="hx-guide-close" data-home-guide-close aria-label="ホーム画面の使い方ガイドを閉じる">閉じる ×</button></div>
       <ol class="hx-guide-steps">
-        <li><span aria-hidden="true">01</span><div><strong>走行を記録する</strong><p>「記録」から手入力またはGPS測定を選びます。記録がないときは「最新の走行」からも開始できます。</p></div></li>
-        <li><span aria-hidden="true">02</span><div><strong>自分の記録に戻る</strong><p>保存した走行は「結果」や「履歴」で再び確認できます。入力しない日があっても問題ありません。</p></div></li>
-        <li><span aria-hidden="true">03</span><div><strong>表示を自分好みに</strong><p>「編集」でカードの並べ替えや表示切替ができます。記録自体は変わりません。</p></div></li>
+        <li><span aria-hidden="true">01</span><div><strong>走行を記録する</strong><p>下部の「記録」または「最新の走行」のボタンから、手入力かGPS測定を選びます。</p></div></li>
+        <li><span aria-hidden="true">02</span><div><strong>保存した走行を見る</strong><p>最新の走行結果はこの画面から、過去の走行は「履歴」から確認できます。</p></div></li>
+        <li><span aria-hidden="true">03</span><div><strong>ホームを編集する</strong><p>右上の「編集」で、カードの順番・表示・サイズを変更できます。</p></div></li>
       </ol>
-      <p class="hx-guide-note">生活コンディションは任意の別記録です。睡眠などの数値だけで健康状態を判断するものではありません。</p>
+      <p class="hx-guide-note">「コンディション」の「開く」から、睡眠・就床時間や起床時の調子を記録・確認できます。</p>
     </section>`;
   }
   function home(){

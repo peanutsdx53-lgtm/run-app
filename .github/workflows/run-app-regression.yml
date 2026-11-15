@@ -56,6 +56,16 @@ jobs:
           path: audit-output/onboarding-${{ matrix.engine }}/
           if-no-files-found: warn
           retention-days: 7
+      - name: Inspect Japanese and English Home cards and guide across viewports
+        run: node tests/homeCopyBilingualBrowser.mjs
+      - name: Preserve Home copy screenshots for visual inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: home-copy-${{ matrix.engine }}
+          path: audit-output/home-copy-${{ matrix.engine }}/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify GPS and ROF-J accepted-measurement path
         run: node tests/gpsRofReviewBrowser.mjs
       - name: Verify bilingual interface
