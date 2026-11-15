@@ -54,7 +54,7 @@ test("course layout presents approved three-step flow without changing the save/
  assert.equal((html.match(/data-course-save /g)||[]).length,1);
  assert.equal((html.match(/data-rv-apply/g)||[]).length,1);
  assert.doesNotMatch(html,/必要な条件だけ設定して|コースの保存・削除によって/);
- assert.match(html,/コースの保存・削除は過去の記録に影響しません/);assert.doesNotMatch(html,/rv-save-caption/);
+ assert.match(html,/保存コースの編集・削除は過去の記録を変更しません。/);assert.doesNotMatch(html,/rv-save-caption/);
 });
 
 test('manual basic page gives user an explicit choice of three independently modeled activities',()=>{
@@ -218,4 +218,4 @@ test('S05 segment mode shows partial and complete shares without inventing missi
  assert.equal((coursePage(state,ui).match(/data-rv-remove=/g)||[]).length,5);
 });
 
-test('P6-D course preserves three step actions with one optional header guide',()=>{const d={date:'2026-10-30',courseName:'河川敷',gradeMode:'UNKNOWN',surfaceMode:'UNKNOWN'};const ui=initialCourseUi(d);const html=coursePage({recordDraft:d,recordCourseUi:ui},ui);assert.equal((html.match(/class="rv-screen-help"/g)||[]).length,1);assert.match(html,/コースと走行条件の使い方/);assert.equal((html.match(/rv-course-step"/g)||[]).length,3);assert.match(html,/コースの保存・削除は過去の記録に影響しません/);assert.doesNotMatch(html,/rv-save-caption/);assert.match(html,/data-rv-apply/);assert.match(html,/data-course-save/);});
+test('P6-D course preserves three step actions with one optional header guide',()=>{const d={date:'2026-10-30',courseName:'河川敷',gradeMode:'UNKNOWN',surfaceMode:'UNKNOWN'};const ui=initialCourseUi(d);const html=coursePage({recordDraft:d,recordCourseUi:ui},ui);assert.equal((html.match(/class="rv-screen-help"/g)||[]).length,1);assert.match(html,/コースと走行条件の使い方/);assert.equal((html.match(/rv-course-step"/g)||[]).length,3);assert.match(html,/保存コースの編集・削除は過去の記録を変更しません。/);assert.doesNotMatch(html,/rv-save-caption/);assert.match(html,/data-rv-apply/);assert.match(html,/data-course-save/);});
