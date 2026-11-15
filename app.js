@@ -55,7 +55,7 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
   ]=await Promise.all([
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
-    import("./ui/homeExperience.js?v=20261111-home-autosave-v1"),
+    import("./ui/homeExperience.js?v=20261115-home-copy-v1"),
     import("./ui/rofJScale.js"),
     import("./ui/rofExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/recordDraftReview.js"),
@@ -98,7 +98,7 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
     import("./ui/interpretationView.js?v=20261026-interpret-v14"),
     import("./ui/interpretationRules.js?v=20261026-interpret-v14"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
-    import("./ui/conditionJourney.js?v=20261026-condition-v15"),
+    import("./ui/conditionJourney.js?v=20261115-home-copy-v1"),
     import("./ui/conditionInsights.js?v=20261026-condition-v15")
   ]);
   // Independent IndexedDB stores can initialize together. Wait for canonical data
