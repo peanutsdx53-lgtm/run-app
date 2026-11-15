@@ -118,6 +118,7 @@ try{
   await checkBar();await shot('stage2-controls-scrolled');
   await page.evaluate(()=>scrollTo(0,0));
   assert.match(await page.locator('[data-gps-status]').innerText(),/位置取得待ち・計測中/);
+  assert.equal(await page.locator('[data-gps-accuracy]').isVisible(),false,'do not repeat GPS waiting text as accuracy');
   assert.equal(await page.locator('[data-gps-notice]').isVisible(),false,'hide redundant help when healthy');
   await safe('running');await shot('02-measuring');
   assert.equal(await page.locator('[data-gps-segment]').count(),0,'retired mixed-activity segment switch is absent');
@@ -127,6 +128,7 @@ try{
   await page.evaluate(ts=>window.__sampleGps(37.50025,ts),t+5000);
   await page.locator('[data-gps-action="flag"]').click();
   assert.match(await page.locator('[data-gps-status]').innerText(),/GPS受信中・計測中/);
+  assert.match(await page.locator('[data-gps-accuracy]').innerText(),/受信精度/,'show accuracy after an accepted fix');
   assert.match(await page.locator('[data-gps-map-flags]').innerText(),/1件/,'flags remain available');
   await page.waitForTimeout(1250);
   await page.locator('[data-gps-action="finish"]').click();
