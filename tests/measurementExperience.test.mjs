@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {measurementPage,gpsReviewPage,activityDescription,gpsMeasurementStatus,gpsGoalProgress} from '../ui/measurementExperience.js';
+import {measurementPage,gpsReviewPage,activityDescription,gpsMeasurementStatus,gpsGoalProgress,gpsPositionIndicator} from '../ui/measurementExperience.js';
 import {createGpsSession,GPS_ACTIVITY,snapshotPosition,checkGpsPoint,formatGpsClock,gpsPace} from '../ui/gpsMeasurementCore.js';
 import {prepareGpsMeasurement,isValidGpsMeasurement} from '../ui/gpsMeasurementValidation.js';
 import {prepareGpsV2Run,gpsV2DetailToFeature} from '../ui/gpsReplayIndexedDbStore.js';
@@ -167,4 +167,13 @@ test('Stage 2: GPS-ready timer, received GPS and failure remain distinguishable'
  assert.match(gpsGoalProgress(s,600000),/自動で終了しません/);
  s.goalReached=false;s.goalMode='distance';s.goalValue='1';s.distanceM=250;
  assert.match(gpsGoalProgress(s,60000),/残り 0.75 km/);
+});
+
+test('Stage 2 location indicator distinguishes waiting, error and valid fixes',()=>{
+ const s={phase:'running',lastPosition:null,positionError:''};
+ assert.equal(gpsPositionIndicator(s),'gps-v2-dot--waiting');
+ s.positionError='Position unavailable';assert.equal(gpsPositionIndicator(s),'gps-v2-dot--error');
+ s.positionError='';s.lastPosition={lat:37.5,lon:139.9,accuracyM:8};
+ assert.equal(gpsPositionIndicator(s),'');
+ s.phase='paused';assert.equal(gpsPositionIndicator(s),'gps-v2-dot--pause');
 });

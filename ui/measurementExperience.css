@@ -463,3 +463,7 @@
  .gps-v35 .gps-live-actions--measuring .gps-v2-button{font-size:.75rem;letter-spacing:-.01em}
  .gps-finish-dialog-actions{grid-template-columns:minmax(0,1fr)}
 }
+
+/* An active timer alone does not establish GPS reception. */
+.gps-v35 .gps-v2-dot--waiting{background:#efcf89;box-shadow:0 0 0 4px #efcf8933}
+.gps-v35 .gps-v2-dot--error{background:#ff9f92;box-shadow:0 0 0 4px #ff9f9238}

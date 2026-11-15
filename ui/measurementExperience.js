@@ -20,6 +20,11 @@ export function gpsMeasurementStatus(s){
  if(s.phase==='finished')return '計測終了';
  return '開始前';
 }
+export function gpsPositionIndicator(s){
+ if(s.phase!=='running')return 'gps-v2-dot--pause';
+ if(s.positionError)return 'gps-v2-dot--error';
+ return s.lastPosition?'':'gps-v2-dot--waiting';
+}
 export function gpsGoalProgress(s,elapsedMs=0){
  if(s.goalMode==='free')return '';
  const value=Number(s.goalValue);
@@ -69,7 +74,7 @@ export function measurementPage(s,elapsedMs=0,experience={}){
    <label class="gps-live-checkbox gps-screen-awake-pref"><input type="checkbox" data-gps-keep-awake ${s.keepScreenAwake?'checked':''}><span><b>測定中は画面を点灯したままにする（任意）</b><small>初期OFF・対応端末のみ</small></span></label>
    <button class="gps-v2-button gps-v2-primary" type="button" data-gps-action="start">位置情報を許可して測定開始</button></section>`:''}
   <section class="gps-v35-panel gps-live-measure"><div class="gps-live-section-head"><b>02</b><div><h2>走行の記録</h2></div></div>
-   <div class="gps-live-status" role="status"><i class="gps-v2-dot ${active?'': 'gps-v2-dot--pause'}"></i><strong data-gps-status>${status}</strong><span data-gps-accuracy ${active&&s.lastPosition&&!s.positionError?'':'hidden'}>${active&&s.lastPosition&&!s.positionError?`受信精度 ±${Math.round(s.lastPosition.accuracyM)}m`:''}</span></div>
+   <div class="gps-live-status" role="status"><i class="gps-v2-dot ${gpsPositionIndicator(s)}"></i><strong data-gps-status>${status}</strong><span data-gps-accuracy ${active&&s.lastPosition&&!s.positionError?'':'hidden'}>${active&&s.lastPosition&&!s.positionError?`受信精度 ±${Math.round(s.lastPosition.accuracyM)}m`:''}</span></div>
    ${working&&goal?`<p class="gps-live-goal" data-gps-goal>${esc(goal)}</p>`:''}
    <div class="gps-live-time"><small>計測した時間（停止中を除く）</small><strong data-gps-elapsed>${data.time}</strong></div>
    <div class="gps-v2-metrics gps-v35-metrics"><div><span>GPSの移動距離</span><strong data-gps-distance>${data.distance}</strong><small>km</small></div><div><span>平均ペース</span><strong data-gps-pace>${data.pace}</strong><small>/km</small></div><div class="gps-v35-energy"><span>推定消費カロリー</span><strong data-gps-energy>${data.energy.text}</strong><small>kcal</small><em data-gps-energy-note>${data.energy.text==='—'?'':esc(data.energy.note)}</em></div></div>
@@ -95,6 +100,8 @@ export function updateMeasurementDom(root,s,elapsedMs){
  if(navigation)navigation.hidden=s.phase==='running'||s.phase==='paused';
  const d=format(s,elapsedMs);const set=(sel,v)=>{const e=root.querySelector(sel);if(e)e.textContent=v;};
  set('[data-gps-elapsed]',d.time);set('[data-gps-distance]',d.distance);set('[data-gps-pace]',d.pace);set('[data-gps-energy]',d.energy.text);set('[data-gps-energy-note]',d.energy.text==='—'?'':d.energy.note);set('[data-gps-flag-count]',s.flags?.length?'('+s.flags.length+')':'');set('[data-gps-map-flags]',s.flags?.length?'⚑ フラッグ '+s.flags.length+'件を地図に表示中':'フラッグを記録すると地図上に番号が表示されます');set('[data-gps-status]',gpsMeasurementStatus(s));set('[data-gps-accuracy]',s.phase==='running'&&s.lastPosition&&!s.positionError?`受信精度 ±${Math.round(s.lastPosition.accuracyM)}m`:'');const accuracy=root.querySelector('[data-gps-accuracy]');if(accuracy)accuracy.hidden=!(s.phase==='running'&&s.lastPosition&&!s.positionError);set('[data-gps-goal]',gpsGoalProgress(s,elapsedMs));set('[data-gps-notice]',s.positionError||s.notice||'');
+ const indicator=root.querySelector('.gps-live-status .gps-v2-dot');
+ if(indicator)indicator.className='gps-v2-dot '+gpsPositionIndicator(s);
  const notice=root.querySelector('[data-gps-notice]');if(notice)notice.hidden=!(s.positionError||s.notice);
  const flags=root.querySelector('[data-gps-map-flags]');if(flags)flags.hidden=!s.flags?.length;
  updateGpsLiveMap(root,s);

@@ -313,11 +313,12 @@ try{
     await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-running.png'),fullPage:true});
     await enPage.evaluate(()=>window.__gpsStage2Error(2));
     await enPage.locator('[data-gps-notice]').waitFor({state:'visible'});
+    assert.equal(await enPage.locator('.gps-live-status .gps-v2-dot--error').count(),1,'error has non-green status indicator');
     await enPage.waitForFunction(()=>document.querySelector('[data-gps-notice]')?.textContent.includes('GPS signal unavailable'),null,{timeout:10000});
     assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'GPS error does not stop timer');
     await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-location-error.png'),fullPage:true});
     await enPage.evaluate(()=>window.__gpsStage2Fix(37.5,Date.now()));
-    await enPage.waitForFunction(()=>document.querySelector('[data-gps-accuracy]')?.textContent.includes('GPS accuracy'),
+    await enPage.waitForFunction(()=>document.querySelector('.gps-live-status .gps-v2-dot:not(.gps-v2-dot--error):not(.gps-v2-dot--waiting)')&&document.querySelector('[data-gps-accuracy]')?.textContent.includes('GPS accuracy'),
       null,{timeout:10000});
     await enPage.locator('[data-gps-action="finish"]').click();
     await enPage.locator('[data-gps-finish-dialog]').waitFor({state:'visible'});
