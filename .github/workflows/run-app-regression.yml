@@ -42,6 +42,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      # Temporary, audit-only snapshot. Never merged into main.
+      - name: Package checked-out source for isolated GPS screenshot audit
+        if: matrix.engine == 'chromium'
+        run: |
+          python3 - <<'PY'
+          from zipfile import ZipFile, ZIP_DEFLATED
+          from pathlib import Path
+          root = Path('.')
+          with ZipFile('/tmp/runload-source-gps-audit.zip','w',ZIP_DEFLATED) as z:
+              for p in root.rglob('*'):
+                  if not p.is_file() or any(x in {'.git','node_modules','audit-output'} for x in p.parts):
+                      continue
+                  z.write(p,p.as_posix())
+          PY
+      - name: Upload isolated GPS audit source
+        if: matrix.engine == 'chromium'
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-only-gps-source
+          path: /tmp/runload-source-gps-audit.zip
+          retention-days: 1
       - name: Install supported browser test tool
         run: npm install --no-save playwright@1.56.1
       - name: Install browser with OS dependencies
