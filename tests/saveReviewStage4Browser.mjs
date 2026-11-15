@@ -166,6 +166,38 @@ try{
   await page.locator('#runload-result-v4').waitFor({timeout:15000});
   assert.equal(new URLSearchParams(page.url().split('?')[1]).get('gps'),id,'recovered original saved run');
   assert.equal(await page.evaluate(()=>sessionStorage.getItem('runload-v2-pending-gps-operation-v1')),null);
+  // Storage-level uncertain acknowledgment: the same ID and identical payload
+  // must return the original parent. A changed route choice must be rejected.
+  const idempotency=await page.evaluate(async()=>{
+   const store=await import('/ui/gpsReplayIndexedDbStore.js');
+   const t=1700000000000;
+   const p=(i,km)=>({lat:37.5+i*.0001,lon:139.9,km,t:t+i*5000,
+    breakBefore:i===0,ele:null,altitudeAccuracy:null,altitudeQuality:'missing',activity:'RUNNING'});
+   const track=[p(0,0),p(1,.015),p(2,.03)];
+   const session={phase:'finished',activity:'RUNNING',distanceM:30,elapsedMs:10000,
+    accepted:3,rejected:0,track,trackSimplified:false,
+    replayTrackAvailable:true,replayTrack:track.map(x=>({t:x.t,km:x.km,breakBefore:x.breakBefore})),
+    flags:[]};
+   const requestId='gps-v2-'+crypto.randomUUID();
+   const options={date:'2026-11-16',requestId,saveDetails:true,experience:{
+    source:'USER_REPORTED',rofBefore:null,rofAfter:null,beforeCapturedAt:null,
+    afterCapturedAt:null,surface:'UNKNOWN',memo:'test only'}};
+   const first=await store.saveGpsV2Run(session,options);
+   const second=await store.saveGpsV2Run(session,options);
+   const conflict=await store.saveGpsV2Run(session,{...options,saveDetails:false});
+   const list=await store.readGpsV2Summaries();
+   const verified=await store.verifyGpsV2Commit(session,options);
+   return {first,second,conflict,verified,
+    matching:list.ok?list.records.filter(x=>x.id===requestId).length:null};
+  });
+  assert.equal(idempotency.first.ok,true,JSON.stringify(idempotency.first));
+  assert.equal(idempotency.second.ok,true,JSON.stringify(idempotency.second));
+  assert.equal(idempotency.second.duplicate,true,'retry resolves the original commit');
+  assert.equal(idempotency.second.summary.id,idempotency.first.summary.id);
+  assert.equal(idempotency.matching,1,'same ID has exactly one summary');
+  assert.equal(idempotency.verified.ok,true);
+  assert.equal(idempotency.conflict.ok,false,'cannot reinterpret the same ID with route opt-out');
+  assert.equal(idempotency.conflict.code,'REQUEST_CONFLICT');
   assert.deepEqual(errors,[],'GPS recover errors '+language);
   await ctx.close();
  }
