@@ -66,6 +66,16 @@ jobs:
           path: audit-output/home-copy-${{ matrix.engine }}/
           if-no-files-found: warn
           retention-days: 7
+      - name: Photograph condition, achievements, course and simulator in Japanese and English
+        run: node tests/uiuxFocusedScreensBrowser.mjs
+      - name: Preserve the focused UI screenshots and viewport measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: focused-ui-${{ matrix.engine }}
+          path: audit-output/focus-ui-${{ matrix.engine }}/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify GPS and ROF-J accepted-measurement path
         run: node tests/gpsRofReviewBrowser.mjs
       - name: Verify bilingual interface
