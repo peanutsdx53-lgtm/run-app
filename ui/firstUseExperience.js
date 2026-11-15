@@ -88,7 +88,7 @@ export function renderFirstUse(state){
   const final=step===7;
   const labels=step<=1?"":step===7?"プロフィール":("ガイド "+(step-1)+" / 5");
   const progress='<div class="fu-progress" role="progressbar" aria-label="初回利用の進行状況" aria-valuenow="'+(step+1)+'" aria-valuemin="1" aria-valuemax="8">'+Array.from({length:8},function(_,i){return '<span class="'+(i<=step?'is-done':'')+'"></span>';}).join('')+'</div>';
-  const sidebar='<aside class="fu-rail"><span class="fu-rail-mark" aria-hidden="true">◈</span><strong>走行記録</strong><p>初回利用の設定とガイド</p><ol>'
+  const sidebar='<aside class="fu-rail"><span class="fu-rail-mark" aria-hidden="true">◈</span><strong>走行記録</strong><ol>'
     +FIRST_USE_STEPS.map(function(label,i){return '<li class="'+(i===step?'is-current':i<step?'is-done':'')+'"><span>'+String(i+1).padStart(2,"0")+'</span>'+h(label)+'</li>';}).join('')+'</ol></aside>';
   const footer='<footer class="fu-footer" '+(final?'data-onboard-profile-footer':'')+'><button class="fu-button fu-secondary" type="button" data-onboard-back '+(step===0?'disabled':'')+'>戻る</button>'
     +(labels?'<span>'+h(labels)+'</span>':'')+'<div class="fu-footer-actions">'
