@@ -30,13 +30,11 @@ test('4 hours of 1 Hz GPS fixes keep the actual route finish, measured distance 
  let time=1700000000000,success=null,watch=0;
  const geo={watchPosition:cb=>{success=cb;return ++watch},clearWatch:()=>{}};
  const run=createGpsSession({geo,now:()=>time});
- assert.equal(run.setActivity('MIXED'),true);
+ assert.equal(run.setActivity('RUNNING'),true);
  assert.equal(run.start(),true);
  const total=14401,startTime=time;
  for(let i=0;i<total;i++){
   if(i===5000){assert.equal(run.pause(),true);time+=7000;assert.equal(run.resume(),true);}
-  if(i===8000)assert.equal(run.setSegment('WALK'),true);
-  if(i===10500)assert.equal(run.setSegment('JOGGING'),true);
   if(i===11500)time+=35000; // Simulates suspended GPS rather than inventing traveled distance.
   const coords={latitude:37.5+i*.000023,longitude:139.9+.00006*Math.sin(i/45),
     accuracy:7,altitude:150+5*Math.sin(i/75),altitudeAccuracy:8};
@@ -53,16 +51,15 @@ test('4 hours of 1 Hz GPS fixes keep the actual route finish, measured distance 
  assert.equal(snap.replayTrack.length,total,'all accepted fixes retain an independent speed timeline');
  assert.equal(snap.replayTrack[0].t,startTime);
  assert.equal(snap.replayTrack.at(-1).t,time-1000);
- assert.ok(snap.replayTrack.filter(p=>p.breakBefore).length>=3,'pause and activity boundaries survive without thinned route points');
+ assert.ok(snap.replayTrack.filter(p=>p.breakBefore).length>=2,'pause and stale GPS gap survive without thinned route points');
  assert.ok(snap.track.length>500&&snap.track.length<=GPS_LIMITS.maxTrack);
  assert.equal(snap.track[0].t,startTime);
  assert.equal(snap.track.at(-1).t,time-1000);
  assert.ok(Math.abs(snap.track.at(-1).km-snap.distanceM/1000)<1e-7,'saved endpoint matches full measured distance');
  assert.ok(snap.distanceM>30000&&snap.distanceM<50000);
  const breakPoints=snap.track.filter(p=>p.breakBefore);
- assert.ok(breakPoints.length>=3,'pause, activity changes and stale GPS gap survive thinning');
- assert.ok(snap.track.some(p=>p.activity==='WALK'));
- assert.ok(snap.track.some(p=>p.activity==='JOGGING'));
+ assert.ok(breakPoints.length>=2,'pause and stale GPS gap survive thinning');
+ assert.ok(snap.track.every(p=>p.activity==='RUNNING'),'new records retain their single selected activity');
  assert.ok(snap.track.every((p,i)=>!i||(p.t>snap.track[i-1].t&&p.km>=snap.track[i-1].km)));
  const saved=prepareGpsMeasurement(snap,{saveRoute:true,date:'2026-10-27'});
  assert.equal(saved.ok,true,saved.reason);
