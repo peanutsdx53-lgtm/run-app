@@ -107,6 +107,30 @@ test('GPS ROF responses remain user reports on same GPS identity, 0 differs from
   assert.equal(prepareGpsV2Run(session(),{experience:invalid}).ok,false,JSON.stringify(invalid));
 });
 
+test('GPS road surface is optional user report, strict on new saves and compatible with historic V2 summaries',()=>{
+ const raw={source:'USER_REPORTED',rofBefore:0,rofAfter:null,beforeCapturedAt:'2026-10-31T11:40:00.000Z',afterCapturedAt:null,memo:''];
+ const original=prepareGpsV2Run(session(),{experience:raw});
+ assert.equal(original.ok,true);
+ assert.equal(Object.hasOwn(original.summary.experience,'surface'),false,'historic records have no guessed surface');
+ for(const surface of ['UNKNOWN','paved','track','treadmill','soil','trail','naturalGrass','artificialTurf','sand']){
+  const actual=prepareGpsV2Run(session(),{experience:{...raw,surface}});
+  assert.equal(actual.ok,true,actual.reason);
+  assert.equal(actual.summary.experience.surface,surface);
+  assert.equal(actual.summary.experience.source,'USER_REPORTED');
+  assert.equal(validGpsV2Summary(actual.summary),true);
+  assert.equal(actual.summary.distanceKm,original.summary.distanceKm,'subjective input must not affect GPS distance');
+  assert.deepEqual(actual.summary.finalReference,original.summary.finalReference,'subjective input must not alter scientific result');
+ }
+ for(const bad of ['MIXED','paved,trail','',null,1,{},'PAVED']){
+  const actual=prepareGpsV2Run(session(),{experience:{...raw,surface:bad}});
+  assert.equal(actual.ok,false,'reject invalid self-reported surface '+JSON.stringify(bad));
+ }
+ const forged=structuredClone(original.summary);forged.experience.surface='MIXED';
+ assert.equal(validGpsV2Summary(forged),false,'reject forged old backup surface');
+ const extra=structuredClone(original.summary);extra.experience.surface='paved';extra.experience.untrusted=true;
+ assert.equal(validGpsV2Summary(extra),false,'reject extra user-report keys');
+});
+
 test('V2 summaries refuse malformed scientific rows, energy and calendar dates (010,036)',()=>{
  const example=prepareGpsV2Run(session(),{saveDetails:true,date:'2026-10-27'});
  assert.equal(example.ok,true,example.reason);
