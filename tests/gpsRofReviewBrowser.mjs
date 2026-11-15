@@ -123,7 +123,7 @@ try{
   assert.match(await page.locator('[data-gps-rof-entry="after"]').innerText(),/7 \/ 10/);
   await page.locator('[data-gps-note]').fill('測定後に本人が記録した気づき');
   assert.equal(await page.locator('[data-gps-save-route]').isChecked(),false);
-  const saveDetails=width===414;
+  const saveDetails=width!==768; // one opt-in for each activity, one RUNNING opt-out
   if(saveDetails){
    await page.locator('[data-gps-save-route]').check();
    await page.locator('[data-gps-flag-note]').fill('保存する地点の気づき');
@@ -161,7 +161,7 @@ try{
   const fatigue=await result.locator('[data-pane="fatigue"]').innerText();
   assert.match(fatigue,/運動前/);assert.match(fatigue,/運動後/);
   assert.match(fatigue,/(^|\D)0(\D|$)/);assert.match(fatigue,/(^|\D)7(\D|$)/);
-  if(saveDetails){
+  if(width===414){
    // This is a synthetic *already-stored* legacy payload, not a newly
    // created mixed session. Restore it through the existing V2 backup path.
    const legacy=await page.evaluate(async id=>{
