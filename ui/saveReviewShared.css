@@ -1,0 +1,18 @@
+/* Shared manual/GPS pre-save scope: same visual language, distinct evidence. */
+.sv4-review{min-width:0;margin:14px 0;padding:13px 15px;border:1px solid #537f91;border-radius:14px;background:linear-gradient(145deg,#123b4b,#0c2c3c);color:#ecf9fd;box-sizing:border-box}
+.sv4-review *{box-sizing:border-box}
+.sv4-review-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px 14px;flex-wrap:wrap;margin-bottom:10px}
+.sv4-review-head h2{font-size:clamp(.91rem,2.7vw,1.05rem);line-height:1.45;color:#edffff;margin:0}
+.sv4-review-head span{font-size:.73rem;color:#b8dedf;line-height:1.5}
+.sv4-review dl{display:grid;gap:0;margin:0;border-top:1px solid #3f6b7b}
+.sv4-review dl>div{display:grid;grid-template-columns:minmax(102px,.55fr) minmax(0,1fr);gap:8px 12px;align-items:start;padding:9px 1px;border-bottom:1px solid #315869;min-width:0}
+.sv4-review dt{font-size:.77rem;line-height:1.5;color:#b9d4dd;font-weight:650;overflow-wrap:anywhere}
+.sv4-review dd{margin:0;font-size:.79rem;line-height:1.55;font-weight:750;color:#f0ffff;overflow-wrap:anywhere;min-width:0}
+.sv4-review-help{margin:9px 0 0;min-width:0;color:#c9e4e9}
+.sv4-review-help summary{cursor:pointer;min-height:44px;display:flex;align-items:center;width:fit-content;max-width:100%;color:#d0f3f2;font-size:.8rem;font-weight:650;overflow-wrap:anywhere}
+.sv4-review-help summary:focus-visible{outline:3px solid #65e5df;outline-offset:2px;border-radius:5px}
+.sv4-review-help p{margin:0 0 7px;font-size:.77rem;line-height:1.65;overflow-wrap:anywhere}
+.sv4-review .sv4-save-notice{margin:11px 0 0;border:1px solid #e2a96a;background:#51351e;border-radius:10px;padding:11px 12px;color:#ffecd0;font-size:.82rem;line-height:1.65;overflow-wrap:anywhere}
+.sv4-review .sv4-save-busy{margin:9px 0;color:#d5f9f8;font-size:.82rem;line-height:1.6}
+@media(max-width:360px){.sv4-review{padding:12px}.sv4-review dl>div{grid-template-columns:minmax(0,1fr);gap:3px;padding:8px 0}.sv4-review-head span{font-size:.7rem}}
+@media(prefers-reduced-motion:reduce){.sv4-review *{scroll-behavior:auto}}
