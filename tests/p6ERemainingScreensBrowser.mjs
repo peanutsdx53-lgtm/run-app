@@ -104,7 +104,8 @@ try{
   await go('measurement',isPhone?'[data-measurement-v2]':'.gps-platform-unavailable');
   if(isPhone){
    assert.equal(await page.locator('[data-gps-action="start"]').count(),1,'GPS start remains voluntary');
-   assert.match(await page.locator('.gps-live-disclaimer').innerText(),/未保存/);
+   assert.equal(await page.locator('.gps-live-disclaimer').count(),0);
+   assert.match(await page.locator('.gps-v35 .rl-screen-help>p').textContent(),/未保存/);
    assert.equal(await page.locator('[data-gps-keep-awake]').count(),1);
    await audit(page,width,'measurement');await image(page,'measurement',width);
    await help(page,'measurement',/誤差/);
