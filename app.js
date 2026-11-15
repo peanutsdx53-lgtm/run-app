@@ -152,7 +152,7 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261115-retire-whatif-v1';
   return true;
  }
   let gpsController=null;
-  const emptyGpsReport=()=>({rofBefore:null,rofAfter:null,beforeCapturedAt:null,afterCapturedAt:null,memo:'',saveRoute:false});
+  const emptyGpsReport=()=>({rofBefore:null,rofAfter:null,beforeCapturedAt:null,afterCapturedAt:null,surface:'UNKNOWN',memo:'',saveRoute:false});
   let gpsSelfReport=emptyGpsReport();
   let dynamicPlayback=null;
   let gpsTicker=null;
@@ -1011,6 +1011,11 @@ function recordExtras(){
       if(summary)summary.textContent=recordExperience.courseSummary(d,ui).surface;
       return;
     }
+    if(event.target.matches('[data-gps-surface]')&&currentPage()==='gps-review'&&ensureGps().state.phase==='finished'){
+      const surface=event.target.value;
+      if(surface==='UNKNOWN'||reviewDraft.surfaceKeys.includes(surface))gpsSelfReport.surface=surface;
+      return;
+    }
     if(event.target.matches('[data-gps-note]')&&currentPage()==='gps-review'&&ensureGps().state.phase==='finished'){
       gpsSelfReport.memo=event.target.value.slice(0,500);return;
     }
@@ -1077,16 +1082,6 @@ function recordExtras(){
     }
   });
   app.addEventListener("change",(event)=>{
-    if(event.target.matches('[data-gps-rof]')){
-      const phase=event.target.dataset.gpsRof,gps=ensureGps();
-      if(!((phase==='before'&&gps.state.phase==='ready'&&currentPage()==='measurement')||
-           (phase==='after'&&gps.state.phase==='finished'&&currentPage()==='gps-review')))return;
-      const v=event.target.value,score=v===''?null:Number(v);
-      if(score!==null&&(!Number.isInteger(score)||score<0||score>10))return;
-      gpsSelfReport[phase==='before'?'rofBefore':'rofAfter']=score;
-      gpsSelfReport[phase==='before'?'beforeCapturedAt':'afterCapturedAt']=score===null?null:new Date().toISOString();
-      return;
-    }
     if(event.target.matches('[data-gps-save-route]')){
       if(currentPage()==='gps-review'&&ensureGps().state.phase==='finished')gpsSelfReport.saveRoute=event.target.checked;
       return;
@@ -1613,7 +1608,7 @@ function recordExtras(){
           const saved=await gpsV2.saveGpsV2Run(gps.getSnapshot(),{saveDetails:saveRoute,date,experience:{
             source:'USER_REPORTED',rofBefore:gpsSelfReport.rofBefore,rofAfter:gpsSelfReport.rofAfter,
             beforeCapturedAt:gpsSelfReport.beforeCapturedAt,afterCapturedAt:gpsSelfReport.afterCapturedAt,
-            memo:gpsSelfReport.memo
+            surface:gpsSelfReport.surface,memo:gpsSelfReport.memo
           }});
           if(saved.ok){
             const ref={sourceType:'GPS_V2',recordId:saved.summary.id};
