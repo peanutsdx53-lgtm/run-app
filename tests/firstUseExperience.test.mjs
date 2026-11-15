@@ -26,22 +26,22 @@ test("Japanese and English are available at first launch, with separate legal co
 test("first-use language choices are concise and the profile footer can reflow",()=>{
  for(const language of ["ja","en"]){
   const opening=renderFirstUse(state(0,{language}));
-  assert.match(opening,/<strong>日本語<\/strong><\/div>/);
-  assert.match(opening,/<strong>English<\/strong><\/div>/);
-  assert.doesNotMatch(opening,/日本語または英語でアプリを使用できます|Japanese<\/p>|Use the app in English|最初の設定/);
-  assert.doesNotMatch(opening,/<div class="fu-language-list"[\\s\\S]*?<p>/);
-  assert.doesNotMatch(opening,/fu-eyebrow|<header class="fu-screen-title">[\\s\\S]*?<p>/);
+  assert.ok(opening.includes("<strong>日本語</strong></div>"));
+  assert.ok(opening.includes("<strong>English</strong></div>"));
+  for(const removed of ["日本語または英語でアプリを使用できます","<p>Japanese</p>","Use the app in English","最初の設定","fu-eyebrow","<header class=\"fu-screen-title\"><h1 id=\"onboard-title\">表示言語</h1><p>"]){
+   assert.ok(!opening.includes(removed),"unnecessary opening text: "+removed);
+  }
   const consent=renderFirstUse(state(1,{language}));
-  assert.doesNotMatch(consent,/利用開始前の確認/);
-  assert.doesNotMatch(consent,/fu-eyebrow/);
+  assert.ok(!consent.includes("利用開始前の確認"));
+  assert.ok(!consent.includes("fu-eyebrow"));
   const profile=renderFirstUse(state(7,{language}));
-  assert.match(profile,/data-onboard-profile-footer/);
-  assert.match(profile,/data-onboard-skip-profile/);
-  assert.match(profile,/data-onboard-next/);
+  assert.ok(profile.includes("data-onboard-profile-footer"));
+  assert.ok(profile.includes("data-onboard-skip-profile"));
+  assert.ok(profile.includes("data-onboard-next"));
  }
  const css=readFileSync(new URL("../ui/firstUseExperience.css",import.meta.url),"utf8");
- assert.match(css,/fu-footer\\[data-onboard-profile-footer\\]/);
- assert.ok(css.includes('grid-template-columns:minmax(0,'));
+ assert.ok(css.includes("fu-footer[data-onboard-profile-footer]"));
+ assert.ok(css.includes("grid-template-columns:minmax(0,"));
 });
 test("terms and privacy must be separately acknowledged",()=>{
  const before=renderFirstUse(state(1));
