@@ -41,7 +41,7 @@ test("first-use language choices are concise and the profile footer can reflow",
  }
  const css=readFileSync(new URL("../ui/firstUseExperience.css",import.meta.url),"utf8");
  assert.match(css,/fu-footer\\[data-onboard-profile-footer\\]/);
- assert.match(css,/grid-template-columns:minmax\\(0,/);
+ assert.ok(css.includes('grid-template-columns:minmax(0,'));
 });
 test("terms and privacy must be separately acknowledged",()=>{
  const before=renderFirstUse(state(1));
