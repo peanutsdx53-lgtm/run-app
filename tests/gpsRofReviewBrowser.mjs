@@ -168,6 +168,9 @@ try{
   assert.match(await page.locator('.gps-review-rof-before').innerText(),/0 \/ 10/);
   assert.match(await page.locator('.gps-review-provenance').innerText(),/0は回答済み、未回答は未回答のまま保存/);
   assert.match(await page.locator('.gps-review-storage-note').innerText(),/位置情報を含むコース詳細は/);
+  assert.equal(await page.locator('[data-pre-save-scope]').count(),1,'one shared review section');
+  assert.equal(await page.locator('[data-pre-save-scope]').getAttribute('data-save-source'),'gps');
+  assert.match(await page.locator('[data-route-consent-status]').innerText(),/保存しない（初期設定）/);
   const surfaceSelect=page.locator('[data-gps-surface]');
   assert.equal(await surfaceSelect.inputValue(),'UNKNOWN','surface is not inferred from GPS');
   const surfaceOptions=await surfaceSelect.locator('option').evaluateAll(nodes=>nodes.map(el=>el.value));
@@ -199,6 +202,7 @@ try{
   const saveDetails=width!==768; // one opt-in for each activity, one RUNNING opt-out
   if(saveDetails){
    await page.locator('[data-gps-save-route]').check();
+   assert.match(await page.locator('[data-route-consent-status]').innerText(),/本人が選択：位置・速度・フラッグ/);
    assert.equal(await page.locator('.gps-flag-review').getAttribute('open'),null,'flag notes start folded');
    assert.equal(await page.locator('.gps-flag-review summary strong').evaluate(el=>getComputedStyle(el).whiteSpace),'nowrap','flag summary cannot wrap mid-word');
    await page.locator('.gps-flag-review summary').click();
@@ -358,6 +362,10 @@ try{
     assert.equal(englishChoices.length,9);
     assert.ok(englishChoices.every(t=>!/[ぁ-んァ-ン一-龯]/.test(t)),'untranslated English surface labels '+JSON.stringify(englishChoices));
     assert.equal(await enPage.locator('[data-gps-surface]').inputValue(),'UNKNOWN');
+    await enPage.waitForFunction(()=>document.querySelector('[data-pre-save-scope]')?.textContent.includes('Review Before Saving'),null,{timeout:10000});
+    const sharedEnglish=await enPage.locator('[data-pre-save-scope]').innerText();
+    assert.ok(!/[ぁ-んァ-ン一-龯]/.test(sharedEnglish),'English shared review must be fully translated '+sharedEnglish);
+    assert.match(sharedEnglish,/Not Saved/);
     const enGeometry=await enPage.evaluate(()=>{
       const select=document.querySelector('[data-gps-surface]'),v=select.getBoundingClientRect();
       const buttons=[...document.querySelectorAll('.gps-review button,.gps-review a')].filter(x=>x.getClientRects().length).map(x=>{const r=x.getBoundingClientRect();return {left:r.left,right:r.right}});
