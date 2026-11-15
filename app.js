@@ -1,5 +1,5 @@
 import * as restDayStore from './ui/restDayStore.js';
-import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v1';
+import {startEnglishUi} from './ui/englishUi.js?v=20261115-retire-whatif-v1';
 (async function appMain(){
   "use strict";
   // Load independent screen modules concurrently instead of a 48-request serial waterfall.
@@ -54,7 +54,7 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
   ]=await Promise.all([
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
-    import("./ui/homeExperience.js?v=20261115-focus-ui-v1"),
+    import("./ui/homeExperience.js?v=20261115-retire-whatif-v1"),
     import("./ui/rofJScale.js"),
     import("./ui/rofExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/recordDraftReview.js"),
