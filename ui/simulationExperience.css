@@ -275,3 +275,12 @@
  .sm-page .sm-heading h1{font-size:18px}
  .sm-page .sm-panel{padding:12px}
 }
+
+/* U-20261115-04: align the back-arrow path inside its 24px SVG viewBox. */
+.sm-back{line-height:1;align-items:center;justify-items:center}
+.sm-back svg{display:block;width:24px;height:24px;flex:none}
+
+/* Scientific qualifications are available in an optional scrollable help panel. */
+.sm-heading .rl-screen-help>p{max-height:min(62dvh,540px);overflow-y:auto;overscroll-behavior:contain}
+.sm-heading .rl-screen-help>p span{display:block}
+.sm-heading .rl-screen-help>p span+span{margin-top:10px}

@@ -56,7 +56,7 @@ test('obsolete query revisions are not retained solely for historical compatibil
 
 test('offline entry points and dynamic Shadow DOM stylesheet are preserved',()=>{
  for(const url of [
-  './app.js?v=20261115-home-copy-v1',
+  './app.js?v=20261115-focus-ui-v1',
   './ui/annotationEditor.css?v=20261111-posthoc-design-v2',
   './ui/historyInlineStyles.js?v=20261110-p14-visual-v3',
   './ui/englishUi.js?v=20261111-exploration-inquiry-v1',

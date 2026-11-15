@@ -23,7 +23,7 @@ test('UIUX06 S18: GPS review distinguishes valid ROF-J zero from absent after re
 test('UIUX06 S19: four simulation steps and hypothetical results remain explicit, focus wiring retains source',()=>{
  const s=newSimulationUi(),output=renderSimulation(s,{presets:{ok:true,records:[]},manualRuns:{ok:true,records:[]}});
  assert.equal((output.match(/<span>0[1-4] /g)||[]).length,4);
- assert.match(output,/保存済みの実記録とは異なる、仮の計算結果です/);
+ assert.match(output,/算術上の結果/);
  assert.match(renderSimulationResults(s),/身体負荷を予測しません/);
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  assert.match(app,/source=active\?\.getAttribute\?\.\("data-sm-source"\)/);
@@ -46,6 +46,6 @@ test('UIUX06 S20: exported PNG does not falsely assert timestamp absence',()=>{
  const appEntry=html.match(/src="(\.\/app\.js\?v=[^"]+)"/)?.[1];
  assert.ok(appEntry,'entrypoint must use a versioned app.js URL');
  assert.ok(sw.includes('"'+appEntry+'"'),'offline assets must match the current app.js entrypoint');
- assert.match(html,/simulationExperience\.css\?v=20261109-p6e-crossscreen-v1/);
- assert.match(sw,/simulationExperience\.css\?v=20261109-p6e-crossscreen-v1/);
+ assert.match(html,/simulationExperience\.css\?v=20261115-focus-ui-v1/);
+ assert.match(sw,/simulationExperience\.css\?v=20261115-focus-ui-v1/);
 });

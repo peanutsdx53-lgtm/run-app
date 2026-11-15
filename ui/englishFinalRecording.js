@@ -26,7 +26,7 @@ export const ENGLISH_FINAL_RECORDING=Object.freeze({
  "選択中の保存コース": "Selected Saved Course",
  "保存コースを更新": "Update Saved Course",
  "別名で保存": "Save With a New Name",
- "コース・走行条件": "Course and Running Conditions",
+ "コース・走行条件": "Course & Conditions",
  "コース名・坂道・路面を確認します。不明な条件は「不明」を選べます。「この条件を記録に使う」は今回の入力に反映し、保存コースは次回も再利用できます。保存コースの編集・削除は過去の記録を変更しません。": "Review the course name, gradients and surface. You may leave conditions unknown. Applying conditions changes only the current draft, and saved courses can be reused later. Editing or deleting a saved course does not change past activity records.",
  "コースを選ぶ": "Choose Course",
  "保存済み・新規作成": "Saved or New Course",

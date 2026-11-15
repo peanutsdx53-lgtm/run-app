@@ -317,7 +317,7 @@ export function achievementPanel(savedRuns={ok:true,records:[]}){
  '<div class="hx-ach-milestone-symbol" aria-hidden="true">'+(r.achieved[i]?'★':'◇')+'</div>'+
  '<strong class="hx-ach-milestone-label">'+shortLabels[i]+'</strong>'+
  '<small class="hx-ach-milestone-status">'+(r.achieved[i]?'達成':'未達成')+'</small></div>').join('')+'</div>'+
- '<p class="hx-ach-limit">この端末に保存した手入力の走行記録だけが対象です。GPSの未保存データや入力途中の内容は含みません。</p>'+
- '<p class="hx-ach-limit">節目は記録を振り返るための表示であり、健康状態・走力の判定や達成の推奨ではありません。</p>';
- return '<div class="hx-overlay" data-home-overlay><section class="hx-dialog hx-ach-dialog" role="dialog" aria-modal="true" aria-labelledby="hx-ach-label"><header class="hx-dialog-head"><h2 id="hx-ach-label">実績</h2><button type="button" class="hx-dialog-close" data-home-close aria-label="実績詳細を閉じる">×</button></header><div class="hx-dialog-scroll">'+body+'</div></section></div>';
+ ''+
+ '';
+ return '<div class="hx-overlay" data-home-overlay><section class="hx-dialog hx-ach-dialog" role="dialog" aria-modal="true" aria-labelledby="hx-ach-label"><header class="hx-dialog-head"><h2 id="hx-ach-label">実績</h2><details class="rl-screen-help hx-ach-help"><summary aria-label="実績の対象と節目について">？</summary><p><span>この端末に保存した手入力の走行記録だけが対象です。GPSの未保存データや入力途中の内容は含みません。</span><span>節目は記録を振り返るための表示であり、健康状態・走力の判定や達成の推奨ではありません。</span></p></details><button type="button" class="hx-dialog-close" data-home-close aria-label="実績詳細を閉じる">×</button></header><div class="hx-dialog-scroll">'+body+'</div></section></div>';
 }
