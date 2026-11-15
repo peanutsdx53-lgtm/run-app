@@ -718,7 +718,8 @@
 .record-v3.rv-aux .record-course-section>strong{color:#b9ecef}
 .record-v3.rv-aux .record-extra-section>summary:focus-visible{outline:3px solid #86f7eb;outline-offset:2px}
 
-/* U-20261115-03: keep long English choice labels inside the buttons at phone widths. */
+/* U-20261115-03: long English choices wrap within their buttons on both PC and phones. */
+html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{white-space:normal;overflow-wrap:anywhere;line-height:1.24;min-height:54px;padding:7px 3px}
 @media(max-width:650px){
- html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{white-space:normal;overflow-wrap:break-word;line-height:1.24;min-height:54px;font-size:.69rem;padding:7px 3px}
+ html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{font-size:.69rem}
 }
