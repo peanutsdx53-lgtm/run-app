@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {measurementPage,gpsReviewPage,activityDescription} from '../ui/measurementExperience.js';
+import {measurementPage,gpsReviewPage,activityDescription,gpsMeasurementStatus,gpsGoalProgress,gpsPositionIndicator} from '../ui/measurementExperience.js';
 import {createGpsSession,GPS_ACTIVITY,snapshotPosition,checkGpsPoint,formatGpsClock,gpsPace} from '../ui/gpsMeasurementCore.js';
 import {prepareGpsMeasurement,isValidGpsMeasurement} from '../ui/gpsMeasurementValidation.js';
 import {prepareGpsV2Run,gpsV2DetailToFeature} from '../ui/gpsReplayIndexedDbStore.js';
@@ -138,4 +138,42 @@ test('synthetic or legacy mixed activity may not be prepared as a new GPS record
   const ok={...finished,activity,track:finished.track.map(p=>({...p,activity}))};
   assert.equal(prepareGpsV2Run(ok,{saveDetails:false}).ok,true,activity);
  }
+});
+
+test('Stage 2: native finish modal requires separate confirm; controls precede map',()=>{
+ const h=harness();h.gps.start();const html=measurementPage(h.gps.state,1000);
+ assert.match(html,/data-gps-finish-dialog/);
+ assert.match(html,/aria-labelledby="gps-finish-title"/);
+ assert.match(html,/data-gps-action="finish-confirm"/);
+ assert.match(html,/data-gps-action="finish-cancel"/);
+ assert.match(html,/role="group" aria-label="測定中の操作"/);
+ assert.ok(html.indexOf('data-gps-action="pause"')<html.indexOf('data-gps-map'),'controls precede the map');
+ assert.equal((html.match(/data-gps-action="finish"/g)||[]).length,1);
+ const paused=measurementPage({...h.gps.state,phase:'paused'},1000);
+ assert.match(paused,/data-gps-action="resume"/);
+ assert.doesNotMatch(paused,/data-gps-action="flag"/);
+});
+test('Stage 2: GPS-ready timer, received GPS and failure remain distinguishable',()=>{
+ const s={...harness().gps.state,phase:'running',goalMode:'time',goalValue:'10'};
+ assert.equal(gpsMeasurementStatus(s),'位置取得待ち・計測中');
+ assert.match(gpsGoalProgress(s,30000),/残り 00:09:30/);
+ assert.match(measurementPage(s,30000),/data-gps-goal/);
+ assert.doesNotMatch(measurementPage(s,30000),/gps-live-disclaimer/);
+ s.lastPosition={lat:37.5,lon:139.9,accuracyM:8};
+ assert.equal(gpsMeasurementStatus(s),'GPS受信中・計測中');
+ s.positionError='GPSを受信できません';
+ assert.equal(gpsMeasurementStatus(s),'測位を確認してください');
+ s.positionError='';s.goalReached=true;
+ assert.match(gpsGoalProgress(s,600000),/自動で終了しません/);
+ s.goalReached=false;s.goalMode='distance';s.goalValue='1';s.distanceM=250;
+ assert.match(gpsGoalProgress(s,60000),/残り 0.75 km/);
+});
+
+test('Stage 2 location indicator distinguishes waiting, error and valid fixes',()=>{
+ const s={phase:'running',lastPosition:null,positionError:''};
+ assert.equal(gpsPositionIndicator(s),'gps-v2-dot--waiting');
+ s.positionError='Position unavailable';assert.equal(gpsPositionIndicator(s),'gps-v2-dot--error');
+ s.positionError='';s.lastPosition={lat:37.5,lon:139.9,accuracyM:8};
+ assert.equal(gpsPositionIndicator(s),'');
+ s.phase='paused';assert.equal(gpsPositionIndicator(s),'gps-v2-dot--pause');
 });

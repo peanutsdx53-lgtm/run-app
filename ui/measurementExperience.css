@@ -406,3 +406,64 @@
  .gps-v2-header .gps-v2-back{width:44px;height:44px;flex-basis:44px}
 }
 @media(max-width:355px){.gps-v2-header{gap:7px}.gps-v2-header h1{font-size:18px}}
+
+/* GPS Stage 2 — visible, protected operation controls.
+ * While measuring, navigation is hidden: the fixed bar therefore never
+ * competes with the five-tab app navigation. Preserve map scrolling by padding. */
+.gps-v35 .gps-live-goal{
+ display:block;margin:10px 0 2px;padding:9px 12px;border-radius:10px;
+ background:#0b3143;border:1px solid #427e91;color:#d6f5f5;
+ font-size:.81rem;font-weight:700;line-height:1.5
+}
+.gps-v35 [data-gps-notice][hidden],.gps-v35 [data-gps-map-flags][hidden]{display:none!important}
+.gps-v35 .gps-action-finish{border-color:#eab29b;background:#583638;color:#fff2eb}
+.gps-v35 .gps-live-actions--measuring{
+ position:fixed;z-index:95;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));
+ width:calc(100% - 24px);max-width:540px;margin:0 auto;padding:10px;
+ grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;
+ background:#092738f5;border:1px solid #528b9d;border-radius:17px;
+ box-shadow:0 8px 28px #0009;backdrop-filter:blur(12px)
+}
+.gps-v35 .gps-live-actions--measuring.gps-live-actions--paused{grid-template-columns:repeat(2,minmax(0,1fr))}
+.gps-v35 .gps-live-actions--measuring .gps-v2-button{
+ min-height:54px;min-width:0;font-size:clamp(.73rem,2.7vw,.96rem);
+ line-height:1.25;padding:7px 3px;white-space:normal;overflow-wrap:anywhere
+}
+.gps-v35[data-phase="running"] .gps-live-measure,
+.gps-v35[data-phase="paused"] .gps-live-measure{padding-bottom:140px}
+.gps-finish-dialog{
+ position:fixed;inset:0;margin:auto;width:calc(100% - 32px);max-width:440px;
+ max-height:calc(100dvh - 32px);overflow-y:auto;
+ padding:22px 19px;border-radius:21px;
+ background:linear-gradient(140deg,#173c4d,#092734);border:1px solid #83b7c3;
+ box-shadow:0 18px 65px #000c;color:#f4fcff;
+}
+.gps-finish-dialog:not([open]){display:none}
+.gps-finish-dialog::backdrop{background:rgba(1,14,22,.84)}
+.gps-finish-dialog h2{font-size:1.2rem;line-height:1.45;margin:0 0 12px;color:#fff}
+.gps-finish-dialog p{font-size:.84rem;line-height:1.7;color:#cce1e9;margin:0 0 18px}
+.gps-finish-dialog-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.gps-finish-dialog-actions .gps-v2-button{
+ min-width:0;min-height:54px;padding:9px 5px;font-size:.87rem;
+ white-space:normal;overflow-wrap:anywhere
+}
+.gps-finish-dialog .gps-v2-button:focus-visible{outline:3px solid #a5f9ed;outline-offset:2px}
+@media(max-width:800px){
+ /* The ready-screen CTA stays above the fixed, variable-height app navigation. */
+ .gps-v35[data-phase="ready"] .gps-live-prep{padding-bottom:85px}
+ .gps-v35[data-phase="ready"] .gps-live-prep > [data-gps-action="start"]{
+  position:fixed;z-index:48;left:12px;right:12px;
+  bottom:calc(105px + env(safe-area-inset-bottom,0px));
+  width:calc(100% - 24px);max-width:540px;margin:0 auto;
+  min-height:57px;box-shadow:0 8px 28px #061b2fb3;
+ }
+ .gps-v35 .gps-live-actions--measuring{padding:8px;gap:6px}
+}
+@media(max-width:350px){
+ .gps-v35 .gps-live-actions--measuring .gps-v2-button{font-size:.75rem;letter-spacing:-.01em}
+ .gps-finish-dialog-actions{grid-template-columns:minmax(0,1fr)}
+}
+
+/* An active timer alone does not establish GPS reception. */
+.gps-v35 .gps-v2-dot--waiting{background:#efcf89;box-shadow:0 0 0 4px #efcf8933}
+.gps-v35 .gps-v2-dot--error{background:#ff9f92;box-shadow:0 0 0 4px #ff9f9238}

@@ -65,6 +65,15 @@ try{
   assert.equal(await page.locator('.gps-live-steps span').count(),3);
   assert.equal(await page.locator('.gps-live-steps .is-current').count(),1);
   await safe('ready');await shot('01-ready');
+  const readyRect=await page.evaluate(()=>{
+   const b=document.querySelector('[data-gps-action="start"]').getBoundingClientRect();
+   const n=document.querySelector('.mobile-nav').getBoundingClientRect();
+   return {top:b.top,bottom:b.bottom,left:b.left,right:b.right,navTop:n.top,h:innerHeight,w:innerWidth};
+  });
+  assert.ok(readyRect.top>=0&&readyRect.bottom<readyRect.navTop-8,
+   'ready CTA must clear fixed navigation '+JSON.stringify(readyRect));
+  assert.ok(readyRect.left>=0&&readyRect.right<=readyRect.w+1);
+  await shot('stage2-ready-cta');
   const available=await page.locator('[data-gps-activity] option').evaluateAll(options=>options.map(o=>o.value));
   assert.deepEqual(available,['WALK','JOGGING','RUNNING'],'no new mixed activity option');
   for(const value of available){
@@ -93,6 +102,40 @@ try{
   await page.locator('[data-gps-consent-confirm]').click();
   await page.locator('[data-phase="running"]').waitFor();
   assert.equal(await page.locator('.mobile-nav').isVisible(),false,'active GPS must hide bottom navigation');
+  const bar=page.locator('.gps-live-actions--measuring');
+  assert.equal(await bar.locator('button').count(),3,'flag/pause/finish controls present');
+  const checkBar=async()=>{
+   const m=await bar.evaluate(el=>{
+    const r=el.getBoundingClientRect();
+    return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,w:innerWidth,h:innerHeight,
+     buttons:[...el.querySelectorAll('button')].map(b=>{const v=b.getBoundingClientRect();return {left:v.left,right:v.right,height:v.height}})};
+   });
+   assert.ok(m.left>=0&&m.right<=m.w+1&&m.top>=0&&m.bottom<m.h,'GPS controls fit viewport '+JSON.stringify(m));
+   assert.ok(m.buttons.every(x=>x.left>=0&&x.right<=m.w+1&&x.height>=44),'control hit areas '+JSON.stringify(m));
+  };
+  await checkBar();
+  await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));
+  await checkBar();await shot('stage2-controls-scrolled');
+  await page.evaluate(()=>scrollTo(0,0));
+  assert.match(await page.locator('[data-gps-status]').innerText(),/位置取得待ち・計測中/);
+  assert.equal(await page.locator('[data-gps-accuracy]').isVisible(),false,'do not repeat GPS waiting text as accuracy');
+  assert.equal(await page.locator('[data-gps-notice]').isVisible(),false,'hide redundant help when healthy');
+  await page.locator('[data-gps-action="pause"]').click();
+  await page.locator('[data-phase="paused"]').waitFor();
+  assert.equal(await page.locator('.mobile-nav').isVisible(),false,'paused GPS keeps navigation hidden');
+  assert.equal(await page.locator('.gps-live-actions--measuring button').count(),2,'paused bar has resume/end only');
+  await checkBar();await shot('stage2-paused-actions');
+  await page.locator('[data-gps-action="finish"]').click();
+  const pausedDialog=page.locator('[data-gps-finish-dialog]');
+  await pausedDialog.waitFor({state:'visible'});
+  await page.locator('[data-gps-action="finish-cancel"]').click();
+  assert.equal(await page.locator('[data-phase="paused"]').count(),1,'cancel from pause must retain paused state');
+  await page.locator('[data-gps-action="resume"]').click();
+  await page.locator('[data-gps-consent-confirm]').waitFor();
+  await shot('stage2-resume-requires-consent');
+  await page.locator('[data-gps-consent-confirm]').click();
+  await page.locator('[data-phase="running"]').waitFor();
+  assert.equal(await page.locator('.gps-live-actions--measuring button').count(),3,'resumed controls restored');
   await safe('running');await shot('02-measuring');
   assert.equal(await page.locator('[data-gps-segment]').count(),0,'retired mixed-activity segment switch is absent');
   assert.equal(await page.locator('[data-gps-activity]').count(),0,'activity cannot change mid-measurement');
@@ -100,9 +143,26 @@ try{
   await page.evaluate(ts=>window.__sampleGps(37.5,ts),t);
   await page.evaluate(ts=>window.__sampleGps(37.50025,ts),t+5000);
   await page.locator('[data-gps-action="flag"]').click();
+  assert.match(await page.locator('[data-gps-status]').innerText(),/GPS受信中・計測中/);
+  assert.match(await page.locator('[data-gps-accuracy]').innerText(),/受信精度/,'show accuracy after an accepted fix');
   assert.match(await page.locator('[data-gps-map-flags]').innerText(),/1件/,'flags remain available');
   await page.waitForTimeout(1250);
   await page.locator('[data-gps-action="finish"]').click();
+  const dialog=page.locator('[data-gps-finish-dialog]');
+  await dialog.waitFor({state:'visible'});
+  assert.equal(await dialog.getAttribute('aria-labelledby'),'gps-finish-title');
+  assert.equal(await page.locator('[data-phase="running"]').count(),1,'finish first tap cannot stop GPS');
+  await shot('stage2-finish-confirm');
+  await page.keyboard.press('Escape');
+  assert.equal(await dialog.isVisible(),false,'Escape dismisses native dialog');
+  assert.equal(await page.locator('[data-phase="running"]').count(),1,'Escape keeps GPS active');
+  await page.locator('[data-gps-action="finish"]').click();
+  await dialog.waitFor({state:'visible'});
+  await page.locator('[data-gps-action="finish-cancel"]').click();
+  assert.equal(await page.locator('[data-phase="running"]').count(),1,'Cancel keeps measurement active');
+  await page.locator('[data-gps-action="finish"]').click();
+  await dialog.waitFor({state:'visible'});
+  await page.locator('[data-gps-action="finish-confirm"]').click();
   await page.locator('[data-gps-review]').waitFor();
   assert.ok(page.url().includes('#/gps-review'),'finished GPS review');
   assert.match(await page.locator('.gps-review-rof-before').innerText(),/0 \/ 10/);
@@ -215,6 +275,15 @@ try{
   await enContext.addInitScript(()=>{
    localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:'en'}));
    localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({language:'en',textSize:'standard',motion:'system'}));
+   const locations=new Map();
+   Object.defineProperty(navigator,'geolocation',{configurable:true,value:{
+    watchPosition:(ok,err)=>{const id=locations.size+1;locations.set(id,{ok,err});return id;},
+    clearWatch:id=>locations.delete(id)
+   }});
+   window.__gpsStage2Error=code=>{for(const watcher of locations.values())watcher.err({code})};
+   window.__gpsStage2Fix=(latitude,t)=>{for(const watcher of locations.values())watcher.ok({
+    timestamp:t,coords:{latitude,longitude:139.9,accuracy:8,altitude:null,altitudeAccuracy:null}
+   })};
   });
   const enPage=await enContext.newPage(),errors=[];
   enPage.on('pageerror',e=>errors.push(e.message));
@@ -229,6 +298,35 @@ try{
    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage1-en-prep-'+mode.value.toLowerCase()+'.png'),
     fullPage:true,animations:'disabled'});
   }
+
+   if(width===320||width===390){
+    await enPage.locator('[data-gps-activity]').selectOption('JOGGING');
+    await enPage.locator('[data-gps-goal-mode]').selectOption('time');
+    await enPage.locator('[data-gps-goal-value]').fill('8');
+    await enPage.locator('[data-gps-action="start"]').click();
+    await enPage.locator('[data-gps-consent-confirm]').waitFor();
+    await enPage.locator('[data-gps-consent-confirm]').click();
+    await enPage.locator('[data-phase="running"]').waitFor();
+    await enPage.waitForFunction(()=>document.querySelector('[data-gps-status]')?.textContent.includes('Measuring'),null,{timeout:10000});
+    assert.match(await enPage.locator('.gps-live-steps').innerText(),/Prepare/,'first step translated');
+    await enPage.waitForFunction(()=>document.querySelector('[data-gps-goal]')?.textContent.includes('Goal'),null,{timeout:10000});
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-running.png'),fullPage:true});
+    await enPage.evaluate(()=>window.__gpsStage2Error(2));
+    await enPage.locator('[data-gps-notice]').waitFor({state:'visible'});
+    assert.equal(await enPage.locator('.gps-live-status .gps-v2-dot--error').count(),1,'error has non-green status indicator');
+    await enPage.waitForFunction(()=>document.querySelector('[data-gps-notice]')?.textContent.includes('GPS signal unavailable'),null,{timeout:10000});
+    assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'GPS error does not stop timer');
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-location-error.png'),fullPage:true});
+    await enPage.evaluate(()=>window.__gpsStage2Fix(37.5,Date.now()));
+    await enPage.waitForFunction(()=>document.querySelector('.gps-live-status .gps-v2-dot:not(.gps-v2-dot--error):not(.gps-v2-dot--waiting)')&&document.querySelector('[data-gps-accuracy]')?.textContent.includes('GPS accuracy'),
+      null,{timeout:10000});
+    await enPage.locator('[data-gps-action="finish"]').click();
+    await enPage.locator('[data-gps-finish-dialog]').waitFor({state:'visible'});
+    await enPage.waitForFunction(()=>document.querySelector('#gps-finish-title')?.textContent.includes('End This Measurement'),null,{timeout:10000});
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-finish-confirm.png'),fullPage:true});
+    await enPage.locator('[data-gps-action="finish-cancel"]').click();
+    assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'English cancel preserves active session');
+   }
   assert.deepEqual(errors,[],'no English GPS browser errors');
   await enContext.close();
  }

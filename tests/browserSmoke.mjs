@@ -1371,6 +1371,7 @@ try{
   if(mode.name==='desktop')await page.waitForFunction(()=>window.__gpsWakeRequests===3,null,{timeout:8000});
   await page.waitForTimeout(300);
   await page.locator('[data-gps-action="finish"]').click();
+    await page.locator('[data-gps-action="finish-confirm"]').click();
   if(mode.name==='desktop')await page.waitForFunction(()=>window.__gpsWakeReleases===3,null,{timeout:8000});
   await page.locator('[data-gps-review]').waitFor();
   assert.match(await page.locator('.gps-review-facts').innerText(),/GPSで取得した記録/);
@@ -1435,6 +1436,7 @@ try{
     assert.ok(await page.locator('[data-gps-map-overlay] .gps-map-track-line path').count()>0,'offline map still draws recorded track');
     assert.equal(await page.locator('[data-gps-route]').count(),0,'redundant route preview is removed');
     await page.locator('[data-gps-action="finish"]').click();
+    await page.locator('[data-gps-action="finish-confirm"]').click();
     await page.locator('[data-gps-review]').waitFor();
     assert.match(new URL(page.url()).hash,/gps-review/,'GPS stop leads to review before saving');
     await page.locator('.gps-review .gps-v2-button[href="#/measurement"]').click();
@@ -1445,6 +1447,7 @@ try{
     await page.locator('[data-gps-action="start"]').click();
     await page.locator('[data-gps-consent-confirm]').click();
     await page.locator('[data-gps-action="finish"]').click();
+    await page.locator('[data-gps-action="finish-confirm"]').click();
     // Below 10m the finished measurement screen must reject review outright.
     await page.locator('.gps-finish-unavailable').waitFor({state:'visible'});
     assert.match(await page.locator('.gps-finish-unavailable').innerText(),/保存できません/);

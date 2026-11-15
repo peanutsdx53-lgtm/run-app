@@ -68,9 +68,9 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261115-retire-whatif-v1';
     import("./ui/environmentExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/bodyContextExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
-    import("./ui/measurementExperience.js?v=20261116-gps3-stage1-v1"),
-    import("./ui/gpsMeasurementCore.js?v=20261116-gps3-stage1-v1"),
-    import("./ui/gpsReplayIndexedDbStore.js?v=20261116-gps3-stage1-v1"),
+    import("./ui/measurementExperience.js?v=20261116-gps-stage2-controls-v1"),
+    import("./ui/gpsMeasurementCore.js?v=20261116-gps-stage2-controls-v1"),
+    import("./ui/gpsReplayIndexedDbStore.js?v=20261116-gps-stage2-controls-v1"),
     import("./ui/gpsDynamicResult.js?v=20261028-back-symmetry-v2"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
     import("./ui/resultExperience.js?v=20261110-public-copy-v1"),
@@ -1580,6 +1580,21 @@ function recordExtras(){
         if(gps.state.phase==='paused'){gpsConsentAction='resume';render();app.querySelector('[data-gps-consent-confirm]')?.focus();return;}
       }
       else if(action==='finish'){
+        // Native modal keeps background controls unfocusable and allows Escape.
+        // The timer/watcher are unaffected until the person confirms the end.
+        if(['running','paused'].includes(gps.state.phase)){
+          const dialog=app.querySelector('[data-gps-finish-dialog]');
+          if(dialog&&!dialog.open){dialog.showModal();dialog.querySelector('[data-gps-action="finish-cancel"]')?.focus();}
+        }
+        return;
+      }else if(action==='finish-cancel'){
+        app.querySelector('[data-gps-finish-dialog]')?.close();
+        app.querySelector('[data-gps-action="finish"]')?.focus();
+        return;
+      }else if(action==='finish-confirm'){
+        const dialog=app.querySelector('[data-gps-finish-dialog]');
+        if(!dialog?.open||!['running','paused'].includes(gps.state.phase))return;
+        dialog.close();
         if(gps.finish()){
           releaseGpsWakeLock();
           if(gps.state.distanceM>=10&&gps.state.accepted>=2){location.hash='#/gps-review';return;}

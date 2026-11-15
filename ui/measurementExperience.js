@@ -12,6 +12,30 @@ function format(s,elapsedMs){const energy=gpsEnergyDisplay({...s,elapsedMs});ret
 const canSave=s=>s.distanceM>=10&&s.accepted>=2;
 const flagCards=s=>`<details class="gps-flag-review" open><summary>⚑ フラッグのメモ <span>${s.flags.length}地点・任意</span></summary><div class="gps-flag-review-body"><p>地点の出来事を記録できます。メモと位置は「コースと動的結果用データを保存する」を選んだ場合だけ保存されます。</p>${s.flags.map((f,i)=>`<label class="gps-flag-note-card"><span class="gps-flag-note-heading"><b>⚑ ${i+1}</b><strong>${f.km.toFixed(2)} km の地点</strong></span><span class="gps-flag-note-label">この地点のメモ <small>省略可</small></span><textarea data-gps-flag-note="${esc(f.id)}" maxlength="240" rows="2" placeholder="例：上り坂に入った、足が重く感じた">${esc(f.note)}</textarea></label>`).join('')}</div></details>`;
 const reportedScore=score=>Number.isInteger(score)&&score>=0&&score<=10?score+' / 10':'未回答';
+// Time counts active session time even before the first accepted GPS position.
+// State text deliberately distinguishes a running timer from received GPS points.
+export function gpsMeasurementStatus(s){
+ if(s.phase==='running')return s.positionError?'測位を確認してください':s.lastPosition?'GPS受信中・計測中':'位置取得待ち・計測中';
+ if(s.phase==='paused')return '一時停止中';
+ if(s.phase==='finished')return '計測終了';
+ return '開始前';
+}
+export function gpsPositionIndicator(s){
+ if(s.phase!=='running')return 'gps-v2-dot--pause';
+ if(s.positionError)return 'gps-v2-dot--error';
+ return s.lastPosition?'':'gps-v2-dot--waiting';
+}
+export function gpsGoalProgress(s,elapsedMs=0){
+ if(s.goalMode==='free')return '';
+ const value=Number(s.goalValue);
+ if(!(value>0&&Number.isFinite(value)))return '';
+ const unit=s.goalMode==='distance'?'km':'分';
+ const remaining=s.goalMode==='distance'
+  ?Math.max(0,value-(s.distanceM||0)/1000).toFixed(2)+' km'
+  :formatGpsClock(Math.max(0,value*60000-elapsedMs));
+ return s.goalReached?'目標に到達しました。測定は自動で終了しません。'
+  :'目標 '+value+' '+unit+' ／ 残り '+remaining;
+}
 export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml=''){
  if(s.phase!=='finished')return '<section class="gps-v2 gps-review" data-gps-review><h1>GPS記録内容の確認</h1><p role="alert">終了したGPS測定がありません。未保存の記録は再読込後に復元できません。</p><a href="#/measurement">GPS測定へ戻る</a></section>';
  const data=format(s,elapsedMs);
@@ -35,30 +59,38 @@ export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml=''){
 export function measurementPage(s,elapsedMs=0,experience={}){
  const ready=s.phase==='ready',active=s.phase==='running',paused=s.phase==='paused',finished=s.phase==='finished',working=active||paused;
  const data=format(s,elapsedMs);
- const status=ready?'開始前':active?(s.positionError?'測位を確認してください':'GPS計測中'):paused?'一時停止中':'計測終了';
+ const status=gpsMeasurementStatus(s);
+ const goal=gpsGoalProgress(s,elapsedMs);
+ const actions=working?`<div class="gps-live-actions gps-live-actions--measuring ${active?'':'gps-live-actions--paused'}" role="group" aria-label="測定中の操作">${active?`<button data-gps-action="flag" class="gps-v2-button gps-v2-secondary gps-action-flag" type="button">⚑ フラッグ <span data-gps-flag-count>${s.flags.length?`(${s.flags.length})`:''}</span></button>`:''}<button data-gps-action="${active?'pause':'resume'}" class="gps-v2-button gps-v2-primary gps-action-pause" type="button">${active?'一時停止':'測定を再開'}</button><button data-gps-action="finish" class="gps-v2-button gps-action-finish" type="button">測定を終了</button></div>`:'';
+
  const target=s.goalMode==='time'?`${esc(s.goalValue||'—')}分`:s.goalMode==='distance'?`${esc(s.goalValue||'—')}km`:'目標なし';
  return `<div class="gps-v2 gps-v35" data-measurement-v2 data-gps-live-page data-phase="${s.phase}">
-  <header class="gps-v2-header"><a class="gps-v2-back" href="#/record-start" aria-label="記録方法へ戻る">‹</a><div><h1>GPSで走行を記録</h1></div><details class="rl-screen-help"><summary aria-label="GPS測定の使い方">？</summary><p>測定開始時に位置情報の許可を確認します。未保存の測定はアプリ終了・再読み込みで失われます。測位には誤差があり、軌跡は本人が選んだ場合だけ端末に保存します。</p></details></header>
+  <header class="gps-v2-header"><a class="gps-v2-back" href="#/record-start" aria-label="記録方法へ戻る">‹</a><div><h1>GPSで走行を記録</h1></div><details class="rl-screen-help"><summary aria-label="GPS測定の使い方">？</summary><p>測定開始時に位置情報の許可を確認します。未保存の測定はアプリ終了・再読み込みで失われます。測定中に別画面へ移動すると一時停止します。測位には誤差があり、軌跡は本人が選んだ場合だけ端末に保存します。</p></details></header>
   <div class="gps-live-steps" aria-label="操作順序"><span class="${ready?'is-current':''}" ${ready?'aria-current="step"':''}><b>01</b> 準備</span><span class="${working?'is-current':''}" ${working?'aria-current="step"':''}><b>02</b> 測定</span><span class="${finished?'is-current':''}" ${finished?'aria-current="step"':''}><b>03</b> 保存</span></div>
   ${ready?`<section class="gps-v35-panel gps-live-prep"><div class="gps-live-section-head"><b>01</b><div><h2>今回の活動</h2></div></div>
    <div class="gps-activity-surface"><label for="gps-activity"><span class="gps-activity-icon">${gpsIcon}</span><span><small>運動の形式</small><select id="gps-activity" data-gps-activity>${opt(Object.entries(GPS_ACTIVITY),s.activity)}</select></span><span class="gps-activity-arrow" aria-hidden="true">⌄</span></label></div>
    <div class="gps-live-prep-grid"><label>測定の目標<select data-gps-goal-mode>${opt([['free','自由に測る'],['time','時間を決めて測る'],['distance','距離を決めて測る']],s.goalMode||'free')}</select></label><label ${s.goalMode==='free'?'hidden':''}>${s.goalMode==='time'?'目標時間（分）':'目標距離（km）'}<span class="gps-goal-input"><input type="number" data-gps-goal-value inputmode="decimal" step="0.1" min="0.1" max="1000" value="${esc(s.goalValue||'')}"><small>${s.goalMode==='time'?'分':'km'}</small></span></label></div>
    <a href="#/gps-rof" class="gps-rof-link" data-gps-rof-entry="before"><span><strong>運動前の疲労感<b class="gps-rof-term">（ROF-J）</b></strong><small>任意・イラストで選択</small></span><output>${reportedScore(experience.rofBefore)}</output><span aria-hidden="true">›</span></a>
-   <p class="gps-live-disclaimer">未保存の計測はアプリ終了・再読み込みで失われます。測定開始時に位置情報の利用を確認します。</p><label class="gps-live-checkbox gps-screen-awake-pref"><input type="checkbox" data-gps-keep-awake ${s.keepScreenAwake?'checked':''}><span><b>測定中は画面を点灯したままにする（任意）</b><small>初期OFF・対応端末のみ</small></span></label>
+   <label class="gps-live-checkbox gps-screen-awake-pref"><input type="checkbox" data-gps-keep-awake ${s.keepScreenAwake?'checked':''}><span><b>測定中は画面を点灯したままにする（任意）</b><small>初期OFF・対応端末のみ</small></span></label>
    <button class="gps-v2-button gps-v2-primary" type="button" data-gps-action="start">位置情報を許可して測定開始</button></section>`:''}
   <section class="gps-v35-panel gps-live-measure"><div class="gps-live-section-head"><b>02</b><div><h2>走行の記録</h2></div></div>
-   <div class="gps-live-status" role="status"><i class="gps-v2-dot ${active?'': 'gps-v2-dot--pause'}"></i><strong data-gps-status>${status}</strong><span data-gps-accuracy>${s.lastPosition?`受信精度 ±${Math.round(s.lastPosition.accuracyM)}m`:target}</span></div>
+   <div class="gps-live-status" role="status"><i class="gps-v2-dot ${gpsPositionIndicator(s)}"></i><strong data-gps-status>${status}</strong><span data-gps-accuracy ${active&&s.lastPosition&&!s.positionError?'':'hidden'}>${active&&s.lastPosition&&!s.positionError?`受信精度 ±${Math.round(s.lastPosition.accuracyM)}m`:''}</span></div>
+   ${working&&goal?`<p class="gps-live-goal" data-gps-goal>${esc(goal)}</p>`:''}
    <div class="gps-live-time"><small>計測した時間（停止中を除く）</small><strong data-gps-elapsed>${data.time}</strong></div>
    <div class="gps-v2-metrics gps-v35-metrics"><div><span>GPSの移動距離</span><strong data-gps-distance>${data.distance}</strong><small>km</small></div><div><span>平均ペース</span><strong data-gps-pace>${data.pace}</strong><small>/km</small></div><div class="gps-v35-energy"><span>推定消費カロリー</span><strong data-gps-energy>${data.energy.text}</strong><small>kcal</small><em data-gps-energy-note>${data.energy.text==='—'?'':esc(data.energy.note)}</em></div></div>
-   <div class="gps-live-map-box"><div class="gps-live-map-heading"><strong>現在地と走行ルート</strong><small>GPSを受信すると地図を表示</small></div><div class="gps-live-map-canvas" data-gps-map role="img" aria-label="現在地付近の道路地図と測定したGPS軌跡"><span class="gps-map-waiting">GPS測位後に、この場所の地図を表示します。</span></div><div class="gps-live-map-foot"><span>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></span><span>地図の表示には通信が必要です</span></div></div>
-   <div class="gps-live-map-flags" data-gps-map-flags role="status" aria-live="polite">${s.flags.length?'⚑ フラッグ '+s.flags.length+'件を地図に表示中':'フラッグを記録すると地図上に番号が表示されます'}</div>
-   <p data-gps-notice class="gps-live-notice" role="status">${esc(s.positionError||s.notice||'位置情報を利用できない場合は、手入力での記録が可能です。')}</p>
+   ${actions}
+   <div class="gps-live-map-box"><div class="gps-live-map-heading"><strong>現在地と走行ルート</strong></div><div class="gps-live-map-canvas" data-gps-map role="img" aria-label="現在地付近の道路地図と測定したGPS軌跡"><span class="gps-map-waiting">GPS測位後に、この場所の地図を表示します。</span></div><div class="gps-live-map-foot"><span>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a></span><span>地図の表示には通信が必要です</span></div></div>
+   <div class="gps-live-map-flags" data-gps-map-flags role="status" aria-live="polite" ${s.flags.length?'':'hidden'}>${s.flags.length?'⚑ フラッグ '+s.flags.length+'件を地図に表示中':''}</div>
+   <p data-gps-notice class="gps-live-notice" role="status" ${s.positionError||s.notice?'':'hidden'}>${esc(s.positionError||s.notice||'')}</p>
 
-   ${working?`<div class="gps-live-actions gps-live-actions--measuring ${active?'':'gps-live-actions--paused'}">${active?`<button data-gps-action="flag" class="gps-v2-button gps-v2-secondary gps-action-flag" type="button">⚑ フラッグ <span data-gps-flag-count>${s.flags.length?`(${s.flags.length})`:''}</span></button>`:''}<button data-gps-action="${active?'pause':'resume'}" class="gps-v2-button gps-v2-primary gps-action-pause" type="button">${active?'一時停止':'測定を再開'}</button><button data-gps-action="finish" class="gps-v2-button gps-action-finish" type="button">測定を終了</button></div>`:''}
    ${finished?`<div class="gps-live-finish">${canSave(s)?`<p class="gps-finish-success">測定終了：${data.distance} km・${esc(GPS_ACTIVITY[s.activity])}</p><div class="gps-live-actions gps-live-actions--finished"><button type="button" data-gps-action="review" class="gps-v2-button gps-v2-primary">記録内容の確認へ進む</button><button type="button" data-gps-action="discard" class="gps-v2-button gps-v2-secondary">保存せず戻る</button></div>`:`<div class="gps-finish-unavailable" role="alert"><strong>この測定は保存できません</strong><p>GPSによる有効な移動距離が10mに達していません。移動しないまま終了した場合は記録を作成できません。</p></div><button type="button" data-gps-action="discard" class="gps-v2-button gps-v2-primary gps-finish-back">保存せず戻る</button>`}</div>`:''}
   </section>
   <details class="gps-live-info"><summary>測定値と保存の範囲</summary><p>GPS距離・時間には測位条件による誤差があります。12部位の参考値は適用条件を満たす場合に限り、身体負荷の直接測定ではありません。走行軌跡は選択した場合のみ端末に保存します。</p></details>
-  ${working?'<div class="gps-live-leave">画面を離れた場合は測定を一時停止します。ブラウザーの再読み込みや強制終了では未保存の測定を復元できません。</div>':''}</div>`;
+  <dialog data-gps-finish-dialog class="gps-finish-dialog" aria-labelledby="gps-finish-title" aria-describedby="gps-finish-description">
+   <h2 id="gps-finish-title">測定を終了しますか？</h2>
+   <p id="gps-finish-description">終了するとこの測定は再開できません。測定値を保存する前に、記録内容を確認できます。GPS移動距離が10m未満の場合は保存できません。</p>
+   <div class="gps-finish-dialog-actions"><button class="gps-v2-button gps-v2-secondary" type="button" data-gps-action="finish-cancel">測定を続ける</button><button class="gps-v2-button gps-action-finish" type="button" data-gps-action="finish-confirm">測定を終了する</button></div>
+  </dialog></div>`;
 }
 export function updateMeasurementDom(root,s,elapsedMs){
  if(!root)return;
@@ -67,6 +99,11 @@ export function updateMeasurementDom(root,s,elapsedMs){
  const navigation=root.closest('.app-shell')?.querySelector('.mobile-nav');
  if(navigation)navigation.hidden=s.phase==='running'||s.phase==='paused';
  const d=format(s,elapsedMs);const set=(sel,v)=>{const e=root.querySelector(sel);if(e)e.textContent=v;};
- set('[data-gps-elapsed]',d.time);set('[data-gps-distance]',d.distance);set('[data-gps-pace]',d.pace);set('[data-gps-energy]',d.energy.text);set('[data-gps-energy-note]',d.energy.text==='—'?'':d.energy.note);set('[data-gps-flag-count]',s.flags?.length?'('+s.flags.length+')':'');set('[data-gps-map-flags]',s.flags?.length?'⚑ フラッグ '+s.flags.length+'件を地図に表示中':'フラッグを記録すると地図上に番号が表示されます');set('[data-gps-status]',s.positionError?'測位を確認してください':s.phase==='running'?'GPS計測中':s.phase==='paused'?'一時停止中':s.phase==='finished'?'計測終了':'開始前');set('[data-gps-accuracy]',s.lastPosition?`受信精度 ±${Math.round(s.lastPosition.accuracyM)}m`:'GPS待機中');set('[data-gps-notice]',s.positionError||s.notice||'位置情報を利用できない場合は、手入力での記録が可能です。');updateGpsLiveMap(root,s);
+ set('[data-gps-elapsed]',d.time);set('[data-gps-distance]',d.distance);set('[data-gps-pace]',d.pace);set('[data-gps-energy]',d.energy.text);set('[data-gps-energy-note]',d.energy.text==='—'?'':d.energy.note);set('[data-gps-flag-count]',s.flags?.length?'('+s.flags.length+')':'');set('[data-gps-map-flags]',s.flags?.length?'⚑ フラッグ '+s.flags.length+'件を地図に表示中':'フラッグを記録すると地図上に番号が表示されます');set('[data-gps-status]',gpsMeasurementStatus(s));set('[data-gps-accuracy]',s.phase==='running'&&s.lastPosition&&!s.positionError?`受信精度 ±${Math.round(s.lastPosition.accuracyM)}m`:'');const accuracy=root.querySelector('[data-gps-accuracy]');if(accuracy)accuracy.hidden=!(s.phase==='running'&&s.lastPosition&&!s.positionError);set('[data-gps-goal]',gpsGoalProgress(s,elapsedMs));set('[data-gps-notice]',s.positionError||s.notice||'');
+ const indicator=root.querySelector('.gps-live-status .gps-v2-dot');
+ if(indicator)indicator.className='gps-v2-dot '+gpsPositionIndicator(s);
+ const notice=root.querySelector('[data-gps-notice]');if(notice)notice.hidden=!(s.positionError||s.notice);
+ const flags=root.querySelector('[data-gps-map-flags]');if(flags)flags.hidden=!s.flags?.length;
+ updateGpsLiveMap(root,s);
 }
 export function activityDescription(id){return descriptions[id]||'';}
