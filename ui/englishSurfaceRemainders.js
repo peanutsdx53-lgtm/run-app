@@ -216,6 +216,7 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
   return titles[m[1]]+': '+(m[2]==='達成'?'Reached':'Not Yet Reached');
  }
  if((m=s.match(/^(\d+) \/ 5 項目に入力あり$/)))return m[1]+' of 5 Fields Entered';
+ if((m=s.match(/^(\d+)\s+件$/))&&element?.closest?.('.hx-ach-summary'))return m[1]+' Runs';
  if((m=s.match(/^保存済み (\d+)件$/)))return m[1]+' Saved Records';
  if((m=s.match(/^(\d+)件$/)))return m[1]+' Records';
  if((m=s.match(/^休養 (\d+)日$/)))return 'Rest: '+m[1]+' Days';
