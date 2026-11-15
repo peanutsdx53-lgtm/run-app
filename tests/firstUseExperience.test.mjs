@@ -23,6 +23,26 @@ test("Japanese and English are available at first launch, with separate legal co
  assert.match(renderFirstUse(state(1,{language:"en"})),/data-onboard-legal-step lang="en"/);
  assert.match(renderFirstUse(state(1,{language:"ja"})),/data-onboard-legal-step lang="ja"/);
 });
+test("first-use language choices are concise and the profile footer can reflow",()=>{
+ for(const language of ["ja","en"]){
+  const opening=renderFirstUse(state(0,{language}));
+  assert.match(opening,/<strong>日本語<\/strong><\/div>/);
+  assert.match(opening,/<strong>English<\/strong><\/div>/);
+  assert.doesNotMatch(opening,/日本語または英語でアプリを使用できます|Japanese<\/p>|Use the app in English|最初の設定/);
+  assert.doesNotMatch(opening,/<div class="fu-language-list"[\\s\\S]*?<p>/);
+  assert.doesNotMatch(opening,/fu-eyebrow|<header class="fu-screen-title">[\\s\\S]*?<p>/);
+  const consent=renderFirstUse(state(1,{language}));
+  assert.doesNotMatch(consent,/利用開始前の確認/);
+  assert.doesNotMatch(consent,/fu-eyebrow/);
+  const profile=renderFirstUse(state(7,{language}));
+  assert.match(profile,/data-onboard-profile-footer/);
+  assert.match(profile,/data-onboard-skip-profile/);
+  assert.match(profile,/data-onboard-next/);
+ }
+ const css=readFileSync(new URL("../ui/firstUseExperience.css",import.meta.url),"utf8");
+ assert.match(css,/fu-footer\\[data-onboard-profile-footer\\]/);
+ assert.match(css,/grid-template-columns:minmax\\(0,/);
+});
 test("terms and privacy must be separately acknowledged",()=>{
  const before=renderFirstUse(state(1));
  assert.match(before,/data-onboard-terms/);assert.match(before,/data-onboard-privacy/);
