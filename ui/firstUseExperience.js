@@ -8,15 +8,15 @@ const h=escapeLegalHtml;
 const badge=(title,body)=>'<article class="fu-feature"><span class="fu-feature-dot" aria-hidden="true">●</span><div><strong>'+title+'</strong><p>'+body+'</p></div></article>';
 const panel=(heading,body)=>'<section class="fu-panel"><h3>'+heading+'</h3>'+body+'</section>';
 const shortCard=(number,heading,description)=>'<div class="fu-number-card"><span>'+number+'</span><div><strong>'+heading+'</strong><p>'+description+'</p></div></div>';
-const shell=(title,lead,body,kicker)=>'<header class="fu-screen-title"><span class="fu-eyebrow">'+kicker+'</span><h1 id="onboard-title">'+title+'</h1><p>'+lead+'</p></header>'+body;
+const shell=(title,lead,body,kicker)=>'<header class="fu-screen-title">'+(kicker?'<span class="fu-eyebrow">'+kicker+'</span>':'')+'<h1 id="onboard-title">'+title+'</h1>'+(lead?'<p>'+lead+'</p>':'')+'</header>'+body;
 
 function language(state){
   const en=state.language==='en';
-  return shell("表示言語","日本語または英語でアプリを使用できます。日本語の利用規約・プライバシーポリシーが正式文書です。英語の参考訳も閲覧できます。",
+  return shell("表示言語","",
     '<div class="fu-language-list" aria-label="表示言語">'
-    +'<button type="button" data-onboard-language="ja" class="fu-language-option '+(!en?'fu-chosen':'')+'" aria-pressed="'+String(!en)+'"><span class="fu-language-mark" aria-hidden="true">あ</span><div><strong>日本語</strong><p>Japanese</p></div><span class="fu-language-status">'+(!en?'✓ 使用中':'選択する')+'</span></button>'
-    +'<button type="button" data-onboard-language="en" lang="en" class="fu-language-option '+(en?'fu-chosen':'')+'" aria-pressed="'+String(en)+'"><span class="fu-language-mark" aria-hidden="true">A</span><div><strong>English</strong><p>Use the app in English</p></div><span class="fu-language-status">'+(en?'✓ Selected':'Select')+'</span></button>'
-    +'</div>',"最初の設定");
+    +'<button type="button" data-onboard-language="ja" class="fu-language-option '+(!en?'fu-chosen':'')+'" aria-pressed="'+String(!en)+'"><span class="fu-language-mark" aria-hidden="true">あ</span><div><strong>日本語</strong></div><span class="fu-language-status">'+(!en?'✓ 使用中':'選択する')+'</span></button>'
+    +'<button type="button" data-onboard-language="en" lang="en" class="fu-language-option '+(en?'fu-chosen':'')+'" aria-pressed="'+String(en)+'"><span class="fu-language-mark" aria-hidden="true">A</span><div><strong>English</strong></div><span class="fu-language-status">'+(en?'✓ Selected':'Select')+'</span></button>'
+    +'</div>','');
 }
 function legal(state){
   return shell("利用規約とプライバシー","利用を開始する前に、利用条件と個人情報の取扱いを確認してください。",
@@ -27,7 +27,7 @@ function legal(state){
     +'<div class="fu-legal-checks"><label><input type="checkbox" data-onboard-terms '+(state.termsAccepted?'checked':'')+'> <span>利用規約を読み、内容に同意します。</span></label>'
     +'<label><input type="checkbox" data-onboard-privacy '+(state.privacyConfirmed?'checked':'')+'> <span>プライバシーポリシーを読み、内容を確認しました。</span></label></div>'
     +(state.error?'<p class="fu-error" role="alert">'+h(state.error)+'</p>':'')
-    +'<p class="fu-muted">位置情報の使用は、GPS測定を開始する際に別途確認します。</p>',"利用開始前の確認");
+    +'<p class="fu-muted">位置情報の使用は、GPS測定を開始する際に別途確認します。</p>','');
 }
 function intro(){
   return shell("記録と振り返り","運動の記録と日々の体調を保存し、運動の経過を確認できます。",
@@ -86,18 +86,18 @@ export function renderFirstUse(state){
   const current=pages[step](state);
   const canAdvance=step!==1 || (state.termsAccepted===true && state.privacyConfirmed===true);
   const final=step===7;
-  const labels=step===0?"表示言語":step===1?"利用開始前の確認":step===7?"プロフィール":("ガイド "+(step-1)+" / 5");
+  const labels=step<=1?"":step===7?"プロフィール":("ガイド "+(step-1)+" / 5");
   const progress='<div class="fu-progress" role="progressbar" aria-label="初回利用の進行状況" aria-valuenow="'+(step+1)+'" aria-valuemin="1" aria-valuemax="8">'+Array.from({length:8},function(_,i){return '<span class="'+(i<=step?'is-done':'')+'"></span>';}).join('')+'</div>';
   const sidebar='<aside class="fu-rail"><span class="fu-rail-mark" aria-hidden="true">◈</span><strong>走行記録</strong><p>初回利用の設定とガイド</p><ol>'
     +FIRST_USE_STEPS.map(function(label,i){return '<li class="'+(i===step?'is-current':i<step?'is-done':'')+'"><span>'+String(i+1).padStart(2,"0")+'</span>'+h(label)+'</li>';}).join('')+'</ol></aside>';
-  const footer='<footer class="fu-footer"><button class="fu-button fu-secondary" type="button" data-onboard-back '+(step===0?'disabled':'')+'>戻る</button>'
-    +'<span>'+h(labels)+'</span><div class="fu-footer-actions">'
+  const footer='<footer class="fu-footer" '+(final?'data-onboard-profile-footer':'')+'><button class="fu-button fu-secondary" type="button" data-onboard-back '+(step===0?'disabled':'')+'>戻る</button>'
+    +(labels?'<span>'+h(labels)+'</span>':'')+'<div class="fu-footer-actions">'
     +(!state.replay&&step>=2&&step<=6?'<button class="fu-button fu-secondary" type="button" data-onboard-skip-guide>ガイドを後で見る</button>':'')
     +(final?'<button class="fu-button fu-secondary" type="button" data-onboard-skip-profile>設定せずに始める</button>':'')
     +'<button class="fu-button fu-primary" type="button" data-onboard-next '+(canAdvance?'':'disabled')+'>'+(final?'保存して始める':step===1?'同意して次へ':'次へ')+'</button></div></footer>';
   const doc=state.documentOpen?renderLegalDocumentModal(state.documentOpen):'';
   return '<div class="onboard-overlay fu-overlay" data-onboard-overlay><section class="onboard-dialog fu-shell" '+(step===1?'data-onboard-legal-step lang="'+(state.language==='en'?'en':'ja')+'" ':'')+'role="dialog" aria-modal="true" aria-labelledby="onboard-title"><div class="fu-layout">'
-    +sidebar+'<div class="fu-workspace"><div class="fu-topbar"><div class="fu-topbrand">走行記録 <small>初回利用</small></div><span>'+h(labels)+'</span>'+(state.replay?'<button type="button" data-onboard-close aria-label="ガイドを閉じる">閉じる ×</button>':'')+'</div>'
+    +sidebar+'<div class="fu-workspace"><div class="fu-topbar"><div class="fu-topbrand">走行記録</div>'+(labels?'<span>'+h(labels)+'</span>':'')+(state.replay?'<button type="button" data-onboard-close aria-label="ガイドを閉じる">閉じる ×</button>':'')+'</div>'
     +progress+'<main class="fu-content">'+current+'</main>'+footer+'</div></div></section></div>'+doc;
 }
 export function renderLegalDocumentModal(kind,{showEnglishReference=false}={}){
