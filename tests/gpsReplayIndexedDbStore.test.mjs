@@ -108,7 +108,7 @@ test('GPS ROF responses remain user reports on same GPS identity, 0 differs from
 });
 
 test('GPS road surface is optional user report, strict on new saves and compatible with historic V2 summaries',()=>{
- const raw={source:'USER_REPORTED',rofBefore:0,rofAfter:null,beforeCapturedAt:'2026-10-31T11:40:00.000Z',afterCapturedAt:null,memo:''];
+ const raw={source:'USER_REPORTED',rofBefore:0,rofAfter:null,beforeCapturedAt:'2026-10-31T11:40:00.000Z',afterCapturedAt:null,memo:''};
  const original=prepareGpsV2Run(session(),{experience:raw});
  assert.equal(original.ok,true);
  assert.equal(Object.hasOwn(original.summary.experience,'surface'),false,'historic records have no guessed surface');
