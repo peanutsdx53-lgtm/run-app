@@ -32,7 +32,11 @@ try{
   const english=page.locator('[data-onboard-language="en"]');
   assert.equal(await english.isEnabled(),true,'English is selectable during first-use setup');
   assert.equal(await english.getAttribute("lang"),"en");
-  assert.match(await english.innerText(),/Use the app in English/);
+  assert.match(await english.innerText(),/English/);
+   assert.doesNotMatch(await english.innerText(),/Use the app in English/);
+   assert.equal(await page.locator(".fu-language-option p").count(),0,"language options have no duplicate subtitles");
+   assert.equal(await page.locator(".fu-screen-title > p").count(),0,"language selection has no redundant lead");
+   assert.equal(await page.locator(".fu-screen-title .fu-eyebrow").count(),0,"language selection has no redundant eyebrow");
   assert.doesNotMatch(await english.innerText(),/Preview only/);
   assert.doesNotMatch(await english.innerText(),/[\u3040-\u30ff\u3400-\u9fff]/);
   for(let step=0;step<8;step++){
