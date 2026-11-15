@@ -292,10 +292,12 @@ try{
     await enPage.locator('[data-gps-consent-confirm]').click();
     await enPage.locator('[data-phase="running"]').waitFor();
     await enPage.waitForFunction(()=>document.querySelector('[data-gps-status]')?.textContent.includes('Measuring'),null,{timeout:10000});
+    assert.match(await enPage.locator('.gps-live-steps').innerText(),/Prepare/,'first step translated');
     await enPage.waitForFunction(()=>document.querySelector('[data-gps-goal]')?.textContent.includes('Goal'),null,{timeout:10000});
     await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-running.png'),fullPage:true});
     await enPage.evaluate(()=>window.__gpsStage2Error(2));
     await enPage.locator('[data-gps-notice]').waitFor({state:'visible'});
+    await enPage.waitForFunction(()=>document.querySelector('[data-gps-notice]')?.textContent.includes('GPS signal unavailable'),null,{timeout:10000});
     assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'GPS error does not stop timer');
     await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-location-error.png'),fullPage:true});
     await enPage.evaluate(()=>window.__gpsStage2Fix(37.5,Date.now()));
