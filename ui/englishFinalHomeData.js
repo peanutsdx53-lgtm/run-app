@@ -34,6 +34,7 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "睡眠・就床の記録推移": "Sleep and Time-in-Bed History",
  "保存済み手入力走行": "Saved Manual Runs",
  "4つの節目": "Four Milestones",
+  "実績の対象と節目について": "About Milestone Records",
  "この端末に保存した手入力の走行記録だけが対象です。GPSの未保存データや入力途中の内容は含みません。": "Includes only saved manual runs, not unsaved GPS measurements or drafts.",
  "節目は記録を振り返るための表示であり、健康状態・走力の判定や達成の推奨ではありません。": "Milestones support reflection and do not judge health or running ability or prescribe goals.",
  "とても良い": "Very Good",

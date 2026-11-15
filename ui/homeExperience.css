@@ -809,3 +809,14 @@ html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
  }
  #app .home-v3 .dashboard-edit-buttons [data-home-reset]{width:100%;font-size:.76rem}
 }
+
+/* U-20261115-03: reserve iOS top-chrome space; keep the title and close button crisp. */
+#app .home-v3 .hx-dialog.hx-condition-dialog .hx-dialog-head{background:#302c51;border-bottom-color:#8679ba}
+#app .home-v3 .hx-dialog.hx-ach-dialog .hx-dialog-head{background:#3b2d27;border-bottom-color:#ae8257}
+#app .home-v3 .hx-dialog .hx-ach-help{margin-left:auto;z-index:3}
+#app .home-v3 .hx-dialog .hx-ach-help>p span{display:block}
+#app .home-v3 .hx-dialog .hx-ach-help>p span+span{margin-top:8px}
+@media(max-width:800px){
+ #app .home-v3 .hx-overlay{padding-top:max(84px,calc(env(safe-area-inset-top,0px) + 24px));padding-bottom:max(16px,env(safe-area-inset-bottom,0px));align-items:start}
+ #app .home-v3 .hx-dialog{max-height:calc(100dvh - max(84px,calc(env(safe-area-inset-top,0px) + 24px)) - max(16px,env(safe-area-inset-bottom,0px)))}
+}

@@ -275,3 +275,7 @@
  .sm-page .sm-heading h1{font-size:18px}
  .sm-page .sm-panel{padding:12px}
 }
+
+/* U-20261115-04: align the back-arrow path inside its 24px SVG viewBox. */
+.sm-back{line-height:1;align-items:center;justify-items:center}
+.sm-back svg{display:block;width:24px;height:24px;flex:none}
