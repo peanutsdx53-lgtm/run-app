@@ -20,7 +20,7 @@ const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true});
 const out=resolve(root,'audit-output','gps-mobile');await mkdir(out,{recursive:true});
 const phoneUA='Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
 try{
- for(const width of [320,390,1440]){
+ for(const width of [320,390,414,1440]){
   const phone=width<800;
   const opts={viewport:{width,height:900},reducedMotion:'reduce',locale:'ja-JP'};
   if(phone){opts.userAgent=phoneUA;opts.isMobile=true;opts.hasTouch=true;}
@@ -65,6 +65,15 @@ try{
   assert.equal(await page.locator('.gps-live-steps span').count(),3);
   assert.equal(await page.locator('.gps-live-steps .is-current').count(),1);
   await safe('ready');await shot('01-ready');
+  const available=await page.locator('[data-gps-activity] option').evaluateAll(options=>options.map(o=>o.value));
+  assert.deepEqual(available,['WALK','JOGGING','RUNNING'],'no new mixed activity option');
+  for(const value of available){
+   await page.locator('[data-gps-activity]').selectOption(value);
+   assert.equal(await page.locator('[data-gps-activity]').inputValue(),value);
+   await shot('stage1-prep-'+value.toLowerCase());
+  }
+  const selectedActivity=width===320?'WALK':width===390?'JOGGING':'RUNNING';
+  await page.locator('[data-gps-activity]').selectOption(selectedActivity);
   assert.equal(await page.locator('[data-gps-rof="before"]').count(),0,'no inline fatigue selector');
   await page.locator('[data-gps-rof-entry="before"]').click();
   await page.locator('[data-rof-v4-root]').waitFor();
@@ -85,9 +94,13 @@ try{
   await page.locator('[data-phase="running"]').waitFor();
   assert.equal(await page.locator('.mobile-nav').isVisible(),false,'active GPS must hide bottom navigation');
   await safe('running');await shot('02-measuring');
+  assert.equal(await page.locator('[data-gps-segment]').count(),0,'retired mixed-activity segment switch is absent');
+  assert.equal(await page.locator('[data-gps-activity]').count(),0,'activity cannot change mid-measurement');
   const t=Date.now();
   await page.evaluate(ts=>window.__sampleGps(37.5,ts),t);
   await page.evaluate(ts=>window.__sampleGps(37.50025,ts),t+5000);
+  await page.locator('[data-gps-action="flag"]').click();
+  assert.match(await page.locator('[data-gps-map-flags]').innerText(),/1件/,'flags remain available');
   await page.waitForTimeout(1250);
   await page.locator('[data-gps-action="finish"]').click();
   await page.locator('[data-gps-review]').waitFor();
@@ -110,6 +123,13 @@ try{
   assert.match(await page.locator('[data-gps-rof-entry="after"]').innerText(),/7 \/ 10/);
   await page.locator('[data-gps-note]').fill('測定後に本人が記録した気づき');
   assert.equal(await page.locator('[data-gps-save-route]').isChecked(),false);
+  const saveDetails=width===414;
+  if(saveDetails){
+   await page.locator('[data-gps-save-route]').check();
+   await page.locator('[data-gps-flag-note]').fill('保存する地点の気づき');
+   await page.locator('[data-gps-flag-note]').dispatchEvent('change');
+   await shot('stage1-running-details-opt-in');
+  }
   await safe('populated review');await shot('03-review-filled');
   await page.locator('[data-gps-action="save"]').click();
   await page.locator('#runload-result-v4').waitFor();
@@ -121,7 +141,19 @@ try{
   assert.equal(saved.experience.rofBefore,0);assert.equal(saved.experience.rofAfter,7);
   assert.equal(saved.experience.memo,'測定後に本人が記録した気づき');
   assert.ok(saved.experience.beforeCapturedAt&&saved.experience.afterCapturedAt);
-  assert.equal(saved.detailSaved,false,'route storage opt-in remains OFF');
+  assert.equal(saved.activity,selectedActivity,'saved activity matches the user selection');
+  assert.equal(saved.detailSaved,saveDetails,'route storage is opt-in, never implicit');
+  const dynamicGate=page.locator('#runload-result-v4 [data-gps-dynamic-gate]');
+  assert.equal(await dynamicGate.count(),saveDetails?1:0,'single-activity dynamic gate depends on route consent');
+  if(saveDetails){
+   const restored=await page.evaluate(async id=>{
+    const storage=await import('/ui/gpsReplayIndexedDbStore.js');
+    return storage.readGpsV2Detail(id);
+   },id);
+   assert.equal(restored.ok,true,restored.reason);
+   assert.equal(restored.detail.flags.length,1,'flag retained in opt-in details');
+   assert.equal(restored.detail.flags[0].note,'保存する地点の気づき');
+  }
   await page.reload({waitUntil:'networkidle'});
   const result=page.locator('#runload-result-v4');
   if(!(await result.locator('[data-pane="fatigue"]').isVisible()))await result.locator('[data-tab="fatigue"]').click();

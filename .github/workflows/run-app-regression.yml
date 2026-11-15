@@ -78,8 +78,16 @@ jobs:
           retention-days: 7
       - name: Confirm retired what-if URL, Learning shortcut and actual result export
         run: node tests/uiux06TargetBrowser.mjs
-      - name: Verify GPS and ROF-J accepted-measurement path
+      - name: Verify three GPS single-activity modes, flags, legacy-compatible saving and ROF-J
         run: node tests/gpsRofReviewBrowser.mjs
+      - name: Preserve stage 1 GPS screenshots for real visual audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gps-stage1-${{ matrix.engine }}
+          path: audit-output/gps-mobile/
+          retention-days: 7
+          if-no-files-found: warn
       - name: Verify bilingual interface
         run: node tests/englishUiBrowser.mjs
       - name: Verify 19 active screen states and retired S18 absence
