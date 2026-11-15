@@ -93,6 +93,7 @@ export const ENGLISH_FINAL_GPS=Object.freeze({
  "休養日に走行距離・時間・文献参考値はありません。記録は端末に保存します。": "Rest days have no running distance, duration or research reference values. The entry is stored on this device.",
  "距離・時間・活動種目は本人の入力です。運動前後の疲労感・メモは任意の本人申告で、医学的な診断や身体負荷の実測ではありません。": "Distance, duration and activity type are manually entered. Fatigue and notes are optional self-reports, not medical diagnoses or direct measurements of body load.",
  "保存結果を確認しています…": "Checking the Save Result…",
+ "同じ保存操作を再確認": "Recheck the Same Save Operation",
  "前回のGPS保存結果が未確認です": "The Previous GPS Save Is Unconfirmed",
  "測定内容は再読込で復元できません。保存済みかどうかを同じ操作IDで確認できます。新しく測定を始めても前回の記録は自動保存しません。": "Unsaved measurement data cannot be restored after a reload. You can check the previous save using the same operation ID. Starting a new measurement does not save the previous one.",
  "前回の保存結果を確認": "Check Previous Save",
