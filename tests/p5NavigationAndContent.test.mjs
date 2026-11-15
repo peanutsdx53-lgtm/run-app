@@ -12,12 +12,13 @@ test('P5 source gates: learning, nav and scientific provenance preserved',()=>{
  assert.doesNotMatch(learning.innerHTML,/RUNLOAD LEARNING|内部審査候補|原著・教材確認中|RunLoad独自/);
  assert.match(learning.innerHTML,/学習でできること/);
  for(const id of ['pace-basics','running-motion-basics','effort-fatigue-recovery','record-origin-missing'])assert.ok(learning.innerHTML.includes('lesson='+id));
- assert.match(app,/const mobileNav=\[\["home".*\["record-start".*\["history".*\["exploration-tree".*\["learning"/);
+ assert.match(app,/const mobileNav=\[\["home".*\["record-start".*\["history".*\["exploration-tree".*\["settings"/);
+ assert.match(read("ui/homeExperience.js"),/\["learning","学習","learn"\]/);
  assert.match(app,/const desktopNav=\[\["home".*\["record".*\["result".*\["history".*\["exploration-tree".*\["learning".*\["settings"/);
  assert.doesNotMatch(app,/class="rl-tools-menu"/,"obsolete topbar menu must be removed");
  assert.match(app,/\["settings","⚙","設定"\]/,"Settings restored in bottom nav");
  assert.match(app,/const mobileNav=\[[^;]*\["settings"/);
- assert.match(unified,/grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+ assert.match(unified,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
  assert.match(unified,/\.app-shell \.topbar\{display:none!important\}/);
  assert.doesNotMatch(learnCSS,/grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
  assert.match(explore,/data-ex-action="field-help"/);

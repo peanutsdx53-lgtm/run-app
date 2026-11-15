@@ -79,7 +79,7 @@
 .home-v3 .hx-shortcut-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
 .home-v3 .hx-shortcut{display:flex;gap:10px;align-items:center;min-width:0;padding:12px 14px;border:1px solid #ffffff1d;background:#ffffff0b;border-radius:14px;text-decoration:none;color:#e1f6fc;font-weight:850;font-size:.85rem}
 .home-v3 .hx-shortcut span{flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#ffffff15}
-.home-v3 .hx-shortcut-map{color:#8cebc6}.home-v3 .hx-shortcut-sim{color:#c7b0ff}.home-v3 .hx-shortcut-share{color:#ffca93}
+.home-v3 .hx-shortcut-map{color:#8cebc6}.home-v3 .hx-shortcut-learn{color:#c7b0ff}.home-v3 .hx-shortcut-share{color:#ffca93}
 .home-v3 .hx-shortcut strong{color:#f2f8fa}
 .home-v3 .hx-shortcut:hover{background:#ffffff1a;transform:translateY(-2px)}
 .home-v3 .hx-optional{min-height:160px;background:linear-gradient(130deg,#15394c,#142e3d)}

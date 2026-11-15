@@ -15,7 +15,7 @@ import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js';
 import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js';
 import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js';
 import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261111-settings-dialog-v1';
-import {ENGLISH_FINAL_GPS_SIMULATION} from './englishFinalGpsSimulation.js';
+import {ENGLISH_FINAL_GPS} from './englishFinalGps.js';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
@@ -46,7 +46,6 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "測定": "Measurement",
  "GPSの疲労感": "GPS Fatigue Response",
  "コース設計": "Course Planning",
- "シミュレーション": "What-if Simulation",
  "相談・共有": "Consultation & Sharing",
  "部位詳細": "Body Region Details",
  "メニュー": "Menu",
@@ -209,7 +208,7 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  ...ENGLISH_FINAL_CONDITIONS,
  ...ENGLISH_FINAL_HOME_DATA,
  ...ENGLISH_FINAL_BACKUP,
- ...ENGLISH_FINAL_GPS_SIMULATION,
+ ...ENGLISH_FINAL_GPS,
  ...ENGLISH_FINAL_ANNOTATION,
  ...ENGLISH_FINAL_INQUIRY,
  ...ENGLISH_FINAL_APP_SHELL,

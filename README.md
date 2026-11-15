@@ -2,7 +2,7 @@
 
 本リポジトリは、**本人が記録した走行の事実・本人申告・適格な文献参考値を区別して解釈する**日本語Webアプリの実装・内部評価用です。**GitHubでの公開は、一般向けの正式なリリースやアプリストアでの配布を意味しません。** 研究資料の原本や本人の実記録を無断で置換・移行しません。
 
-**現在の状態（2026-11-12）**：主要20画面、記録・結果・履歴・任意の問い、原著の条件を踏まえた部位内参考値、手入力・スマートフォン向けGPS測定、任意ROF-J、コース、仮の走歩比較、共有向け画面、ローカル保存、PNG出力、PWA・オフラインの実装があります。対象幅320/390/1440pxのChromium/WebKitブラウザ試験を行っています。全機能の実機品質と科学的・学術的な総合成立を表すものではありません。
+**現在の状態（2026-11-15）**：S18条件変更シミュレーション（F21）は廃止しました。歴史上のS01〜S20のうち、稼働する画面・横断状態は19対象です。記録・結果・履歴・任意の問い、原著の条件を踏まえた部位内参考値、手入力・スマートフォン向けGPS測定、任意ROF-J、コース設計、学習・探究、相談・共有、ローカル保存、PNG出力、PWA・オフラインの実装があります。対象幅320/390/1440pxのChromium/WebKitブラウザ試験を行っています。全機能の実機品質と科学的・学術的な総合成立を表すものではありません。
 
 ## 研究目的と表示上の限界
 
@@ -11,7 +11,7 @@
 - **事実**：入力した距離・時間、またはGPSが実際に受信した位置点等の出所を保つ。平均ペースは当該距離と時間からの計算値。
 - **主観**：ROF-Jは本人が任意回答する0〜10の疲労感。0は有効回答、未回答とは異なる。回答時刻と運動前／後のラベルは、実際の時間的前後関係を無条件に証明しない。
 - **文献参考値**：採用文献の観測条件・速度範囲・部位と計算経路が適格な場合だけ算出する。各部位**自身**の基準100であり、部位間を共通の物理単位で順位付けしない。一般の初心者への予測精度・健康状態の判定は意味しない。
-- **仮の比較**：シミュレーションは入力した時間・ペース・走歩区間の算術結果。走行能力や身体負荷を予測せず、実績へ自動保存しない。
+- **走歩混在**：本人が活動種別・区間を記録することと、混合運動の12部位に関する統合的な文献参考値を算出することは別です。後者は現行モデルの適用範囲外であり、仮の条件変更シミュレーションを廃止しても科学計算の制約は維持します。
 - **利用者効果**：内部の実装・整合性試験は、初心者ランナーの自己理解が実際に向上したという実証ではない。
 
 保存された記録へのリンクは実在するIDのみを使用し、メモの変更・削除は本人の操作で行います。GPS詳細軌跡の保存は初期OFFで本人選択制です。相談用の出力では要配慮の詳細情報を自動公開しません。
@@ -33,7 +33,7 @@ GitHub Pagesの配信先はリポジトリ移行後に確定するため、本�
 
 英語版は、初回起動の言語選択または「設定 → 表示と言語 → English」から利用できます。英語選択と日本語への復帰は保存済みの走行原本・科学的計算・GPS位置情報を書き換えません。初回の言語選択だけでは、利用規約への同意は成立しません。
 
-English translations cover the first-use guide, manual recording, review, results, history, GPS recording and replay, environmental conditions and ROF-J responses, optional personal notes, course planning, simulations, the four available learning lessons and quizzes, Explore topics, consultation/print/PDF reports, backup/restore/deletion instructions, and common errors. No external translation service is used. **Your personal notes are preserved in the language you entered.** Scientific references do not constitute measured tissue loads, injury-risk predictions, or medical diagnoses; zero and unanswered fatigue scores remain distinct.
+English translations cover the first-use guide, manual recording, review, results, history, GPS recording and replay, environmental conditions and ROF-J responses, optional personal notes, course planning, the four available learning lessons and quizzes, Explore topics, consultation/print/PDF reports, backup/restore/deletion instructions, and common errors. No external translation service is used. **Your personal notes are preserved in the language you entered.** Scientific references do not constitute measured tissue loads, injury-risk predictions, or medical diagnoses; zero and unanswered fatigue scores remain distinct.
 
 **Legal-document limitation:** The original Japanese Terms of Use and Privacy Policy remain the authoritative legal text. English article-by-article *reference translations* are provided alongside the originals. These English reference texts have **not undergone independent legal review**. English language selection does not bypass explicit consent. Other untranslated strings may still occur in uncommon errors or dynamically constructed combinations; such strings should be reported rather than treated as certified English completeness.
 
@@ -58,7 +58,7 @@ node tests/offlineShellBrowserSmoke.mjs
 
 `--with-deps`はLinux CI用の追加システムライブラリをインストールするため、端末・OSによって管理者権限や代替手順が必要です。Windows/macOSでは通常`npx playwright install chromium webkit`等を使用します。自動試験のGPS位置点はテストが明示的に注入した入力で、実機屋外測位ではありません。
 
-試験結果は、実行したリポジトリの**Actions**にコミットSHAごと保存します。全20画面のChromium/WebKit受入、研究解釈監査、二走行の連続性を別々のテストで確認します。特定コミットでの成功を、無条件に後続コードや別の端末環境へ拡張しません。
+試験結果は、実行したリポジトリの**Actions**にコミットSHAごと保存します。F21/S18の廃止理由と旧証拠の扱いは非公開Currentの既存設計資料に直接追記し、旧時点の検査結果を現在の採用要件として扱いません。S18廃止後の現役19画面・状態のChromium/WebKit内部検査、研究解釈監査、二走行の連続性を別々のテストで確認します。特定コミットでの成功を、無条件に後続コードや別の端末環境へ拡張しません。
 
 ## 研究資料の取り扱いと成立条件
 

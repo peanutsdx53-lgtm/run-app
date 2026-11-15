@@ -1,4 +1,4 @@
-/** UIUX06: simulations remain hypothetical; exported PNG never asserts missing assessment times. */
+/** UIUX06: verify retired route and accessible Learning shortcut; preserve actual PNG export evidence. */
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
@@ -35,29 +35,18 @@ try{
    acceptDownloads:true,userAgent:mobile?'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1':undefined});
   await context.addInitScript(()=>localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:'ja'})));
   const page=await context.newPage(),errors=[];page.on('pageerror',err=>errors.push(err.message));
+  await page.goto(base+'home',{waitUntil:'networkidle'});
+  const quick=page.locator('.hx-shortcuts');await quick.waitFor();
+  for(const dest of ['course','learning','consultation'])assert.equal(await quick.locator('a[href="#/'+dest+'"]').count(),1,'quick access '+dest);
+  assert.equal(await quick.locator('a[href="#/simulation"]').count(),0,'retired entry removed');
+  await shot(page,width,'S18-learning-entry');
+  await quick.locator('a[href="#/learning"]').click();
+  await page.locator('#runload-learning .lr-catalog').waitFor();
+  await shot(page,width,'S18-learning-catalog');
   await page.goto(base+'simulation',{waitUntil:'networkidle'});
-  const sim=page.locator('[data-sim-page]');await sim.waitFor();
-  assert.equal(await sim.locator('.sm-steps span').count(),4,'all four approved simulation phases retained');
-  const stages=await sim.locator('.sm-steps span').evaluateAll(elements=>elements.map(el=>el.getBoundingClientRect().top));
-  assert.ok(stages.every(top=>Math.abs(top-stages[0])<=2),'all four simulation stages remain on one row at '+width+'px: '+JSON.stringify(stages));
-  assert.match(await sim.locator('.sm-limits').innerText(),/身体負荷を予測しません/);
-  assert.match(await sim.locator('.sm-comparison-note').innerText(),/仮定/);
-  await shot(page,width,'S19-manual-hypothetical');
-  const none=sim.locator('[data-sm-source="none"]');await none.click();
-  assert.equal(await sim.locator('[data-sm-source="none"]').getAttribute('aria-pressed'),'true');
-  assert.equal(await sim.locator('[data-sm-source="none"]').evaluate(el=>el===document.activeElement),true,'source focus survives full rerender');
-  assert.match(await sim.locator('.sm-result').first().innerText(),/距離目標なし/);
-  assert.match(await sim.locator('.sm-comparison-note').innerText(),/到達地点・残り距離は表示しません/);
-  await shot(page,width,'S19-no-course');
-  const manual=sim.locator('[data-sm-source="manual"]');await manual.click();
-  assert.equal(await sim.locator('[data-sm-source="manual"]').evaluate(el=>el===document.activeElement),true);
-  const budget=sim.locator('[data-sm-field="budget"]');
-  await budget.fill('');
-  assert.match(await sim.locator('.sm-error').first().innerText(),/時間・ペース・走歩の区間をすべて入力/);
-  await shot(page,width,'S19-blank-parameter');
-  await budget.fill('35');
-  assert.match(await sim.locator('.sm-comparison-note').innerText(),/35分間/);
-  await shot(page,width,'S19-recovered-comparison');
+  await page.locator('.home-v3').waitFor();
+  assert.equal(await page.locator('[data-sim-page]').count(),0,'stale link cannot render retired feature');
+  await shot(page,width,'S18-retired-route-safe-fallback');
   // An actual canonical saved run, not a static HTML mock, drives PNG export and print.
   await page.goto(base+'home',{waitUntil:'networkidle'});
   const id=await page.evaluate(async()=>{
@@ -109,6 +98,6 @@ try{
   assert.deepEqual(errors,[],'no browser runtime errors');
   await context.close();
  }
- await writeFile(resolve(out,'report.json'),JSON.stringify({sha:process.env.GITHUB_SHA||'',engine,scope:'S19 what-if + S20 actual PNG/print, not physical-device or user-effect proof',report},null,2));
+ await writeFile(resolve(out,'report.json'),JSON.stringify({sha:process.env.GITHUB_SHA||'',engine,scope:'Retired F21 navigation + Learning and actual PNG/print; not physical-device or user-effect proof',report},null,2));
  console.log('PASS UIUX06 '+engine+' '+report.length+' actual browser screenshots');
 }finally{await browser.close();await new Promise(done=>server.close(done));}

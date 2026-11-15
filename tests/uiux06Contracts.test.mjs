@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gpsReviewPage} from '../ui/measurementExperience.js';
-import {newSimulationUi,renderSimulation,renderSimulationResults} from '../ui/simulationExperience.js';
+import {existsSync} from 'node:fs';
+import {shortcutsCard} from '../ui/homeExperience.js';
 import {resultImageAnnotation} from '../ui/resultExperience.js';
 
 const finished=()=>({phase:'finished',distanceM:35,accepted:2,activity:'RUNNING',goalMode:'free',goalValue:'',flags:[],lastPosition:null,notice:'',saveRoute:false});
@@ -20,15 +21,13 @@ test('UIUX06 S18: GPS review distinguishes valid ROF-J zero from absent after re
  const disabled=gpsReviewPage({...finished(),distanceM:2,accepted:1},60000,{});
  assert.match(disabled,/data-gps-action="save"[^>]*disabled/);
 });
-test('UIUX06 S19: four simulation steps and hypothetical results remain explicit, focus wiring retains source',()=>{
- const s=newSimulationUi(),output=renderSimulation(s,{presets:{ok:true,records:[]},manualRuns:{ok:true,records:[]}});
- assert.equal((output.match(/<span>0[1-4] /g)||[]).length,4);
- assert.match(output,/算術上の結果/);
- assert.match(renderSimulationResults(s),/身体負荷を予測しません/);
+test('Retired F21/S18: no simulator assets or navigation, Learning replaces the shortcut',()=>{
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
- assert.match(app,/source=active\?\.getAttribute\?\.\("data-sm-source"\)/);
- assert.match(app,/field=active\?\.getAttribute\?\.\("data-sm-field"\)/);
- assert.match(app,/current\?\.focus\(\{preventScroll:true\}\)/);
+ const home=shortcutsCard();
+ assert.match(home,/href="#\/learning"/);
+ assert.doesNotMatch(home,/href="#\/simulation"/);
+ assert.doesNotMatch(app,/simulationExperience|data-gps-v2-use|page==="simulation"/);
+ for(const p of ['../ui/simulationExperience.js','../ui/simulationExperience.css','../ui/gpxImport.js','../ui/gpsCourseEvidence.js'])assert.equal(existsSync(new URL(p,import.meta.url)),false,p+' must be physically absent');
 });
 test('UIUX06 S20: exported PNG does not falsely assert timestamp absence',()=>{
  const js=readFileSync(new URL('../ui/resultExperience.js',import.meta.url),'utf8');
@@ -46,6 +45,4 @@ test('UIUX06 S20: exported PNG does not falsely assert timestamp absence',()=>{
  const appEntry=html.match(/src="(\.\/app\.js\?v=[^"]+)"/)?.[1];
  assert.ok(appEntry,'entrypoint must use a versioned app.js URL');
  assert.ok(sw.includes('"'+appEntry+'"'),'offline assets must match the current app.js entrypoint');
- assert.match(html,/simulationExperience\.css\?v=20261115-focus-ui-v1/);
- assert.match(sw,/simulationExperience\.css\?v=20261115-focus-ui-v1/);
 });

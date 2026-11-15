@@ -1,4 +1,4 @@
-/** U-20261115-03/04: take real Chromium/WebKit screenshots of four revised surfaces.
+/** U-20261115-03/04: take Chromium/WebKit screenshots of condition, milestones, course and Learning surfaces.
  * All checks use isolated browser storage; scientific calculations and saved data are unchanged.
  */
 import assert from 'node:assert/strict';
@@ -27,7 +27,7 @@ const findings=[];
 const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
 async function capture(page,name,lang,width){
  const info=await page.evaluate(()=>{
-  const selectors=['.hx-dialog','.hx-dialog-head','.hx-dialog-head h2','.hx-dialog-close','.hx-ach-help','.rv-head','.rv-back','.sm-heading','.sm-back','.sm-back svg','.sm-steps','.rv-course-step','.sm-panel'];
+  const selectors=['.hx-dialog','.hx-dialog-head','.hx-dialog-head h2','.hx-dialog-close','.hx-ach-help','.rv-head','.rv-back','.rv-course-step','.lr-root','.lr-course'];
   const elements=selectors.flatMap(selector=>[...document.querySelectorAll(selector)].slice(0,8).map(e=>{
    const r=e.getBoundingClientRect();return {selector,text:(e.innerText||'').slice(0,60),left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
   }));
@@ -35,7 +35,7 @@ async function capture(page,name,lang,width){
  });
  assert.ok(info.document<=width+2&&info.body<=width+2,name+' horizontal overflow '+JSON.stringify(info));
  for(const e of info.elements)if(e.width>0&&e.height>0)assert.ok(e.left>=-2&&e.right<=width+2,name+' visible control overflow '+JSON.stringify(e));
- await page.screenshot({path:resolve(output,name+'-'+lang+'-'+width+'.png'),fullPage:name==='course'||name==='simulation',animations:'disabled'});
+ await page.screenshot({path:resolve(output,name+'-'+lang+'-'+width+'.png'),fullPage:['course','learning','learning-lesson'].includes(name),animations:'disabled'});
  findings.push({engine,width,lang,name,...info});
  console.log('PASS FOCUSED',engine,width,lang,name);
 }
@@ -50,6 +50,10 @@ try{
    const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto(origin+'/#/home',{waitUntil:'networkidle'});
    await page.locator('.home-v3').waitFor();
+   const shortcuts=page.locator('.hx-shortcuts');
+   for(const dest of ['course','learning','consultation'])assert.equal(await shortcuts.locator('a[href="#/'+dest+'"]').count(),1,'shortcut '+dest);
+   assert.equal(await shortcuts.locator('a[href="#/simulation"]').count(),0,'retired shortcut absent');
+   assert.equal(await page.locator('.mobile-nav .mobile-link').count(),5,'five mobile navigation links');
    await page.locator('[data-condition-open]').click();
    const cond=page.locator('.hx-condition-dialog');await cond.waitFor();
    let measure=await cond.evaluate(e=>{
@@ -102,19 +106,18 @@ try{
     assert.ok(await course.locator('.rv-screen-help p').isVisible());
     await capture(page,'course-help',lang,width);
    }
-   await page.goto(origin+'/#/simulation',{waitUntil:'networkidle'});
-   const sim=page.locator('.sm-page');await sim.waitFor();
-   assert.equal(await sim.locator('.sm-step-head').count(),4,'all simulation steps remain');
-   assert.equal(await sim.locator('.sm-note').count(),0,'duplicate simulation captions removed');
-   if(lang==='en')assert.equal(await sim.locator('.sm-page .sm-field em').filter({hasText:'分/km'}).count(),0,'pace units translated');
-   const back=await sim.locator('.sm-back').evaluate(e=>{const r=e.getBoundingClientRect(),s=e.querySelector('svg').getBoundingClientRect();return {boxCenter:[r.left+r.width/2,r.top+r.height/2],glyphCenter:[s.left+s.width/2,s.top+s.height/2],width:r.width,height:r.height}});
-   assert.ok(Math.abs(back.boxCenter[0]-back.glyphCenter[0])<=1&&Math.abs(back.boxCenter[1]-back.glyphCenter[1])<=1,'SVG back arrow centered '+JSON.stringify(back));
-   await capture(page,'simulation',lang,width);
+   await page.goto(origin+'/#/learning',{waitUntil:'networkidle'});
+   const learning=page.locator('#runload-learning .lr-catalog');await learning.waitFor();
+   assert.equal(await learning.locator('.lr-course').count(),3,'three approved core lessons remain');
+   await capture(page,'learning',lang,width);
    if(width===390){
-    await sim.locator('.rl-screen-help summary').click();
-    assert.ok(await sim.locator('.rl-screen-help p').isVisible());
-    await capture(page,'simulation-help',lang,width);
+    await page.goto(origin+'/#/learning?lesson=pace-basics',{waitUntil:'networkidle'});
+    await page.locator('#runload-learning .lr-lesson').waitFor();
+    await capture(page,'learning-lesson',lang,width);
    }
+   await page.goto(origin+'/#/simulation',{waitUntil:'networkidle'});
+   await page.locator('.home-v3').waitFor();
+   assert.equal(await page.locator('[data-sim-page]').count(),0,'retired URL never renders removed feature');
    assert.deepEqual(errors,[],'uncaught page errors '+lang+' '+width);
    await context.close();
   }

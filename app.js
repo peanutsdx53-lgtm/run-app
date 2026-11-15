@@ -1,5 +1,5 @@
 import * as restDayStore from './ui/restDayStore.js';
-import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v1';
+import {startEnglishUi} from './ui/englishUi.js?v=20261115-retire-whatif-v1';
 (async function appMain(){
   "use strict";
   // Load independent screen modules concurrently instead of a 48-request serial waterfall.
@@ -17,7 +17,6 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
     canonical,
     recordExperience,
     coursePresets,
-    simulationExperience,
     gaitExperience,
     environmentExperience,
     bodyExperience,
@@ -55,7 +54,7 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
   ]=await Promise.all([
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
-    import("./ui/homeExperience.js?v=20261115-focus-ui-v1"),
+    import("./ui/homeExperience.js?v=20261115-retire-whatif-v1"),
     import("./ui/rofJScale.js"),
     import("./ui/rofExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/recordDraftReview.js"),
@@ -65,7 +64,6 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
     import("./ui/manualRunCanonical.js"),
     import("./ui/recordExperience.js?v=20261115-focus-ui-v1"),
     import("./ui/coursePresetStore.js?v=20261026-courses-v30"),
-    import("./ui/simulationExperience.js?v=20261115-focus-ui-v1"),
     import("./ui/gaitExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/environmentExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/bodyContextExperience.js?v=20261109-p6d-recorddetails-v1"),
@@ -209,7 +207,6 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
       gpsController.checkGoal();measurementExperience.updateMeasurementDom(app.querySelector('[data-gps-live-page]'),gpsController.state,gpsController.elapsed());
     },1000);
   }
-  const simulationUi=simulationExperience.newSimulationUi();
   const historyUi=historyExperience.createHistoryUi();
   // Presentation-only state; never persisted to saved-run or GPS storage.
   let gpsHistoryExpanded=false,gpsHistoryManageExpanded=false;
@@ -357,9 +354,9 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261111-exploration-inquiry-v
   const hasPriorLegalRecord=(()=>{try{return !!onboardStorage?.getItem(legalDocuments.LEGAL_CONSENT_KEY)}catch{return false}})();
   const needsLegalReconfirmation=!!introStored?.completed&&hasPriorLegalRecord&&!legalDocuments.readLegalConsent(onboardStorage);
   const onboardingState={open:!introStored?.completed||needsLegalReconfirmation,step:needsLegalReconfirmation?1:0,reconsentOnly:needsLegalReconfirmation,replay:false,language:settingsUi.display.language,termsAccepted:false,privacyConfirmed:false,error:"",nickname:settingsUi.profile.nickname,purpose:settingsUi.profile.purpose,heightCm:String(settingsUi.profile.heightCm??""),weightKg:String(settingsUi.profile.weightKg??""),ageBand:settingsUi.profile.ageBand};
-  const pageLabels={condition:"コンディションの歩み",home:"ホーム",record:"記録","record-start":"記録を始める","record-review":"記録内容の確認","record-course":"コース・走行条件","record-rof":"運動前後の疲労感","record-more":"追加情報","record-compare":"歩数・走り方","record-reflection":"身体・使用品・メモ","record-environment":"環境",result:"結果","dynamic-result":"動的結果",history:"履歴",annotation:"記録の後日補完","exploration-tree":"探究",learning:"学習",settings:"設定",measurement:"測定","gps-review":"GPS記録内容の確認","gps-rof":"GPSの疲労感",course:"コース設計",simulation:"シミュレーション",consultation:"相談・共有","body-part-detail":"部位詳細"};
+  const pageLabels={condition:"コンディションの歩み",home:"ホーム",record:"記録","record-start":"記録を始める","record-review":"記録内容の確認","record-course":"コース・走行条件","record-rof":"運動前後の疲労感","record-more":"追加情報","record-compare":"歩数・走り方","record-reflection":"身体・使用品・メモ","record-environment":"環境",result:"結果","dynamic-result":"動的結果",history:"履歴",annotation:"記録の後日補完","exploration-tree":"探究",learning:"学習",settings:"設定",measurement:"測定","gps-review":"GPS記録内容の確認","gps-rof":"GPSの疲労感",course:"コース設計",consultation:"相談・共有","body-part-detail":"部位詳細"};
   const desktopNav=[["home","⌂","ホーム"],["record","✎","記録"],["result","▥","結果"],["history","◷","履歴"],["exploration-tree","⚭","探究"],["learning","▣","学習"],["settings","⚙","設定"]];
-  const mobileNav=[["home","⌂","ホーム"],["record-start","✎","記録"],["history","◷","履歴"],["exploration-tree","⚭","探究"],["learning","▣","学習"],["settings","⚙","設定"]];
+  const mobileNav=[["home","⌂","ホーム"],["record-start","✎","記録"],["history","◷","履歴"],["exploration-tree","⚭","探究"],["settings","⚙","設定"]];
   const currentPage=()=>{const raw=location.hash.replace(/^#\/?/,"");const path=raw.split("?")[0];return path==="history"&&raw.includes("life=1")?"condition":pageLabels[path]?path:"home"};
   const navIcon=function navIcon(name){
   const shapes={
@@ -605,7 +602,7 @@ function recordExtras(){
     function settings(){return settingsExperience.renderSettings({...settingsUi,dataUi});}
     function secondary(page){
  const title=pageLabels[page]||"その他";
- const top=`<section class="home-head"><div><h1>${esc(title)}</h1><p class="lead">${esc({measurement:"走る時間とルートを確かめる。",course:"走りたいコースを、自分で組み立てる。",simulation:"条件を変えて、参考値の違いを考える。",consultation:"記録を振り返り、必要な情報を整理する。","body-part-detail":"気になる部位を、過去の記録と照らし合わせる。"}[page]||"自分の記録を大切に扱う。")}</p></div></section>`;
+ const top=`<section class="home-head"><div><h1>${esc(title)}</h1><p class="lead">${esc({measurement:"走る時間とルートを確かめる。",course:"走りたいコースを、自分で組み立てる。",consultation:"記録を振り返り、必要な情報を整理する。","body-part-detail":"気になる部位を、過去の記録と照らし合わせる。"}[page]||"自分の記録を大切に扱う。")}</p></div></section>`;
 
  if(['measurement','gps-review','gps-rof'].includes(page)&&!gpsPlatform.currentGpsSmartphone())
    return '<section class="gps-v2 gps-platform-unavailable" role="status"><h1>GPS測定はスマートフォン専用です</h1><p>PCでは手入力をご利用ください。</p><a href="#/record-start" class="gps-v2-button gps-v2-primary">記録方法に戻る</a></section>';
@@ -619,16 +616,6 @@ function recordExtras(){
    return rofExperience.rofPage(gpsSelfReport,gpsRofUi,{gps:true});
  }
    if(page==="course")return recordCourse(true);
- if(page==="simulation"){
-  const selected=simulationUi.gpsId;
-  const active=selected&&gpsV2Cache.ok&&gpsV2Cache.records.some(r=>r.id===selected&&r.detailSaved);
-  if(!active||simulationUi.gpsFeatureId!==selected){simulationUi.gpsFeature=null;simulationUi.gpsFeatureId='';}
-  if(simulationUi.source==='gps'&&simulationUi.gpsFeature)simulationUi.distance=String(simulationUi.gpsFeature.distanceKm);
-  return simulationExperience.renderSimulation(simulationUi,{
-   presets:coursePresets.readCoursePresets(onboardStorage),
-   manualRuns:manualRunStore.readManualRuns(onboardStorage),
-   gpsRuns:gpsV2Cache
-  });}
  if(page==="consultation")return consultationExperience.renderConsultation();
  // The legacy body-part detail hash must never display fixed demo numbers as
  // if they came from a saved run. The real 12-region evidence lives in Result.
@@ -744,33 +731,6 @@ function recordExtras(){
  if(page==="measurement"){
    measurementExperience.updateMeasurementDom(app.querySelector("[data-gps-live-page]"),ensureGps().state,ensureGps().elapsed());
  }
- if(page==="simulation"){
-   const panel=app.querySelector("[data-sim-page]");
-   simulationExperience.bindSimulation(panel,simulationUi);
-   panel?.addEventListener("sim-redraw",()=>{
-     const y=window.scrollY,active=document.activeElement;
-     const source=active?.getAttribute?.("data-sm-source"),field=active?.getAttribute?.("data-sm-field");
-     const selectedV2=simulationUi.source==='gps'&&simulationUi.gpsId?.startsWith('gps-v2-')
-       &&simulationUi.gpsFeatureId!==simulationUi.gpsId;
-     render();window.scrollTo(0,y);
-     // A simulation source or saved-record selection replaces this entire screen.
-     // Restore focus to the same control without moving the scroll position.
-     const current=source?app.querySelector('[data-sm-source="'+source+'"]'):field?app.querySelector('[data-sm-field="'+field+'"]'):null;
-     current?.focus({preventScroll:true});
-     if(selectedV2){
-      // Fetch the selected V2 record on demand; late responses cannot replace
-      // a newer selection. No extra GPS data is shared or transmitted.
-      void simulationExperience.resolveGpsV2CourseSelection(simulationUi,{
-       readDetail:gpsV2.readGpsV2Detail,toFeature:gpsV2.gpsV2DetailToFeature
-      }).then(result=>{
-       if(result.stale||currentPage()!=='simulation')return;
-       const scroll=window.scrollY,focus=document.activeElement?.getAttribute?.('data-sm-field');
-       render();window.scrollTo(0,scroll);
-       if(focus)app.querySelector('[data-sm-field="'+focus+'"]')?.focus({preventScroll:true});
-      });
-     }
-   });
- }
  if(page==="history"){
    const saved=manualRunStore.readManualRuns(onboardStorage);
    const restDays=restDayStore.readRestDays(onboardStorage);
@@ -788,7 +748,7 @@ function recordExtras(){
    if(!gpsV2Cache.ok)gpsPanel.insertAdjacentHTML("beforeend",`<p role="alert">${esc(gpsV2Cache.reason)}</p>`);
    if(gpsV2Cache.ok){
     const recent=gpsV2Cache.records.slice().reverse();
-    const markup=recent.length?recent.map(r=>`<article class="gps-history-item"><span><strong>${esc(r.date)}｜${esc(gpsCore.GPS_ACTIVITY[r.activity])}</strong><small>${r.distanceKm.toFixed(2)} km ・ ${gpsCore.formatGpsClock(r.activeSeconds*1000)} ・ ${r.detailSaved?(r.activity==='MIXED'?'コース保存あり（動的結果は対象外）':'動的結果データあり'):'概要のみ'}</small></span><div><a class="btn soft" href="#/result?gps=${encodeURIComponent(r.id)}">結果を見る</a><a class="btn soft" href="${esc(annotationEditor.editorLink({sourceType:'GPS_V2',recordId:r.id}))}">この記録を補う（任意）</a>${r.detailSaved?`<button data-gps-v2-use="${esc(r.id)}">コースを試す</button>`:""}<button data-gps-v2-delete="${esc(r.id)}">削除</button></div></article>`).join('') :'';
+    const markup=recent.length?recent.map(r=>`<article class="gps-history-item"><span><strong>${esc(r.date)}｜${esc(gpsCore.GPS_ACTIVITY[r.activity])}</strong><small>${r.distanceKm.toFixed(2)} km ・ ${gpsCore.formatGpsClock(r.activeSeconds*1000)} ・ ${r.detailSaved?(r.activity==='MIXED'?'コース保存あり（動的結果は対象外）':'動的結果データあり'):'概要のみ'}</small></span><div><a class="btn soft" href="#/result?gps=${encodeURIComponent(r.id)}">結果を見る</a><a class="btn soft" href="${esc(annotationEditor.editorLink({sourceType:'GPS_V2',recordId:r.id}))}">この記録を補う（任意）</a><button data-gps-v2-delete="${esc(r.id)}">削除</button></div></article>`).join('') :'';
     if(recent.length)gpsPanel.insertAdjacentHTML('beforeend','<section class="gps-v2-history">'+markup+'</section>');
    }
    if(gpsCount===0)gpsPanel.insertAdjacentHTML('beforeend','<p class="gps-history-empty">GPSで保存した記録はありません。</p>');
@@ -1597,17 +1557,6 @@ function recordExtras(){
         render();app.querySelector(pending==='resume'?'[data-gps-action="resume"]':'[data-gps-action="start"]')?.focus();
       }
       return;
-    }
-    const gpsV2Use=event.target.closest('[data-gps-v2-use]');
-    if(gpsV2Use){
-     const saved=await gpsV2.readGpsV2Detail(gpsV2Use.dataset.gpsV2Use);
-     if(!saved.ok){state.toast=saved.reason;render();return;}
-     const feature=gpsV2.gpsV2DetailToFeature(saved.summary,saved.detail);
-     if(!feature){state.toast='コースを読み込めませんでした';render();return;}
-     simulationUi.source='gps';simulationExperience.beginGpsCourseSelection(simulationUi,saved.summary.id);
-     simulationUi.gpsFeature=feature;simulationUi.gpsFeatureId=saved.summary.id;
-     simulationUi.distance=String(feature.distanceKm);
-     location.hash='#/simulation';return;
     }
     const gpsV2Delete=event.target.closest('[data-gps-v2-delete],[data-gps-v2-confirm-delete],[data-gps-v2-cancel-delete]');
     if(gpsV2Delete){

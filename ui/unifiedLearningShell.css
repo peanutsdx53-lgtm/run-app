@@ -3,7 +3,7 @@
 .app-shell .topbar{display:none!important}
 @media(max-width:800px){
  .app-shell .mobile-nav{
-  display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
   grid-auto-rows:minmax(54px,auto)!important;height:auto!important;
   min-height:65px!important;align-items:stretch!important;
   padding:5px 3px calc(7px + env(safe-area-inset-bottom,0px))!important;

@@ -4,10 +4,10 @@ import fs from 'node:fs';
 import {translateUiText} from '../ui/englishUi.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('Public screens do not expose project codenames or provisional labels',()=>{
+ assert.doesNotMatch(read('app.js'),/simulationExperience|data-gps-v2-use/);
  assert.doesNotMatch(read('ui/explorationExperience.js'),/研究Current|研究用の出典台帳|RunLoadで本人|RunLoadの本人|Runloadの効果/);
  assert.doesNotMatch(read('ui/learningOriginLesson.js'),/Reference-100|補助教材（試行版）|研究系列の条件付き参考情報/);
  assert.doesNotMatch(read('ui/learningMotionLesson.js'),/一般知識の試行教材/);
- assert.doesNotMatch(read('ui/simulationExperience.js'),/計画と実績の自動照合は未実装/);
  assert.doesNotMatch(read('ui/referenceEvidenceInfo.js'),/研究台帳参照|研究上の指標|モデル内の原著ID|識別子：/);
  assert.doesNotMatch(read('ui/resultExperience.js'),/参考原著・識別子|研究上の測定量/);
  assert.match(read('ui/resultExperience.js'),/ROF_TIME_BASIS_DISPLAY/);
@@ -20,7 +20,6 @@ test('Visible file names are neutral; backup format and storage contracts are un
  assert.doesNotMatch(read('app.js'),/従来形式のバックアップ|新形式のGPS記録/);
  assert.doesNotMatch(read('app.js'),/a\.download='runload-gps-v2-backup-|anchor\.download='runload-gps-backup-/);
  assert.match(read('ui/gpsReplayIndexedDbStore.js'),/runload-gps-v2-backup/);
- assert.doesNotMatch(read('ui/simulationExperience.js'),/GPS実走履歴：今後対応|gpsRecordToFeature/);
  assert.doesNotMatch(read('ui/learningOriginLesson.js'),/GPS旧形式|新形式（v2）|旧記録に存在しない項目/);
  assert.doesNotMatch(read('ui/consultationExperience.js'),/GPS旧形式計測値|新形式のGPS記録/);
  assert.doesNotMatch(read('sw.js'),/gpsIndexedDbStore|gpsMeasurementStore/);
@@ -50,7 +49,6 @@ test('current GPS is the only runtime storage and reference path',()=>{
  }
  assert.match(read('ui/gpsReplayIndexedDbStore.js'),/prepareGpsMeasurement/);
  assert.match(read('ui/dataManagement.js'),/local:snap.local,gps/);
- assert.match(read('ui/simulationExperience.js'),/detailSaved===true/);
  assert.match(read('sw.js'),/\.\/ui\/gpsMeasurementValidation\.js/);
 });
 

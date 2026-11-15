@@ -7,7 +7,7 @@ import {fatigueMarkup} from '../ui/learningFatigueLesson.js';
 import {mountLearning} from '../ui/learningExperience.js';
 import {shortcutsCard} from '../ui/homeExperience.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261115-focus-ui-v1';
+const cacheVersion='20261115-retire-whatif-v1';
 function visibleText(markup){
  return markup.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ')
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ')
@@ -29,7 +29,7 @@ test('P11: no banned product name appears in catalogue and three standalone less
 });
 test('P11: the extra three functions remain in Home quick access, never Settings',()=>{
  const home=shortcutsCard(),settings=read('ui/settingsExperience.js');
- for(const route of ['course','simulation','consultation']){
+ for(const route of ['course','learning','consultation']){
   assert.match(home,new RegExp('href="#/'+route+'"'),'Home missing '+route);
   assert.doesNotMatch(settings,new RegExp('href="#/'+route+'"'),'Do not move '+route+' to Settings');
  }
@@ -41,14 +41,14 @@ test('P11: the extra three functions remain in Home quick access, never Settings
 });
 test('P11: the last stylesheet and offline version are really new',()=>{
  const index=read('index.html'),sw=read('sw.js'),css=read('ui/unifiedLearningShell.css');
- const version='20261115-focus-ui-v1',presentationVersion='20261111-home-autosave-v1';
- assert.ok(index.includes('unifiedLearningShell.css?v=20261111-learning-density-v1'));
+ const version='20261115-retire-whatif-v1',presentationVersion='20261111-home-autosave-v1';
+ assert.ok(index.includes('unifiedLearningShell.css?v=20261115-retire-whatif-v1'));
  assert.match(index,new RegExp('app\\.js\\?v='+version));
  assert.match(sw,new RegExp('runload-ui-next-shell-'+cacheVersion));
- assert.ok(sw.includes('unifiedLearningShell.css?v=20261111-learning-density-v1'));
+ assert.ok(sw.includes('unifiedLearningShell.css?v=20261115-retire-whatif-v1'));
  assert.match(index,new RegExp('pwa\\.js\\?v='+presentationVersion));
  assert.match(sw,new RegExp('pwa\\.js\\?v='+presentationVersion));
- assert.match(css,/grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+ assert.match(css,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
  assert.match(css,/\.app-shell \.topbar\{display:none!important\}/);
  assert.match(css,/\.lr-root \.lr-lesson-title\{/);
  assert.doesNotMatch(index,/s2-utility-links/,'no settings relocation');
