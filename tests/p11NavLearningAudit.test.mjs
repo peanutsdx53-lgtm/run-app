@@ -41,7 +41,7 @@ test('P11: the extra three functions remain in Home quick access, never Settings
 });
 test('P11: the last stylesheet and offline version are really new',()=>{
  const index=read('index.html'),sw=read('sw.js'),css=read('ui/unifiedLearningShell.css');
- const version='20261115-home-copy-v1',presentationVersion='20261111-home-autosave-v1';
+ const version='20261115-focus-ui-v1',presentationVersion='20261111-home-autosave-v1';
  assert.ok(index.includes('unifiedLearningShell.css?v=20261111-learning-density-v1'));
  assert.match(index,new RegExp('app\\.js\\?v='+version));
  assert.match(sw,new RegExp('runload-ui-next-shell-'+cacheVersion));
