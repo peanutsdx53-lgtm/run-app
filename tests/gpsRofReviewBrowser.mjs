@@ -207,5 +207,30 @@ try{
   assert.deepEqual(errors,[],'no browser errors');
   await ctx.close();
  }
+ // Separate English visual/layout contract: the user selects the same three
+ // modes in English without enabling the real GPS sensor or persisting a route.
+ for(const width of [320,390,414]){
+  const enContext=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce',
+   locale:'en-US',userAgent:phoneUA,isMobile:true,hasTouch:true});
+  await enContext.addInitScript(()=>{
+   localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:'en'}));
+   localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({language:'en',textSize:'standard',motion:'system'}));
+  });
+  const enPage=await enContext.newPage(),errors=[];
+  enPage.on('pageerror',e=>errors.push(e.message));
+  await enPage.goto('http://127.0.0.1:4226/#/measurement',{waitUntil:'networkidle'});
+  await enPage.locator('[data-phase="ready"]').waitFor();
+  const choices=await enPage.locator('[data-gps-activity] option').evaluateAll(nodes=>nodes.map(x=>({value:x.value,label:x.textContent.trim()})));
+  assert.deepEqual(choices.map(x=>x.value),['WALK','JOGGING','RUNNING']);
+  assert.equal(choices.length,3,'English options also exclude MIXED');
+  assert.ok(choices.every(x=>!/[ぁ-んァ-ン一-龯]/.test(x.label)),'English choices must not contain Japanese labels: '+JSON.stringify(choices));
+  for(const mode of choices){
+   await enPage.locator('[data-gps-activity]').selectOption(mode.value);
+   await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage1-en-prep-'+mode.value.toLowerCase()+'.png'),
+    fullPage:true,animations:'disabled'});
+  }
+  assert.deepEqual(errors,[],'no English GPS browser errors');
+  await enContext.close();
+ }
  console.log('PASS mobile GPS preflight -> ROF -> measurement -> after ROF -> result, desktop blocked '+engine);
 }finally{await browser.close();await new Promise(done=>server.close(done));}
