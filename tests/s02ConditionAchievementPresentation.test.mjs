@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {conditionCard,achievementCard,todayLocal,CONDITION_KEY} from '../ui/homeExperience.js';
+import {conditionCard,achievementCard,achievementPanel,todayLocal,CONDITION_KEY} from '../ui/homeExperience.js';
 function storage(seed={}){const data=new Map(Object.entries(seed));return {getItem:k=>data.has(k)?data.get(k):null,setItem:(k,v)=>data.set(k,String(v)),snapshot:()=>JSON.stringify([...data])};}
 test('S02: no-life-record is an honest empty state, not zero-duration data',()=>{
  const s=storage(),before=s.snapshot(),html=conditionCard(s);
@@ -34,4 +34,13 @@ test('S02: each achievement displays its real threshold and status, no invented 
  const error=achievementCard({ok:false,reason:'破損'});
  assert.doesNotMatch(error,/hx-award-item won|hx-award-item locked/);
  assert.match(error,/実績を確認できません/);
+});
+
+test('S02 milestone scope is behind optional help and not an always-visible caption',()=>{
+ const html=achievementPanel({ok:true,records:[]});
+ assert.match(html,/hx-ach-help/);
+ assert.match(html,/実績の対象と節目について/);
+ assert.match(html,/この端末に保存した手入力の走行記録だけが対象/);
+ assert.doesNotMatch(html,/class="hx-ach-limit"/);
+ assert.equal((html.match(/hx-ach-milestone /g)||[]).length,4);
 });

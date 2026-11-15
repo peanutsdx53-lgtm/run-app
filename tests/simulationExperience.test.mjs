@@ -159,3 +159,12 @@ test('GPS source choice is enabled; obsolete pre-integration disabled copy is go
  assert.doesNotMatch(html,/<button(?=[^>]*data-sm-source="gps")[^>]*disabled/);
  assert.doesNotMatch(html,/GPS実走履歴：今後対応|GPS走行軌跡の保存機能が接続されてから利用できます/);
 });
+
+test('simulation keeps scientific limits and centered SVG navigation without redundant captions',()=>{
+ const html=renderSimulation(newSimulationUi(),{presets:{ok:true,records:[]},manualRuns:{ok:true,records:[]}});
+ assert.match(html,/class="sm-back"[^>]*><svg/);
+ assert.equal((html.match(/class="sm-step-head"/g)||[]).length,4);
+ assert.doesNotMatch(html,/GPS・GPXがなくても条件を試せます|class="sm-note"|2つの案に共通する計算の前提/);
+ assert.match(html,/class="rl-screen-help"/);
+ assert.match(html,/算術上の結果/);
+});
