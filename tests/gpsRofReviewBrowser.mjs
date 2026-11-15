@@ -313,7 +313,7 @@ try{
     fullPage:true,animations:'disabled'});
   }
 
-   if(width===320||width===390){
+   { // All smartphone widths must review translated post-run input.
     await enPage.locator('[data-gps-activity]').selectOption('JOGGING');
     await enPage.locator('[data-gps-goal-mode]').selectOption('time');
     await enPage.locator('[data-gps-goal-value]').fill('8');
@@ -340,6 +340,29 @@ try{
     await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-finish-confirm.png'),fullPage:true});
     await enPage.locator('[data-gps-action="finish-cancel"]').click();
     assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'English cancel preserves active session');
+    await enPage.evaluate(()=>window.__gpsStage2Fix(37.50025,Date.now()+5000));
+    await enPage.waitForTimeout(1100);
+    await enPage.locator('[data-gps-action="finish"]').click();
+    await enPage.locator('[data-gps-finish-dialog]').waitFor({state:'visible'});
+    await enPage.locator('[data-gps-action="finish-confirm"]').click();
+    await enPage.locator('[data-gps-review]').waitFor();
+    await enPage.waitForFunction(()=>document.querySelector('.gps-review-surface-heading')?.textContent.includes('Not Measured by GPS'),null,{timeout:10000});
+    const englishChoices=await enPage.locator('[data-gps-surface] option').evaluateAll(nodes=>nodes.map(n=>n.textContent.trim()));
+    assert.equal(englishChoices.length,9);
+    assert.ok(englishChoices.every(t=>!/[ぁ-んァ-ン一-龯]/.test(t)),'untranslated English surface labels '+JSON.stringify(englishChoices));
+    assert.equal(await enPage.locator('[data-gps-surface]').inputValue(),'UNKNOWN');
+    const enGeometry=await enPage.evaluate(()=>{
+      const select=document.querySelector('[data-gps-surface]'),v=select.getBoundingClientRect();
+      const buttons=[...document.querySelectorAll('.gps-review button,.gps-review a')].filter(x=>x.getClientRects().length).map(x=>{const r=x.getBoundingClientRect();return {left:r.left,right:r.right}});
+      return {width:innerWidth,scroll:document.documentElement.scrollWidth,selectLeft:v.left,selectRight:v.right,buttons};
+    });
+    assert.ok(enGeometry.scroll<=enGeometry.width+2,'English GPS review overflow '+JSON.stringify(enGeometry));
+    assert.ok(enGeometry.selectLeft>=0&&enGeometry.selectRight<=enGeometry.width+1,'English surface selector fits '+JSON.stringify(enGeometry));
+    assert.ok(enGeometry.buttons.every(x=>x.left>=-1&&x.right<=enGeometry.width+1),'English controls fit '+JSON.stringify(enGeometry));
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage3-en-review-empty.png'),fullPage:true,animations:'disabled'});
+    await enPage.locator('[data-gps-surface]').selectOption('soil');
+    await enPage.locator('.gps-review-surface details summary').click();
+    await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage3-en-review-surface-help.png'),fullPage:true,animations:'disabled'});
    }
   assert.deepEqual(errors,[],'no English GPS browser errors');
   await enContext.close();
