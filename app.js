@@ -1,5 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {startEnglishUi} from './ui/englishUi.js?v=20261115-retire-whatif-v1';
+import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
   // Load independent screen modules concurrently instead of a 48-request serial waterfall.
@@ -154,6 +155,30 @@ import {startEnglishUi} from './ui/englishUi.js?v=20261115-retire-whatif-v1';
   let gpsController=null;
   const emptyGpsReport=()=>({rofBefore:null,rofAfter:null,beforeCapturedAt:null,afterCapturedAt:null,surface:'UNKNOWN',memo:'',saveRoute:false});
   let gpsSelfReport=emptyGpsReport();
+  let gpsSaveNotice='';
+  // Only an opaque request ID and calendar date survive reload; raw locations
+  // and the unsaved measurement are never written to sessionStorage.
+  const pendingGpsOperationKey='runload-v2-pending-gps-operation-v1';
+  let gpsSaveOperation=null;
+  try{
+    const entry=JSON.parse(sessionStorage.getItem(pendingGpsOperationKey)||'null');
+    if(gpsV2.validNewGpsRequestId(entry?.id)&&/^\d{4}-\d{2}-\d{2}$/.test(entry.date||'')){
+      gpsSaveOperation={id:entry.id,date:entry.date};
+    }
+  }catch{}
+  const clearGpsSaveOperation=()=>{
+    gpsSaveOperation=null;
+    try{sessionStorage.removeItem(pendingGpsOperationKey)}catch{}
+  };
+  const currentGpsSaveOperation=()=>{
+    if(gpsSaveOperation)return gpsSaveOperation;
+    const id='gps-v2-'+(globalThis.crypto?.randomUUID?.()||'');
+    if(!gpsV2.validNewGpsRequestId(id))return null;
+    const now=new Date(),date=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    gpsSaveOperation={id,date};
+    try{sessionStorage.setItem(pendingGpsOperationKey,JSON.stringify(gpsSaveOperation))}catch{}
+    return gpsSaveOperation;
+  };
   let dynamicPlayback=null;
   let gpsTicker=null;
   let gpsWakeLock=null,gpsWakeLockGeneration=0;
@@ -512,7 +537,7 @@ function recordExtras(){
   }
   function record(){return recordExperience.manualPage(state);}
   function recordReview(){return recordReviewExperience.reviewView(state.recordDraft,{
-    recordType:state.recordType,source:state.recordReviewSource,courseUi:state.recordCourseUi,bodySelected:bodyUi.selected,saveNotice:manualSaveNotice,mentalSummary:mentalExperience.mentalSummary(manualMental)
+    recordType:state.recordType,source:state.recordReviewSource,courseUi:state.recordCourseUi,bodySelected:bodyUi.selected,saveNotice:manualSaveNotice,saving:mentalSaveBusy,mentalSummary:mentalExperience.mentalSummary(manualMental)
   });}
   function recordCourse(fromHome=false){return recordExperience.coursePage(state,state.recordCourseUi,coursePresets.readCoursePresets(onboardStorage),fromHome);}
   function recordRof(){return rofExperience.rofPage(state.recordDraft,rofUi);}
@@ -606,8 +631,8 @@ function recordExtras(){
 
  if(['measurement','gps-review','gps-rof'].includes(page)&&!gpsPlatform.currentGpsSmartphone())
    return '<section class="gps-v2 gps-platform-unavailable" role="status"><h1>GPS測定はスマートフォン専用です</h1><p>PCでは手入力をご利用ください。</p><a href="#/record-start" class="gps-v2-button gps-v2-primary">記録方法に戻る</a></section>';
- if(page==="measurement")return measurementExperience.measurementPage(ensureGps().state,ensureGps().elapsed(),gpsSelfReport);
- if(page==="gps-review")return measurementExperience.gpsReviewPage(ensureGps().state,ensureGps().elapsed(),gpsSelfReport,mentalExperience.renderMentalInput(gpsMental,'gps'));
+ if(page==="measurement")return measurementExperience.measurementPage(ensureGps().state,ensureGps().elapsed(),gpsSelfReport,{pendingSave:!!gpsSaveOperation});
+ if(page==="gps-review")return measurementExperience.gpsReviewPage(ensureGps().state,ensureGps().elapsed(),gpsSelfReport,mentalExperience.renderMentalInput(gpsMental,'gps'),{notice:gpsSaveNotice,saving:mentalSaveBusy});
  if(page==="gps-rof"){
    const phase=ensureGps().state.phase;
    if(!['ready','finished'].includes(phase))
