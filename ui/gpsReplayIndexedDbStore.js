@@ -208,9 +208,9 @@ export async function readGpsV2RunById(id){
   const detail=await result(tx.objectStore(GPS_V2_DETAILS).get(id));
   await done;
   if(summary===undefined&&detail===undefined)return {ok:true,found:false};
-  if(!validGpsV2Summary(summary)||summary.detailSaved
-    ?(!validGpsV2Summary(summary)||!validGpsV2Pair(summary,detail))
-    :detail!==undefined)return {ok:false,code:'INVALID_RECORD',reason:FAIL};
+  if(!validGpsV2Summary(summary)||
+     (summary.detailSaved?!validGpsV2Pair(summary,detail):detail!==undefined))
+   return {ok:false,code:'INVALID_RECORD',reason:FAIL};
   return {ok:true,found:true,summary,detail:detail??null};
  }catch{return {ok:false,code:'READ_FAILED',reason:FAIL};}
 }
