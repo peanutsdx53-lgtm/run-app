@@ -161,6 +161,49 @@ try{
   const fatigue=await result.locator('[data-pane="fatigue"]').innerText();
   assert.match(fatigue,/運動前/);assert.match(fatigue,/運動後/);
   assert.match(fatigue,/(^|\D)0(\D|$)/);assert.match(fatigue,/(^|\D)7(\D|$)/);
+  if(saveDetails){
+   // This is a synthetic *already-stored* legacy payload, not a newly
+   // created mixed session. Restore it through the existing V2 backup path.
+   const legacy=await page.evaluate(async id=>{
+    const store=await import('/ui/gpsReplayIndexedDbStore.js');
+    const prior=await store.readGpsV2Detail(id);
+    if(!prior.ok)return {ok:false,reason:prior.reason};
+    const oldId='gps-v2-legacy-20261027-mixed-01';
+    const summary=structuredClone(prior.summary),detail=structuredClone(prior.detail);
+    summary.id=oldId;summary.activity='MIXED';summary.energyEstimate=null;
+    summary.finalReference={...summary.finalReference,state:'MIXED_NOT_SUPPORTED',
+     modelVersion:null,semanticVersion:null,source:null,
+     regions:summary.finalReference.regions.map(r=>({...r,value:null,
+      calculationState:'NOT_CALCULABLE',reasonCode:'MIXED_NOT_SUPPORTED'}))};
+    detail.id=oldId;
+    const data=JSON.stringify({format:store.GPS_V2_BACKUP_FORMAT,version:2,summaries:[summary],details:[detail]});
+    const check=store.inspectGpsV2Backup(data);
+    if(!check.ok)return {ok:false,reason:check.reason};
+    const imported=await store.importGpsV2Backup(data);
+    const records=await store.readGpsV2Summaries();
+    const restored=await store.readGpsV2Detail(oldId);
+    return {ok:imported.ok&&records.ok&&restored.ok,added:imported.added,
+     historic:records.records.some(x=>x.id===oldId&&x.activity==='MIXED'),
+     state:restored.summary?.finalReference?.state,reason:imported.reason};
+   },id);
+   assert.equal(legacy.ok,true,legacy.reason);
+   assert.equal(legacy.added,1,'old mixed record imported without changing existing IDs');
+   assert.equal(legacy.historic,true,'legacy MIXED read back');
+   assert.equal(legacy.state,'MIXED_NOT_SUPPORTED','old scientific refusal remains intact');
+   await page.goto(host+'history',{waitUntil:'networkidle'});
+   await page.reload({waitUntil:'networkidle'});
+   const section=page.locator('[data-gps-history-disclosure]');
+   await section.waitFor();
+   if(await section.getAttribute('open')===null)await section.locator('summary').first().click();
+   const oldItem=page.locator('.gps-history-item').filter({hasText:'走る＋歩く'}).first();
+   await oldItem.waitFor();
+   assert.match(await oldItem.innerText(),/動的結果は対象外/);
+   await shot('stage1-legacy-mixed-history');
+   await oldItem.locator('a[href^="#/result?gps="]').first().click();
+   await page.locator('#runload-result-v4 .rv4-header').waitFor();
+   assert.equal(await page.locator('[data-gps-dynamic-gate]').count(),0,'legacy mixed must not be misrepresented as dynamic reference');
+   await shot('stage1-legacy-mixed-result');
+  }
   assert.deepEqual(errors,[],'no browser errors');
   await ctx.close();
  }
