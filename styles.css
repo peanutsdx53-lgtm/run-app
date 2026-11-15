@@ -1868,13 +1868,11 @@ html:has(#runload-result-v4),body:has(#runload-result-v4),body:has(#runload-resu
  .app-shell:has(.cj-screen) .mobile-nav,
  .app-shell:has(#runload-consultation) .mobile-nav,
  .app-shell:has([data-settings-v2]) .mobile-nav,
- .app-shell:has([data-measurement-v2]) .mobile-nav,
- .app-shell:has(.sm-page) .mobile-nav{height:auto;min-height:63px;grid-auto-rows:minmax(45px,auto);align-items:stretch}
+ .app-shell:has([data-measurement-v2]) .mobile-nav{height:auto;min-height:63px;grid-auto-rows:minmax(45px,auto);align-items:stretch}
  .app-shell:has(.cj-screen) .mobile-link,
  .app-shell:has(#runload-consultation) .mobile-link,
  .app-shell:has([data-settings-v2]) .mobile-link,
- .app-shell:has([data-measurement-v2]) .mobile-link,
- .app-shell:has(.sm-page) .mobile-link{height:auto;min-height:45px;align-content:center;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
+ .app-shell:has([data-measurement-v2]) .mobile-link{height:auto;min-height:45px;align-content:center;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
  .app-shell:has(.cj-screen) .main-content,
  .app-shell:has(#runload-consultation) .main-content,
  .app-shell:has([data-settings-v2]) .main-content,
