@@ -232,6 +232,8 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  if((m=s.match(/^(\d+)分走る → (\d+)分歩く · (\d+)分サイクル$/)))
   return 'Run '+m[1]+' min → Walk '+m[2]+' min · '+m[3]+' min Cycle';
  if((m=s.match(/^走る(\d+)分 ＋ 歩く(\d+)分$/)))return 'Run '+m[1]+' min + Walk '+m[2]+' min';
+  if(element?.matches?.('[data-gps-goal]')&&(m=s.match(/^目標 ([\d.]+) (km|分) ／ 残り (.+)$/)))
+   return 'Goal '+m[1]+' '+(m[2]==='分'?'min':'km')+' / Remaining '+m[3];
  if((m=s.match(/^目標距離まで ([\d.]+)分$/)))return m[1]+' min to Target Distance';
  if((m=s.match(/^(\d+)分間、入力したペースが変わらないと仮定すると、Aは([\d.]+)km、Bは([\d.]+)kmです。進行距離の差は([\d.]+)kmです。実際の道路上の到達地点は不明です。手動設定だけでは位置・坂道の順序を特定できません。$/)))
   return 'Assuming the entered paces remain unchanged for '+m[1]+' minutes, scenario A covers '+m[2]+' km and B covers '+m[3]+' km, a difference of '+m[4]+' km. The actual destination on a road is unknown. Manual settings do not determine positions or the order of hills.';
