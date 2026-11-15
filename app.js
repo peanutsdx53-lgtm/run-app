@@ -537,7 +537,7 @@ function recordExtras(){
   }
   function record(){return recordExperience.manualPage(state);}
   function recordReview(){return recordReviewExperience.reviewView(state.recordDraft,{
-    recordType:state.recordType,source:state.recordReviewSource,courseUi:state.recordCourseUi,bodySelected:bodyUi.selected,saveNotice:manualSaveNotice,saving:mentalSaveBusy,mentalSummary:mentalExperience.mentalSummary(manualMental)
+    recordType:state.recordType,source:state.recordReviewSource,courseUi:state.recordCourseUi,bodySelected:bodyUi.selected,saveNotice:manualSaveNotice,mentalSummary:mentalExperience.mentalSummary(manualMental)
   });}
   function recordCourse(fromHome=false){return recordExperience.coursePage(state,state.recordCourseUi,coursePresets.readCoursePresets(onboardStorage),fromHome);}
   function recordRof(){return rofExperience.rofPage(state.recordDraft,rofUi);}
