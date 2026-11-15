@@ -121,13 +121,20 @@ const shortRows=rows=>rows.map(r=>({
  regionId:r.regionId,value:r.calculationState==='CALCULATED'&&good(r.value)?r.value:null,
  calculationState:r.calculationState,reasonCode:r.reasonCode||null
 }));
-export function prepareGpsV2Run(session,{saveDetails=false,date=new Date().toISOString().slice(0,10),experience=null}={}){
+// A retry supplies the same operation ID. An ID is bound to exactly one
+// evidence payload and route-consent choice; it must never become another run.
+export const validNewGpsRequestId=id=>typeof id==='string'&&
+ /^gps-v2-[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(id);
+export function prepareGpsV2Run(session,{saveDetails=false,date=new Date().toISOString().slice(0,10),experience=null,requestId=null}={}){
  const subjective=prepareGpsExperience(experience);
  if(!subjective.ok)return subjective;
  const checked=prepareGpsMeasurement(session,{saveRoute:saveDetails,date});
  if(!checked.ok)return checked;
  const data=checked.measurement;
- const id='gps-v2-'+(globalThis.crypto?.randomUUID?.()||Math.random().toString(36).slice(2));
+ if(requestId!==null&&!validNewGpsRequestId(requestId))
+  return {ok:false,code:'BAD_REQUEST_ID',reason:'GPS保存操作IDの形式を確認できません'};
+ const id=requestId||('gps-v2-'+(globalThis.crypto?.randomUUID?.()||''));
+ if(!validNewGpsRequestId(id))return {ok:false,code:'ID_UNAVAILABLE',reason:'安全なGPS保存操作IDを生成できません'};
  const avg=data.distanceKm*1000/data.activeSeconds;
  const ref=evaluateGpsReplayReference({activity:data.activity,speedMps:avg});
  const energy=estimateGpsEnergy(session);
@@ -182,19 +189,61 @@ export async function readGpsV2Detail(id){
   return {ok:true,summary,detail};
  }catch{return {ok:false,reason:FAIL};}
 }
+// createdAt is assigned when the save is prepared, not when GPS was measured.
+// Exclude only that transient timestamp when comparing an exact replay.
+export function sameGpsSaveCandidate(candidate,storedSummary,storedDetail=null){
+ if(!candidate?.ok||!validGpsV2Summary(storedSummary))return false;
+ if(candidate.summary.detailSaved
+   ?!validGpsV2Pair(storedSummary,storedDetail)
+   :storedDetail!==null&&storedDetail!==undefined)return false;
+ const withoutWriteTime=summary=>{const {createdAt,...stable}=summary;return stable;};
+ return JSON.stringify(withoutWriteTime(candidate.summary))===JSON.stringify(withoutWriteTime(storedSummary))&&
+  JSON.stringify(candidate.detail)===JSON.stringify(storedDetail??null);
+}
+export async function readGpsV2RunById(id){
+ if(!validNewGpsRequestId(id))return {ok:false,code:'BAD_REQUEST_ID',reason:'GPS保存操作IDが正しくありません'};
+ try{
+  const db=await database(),tx=db.transaction([GPS_V2_SUMMARIES,GPS_V2_DETAILS],'readonly'),done=completion(tx);
+  const summary=await result(tx.objectStore(GPS_V2_SUMMARIES).get(id));
+  const detail=await result(tx.objectStore(GPS_V2_DETAILS).get(id));
+  await done;
+  if(summary===undefined&&detail===undefined)return {ok:true,found:false};
+  if(!validGpsV2Summary(summary)||summary.detailSaved
+    ?(!validGpsV2Summary(summary)||!validGpsV2Pair(summary,detail))
+    :detail!==undefined)return {ok:false,code:'INVALID_RECORD',reason:FAIL};
+  return {ok:true,found:true,summary,detail:detail??null};
+ }catch{return {ok:false,code:'READ_FAILED',reason:FAIL};}
+}
+export async function verifyGpsV2Commit(session,options){
+ const candidate=prepareGpsV2Run(session,options);
+ if(!candidate.ok)return candidate;
+ const read=await readGpsV2RunById(candidate.summary.id);
+ if(!read.ok)return read;
+ if(!read.found)return {ok:false,code:'NOT_FOUND',reason:'同じ保存操作IDの記録が見つかりません'};
+ return sameGpsSaveCandidate(candidate,read.summary,read.detail)
+  ?{ok:true,summary:read.summary,duplicate:true}
+  :{ok:false,code:'REQUEST_CONFLICT',reason:'同じ保存操作IDに異なる記録が存在します。履歴を確認してください'};
+}
 export async function saveGpsV2Run(session,options={}){
  const candidate=prepareGpsV2Run(session,options);
  if(!candidate.ok)return candidate;
  try{
   const db=await database(),tx=db.transaction([GPS_V2_SUMMARIES,GPS_V2_DETAILS],'readwrite'),done=completion(tx);
-  const store=tx.objectStore(GPS_V2_SUMMARIES);
+  const store=tx.objectStore(GPS_V2_SUMMARIES),details=tx.objectStore(GPS_V2_DETAILS);
+  const prior=await result(store.get(candidate.summary.id));
+  if(prior!==undefined){
+   const oldDetails=await result(details.get(candidate.summary.id));await done;
+   return sameGpsSaveCandidate(candidate,prior,oldDetails)
+    ?{ok:true,summary:prior,duplicate:true}
+    :{ok:false,code:'REQUEST_CONFLICT',reason:'保存操作IDの内容または軌跡保存の選択が一致しません。履歴を確認してください'};
+  }
   const count=await result(store.count());
-  if(count>=GPS_RECORD_LIMIT){tx.abort();await done.catch(()=>{});return {ok:false,reason:'GPS記録の上限（2000件）に達しました'};}
+  if(count>=GPS_RECORD_LIMIT){tx.abort();await done.catch(()=>{});return {ok:false,code:'LIMIT',reason:'GPS記録の上限（2000件）に達しました'};}
   store.add(candidate.summary);
-  if(candidate.detail)tx.objectStore(GPS_V2_DETAILS).add(candidate.detail);
+  if(candidate.detail)details.add(candidate.detail);
   await done;
-  return {ok:true,summary:candidate.summary};
- }catch{return {ok:false,reason:FAIL};}
+  return {ok:true,summary:candidate.summary,duplicate:false};
+ }catch{return {ok:false,code:'WRITE_UNKNOWN',reason:FAIL};}
 }
 export async function deleteGpsV2Run(id){
  try{
