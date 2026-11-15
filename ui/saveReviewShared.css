@@ -16,3 +16,9 @@
 .sv4-review .sv4-save-busy{margin:9px 0;color:#d5f9f8;font-size:.82rem;line-height:1.6}
 @media(max-width:360px){.sv4-review{padding:12px}.sv4-review dl>div{grid-template-columns:minmax(0,1fr);gap:3px;padding:8px 0}.sv4-review-head span{font-size:.7rem}}
 @media(prefers-reduced-motion:reduce){.sv4-review *{scroll-behavior:auto}}
+
+/* Recovery after an interrupted GPS save: no location is restored from storage. */
+.gps-v2 .gps-recovery{display:grid;gap:10px;margin:10px 0 14px;padding:16px;min-width:0;background:#143949;border-color:#977b50}
+.gps-v2 .gps-recovery strong{font-size:.92rem;line-height:1.5;color:#ffe9c5;overflow-wrap:anywhere}
+.gps-v2 .gps-recovery p{font-size:.8rem;line-height:1.7;color:#d8ebee;margin:0;overflow-wrap:anywhere}
+.gps-v2 .gps-recovery button{min-height:48px;width:100%;max-width:360px;white-space:normal}
