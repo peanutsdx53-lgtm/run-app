@@ -64,7 +64,6 @@ export const ENGLISH_FINAL_GPS=Object.freeze({
  "連続した走行を記録します。速度の目標は自動設定しません。": "Record a continuous run. No speed target is set automatically.",
  "ゆっくり走ったことを記録します。走行速度による活動区分の自動判定は行いません。": "Record jogging as selected. Activity type is not inferred automatically from GPS speed.",
  "歩いた経路と時間を記録します。走行の12部位モデルは適用しません。": "Record a walking route and duration. Running-specific 12-region models do not apply.",
- "走る・ジョギング・歩く区間を自分で切り替えながら記録します。": "Manually switch between running, jogging and walking segments while recording.",
  "目標なし": "No Goal",
  "記録方法へ戻る": "Back to Recording Methods",
  "GPS測定の使い方": "How to Use GPS Measurement",
