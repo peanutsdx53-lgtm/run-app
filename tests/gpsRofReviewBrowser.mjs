@@ -317,6 +317,8 @@ try{
     assert.equal(await enPage.locator('[data-phase="running"]').count(),1,'GPS error does not stop timer');
     await enPage.screenshot({path:resolve(out,engine+'-'+width+'-stage2-en-location-error.png'),fullPage:true});
     await enPage.evaluate(()=>window.__gpsStage2Fix(37.5,Date.now()));
+    await enPage.waitForFunction(()=>document.querySelector('[data-gps-accuracy]')?.textContent.includes('GPS accuracy'),
+      null,{timeout:10000});
     await enPage.locator('[data-gps-action="finish"]').click();
     await enPage.locator('[data-gps-finish-dialog]').waitFor({state:'visible'});
     await enPage.waitForFunction(()=>document.querySelector('#gps-finish-title')?.textContent.includes('End This Measurement'),null,{timeout:10000});
