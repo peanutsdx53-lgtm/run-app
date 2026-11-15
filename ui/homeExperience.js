@@ -158,7 +158,7 @@ function icon(which){
  chart:'<path d="M3 20h18M5 16v-4h4v4M11 16V5h4v11M17 16V9h4v7"/>',
  leaf:'<path d="M12 21v-8m0 7C7 19 4 16 4 12c4-1 8 0 8 5m0-4c0-6 3-9 8-10 1 5-1 10-8 12"/>',
  map:'<path d="M3 6 9 3l6 3 6-3v15l-6 3-6-3-6 3V6ZM9 3v15M15 6v15"/>',
- sim:'<path d="M3 20h18M5 17l5-5 4 2 5-8m-3 0h3v3"/>',
+ learn:'<path d="M3 5h7c2 0 3 1 3 3v13c0-2-2-3-4-3H3z"/><path d="M21 5h-7c-2 0-3 1-3 3v13c0-2 2-3 4-3h6z"/>',
  share:'<path d="M7 12 17 6M7 12l10 6"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="19" cy="19" r="2"/>'
  }[which]||'';
  return '<svg viewBox="0 0 24 24" aria-hidden="true" class="hx-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round">'+shape+'</svg>';
@@ -226,7 +226,7 @@ export function achievementCard(savedRuns={ok:true,records:[]}){
  return '<section class="hx-card hx-achievement"><button type="button" class="hx-title-button" data-achievement-open aria-label="実績の詳細を開く">'+head("実績","trophy",'<span class="hx-right">開く ›</span>')+'</button>'+track+'</section>';
 }
 export function shortcutsCard(){
- const links=[["course","コース設計","map"],["simulation","条件を変えて考える","sim"],["consultation","相談・共有","share"]];
+ const links=[["course","コース設計","map"],["learning","学習","learn"],["consultation","相談・共有","share"]];
  return '<section class="hx-card hx-shortcuts">'+head("クイックアクセス","bolt")+'<div class="hx-shortcut-grid">'+links.map(([url,label,ico])=>'<a href="#/'+url+'" class="hx-shortcut hx-shortcut-'+ico+'"><span>'+icon(ico)+'</span><strong>'+label+'</strong></a>').join("")+'</div></section>';
 }
 /** C F18: optional trend reads only confirmed, saved manual running records.
