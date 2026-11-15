@@ -65,6 +65,12 @@ try{
    await page.locator('[data-achievement-open]').click();
    const ach=page.locator('.hx-ach-dialog');await ach.waitFor();
    assert.equal(await ach.locator('.hx-ach-milestone').count(),4,'four milestones');
+   if(lang==='en'){
+    const copy=await ach.locator('.hx-ach-summary').innerText();
+    assert.match(copy,/Total Running Distance/,'English aggregate label');
+    assert.match(copy,/0 Runs/,'English manual-run count');
+    assert.doesNotMatch(copy,/累計走行距離| 件/,'untranslated aggregation');
+   }
    assert.equal(await ach.locator('.hx-ach-limit').count(),0,'no always-visible long caveats');
    assert.equal(await ach.locator('.hx-ach-help[open]').count(),0,'details default closed');
    measure=await ach.evaluate(e=>({top:e.getBoundingClientRect().top,headBg:getComputedStyle(e.querySelector('.hx-dialog-head')).backgroundColor}));
@@ -86,6 +92,10 @@ try{
    assert.equal(await course.locator('.rv-save-caption,.rv-commit-help').count(),0,'redundant course captions removed');
    assert.equal(await course.locator('.rv-course-step').count(),3,'course three sections remain');
    assert.equal(await course.locator('.rv-screen-help').count(),1,'course explanation accessible');
+   if(lang==='en'){
+    const bounds=await course.locator('.rv-condition-pair .rv-choice').evaluateAll(nodes=>nodes.map(e=>({text:e.innerText,scroll:e.scrollWidth,client:e.clientWidth})));
+    for(const b of bounds)assert.ok(b.scroll<=b.client+2,'English choice label clipped: '+JSON.stringify(b));
+   }
    await capture(page,'course',lang,width);
    if(width===390){
     await course.locator('.rv-screen-help summary').click();
@@ -96,6 +106,7 @@ try{
    const sim=page.locator('.sm-page');await sim.waitFor();
    assert.equal(await sim.locator('.sm-step-head').count(),4,'all simulation steps remain');
    assert.equal(await sim.locator('.sm-note').count(),0,'duplicate simulation captions removed');
+   if(lang==='en')assert.equal(await sim.locator('.sm-page .sm-field em').filter({hasText:'分/km'}).count(),0,'pace units translated');
    const back=await sim.locator('.sm-back').evaluate(e=>{const r=e.getBoundingClientRect(),s=e.querySelector('svg').getBoundingClientRect();return {boxCenter:[r.left+r.width/2,r.top+r.height/2],glyphCenter:[s.left+s.width/2,s.top+s.height/2],width:r.width,height:r.height}});
    assert.ok(Math.abs(back.boxCenter[0]-back.glyphCenter[0])<=1&&Math.abs(back.boxCenter[1]-back.glyphCenter[1])<=1,'SVG back arrow centered '+JSON.stringify(back));
    await capture(page,'simulation',lang,width);
