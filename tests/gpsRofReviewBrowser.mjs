@@ -20,7 +20,7 @@ const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true});
 const out=resolve(root,'audit-output','gps-mobile');await mkdir(out,{recursive:true});
 const phoneUA='Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
 try{
- for(const width of [320,390,414,1440]){
+ for(const width of [320,390,414,768,1440]){
   const phone=width<800;
   const opts={viewport:{width,height:900},reducedMotion:'reduce',locale:'ja-JP'};
   if(phone){opts.userAgent=phoneUA;opts.isMobile=true;opts.hasTouch=true;}
@@ -209,7 +209,7 @@ try{
  }
  // Separate English visual/layout contract: the user selects the same three
  // modes in English without enabling the real GPS sensor or persisting a route.
- for(const width of [320,390,414]){
+ for(const width of [320,390,414,768]){
   const enContext=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce',
    locale:'en-US',userAgent:phoneUA,isMobile:true,hasTouch:true});
   await enContext.addInitScript(()=>{
