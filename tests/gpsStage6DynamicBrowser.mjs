@@ -32,6 +32,7 @@ async function capture(page,width,language,state){
   return {width:innerWidth,scroll:document.documentElement.scrollWidth,body:document.body.scrollWidth,
    boxes:Object.fromEntries(selectors.map(x=>[x,document.querySelector(x)?rect(document.querySelector(x)):null])),
    buttons:[...document.querySelectorAll('.gd-flag-actions button')].map(rect),
+   heading:(()=>{const root=document.querySelector('.gd-anatomy-panel .gd-panel-head');if(!root)return null;return {outer:rect(root),strong:rect(root.querySelector('strong')),small:rect(root.querySelector('small'))};})(),
    state:document.querySelector('[data-gps-replay-state]')?.dataset.gpsReplayState};
  });
  assert.ok(layout.scroll<=layout.width+2&&layout.body<=layout.width+2,
@@ -42,6 +43,11 @@ async function capture(page,width,language,state){
  }
  for(const r of layout.buttons)assert.ok(r.height>=43.5&&r.left>=-2&&r.right<=layout.width+2,
   'flag nav hit target clipped '+JSON.stringify(r));
+ if(layout.heading){const {outer,strong,small}=layout.heading;
+  assert.ok(strong.left>=outer.left-1&&strong.right<=outer.right+1&&strong.bottom<=outer.bottom+1,'anatomy title clipped '+JSON.stringify(layout.heading));
+  assert.ok(small.left>=outer.left-1&&small.right<=outer.right+1&&small.bottom<=outer.bottom+1,'reference disclaimer clipped '+JSON.stringify(layout.heading));
+  assert.ok(strong.bottom<=small.top+2||strong.right<=small.left+1,'anatomy title overlaps disclaimer '+JSON.stringify(layout.heading));
+ }
  const path=resolve(out,engineName+'-'+language+'-'+width+'-'+state+'.png');
  await page.screenshot({path,fullPage:true,animations:'disabled',timeout:25000});
  results.push({engine:engineName,language,width,state,layout});
@@ -93,6 +99,7 @@ try{
   assert.equal(await page.locator('[data-gps-replay-state]').getAttribute('data-gps-replay-state'),'REFERENCE_ONLY');
   assert.equal(await page.locator('[data-flag-step]').count(),2);
   assert.equal(await page.locator('.gd-map-flag').count(),2);
+  assert.ok(await page.locator('.gd-speed-isolated').count()>=1,'speed graph displays valid isolated GPS speed after gap as an unconnected point');
   assert.equal(await page.locator('.gd-flag-step-status').innerText(),'0 / 2');
   await page.waitForFunction(lang=>lang==='ja'
    ?document.querySelector('.gd-time-axis-note')?.textContent.includes('横軸')
@@ -102,7 +109,13 @@ try{
    const english=(await page.locator('.gd-evidence-status').innerText())+' '+
     (await page.locator('.gd-flag-actions').innerText())+' '+
     (await page.locator('.gd-time-axis-note').innerText())+' '+
-    (await page.locator('.gd-panel-head').first().innerText());
+    (await page.locator('.gd-panel-head').first().innerText())+' '+
+    (await page.locator('.gd-metrics').innerText())+' '+
+    (await page.locator('.gd-panel-foot').first().innerText())+' '+
+    (await page.locator('.gd-reading-actions').innerText())+' '+
+    (await page.locator('.gd-play').innerText())+' '+
+    (await page.locator('.gd-head-sub').innerText())+' '+
+    (await page.locator('.gd-course-panel .gd-panel-head').innerText());
    assert.ok(!/[ぁ-んァ-ン一-龯]/.test(english),'English dynamic source UI not fully translated: '+english);
   }
   assert.equal(await page.locator('.gd-note-disclosure').getAttribute('open'),null,'long research limitations start folded');
