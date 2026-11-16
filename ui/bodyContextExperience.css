@@ -117,3 +117,41 @@
  .cx-page .cx-tabs{gap:3px}
 }
 @media print{.cx-page .cx-screen-help{display:none}}
+
+
+/* Record UI D32: 320/390px English and Japanese at 200% text.
+   Back and help occupy their own row, giving the translated heading full
+   width. Keep all existing body region art and selection controls. */
+@media(max-width:430px){
+ .cx-page .cx-header{
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr) 44px;
+  grid-template-rows:auto auto;
+  column-gap:9px;row-gap:7px;align-items:start;
+ }
+ .cx-page .cx-header>.cx-back{
+  grid-column:1;grid-row:1;justify-self:start;
+  width:44px;height:44px;
+ }
+ .cx-page .cx-header>.cx-screen-help{
+  grid-column:3;grid-row:1;justify-self:end;margin-left:0;
+ }
+ .cx-page .cx-header>div{
+  grid-column:1/-1;grid-row:2;min-width:0;
+ }
+ .cx-page .cx-header h1{
+  font-size:1.12rem!important;line-height:1.25;
+  max-width:100%;overflow-wrap:normal;
+ }
+ .cx-page .cx-main-grid,.cx-page .cx-main-card,.cx-page .cx-stage,.cx-page .cx-notes-column{
+  min-width:0;max-width:100%;
+ }
+ .cx-page .cx-context,.cx-page .cx-blank-hint{
+  max-width:calc(100% - 12px);
+ }
+ .cx-page .cx-context-action{
+  min-width:0;max-width:100%;white-space:normal;
+  overflow-wrap:anywhere;line-height:1.25;
+ }
+ .cx-page .cx-context strong{overflow-wrap:anywhere}
+}
