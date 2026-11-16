@@ -122,6 +122,39 @@ jobs:
         run: node tests/englishUiBrowser.mjs
       - name: Verify 19 active screen states and retired S18 absence
         run: node tests/screenDesign20PopulatedBrowser.mjs
+      - name: Stage 7 inspect 19 active states at 200-percent root font and responsive widths
+        env:
+          RUNLOAD_P8_FONT200: '1'
+          RUNLOAD_P8_WIDTHS: '320,390,768'
+        run: node tests/screenDesign20PopulatedBrowser.mjs
+      - name: Stage 7 inspect English S01–S20 and Learning at 320px font 200-percent
+        env:
+          RUNLOAD_ENGLISH_AUDIT_WIDTH: '320'
+          RUNLOAD_ENGLISH_FONT200: '1'
+          RUNLOAD_STAGE7_CAPTURE_ALL: '1'
+        run: node tests/englishSurfaceAuditBrowser.mjs
+      - name: Stage 7 inspect English S01–S20 and Learning at 768px font 200-percent
+        env:
+          RUNLOAD_ENGLISH_AUDIT_WIDTH: '768'
+          RUNLOAD_ENGLISH_FONT200: '1'
+          RUNLOAD_STAGE7_CAPTURE_ALL: '1'
+        run: node tests/englishSurfaceAuditBrowser.mjs
+      - name: Stage 7 inspect English desktop 1440px and preserve source separation
+        env:
+          RUNLOAD_ENGLISH_AUDIT_WIDTH: '1440'
+          RUNLOAD_STAGE7_CAPTURE_ALL: '1'
+        run: node tests/englishSurfaceAuditBrowser.mjs
+      - name: Preserve cross-screen, English and 200-percent stage 7 audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage7-integrated-${{ matrix.engine }}
+          path: |
+            audit-output/p8-font200-current-19-${{ matrix.engine }}-320-390-768.json
+            audit-output/${{ matrix.engine }}-font200-*.png
+            audit-output/english-surface-${{ matrix.engine }}-*/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify portable backup export, legacy restore and annotation provenance
         run: node tests/professorPortableV2Browser.mjs
       - name: Verify complete two-run cycle twice
