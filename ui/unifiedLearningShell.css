@@ -196,3 +196,29 @@
  outline:3px solid #acebe6;outline-offset:3px;
 }
 .lr-root .lr-panel .lr-partial-form button.lr-action:disabled{opacity:.55;cursor:not-allowed}
+
+
+/* Stage 7: the shared dark shell owns the mobile nav with !important, so
+ * earlier styles.css responsive overrides did not apply. Reflow based on
+ * rem-scaled target width. Normal 16px root fits five columns at 320px;
+ * at 200% text the same buttons get two wider columns without splitting
+ * English words or making horizontally scrolling navigation. */
+@media(max-width:430px){
+ .app-shell .mobile-nav{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,3.6rem),1fr))!important;
+  grid-auto-rows:minmax(54px,auto)!important;
+  width:100%;box-sizing:border-box;
+ }
+ .app-shell .mobile-link{
+  min-width:0!important;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  padding:5px 3px!important;
+  text-align:center;
+ }
+ .app-shell .main-content{
+  padding-bottom:max(calc(193px + env(safe-area-inset-bottom,0px)),calc(10.5rem + env(safe-area-inset-bottom,0px)))!important;
+ }
+}
