@@ -204,7 +204,7 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  if(element?.matches?.('[data-history-system-caption]')&&(m=s.match(/^走行時間 ([0-9:]+)\s*・\s*ペース ([0-9:—]+) \/km$/)))
   return 'Duration '+m[1]+' · Pace '+m[2]+' /km';
  if((element?.matches?.('.focus-panel h3,.selected-footer strong'))&&
-  (m=s.match(/^(\\d{4})年(\\d{1,2})月(\\d{1,2})日[の　](.+)$/))){
+  (m=s.match(/^(\d{4})年(\d{1,2})月(\d{1,2})日[の　](.+)$/))){
   const activity={'ランニング':'Running','ジョギング':'Jogging','ウォーキング':'Walking',
    '走歩混在':'Mixed Running and Walking','休養':'Rest'}[m[4]];
   const month=MONTHS[Number(m[2])-1];
