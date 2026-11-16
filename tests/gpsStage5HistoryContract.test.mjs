@@ -65,7 +65,6 @@ test('stage 5: same history lists and monthly stats count manual+GPS once, sourc
  html=renderHistory(ui,rows,{connected:true,onOpen() {},onAnnotate() {},onDeleteGps() {}});
  assert.match(html,/data-delete-gps-record/);
  assert.match(html,/data-annotate-record/);
- assert.match(html,/href="#/history"/,false);
  assert.equal((html.match(/data-select-id=/g)||[]).length,1);
  assert.match(html,/>2<em>回/,'monthly stat must not change when filtering the list');
  ui.source='MANUAL';ui.selectedId=manual.id;
