@@ -110,7 +110,7 @@ test("v8 release uses cache-busted body resources and a user-controlled update p
  assert.ok(sw.includes('./ui/bodyContextExperience.js?v='+jsRevision[1]),'offline shell caches active body module');
  assert.match(pwa,/updateViaCache:\"none\"/);
  assert.match(pwa,/更新する/);
- assert.match(sw,/back-symmetry-v2/);
+ assert.ok(sw.includes('./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1'),'current GPS dynamic module must be precached');
  assert.match(sw,/\.\/ui\/gpsReplayIndexedDbStore\.js/);
  assert.match(sw,/cache:\"no-cache\"/);
 });
@@ -128,7 +128,7 @@ test("global double-tap suppression preserves accessible pinch zoom and approved
  }
  assert.match(html,/styles\.css\?v=20261115-retire-whatif-v1/);
  assert.match(html,/conditionJourney\.css\?v=20261109-p6e-crossscreen-v1/);
- assert.match(sw,/back-symmetry-v2/);
+ assert.ok(sw.includes('./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1'),'current GPS dynamic module must be precached');
  assert.match(sw,/\.\/ui\/gpsReplayReference\.js/);
 });
 
