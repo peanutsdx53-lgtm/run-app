@@ -106,11 +106,12 @@ try{
    await capture(page,width,language,'02-history-gps-selected');
    await history.locator('[data-open-record]').click();
    await page.waitForFunction(id=>location.hash==='#/result?gps='+encodeURIComponent(id),saved.gpsId);
-   const result=page.locator('#runload-result-v4');await result.locator('[data-tab="body"]').waitFor({state:'visible',timeout:15000});
+   const result=page.locator('#runload-result-v4');await result.locator('[data-tab="body"]').waitFor({state:'attached',timeout:15000});
    assert.equal(await result.locator('[data-tab]').count(),3,'existing result 3 tabs unchanged');
    assert.equal(await result.locator('[data-result-source]').getAttribute('data-result-source'),'GPS_V2');
    assert.equal(await result.locator('[data-gps-dynamic-gate]').count(),0,'no dynamic route when opt-out');
-   await result.locator('[data-tab="radar"]').click();
+   if(width<=800)await result.locator('[data-tab="radar"]').click();
+   else assert.equal(await result.locator('[data-pane="radar"]').isVisible(),true,'desktop presents comparison alongside body');
    assert.equal(await result.locator('[data-compare-select]').count(),0,'GPS does not compare with manual reference rows');
    assert.match(await result.locator('[data-pane="radar"]').innerText(),language==='en'?/do not automatically compare/:/自動で比較しません/);
    await capture(page,width,language,'03-result-gps-compare-unavailable');
@@ -123,10 +124,11 @@ try{
    await capture(page,width,language,'04-history-manual-selected');
    await history.locator('[data-open-record]').click();
    await page.waitForFunction(id=>location.hash==='#/result?record='+encodeURIComponent(id),saved.manualId);
-   await result.locator('[data-tab="body"]').waitFor({state:'visible',timeout:15000});
+   await result.locator('[data-tab="body"]').waitFor({state:'attached',timeout:15000});
    assert.equal(await result.locator('[data-tab]').count(),3,'manual result also has exactly 3 tabs');
    assert.equal(await result.locator('[data-result-source]').getAttribute('data-result-source'),'MANUAL');
-   await result.locator('[data-tab="fatigue"]').click();
+   if(width<=800)await result.locator('[data-tab="fatigue"]').click();
+   else assert.equal(await result.locator('[data-pane="fatigue"]').isVisible(),true,'desktop presents fatigue alongside body');
    assert.equal(await result.locator('[data-pane="fatigue"]').isVisible(),true);
    await capture(page,width,language,'05-result-manual-fatigue');
    await page.goto(base+'result?gps=gps-v2-nonexistent-000001',{waitUntil:'networkidle'});
