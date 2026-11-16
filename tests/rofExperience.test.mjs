@@ -110,7 +110,7 @@ test('S06: immediate illustration explanation with no repeated long notes',()=>{
  assert.equal((html.match(/class="rv4-description"/g)||[]).length,1);
  assert.ok(html.indexOf('class="rv4-anchor-row"')<html.indexOf('class="rv4-description"'));
  assert.ok(html.indexOf('class="rv4-description"')<html.indexOf('class="rv4-axis"'));
- assert.match(html,/5つの代表イラストは説明用/);assert.doesNotMatch(html,/<div class="rv4-rail-top"><strong>代表イラスト<\/strong><small>/);
+ assert.match(html,/5つの代表イラストは尺度の目安/);assert.doesNotMatch(html,/<div class="rv4-rail-top"><strong>代表イラスト<\/strong><small>/);
  for(const old of [
  '選択したイラストの説明です。点数は変更されません。',
  '「2と3の間」「7と8の間」は目安の位置',
@@ -168,4 +168,4 @@ test('same-day reverse clocks fail without overwriting a previously accepted exe
  assert.match(result.reason,/終了時刻が開始時刻より前/);
 });
 
-test('P6-D ROF help does not replace eleven-point axis, five originals or optional timestamps',()=>{const d={date:'2026-10-30',rofBefore:null,rofAfter:null};const html=rofPage(d,createRofUiState());assert.equal((html.match(/class="rv-screen-help"/g)||[]).length,1);assert.match(html,/未入力と0は別です/);assert.equal((html.match(/data-rof-v4-tick=/g)||[]).length,11);assert.equal((html.match(/data-rof-v4-anchor=/g)||[]).length,5);assert.match(html,/rv4-optional-meta/);assert.match(html,/rv4-rights/);});
+test('P6-D ROF help does not replace eleven-point axis, five originals or optional timestamps',()=>{const d={date:'2026-10-30',rofBefore:null,rofAfter:null};const html=rofPage(d,createRofUiState());assert.equal((html.match(/class="rv-screen-help"/g)||[]).length,1);assert.match(html,/「未入力」と「0」を区別して記録します/);assert.equal((html.match(/data-rof-v4-tick=/g)||[]).length,11);assert.equal((html.match(/data-rof-v4-anchor=/g)||[]).length,5);assert.match(html,/rv4-optional-meta/);assert.match(html,/rv4-rights/);});
