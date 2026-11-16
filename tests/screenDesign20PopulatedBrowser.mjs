@@ -36,13 +36,25 @@ async function captureFont200(page,screen,width){
   return {viewport:vw,document:doc.scrollWidth,body:body.scrollWidth,
    rootFont:getComputedStyle(doc).fontSize,
    leftOverflow:Math.round(Math.max(0,-doc.getBoundingClientRect().left)),
-   rightOverflow:Math.max(0,Math.max(doc.scrollWidth,body.scrollWidth)-vw)};
+   rightOverflow:Math.max(0,Math.max(doc.scrollWidth,body.scrollWidth)-vw),
+   mobileLabels:[...document.querySelectorAll('.mobile-nav .mobile-link')]
+    .filter(el=>el.getClientRects().length>0)
+    .map(el=>{
+      const text=[...el.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
+      if(!text)return {text:'',fragments:0};
+      const range=document.createRange();range.selectNodeContents(text);
+      const parts=[...range.getClientRects()],parent=el.getBoundingClientRect();
+      return {text:text.textContent.trim(),fragments:parts.length,
+       outside:parts.some(r=>r.left<parent.left-1||r.right>parent.right+1)};
+    })};
  });
  const entry={screen,engine,width,mode:'root-font-200',state:'realized',...layout,
   ok:layout.document<=width+3&&layout.body<=width+3};
  fontReports.push(entry);
  await page.screenshot({path:resolve(root,'audit-output',engine+'-font200-'+screen+'-'+width+'.png'),
   animations:'disabled',fullPage:true});
+ const navFaults=layout.mobileLabels.filter(x=>x.fragments!==1||x.outside);
+ assert.deepEqual(navFaults,[],'200% mobile navigation text wraps or clips '+screen+' '+width);
  await page.evaluate(()=>{document.documentElement.style.fontSize='';});
  return entry;
 }
