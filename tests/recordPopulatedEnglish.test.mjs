@@ -33,9 +33,9 @@ for(const [description,ja,en,selector,screen] of cases){
   assert.equal(translateUiText(ja,{element:fake(selector,screen)}),en);
  });
 }
-test('unscoped original Japanese notes and names remain exactly as entered',()=>{
+test('explicitly marked user-authored Japanese notes and names remain exactly as entered',()=>{
  const values=['くもり','殿部','川沿い周回・橋を渡るコース','18.5℃ · くもり · 風が強い','向かい風の体感があった。'];
- for(const ja of values)assert.equal(translateUiText(ja,{element:fake('.rr-row-desc','.rr-page')}),ja);
+ for(const ja of values)assert.equal(translateUiText(ja,{element:fake('.rr-row-desc','[data-user-authored]')}),ja);
 });
 test('record copy does not rewrite scientific or storage identifiers',()=>{
  for(const value of ['ROF-J','BA-DISP-014','run-v1-abc','GPS-V2','0','—'])assert.equal(translateUiText(value,{element:fake('strong','[data-cx-page]')}),value);
