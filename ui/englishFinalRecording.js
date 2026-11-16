@@ -11,7 +11,6 @@ export const ENGLISH_FINAL_RECORDING=Object.freeze({
  "手入力かGPS測定を選びます。GPS測定はスマートフォンで利用できます。": "Choose manual entry or GPS measurement. GPS is available on smartphones.",
  "GPSで測定": "Measure With GPS",
  "GPS測定を開始": "Start GPS",
- "GPS測定": "GPS Measurement",
  "スマートフォンで利用できます": "Available on Smartphones",
  "運動前と運動後の疲労感を0〜10の整数で選びます。評価は横軸または±ボタンで操作します。5つの代表イラストは尺度の目安です。「未入力」と「0」を区別して記録します。数値は本人が感じた疲労感を表します。医学的な診断や身体負荷の測定とは用途が異なります。": "Choose whole-number fatigue ratings from 0 to 10 for before and after activity. Use the scale or plus/minus buttons. The five illustrations show reference points on the scale. An unanswered rating and zero are recorded separately. These ratings describe perceived fatigue, serving a different purpose from medical diagnosis or direct body-load measurement.",
  "スマホの位置情報を使用": "Use Smartphone Location",
