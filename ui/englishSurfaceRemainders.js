@@ -252,6 +252,9 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
    '大腿後面':'Back Thigh','膝蓋大腿関節部':'Patellofemoral Region','脛骨部':'Tibial Region',
    '下腿後面':'Back of Lower Leg','足関節部':'Ankle Region','アキレス腱部':'Achilles Tendon Region',
    '後足部':'Hindfoot','足底中部・内側縦足弓':'Midfoot / Medial Longitudinal Arch','前足部':'Forefoot'};
+  if(is('.cx-picker-title span')&&(m=s.match(/^(\d+)件$/)))return m[1]+' Regions';
+  if(attribute==='aria-label'&&is('path[data-region-focus]')&&(m=s.match(/^(.+)を確認$/))&&Object.hasOwn(names,m[1]))
+   return 'Review '+names[m[1]];
   if(is('.cx-selected-chip,.cx-picker-option,.cx-context strong,.cx-stage svg title')&&Object.hasOwn(names,s))
    return names[s];
   if(attribute==='aria-label'&&is('.cx-selected-chip')&&(m=s.match(/^(.+)の選択を解除$/))&&Object.hasOwn(names,m[1]))
