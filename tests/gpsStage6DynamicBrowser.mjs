@@ -32,9 +32,14 @@ async function capture(page,width,language,state){
   return {width:innerWidth,scroll:document.documentElement.scrollWidth,body:document.body.scrollWidth,
    boxes:Object.fromEntries(selectors.map(x=>[x,document.querySelector(x)?rect(document.querySelector(x)):null])),
    buttons:[...document.querySelectorAll('.gd-flag-actions button')].map(rect),
+   fixedNavVisible:[...document.querySelectorAll('.app-shell .mobile-nav,.app-shell .bottom-nav')]
+    .filter(el=>getComputedStyle(el).display!=='none'&&el.getBoundingClientRect().width>0)
+    .map(el=>({className:el.className,position:getComputedStyle(el).position,...rect(el)})),
    heading:(()=>{const root=document.querySelector('.gd-anatomy-panel .gd-panel-head');if(!root)return null;return {outer:rect(root),strong:rect(root.querySelector('strong')),small:rect(root.querySelector('small'))};})(),
    state:document.querySelector('[data-gps-replay-state]')?.dataset.gpsReplayState};
  });
+ assert.deepEqual(layout.fixedNavVisible,[],
+  'dynamic GPS content must never be covered by mobile/tablet fixed navigation '+engineName+' '+language+' '+width+' '+state);
  assert.ok(layout.scroll<=layout.width+2&&layout.body<=layout.width+2,
   'horizontal overflow '+engineName+' '+language+' '+width+' '+state+' '+JSON.stringify(layout));
  for(const [key,r] of Object.entries(layout.boxes)){
@@ -77,7 +82,7 @@ const createFixture=async page=>page.evaluate(async()=>{
  return {id:withDetails.summary.id,emptyId:withoutDetails.summary.id};
 });
 try{
- for(const language of ['ja','en'])for(const width of [320,390,414,768,1440]){
+ for(const language of ['ja','en'])for(const width of [320,390,414,768,1024,1440]){
   const ctx=await browser.newContext({viewport:{width,height:900},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block'});
   await ctx.addInitScript(lang=>{
    localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:lang}));
@@ -165,7 +170,7 @@ try{
   await ctx.close();
  }
  await writeFile(resolve(out,engineName+'-report.json'),JSON.stringify(results,null,2));
- console.log('PASS GPS Stage 6 elapsed-time/gap/evidence/flag/body dynamic bilingual 5 viewports '+engineName+' screenshots '+results.length);
+ console.log('PASS GPS Stage 6 elapsed-time/gap/evidence/flag/body dynamic bilingual 6 viewports '+engineName+' screenshots '+results.length);
 }finally{
  await browser.close();
  await new Promise(done=>server.close(done));
