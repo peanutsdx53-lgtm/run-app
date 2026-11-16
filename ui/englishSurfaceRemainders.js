@@ -247,6 +247,16 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
    if(translated.every(x=>x!==null))return translated.join(' · ');
   }
  }
+ if(inView('[data-rof-v4-root]')){
+  const guidance={'少し疲れている付近':'Near A Little Fatigued',
+   'とても疲れている付近':'Near Very Fatigued',
+   '目安の間の値':'Between Illustrated Reference Points'};
+  if(is('.rv4-description-main')&&Object.hasOwn(guidance,s))return guidance[s];
+  if(is('[data-rof-v4-caption]')&&(m=s.match(/^選択値：(\d+) \/ 10$/)))
+   return 'Selected Rating: '+m[1]+' / 10';
+  if(is('.rv4-end-day-caption')&&(m=s.match(/^終了日：(\d{4}\/\d{1,2}\/\d{1,2})（(当日|翌日)）$/)))
+   return 'End Date: '+m[1]+' ('+(m[2]==='当日'?'Same Day':'Next Day')+')';
+ }
  if(inView('[data-cx-page]')){
   const names={'股関節部':'Hip Region','殿部':'Gluteal Region','大腿前面':'Front Thigh',
    '大腿後面':'Back Thigh','膝蓋大腿関節部':'Patellofemoral Region','脛骨部':'Tibial Region',
