@@ -216,6 +216,7 @@ export const ENGLISH_UI_TEXT=Object.freeze({
 });
 export function translateUiText(text,context={}){
  const raw=String(text??'');const trimmed=raw.trim();
+ if(context.element?.closest?.('[data-user-authored]'))return raw;
  const exact=Object.prototype.hasOwnProperty.call(ENGLISH_UI_TEXT,trimmed)?ENGLISH_UI_TEXT[trimmed]:null;
  const translated=exact??translateResidualDynamic(trimmed,context);
  return translated===null?raw:raw.replace(trimmed,translated);
