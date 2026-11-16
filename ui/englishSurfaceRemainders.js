@@ -217,6 +217,7 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
   if(is('.rv-section-row-head button')&&s==='削除')return 'Remove';
  }
  if(inView('[data-g4-page]')){
+  if(is('.g4-step-input b')&&s==='歩')return 'steps';
   const stepsLabels={'端末計測':'Measured by Device','概数入力':'Estimated Count','連続走行':'Continuous Running',
    '走行＋歩行':'Run + Walk','不明・未設定':'Unknown / Unspecified'};
   if(is('[data-g4-source],[data-g4-format],[data-g4-summary-format]')&&Object.hasOwn(stepsLabels,s))
