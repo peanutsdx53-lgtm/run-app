@@ -140,9 +140,12 @@
 }
 
 /* Immersive GPS replay: do not obscure flag context / speed controls with fixed mobile navigation. */
+/* Immersive replay must never be covered by fixed mobile/tablet navigation,
+ * including landscape phones and 768–1024px tablets. The back link remains.
+ * Keep the main result/history navigation unchanged outside dynamic replay. */
+.app-shell:has(.gd-root:not(.gd-summary)) .mobile-nav,
+.app-shell:has(.gd-root:not(.gd-summary)) .bottom-nav{display:none!important}
 @media(max-width:680px){
- .app-shell:has(.gd-root:not(.gd-summary)) .mobile-nav{display:none!important}
- .app-shell:has(.gd-root:not(.gd-summary)) .bottom-nav{display:none!important}
  .app-shell:has(.gd-root:not(.gd-summary)) .main-content{padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
 }
 
