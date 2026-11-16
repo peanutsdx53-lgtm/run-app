@@ -7,7 +7,7 @@ import {reviewView} from '../ui/recordReviewExperience.js';
 // remain unchanged, including Japanese strings even in English UI.
 const fake=(selector,screen)=>{
  const matches=parts=>parts.split(',').map(x=>x.trim()).includes(selector);
- return {matches,closest:parts=>parts.split(',').map(x=>x.trim()).includes(screen)?{}:null};
+ return {matches,closest:parts=>parts.split(',').map(x=>x.trim()).some(x=>x===screen||x===selector)?{}:null};
 };
 const cases=[
  ['course progress','区間割合 5 / 5 件入力・入力分の合計 100%（100%）','Segment Shares: 5 / 5 Entered · Entered Total 100% (100%)','[data-rv-section-progress]','.rv-course'],
