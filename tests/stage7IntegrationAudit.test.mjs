@@ -7,10 +7,14 @@ test('stage7: responsive 200% navigation text remains full-length and PWA uses o
  assert.match(shell,/grid-template-columns:repeat\(auto-fit,minmax\(min\(100%,3\.6rem\),1fr\)\)!important/);
  assert.match(shell,/white-space:nowrap!important/);
  assert.match(shell,/grid-template-columns:minmax\(0,1fr\)/);
- assert.match(html,/styles\.css\?v=20261116-gps-stage7-v1/);
- assert.match(sw,/runload-ui-next-shell-20261116-gps-stage7-v1/);
- assert.match(sw,/\.\/styles\.css\?v=20261116-gps-stage7-v1/);
+ assert.match(html,/styles\.css\?v=20261116-gps-stage7-v2/);
+ assert.match(sw,/runload-ui-next-shell-20261116-gps-stage7-v2/);
+ assert.match(sw,/\.\/styles\.css\?v=20261116-gps-stage7-v2/);
  assert.doesNotMatch(sw,/styles\.css\?v=20261115-retire-whatif-v1/);
+ const record=read('ui/recordExperience.css');
+ assert.match(record,/font-size:min\(1\.3rem,10vw\)!important/);
+ assert.match(shell,/flex-direction:column-reverse/);
+ assert.match(shell,/\.lr-page-heading \.lr-screen-help\{[\s\S]*align-self:flex-end/);
 });
 test('stage7: final research and privacy invariants retained across merged stages',()=>{
  const app=read('app.js'),result=read('ui/resultExperience.js'),
