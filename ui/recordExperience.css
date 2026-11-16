@@ -747,7 +747,10 @@ html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{white-space:n
   grid-column:1/-1;grid-row:2;min-width:0;width:100%;
  }
  .record-v3:is(.rv-course,.rv-aux,.rv4-page) .rv-head h1{
-  font-size:clamp(1.1rem,6vw,1.3rem);
+  /* Override the later P14 !important screen-title rule only at 320px.
+   * Cap the long English Course & Conditions heading by available width,
+   * keeping whole words and the full 200% root-font scaling path. */
+  font-size:min(1.3rem,10vw)!important;
   line-height:1.32;word-break:normal;overflow-wrap:normal;
   max-width:100%;
  }
