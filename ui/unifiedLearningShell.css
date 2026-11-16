@@ -238,3 +238,23 @@
   min-width:0;max-width:100%;
  }
 }
+
+/* Stage 7: at 320px with 200% text, a 44px help control cannot share
+ * the Learning heading's flex row. Give the help and full title separate
+ * rows, preserve both controls, and avoid horizontal clipping. */
+@media(max-width:355px){
+ .app-shell:has(.lr-root) .lr-root .lr-page-heading{
+  flex-direction:column-reverse;
+  align-items:stretch;
+  gap:8px;
+ }
+ .app-shell:has(.lr-root) .lr-root .lr-page-heading .lr-screen-help{
+  align-self:flex-end;
+  margin-left:0;
+  width:44px;
+ }
+ .app-shell:has(.lr-root) .lr-root .lr-page-heading h1{
+  min-width:0;
+  max-width:100%;
+ }
+}
