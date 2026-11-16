@@ -94,8 +94,17 @@ async function record(page,screen,route,selector){
       scrollWidth:el.scrollWidth,minWidth:getComputedStyle(el).minWidth,
       text:(el.textContent||'').replace(/\s+/g,' ').slice(0,90)};
     }).sort((a,b)=>b.right-a.right).slice(0,30):[];
+  const navLabels=[...document.querySelectorAll('.mobile-nav .mobile-link')]
+   .filter(el=>el.getClientRects().length>0).map(el=>{
+     const text=[...el.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
+     if(!text)return {text:'',fragments:0,outside:true};
+     const range=document.createRange();range.selectNodeContents(text);
+     const parts=[...range.getClientRects()],parent=el.getBoundingClientRect();
+     return {text:text.textContent.trim(),fragments:parts.length,
+      outside:parts.some(r=>r.left<parent.left-1||r.right>parent.right+1)};
+   });
   return {remaining:[...found].sort(),width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,title:document.title,lang:document.documentElement.lang};
+   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,title:document.title,lang:document.documentElement.lang,navLabels};
  });
  reports.push({screen,route:route||'(in-place)',mode:font200?'root-font-200':'normal',...sample});
  console.log('ENGLISH-SURFACE '+engine+' '+screen+' remaining='+sample.remaining.length+' overflow='+Math.max(0,sample.scrollWidth-sample.width)+' samples='+JSON.stringify(sample.remaining.slice(0,14)));
@@ -187,6 +196,8 @@ try{
  assert.deepEqual(cardOverlaps,[],'translated Home summary text must stay inside its own card, not overlap neighbors');
  const overflow=reports.filter(entry=>entry.scrollWidth>entry.width+3);
  assert.deepEqual(overflow,[],'English UI must not horizontally overflow at the audited viewport');
+ const brokenNav=reports.flatMap(entry=>entry.navLabels.filter(x=>x.fragments!==1||x.outside).map(x=>({screen:entry.screen,...x})));
+ assert.deepEqual(brokenNav,[],'English mobile nav labels must not split into fragments or overflow their targets');
 }finally{
  const summary={engine,width:auditWidth,font200,scope:'English displayed copy inventory; Japanese legal original and user-authored data excluded',observed:reports.length,byScreen:reports,errors:scriptErrors,
   totalUntranslated:reports.reduce((sum,x)=>sum+x.remaining.length,0),
