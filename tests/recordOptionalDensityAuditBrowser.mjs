@@ -52,6 +52,12 @@ async function take(page,w,id){
  await page.screenshot({path:resolve(out,engine+'-'+activeLanguage+'-'+w+'-'+id+'.png'),fullPage:true,animations:'disabled',timeout:20000});
  if(m.document>m.viewport+2||m.body>m.viewport+2)console.warn('OVERFLOW '+engine+' '+activeLanguage+' '+w+' '+id+': '+m.document);
 }
+async function takePopulatedZoom(page,w,id){
+ if(activeLanguage!=='en'||![320,390].includes(w))return;
+ await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
+ await take(page,w,id+'-font200');
+ await page.evaluate(()=>{document.documentElement.style.fontSize='';});
+}
 async function enter(page,route,selector,w,id){
  await page.goto(host+route,{waitUntil:'networkidle'});await page.locator(selector).waitFor({timeout:12000});await take(page,w,id+'-empty');
 }
@@ -91,6 +97,7 @@ try{
   assert.equal(await page.locator('[data-rv-surface-pick-value="'+surfaces[1]+'"]').innerText(),'40%');
   assert.equal(await page.locator('.rv-surface-fine [data-rv-surface-step]').count(),2,'step controls mirror slope');
   await take(page,w,'COURSE-dense');
+  await takePopulatedZoom(page,w,'COURSE-dense');
   assert.equal(await page.locator('.rv-inline-preset-tools').count(),0,'new course has no edit/copy controls');
   await page.locator('.rv-course-summary [data-course-save]').click();
   await page.locator('.rv-inline-preset-tools').waitFor({state:'visible',timeout:6000});
@@ -167,6 +174,7 @@ try{
   await page.locator('[data-selected-expand]').click();
   assert.equal(await page.locator('.cx-selected-chip').count(),12,'expand reveals all selections without loss');
   await take(page,w,'BODY-12-regions-expanded');
+  await takePopulatedZoom(page,w,'BODY-12-regions-expanded');
   await page.locator('[data-selected-expand]').click();
   assert.equal(await page.locator('.cx-selected-chip').count(),3,'collapse does not discard selected regions');
   const shoeBefore=await page.locator('#cx-shoeName').evaluate(el=>({limit:el.maxLength,length:el.value.length}));
@@ -193,6 +201,7 @@ try{
   if(language==='ja')assert.match(reviewText,/全文は編集画面で確認/,'long original notes are summarized, not truncated in storage');
   assert.ok(reviewText.length<5000,'review remains reachable even with long optional notes: '+reviewText.length);
   await take(page,w,'REVIEW-environment-saved-draft');
+  await takePopulatedZoom(page,w,'REVIEW-environment-saved-draft');
   const button=page.locator('[data-manual-run-save]');
   assert.equal(await button.isEnabled(),true,'complete optional context must not block valid run save');
   await button.click();
