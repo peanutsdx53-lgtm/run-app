@@ -176,6 +176,12 @@ try{
   assert.equal(stored.records.filter(x=>x.id===id).length,1,'retry must create just one parent');
   assert.equal(stored.records.find(x=>x.id===id)?.detailSaved,on,'route data only when explicitly opted in');
   assert.equal(await page.evaluate(()=>sessionStorage.getItem('runload-v2-pending-gps-operation-v1')),null,'confirmed save clears pending ID');
+  if(language==='en'){
+   await page.waitForFunction(()=>document.querySelector('.toast-notice')?.textContent.includes('GPS Activity'),
+    null,{timeout:10000});
+   await page.locator('.rv4-notice').getByText('GPS Record',{exact:true}).waitFor({timeout:10000});
+   await page.locator('[data-source-distance]').getByText('Source: GPS Measurement',{exact:true}).waitFor({timeout:10000});
+  }
   await capture(page,language,width,'gps-result-confirmed');
   // Reconstruct only the opaque ID, not the GPS route, as if acknowledgment
   // had been lost before a reload. The original parent must be read back.
