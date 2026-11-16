@@ -19,7 +19,7 @@ import {ENGLISH_FINAL_GPS} from './englishFinalGps.js';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261117-record-stage2-v1';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
