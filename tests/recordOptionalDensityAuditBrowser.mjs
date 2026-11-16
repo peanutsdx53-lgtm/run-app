@@ -22,6 +22,23 @@ async function take(page,w,id){
   const els=[...document.querySelectorAll('.rv-panel,.cx-main-card,.cx-field-card,.cx-transfer,.cx-toolbar,.cx-selected-chip,.rv-section-row,.e4-panel,.g4-panel,.rv4-card')];
   // Restricted to generated UI, excluding user-entered course names, free
   // text, transferred environmentNote and saved body observations.
+  const bodyTextClipping=[];
+  for(const el of document.querySelectorAll('.cx-header h1,.cx-context-action')){
+   if(!el.getClientRects().length)continue;
+   const outer=el.getBoundingClientRect(),walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+   while(walker.nextNode()){
+    if(!walker.currentNode.textContent.trim())continue;
+    const range=document.createRange();range.selectNodeContents(walker.currentNode);
+    for(const r of range.getClientRects()){
+     if(r.width>0&&(r.left<outer.left-2||r.right>outer.right+2||
+       r.top<outer.top-2||r.bottom>outer.bottom+2)){
+      bodyTextClipping.push({parent:el.className||el.tagName,text:walker.currentNode.textContent.trim(),
+       textBox:{left:r.left,right:r.right,top:r.top,bottom:r.bottom},
+       container:{left:outer.left,right:outer.right,top:outer.top,bottom:outer.bottom}});
+     }
+    }
+   }
+  }
   const systemNodes=[
    '.rv-section-progress','.rv-section-row-head strong','.rv-section-row-head small',
    '.rv-section-row-head button','.rv-section-fields label',
@@ -50,7 +67,7 @@ async function take(page,w,id){
   return {viewport:innerWidth,document:document.documentElement.scrollWidth,body:document.body.scrollWidth,
    pageHeight:document.documentElement.scrollHeight,cardCount:els.length,
    selectedRegions:document.querySelectorAll('.cx-selected-chip').length,
-   systemResidue,
+   systemResidue,bodyTextClipping,
    nodes:els.map(e=>{const r=e.getBoundingClientRect();return {className:String(e.className),left:r.left,right:r.right,width:r.width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}}),
    counters:[...document.querySelectorAll('.cx-counter')].map(e=>e.textContent),fields,
    textareaVisibleRatios:fields.filter(x=>x.scrollHeight>0&&x.clientHeight>0)
@@ -61,6 +78,7 @@ async function take(page,w,id){
  await page.screenshot({path:resolve(out,engine+'-'+activeLanguage+'-'+w+'-'+id+'.png'),fullPage:true,animations:'disabled',timeout:20000});
  if(m.document>m.viewport+2||m.body>m.viewport+2)console.warn('OVERFLOW '+engine+' '+activeLanguage+' '+w+' '+id+': '+m.document);
  if(id.endsWith('-font200'))assert.ok(m.document<=m.viewport+2&&m.body<=m.viewport+2,'populated 200% screen must fit viewport: '+JSON.stringify({engine,language:activeLanguage,width:w,state:id,document:m.document,body:m.body}));
+ if(id.endsWith('-font200'))assert.deepEqual(m.bodyTextClipping,[],'body heading and region-action text must remain in their controls at 200%');
 }
 async function takePopulatedZoom(page,w,id){
  if(activeLanguage!=='en'||![320,390].includes(w))return;
