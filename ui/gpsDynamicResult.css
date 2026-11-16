@@ -211,3 +211,7 @@
  .gd-panel-head small{line-height:1.4}
 }
 @media(max-width:360px){.gd-flag-actions{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}.gd-flag-step-status{font-size:10px}}
+.gd-note-disclosure{margin-top:9px;padding:2px 0 0;min-width:0;color:#c2e2e9}
+.gd-note-disclosure summary{cursor:pointer;display:flex;align-items:center;min-height:44px;width:fit-content;max-width:100%;font-size:12px;line-height:1.5;font-weight:750;overflow-wrap:anywhere}
+.gd-note-disclosure summary:focus-visible{outline:3px solid #92fff1;outline-offset:3px;border-radius:4px}
+.gd-note-disclosure .gd-note{margin:0 0 8px;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
