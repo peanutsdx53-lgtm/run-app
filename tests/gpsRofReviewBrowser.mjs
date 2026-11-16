@@ -277,7 +277,7 @@ try{
    const history=page.locator('#runload-history-v2');await history.waitFor();
    await history.locator('[data-history-scope="all"]').click();
    await history.locator('[data-record-source="GPS_V2"]').click();
-   const oldItem=history.locator('[data-select-id="'+oldId+'"]');
+   const oldItem=history.locator('[data-select-id="gps-v2-legacy-20261027-mixed-01"]');
    await oldItem.waitFor();
    assert.match(await oldItem.innerText(),/走歩混在/);
    assert.match(await oldItem.innerText(),/GPS計測/);
