@@ -41,7 +41,7 @@ export function gpsReplayEvidenceState(frame,reference){
   return {code:'SPEED_UNAVAILABLE',label:'このGPS区間では有効な速度条件を確認できず、文献参考値は表示しません'};
  if(!reference||reference.state!=='REFERENCE_ONLY'||!reference.count)
   return {code:'REFERENCE_UNAVAILABLE',label:'速度条件に適用できる文献参考値はありません（測定値のゼロではありません）'};
- return {code:'REFERENCE_ONLY',label:'隣接GPS点から算出した区間速度に対応する文献参考値（'+reference.count+'/12部位）。身体負荷の実測ではありません'};
+ return {code:'REFERENCE_ONLY',label:'隣接GPS点から算出した区間速度に対応する文献参考値です。身体負荷の実測ではありません',count:reference.count};
 }
 const svgLine=points=>points.length<2?'':points.map((p,i)=>(i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' ');
 export function routeGeometry(track){
@@ -156,7 +156,7 @@ export function mountGpsDynamicResult(host,summary,detail){
    if(atEnd){if(line.length>1)paths.push(svgLine(line));line=[];}
   }
   const ix=gpsReplayChartX(speed,index);
-  return '<svg class="gd-speed-svg" viewBox="0 0 700 70" role="img" aria-label="GPS速度変化"><path d="M5 61H695" stroke="#418093" stroke-width="1"/>'
+  return '<svg class="gd-speed-svg" viewBox="0 0 700 70" role="img" aria-label="GPS速度変化（運動中の経過時間を横軸に配置、GPS欠損区間は接続しない）"><path d="M5 61H695" stroke="#418093" stroke-width="1"/>'
    +paths.map(path=>'<path d="'+path+'" stroke="#46d9dc" stroke-width="2.5" fill="none" stroke-linejoin="round"/>').join('')
    +'<path d="M'+ix.toFixed(2)+' 3 V63" stroke="#ffc47e" stroke-width="2" stroke-dasharray="3 3"/></svg>';
  };
@@ -172,11 +172,11 @@ export function mountGpsDynamicResult(host,summary,detail){
    +'<button type="button" data-flag-step="-1" '+(activeFlagIndex===null||activeFlagIndex===0?'disabled':'')+'>前のフラッグ</button>'
    +'<span class="gd-flag-step-status">'+(activeFlagIndex===null?'0':activeFlagIndex+1)+' / '+labels.length+'</span>'
    +'<button type="button" data-flag-step="1" '+(activeFlagIndex===labels.length-1?'disabled':'')+'>次のフラッグ</button></div>':'';
-  const flagInfo=note?'<span class="gd-flag-title">⚑ '+esc(note.note||'記録した地点')+'</span><span class="gd-flag-detail">近傍のGPS採用点：'+time(elapsed(frame))+' / '+frame.km.toFixed(2)+' km · '+speedText+' km/h</span>':'<span class="gd-flag-empty">地図上の旗をタップして地点を確認</span>';
+  const flagInfo=note?'<span class="gd-flag-title">⚑ '+esc(note.note||'記録した地点')+'</span><span class="gd-flag-detail"><span>近傍のGPS採用点</span>：'+time(elapsed(frame))+' / '+frame.km.toFixed(2)+' km · '+speedText+' km/h</span>':'<span class="gd-flag-empty">地図上の旗をタップして地点を確認</span>';
   host.innerHTML='<section class="gd-root" aria-label="GPS動的結果">'
    +'<header class="gd-head"><div class="gd-heading"><a href="#/result?gps='+encodeURIComponent(summary.id)+'" class="gd-back" style="display:grid;place-items:center;color:inherit;text-decoration:none" aria-label="通常結果に戻る">‹</a><div><div class="gd-eyebrow">DYNAMIC RESULT / GPS</div><h1>動的結果</h1><p class="gd-head-sub">'+esc(summary.date)+'　'+esc(types[summary.activity])+'</p></div></div><div class="gd-tag">文献参考値の変化</div></header>'
    +'<div class="gd-metrics"><div class="gd-metric"><span>経過時間</span><strong>'+time(elapsed(frame))+'</strong></div><div class="gd-metric"><span>走行距離</span><strong>'+frame.km.toFixed(2)+' <em>km</em></strong></div><div class="gd-metric"><span>GPS速度</span><strong>'+speedText+' <em>km/h</em></strong></div></div>'
-   +'<p class="gd-evidence-status" role="status" data-gps-replay-state="'+evidence.code+'"><strong>GPS採用点 '+(index+1)+' / '+speed.length+'</strong><span>'+esc(evidence.label)+'</span></p>'
+   +'<p class="gd-evidence-status" role="group" aria-label="GPS採用点と文献参考値の適用状態" data-gps-replay-state="'+evidence.code+'"><strong><span>GPS採用点</span> '+(index+1)+' / '+speed.length+'</strong><span>'+esc(evidence.label)+'</span></p>'
    +'<div class="gd-view-bar"><div class="gd-view-bar-copy"><strong>人体図とコース</strong><span>同じ再生位置に連動</span></div><div class="gd-tabs" role="group" aria-label="人体図の表示面">'
    +BODY_REGION_VIEWS.map(v=>'<button data-view="'+v.key+'" aria-pressed="'+(v.key===view)+'">'+v.title+'</button>').join('')+'</div></div>'
    +'<div class="gd-main"><section class="gd-panel gd-anatomy-panel"><header class="gd-panel-head"><strong>部位別文献参考値</strong><small>身体負荷の実測ではありません</small></header>'
