@@ -176,6 +176,7 @@ export const ENGLISH_FINAL_GPS=Object.freeze({
  "人体図は速度条件に対応する文献参考値です。個人の身体負荷や損傷リスクの実測値ではありません。灰色は計算不能です。GPS欠損中の参考値は補完しません。": "Body-diagram colors display research reference values for eligible speed conditions, not directly measured physical load or injury risk. Gray means uncalculated. Missing GPS data are not filled in.",
  "基準との差": "Difference From Baseline",
  "GPS採用点": "Accepted GPS Fix",
+ "数値の出所と限界": "Sources and Limitations of These Values",
  "GPS採用点と文献参考値の適用状態": "Accepted GPS Fix and Research Reference Applicability",
  "GPS採用点を確認できません": "GPS Fix Is Unavailable",
  "最初のGPS採用点：区間速度と文献参考値は算出しません": "First GPS Fix: Segment Speed and Research Reference Cannot Be Calculated",
