@@ -14,6 +14,7 @@ const engine=process.env.RUNLOAD_BROWSER_ENGINE==='webkit'?'webkit':'chromium';
 const auditWidth=Number(process.env.RUNLOAD_ENGLISH_AUDIT_WIDTH||390);
 if(![320,375,390,414,768,1024,1440].includes(auditWidth))throw Error('English audit: unexpected width');
 const font200=process.env.RUNLOAD_ENGLISH_FONT200==='1';
+const captureAll=process.env.RUNLOAD_STAGE7_CAPTURE_ALL==='1';
 const out=resolve(root,'audit-output','english-surface-'+engine+'-'+auditWidth+(font200?'-font200':''));
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.webmanifest':'application/manifest+json','.svg':'image/svg+xml','.png':'image/png'};
 const server=createServer(async(req,res)=>{
@@ -100,9 +101,9 @@ async function record(page,screen,route,selector){
  console.log('ENGLISH-SURFACE '+engine+' '+screen+' remaining='+sample.remaining.length+' overflow='+Math.max(0,sample.scrollWidth-sample.width)+' samples='+JSON.stringify(sample.remaining.slice(0,14)));
  if(sample.overflowNodes.length)console.log('ENGLISH-OVERFLOW '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.overflowNodes));
  if(sample.cardTextOverflow.length)console.log('ENGLISH-CARD-OVERLAP '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.cardTextOverflow));
- if((sample.remaining.length||sample.cardTextOverflow.length)&&screenshotCount<6){
+ if(captureAll || ((sample.remaining.length||sample.cardTextOverflow.length)&&screenshotCount<6)){
   screenshotCount++;
-  await page.screenshot({path:resolve(out,screen.replace(/[^a-zA-Z0-9-]/g,'_')+'-untranslated.png'),fullPage:true,animations:'disabled'});
+  await page.screenshot({path:resolve(out,screen.replace(/[^a-zA-Z0-9-]/g,'_')+(captureAll?'-full':'-untranslated')+'.png'),fullPage:true,animations:'disabled'});
  }
 }
 try{
