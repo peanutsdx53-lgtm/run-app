@@ -196,7 +196,7 @@ export function mountResult(host,inputDraft={},options={}){
     '<details class="rv4-region-compare-method"><summary>'+(regionCmp?.status==='ready'?'比較値の算出条件と限界':'比較できない理由')+'</summary><p>'+(regionCmp?.status==='ready'?'保存した走行情報を現在の同一モデルで再計算した参考値です。記録当時の結果を再現したものではありません。'+clean(regionCmp.note):clean(regionCmp?.reason||'両方の記録について参考情報を確認できません'))+'</p></details></section>':'';
   const compareCards=comparison?.status==='ready'?'<div class="rv4-compare-cards" aria-label="二件の記録の比較">'+comparison.rows.map(r=>'<div class="rv4-compare-card"><strong>'+clean(r.label)+'</strong><div><span><small>比較相手</small>'+clean(r.first)+'</span><span><small>今回</small>'+clean(r.second)+'</span><span><small>差</small>'+(r.change===null?'比較できません':(r.change>0?'+':'')+r.change+' '+clean(r.unit))+'</span></div></div>').join('')+'</div>':'';
   const compareTable=comparison?.status==='ready'?'<div class="rv4-comparison-scroller"><table class="rv4-comparison-table"><thead><tr><th scope="col">項目</th><th scope="col">比較相手 '+clean(comparison.other.date)+'</th><th scope="col">選択中 '+clean(comparison.current.date)+'</th><th scope="col">差</th></tr></thead><tbody>'+comparison.rows.map(r=>'<tr><th scope="row">'+clean(r.label)+'</th><td>'+clean(r.first)+'</td><td>'+clean(r.second)+'</td><td>'+(r.change===null?'比較できません':(r.change>0?'+':'')+r.change+' '+clean(r.unit))+'</td></tr>').join('')+'</tbody></table></div>'+compareCards+'<div class="rv4-comparison-memos"><div><small>比較相手のメモ</small><p>'+clean(comparison.other.memo||'メモなし')+'</p></div><div><small>選択中の記録のメモ</small><p>'+clean(comparison.current.memo||'メモなし')+'</p></div></div><details class="rv4-comparison-caution"><summary>比較結果の限界</summary><p>'+comparison.uncertainty+'</p></details>':
-   '<p class="rv4-comparison-empty">'+clean(!hasInput?'走行記録を保存すると、過去との比較を確認できます。':hasInvalidCompare?'指定された比較相手は保存記録にありません。':comparison?.reason||'同じ活動種別の保存記録をもう1件残すと、距離・時間・疲労感を見比べられます。')+'</p>';
+   '<p class="rv4-comparison-empty">'+clean(!hasInput?'走行記録を保存すると、過去との比較を確認できます。':fromGps?'GPS記録では、手入力や他のGPS記録と文献参考値を自動で比較しません。保存方法・活動条件・計算基準を確認できない値を同列に並べないためです。':hasInvalidCompare?'指定された比較相手は保存記録にありません。':comparison?.reason||'同じ活動種別の保存記録をもう1件残すと、距離・時間・疲労感を見比べられます。')+'</p>';
 
   // A previous note remains on its original run. The user chooses a specific
   // note AND writes a new observation before any new run-linked note is saved.
@@ -211,7 +211,7 @@ export function mountResult(host,inputDraft={},options={}){
    notes.map(n=>'<option value="'+clean(n.id)+'">'+clean(n.text.slice(0,90))+'</option>').join('')+'</select></label>'+
    '<label>今回考えたこと（1〜500文字）<textarea data-run-question-text maxlength="500" rows="3" placeholder="前回の問いを見て、今回どう感じたかを書きます"></textarea></label>'+
    '<button type="button" data-run-question-save>本人が選んで保存する</button><p role="status" class="rv4-question-notice"></p><small>元の問いや走行記録は変更しません。科学的な因果や改善を判定する機能ではありません。</small></details>':'';
-  return '<section class="rv4-card rv4-history" data-pane="radar"><div class="rv4-card-heading"><span class="rv4-icon">'+icon('radar')+'</span><div><h2>過去と比較</h2><p>保存した走行の違いを確かめる</p></div></div>'+selector+provenance+regionCmpView+compareTable+questionPanel+
+  return '<section class="rv4-card rv4-history" data-pane="radar"><div class="rv4-card-heading"><span class="rv4-icon">'+icon('radar')+'</span><div><h2>過去と比較</h2><p>保存した走行の違いを確かめる</p></div></div>'+selector+provenance+regionCmpView+compareTable+(fromGps?'<a class="rv4-history-back" href="#/history">保存履歴でほかの記録を確認する</a>':'')+questionPanel+
    '</section>';
  };
  const extras=()=>!hasInput?'':'<details class="rv4-details"><summary><span class="rv4-icon">'+icon('memo')+'</span><span><strong>その日の記録</strong><small>使用品・コース・メモ</small></span><b>⌄</b></summary><div class="rv4-extra-grid"><div><small>シューズ</small><strong>'+clean(draft.shoeName||'—')+'</strong></div><div><small>歩数</small><strong>'+(positive(draft.steps)!==null?format(positive(draft.steps))+' 歩':'—')+'</strong></div><div><small>上り割合</small><strong>'+(number(draft.upPercent)!==null?format(number(draft.upPercent))+'%':'—')+'</strong></div></div><div class="rv4-note"><small>メモ</small><p>'+clean(draft.memo||'記録がありません')+'</p></div></details>';
@@ -222,7 +222,7 @@ export function mountResult(host,inputDraft={},options={}){
   const unavailableHint=reference?.reason==='MIXED_GAIT_NOT_QUANTIFIED'?'（走歩混在）':reference?.reason==='GAIT_NOT_SELECTED'?'（活動種別未設定）':reference?.state==='NO_AUTHORIZED_SPEED_REFERENCE'?'（文献条件外）':'';
   const status=fromGps||fromSaved?(reference?.count?'参考値 '+reference.count+'/12部位':'参考値なし'+unavailableHint):'';
   if(!hasInput)return '<div class="rv4-notice" role="status"><span>記録なし</span><span>走行記録を保存すると結果を確認できます。</span></div>';
-  return '<div class="rv4-notice" role="status"><span>'+label+'</span>'+(status?'<strong>'+status+'</strong>':'')+'</div>';
+  return '<div class="rv4-notice" role="status" data-result-source="'+(fromGps?'GPS_V2':fromSaved?'MANUAL':'DRAFT')+'"><span>'+label+'</span>'+(fromGps?'<small class="rv4-result-detail-state">'+(gps.detailSaved?'GPSコース詳細を保存済み':'GPS概要のみ（位置情報なし）')+'</small>':'')+(status?'<strong>'+status+'</strong>':'')+'</div>';
  };
  const referenceHelp=()=>{
   if(!hasInput)return '';
