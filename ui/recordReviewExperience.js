@@ -52,6 +52,30 @@ export function reviewView(d={},opts={}){
   ['record-reflection','body','身体・使用品・メモ',[present(values.bodyObservation)?compactReviewText(values.bodyObservation):'',present(values.shoeName)?`シューズ：${compactReviewText(values.shoeName,45)}`:'',present(values.memo)?'メモあり':'',(!isGps&&opts.bodySelected?.length)?`気になった部位 ${opts.bodySelected.length}件`:'' ].filter(Boolean).join('・')||'未入力',bodyHas]
  ];
  const visible=isRest?links.slice(3):links;
+ // Split UI labels from user-authored values. Stored data stay untouched.
+ const reviewDescriptionHtml=(route,description)=>{
+  if(route==='record-course'&&present(values.courseName))
+   return '<span data-user-authored>'+escape(description)+'</span>';
+  if(route==='record-environment'&&present(values.environmentNote)){
+   const parts=[];
+   if(present(values.temperatureC))parts.push('<span>気温 '+escape(values.temperatureC)+'℃</span>');
+   if(environmentReported){
+    const selected=compactReviewText(environmentReported.replace('【本人申告の環境選択】',''),45);
+    parts.push('<span>本人申告：</span><span data-user-authored>'+escape(selected)+'</span>');
+   }else parts.push('<span>環境メモあり</span>');
+   return parts.join('・');
+  }
+  if(route==='record-reflection'){
+   const parts=[];
+   if(present(values.bodyObservation))parts.push('<span data-user-authored>'+escape(compactReviewText(values.bodyObservation))+'</span>');
+   if(present(values.shoeName))parts.push('<span>シューズ：</span><span data-user-authored>'+escape(compactReviewText(values.shoeName,45))+'</span>');
+   if(present(values.memo))parts.push('<span>メモあり</span>');
+   if(!isGps&&opts.bodySelected?.length)parts.push('<span>気になった部位 '+opts.bodySelected.length+'件</span>');
+   return parts.join('・')||'未入力';
+  }
+  return escape(description);
+ };
+
  // An optional mental report is separate from ROF-J and does not become a
  // mandatory record field or an inferred scale.
  const mentalPreview=!isGps&&!isRest&&typeof opts.mentalSummary==='string'&&
@@ -75,7 +99,7 @@ export function reviewView(d={},opts={}){
   ${required?`<div class="rr-required-status" role="status" aria-label="保存の必須項目">${[['distance','距離'],['time','時間'],['activity','活動種目']].map(([key,title])=>`<span data-required-status="${key}" data-required-ok="${required.fields[key]}" aria-label="${title}：${required.fields[key]?'入力済み':'要入力'}"><b>${title}</b><em>${required.fields[key]?'入力済み':'要入力'}</em></span>`).join('')}</div>`:''}
   ${metrics?`<div class="rr-metrics"><div class="rr-metric"><div class="rr-metric-head">${icon('distance')}距離</div><div><strong class="${metrics.km==='—'?'rr-miss':''}">${escape(metrics.km)}</strong>${metrics.km!=='—'?'<em>km</em>':''}</div></div><div class="rr-metric"><div class="rr-metric-head">${icon('clock')}時間</div><div><strong class="${metrics.time==='—'?'rr-miss':''}">${escape(metrics.time)}</strong></div></div><div class="rr-metric pace"><span class="rr-metric-head">${icon('pace')}平均ペース</span><div><strong class="${metrics.pace==='—'?'rr-miss':''}">${escape(metrics.pace)}</strong>${metrics.pace!=='—'?'<em>/km</em>':''}</div></div></div><p class="rr-metric-caption">平均ペースは距離と時間から計算しています。</p>`:`<p class="rr-rest-hint">休養日の記録では距離・時間・ペースを表示しません。</p>`}
   </section>${activityPrompt}${status?`<section id="${errors.length?'rr-review-validation':'rr-review-notice'}" class="rr-panel rr-alert ${errors.length?'is-warning':''}" role="${errors.length?'alert':'status'}">${status}</section>`:''}</div>
-  <section class="rr-panel rr-summary" aria-label="追加情報の確認"><div class="rr-summary-head"><h2>詳細情報</h2><small>${count} / ${visible.length} 項目に入力あり</small></div>${visible.map(([route,ic,name,description,has])=>`<a href="#/${route}" class="rr-row" data-review-link="${route}"><span class="rr-row-icon">${icon(ic)}</span><span class="rr-row-body"><span class="rr-row-title">${escape(name)}</span><small class="rr-row-desc"${route==='record-reflection'||(route==='record-course'&&present(values.courseName))||(route==='record-environment'&&present(values.environmentNote))?' data-user-authored':''}>${escape(description)}</small></span><span class="rr-row-state ${has?'is-filled':''}">${has?'入力あり':'未入力'}</span><span class="rr-chevron">›</span></a>`).join('')}${mentalPreview}</section></div>
+  <section class="rr-panel rr-summary" aria-label="追加情報の確認"><div class="rr-summary-head"><h2>詳細情報</h2><small>${count} / ${visible.length} 項目に入力あり</small></div>${visible.map(([route,ic,name,description,has])=>`<a href="#/${route}" class="rr-row" data-review-link="${route}"><span class="rr-row-icon">${icon(ic)}</span><span class="rr-row-body"><span class="rr-row-title">${escape(name)}</span><small class="rr-row-desc">${reviewDescriptionHtml(route,description)}</small></span><span class="rr-row-state ${has?'is-filled':''}">${has?'入力あり':'未入力'}</span><span class="rr-chevron">›</span></a>`).join('')}${mentalPreview}</section></div>
   ${saveReviewScope({source:isGps?'gps':'manual',rest:isRest,notice:opts.saveNotice||'',busy:!!opts.saving})}
   <footer class="rr-foot"><div class="rr-foot-msg"><span class="lock">${icon('lock')}</span><div><strong>${isGps?'GPSでの記録はまだ保存できません':isRest?'休養日の記録を端末内に保存':'手入力した走行を端末内に保存'}</strong><br>${isGps?'この種類の記録は保存できません。':isRest?'本人が入力した日付と任意メモだけを休養日として履歴に保存します。走行の結果画面は表示しません。':'端末内に保存し、履歴・結果で確認できます。'}</div></div><div class="rr-foot-actions"><button type="button" class="rr-save" ${isRest?'data-rest-day-save':'data-manual-run-save'} ${errors.length?'aria-describedby="rr-review-validation" ':''}${errors.length||isGps||opts.saving?'disabled':''}>${opts.saveNotice?'同じ保存操作を再確認':isRest?'休養日を保存する':'走行記録を保存する'}</button></div></footer>
  </div></div></div>`;
