@@ -190,7 +190,7 @@ export function mountGpsDynamicResult(host,summary,detail){
    +speedSvg()+'<p class="gd-time-axis-note">横軸：運動中の経過時間。シークバー：採用GPS点の順番。GPS欠損・中断区間の速度はつなぎません。</p><div class="gd-controls"><button data-play class="gd-play">'+(playing?'一時停止':'▶ 再生')+'</button>'
    +'<input class="gd-scrub" data-seek type="range" min="0" max="'+(speed.length-1)+'" value="'+index+'" aria-label="再生位置"/>'
    +'<span class="gd-duration">'+time(elapsed(frame))+' / '+time(duration)+'</span></div>'
-   +'<p class="gd-note">人体図は速度条件に対応する文献参考値です。個人の身体負荷や損傷リスクの実測値ではありません。灰色は計算不能です。GPS欠損中の参考値は補完しません。</p></section></section>';
+   +'<details class="gd-note-disclosure"><summary>数値の出所と限界</summary><p class="gd-note">人体図は速度条件に対応する文献参考値です。個人の身体負荷や損傷リスクの実測値ではありません。灰色は計算不能です。GPS欠損中の参考値は補完しません。</p></details></section></section>';
   host.querySelector('[data-body-label-toggle]')?.addEventListener('click',()=>{showBodyNumbers=!showBodyNumbers;render();});
   host.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.view;selected=(BODY_REGION_VIEWS.find(v=>v.key===view)?.paths[0]||['BA-DISP-014'])[0];render();}));
   host.querySelectorAll('[data-body-region]').forEach(b=>{
