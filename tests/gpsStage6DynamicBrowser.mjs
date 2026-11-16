@@ -105,7 +105,14 @@ try{
     (await page.locator('.gd-panel-head').first().innerText());
    assert.ok(!/[ぁ-んァ-ン一-龯]/.test(english),'English dynamic source UI not fully translated: '+english);
   }
+  assert.equal(await page.locator('.gd-note-disclosure').getAttribute('open'),null,'long research limitations start folded');
   await capture(page,width,language,'01-reference-first');
+  if(width===390){
+   await page.locator('.gd-note-disclosure summary').click();
+   assert.equal(await page.locator('.gd-note-disclosure').getAttribute('open'),'','details accessible on demand');
+   await capture(page,width,language,'01a-reference-explanation-open');
+   await page.locator('.gd-note-disclosure summary').click();
+  }
   await page.locator('[data-seek]').evaluate(el=>{el.value='0';el.dispatchEvent(new Event('input',{bubbles:true}));});
   assert.equal(await page.locator('[data-gps-replay-state]').getAttribute('data-gps-replay-state'),'INITIAL_FIX');
   assert.match(await page.locator('.gd-metric').nth(2).innerText(),/—/,'initial GPS fix has no speed');
