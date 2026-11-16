@@ -107,6 +107,15 @@ try{
    assert.equal(await rows.count(),1,'GPS filter returns one record');
    const gpsItem=history.locator('[data-select-id="'+saved.gpsId+'"]');
    await gpsItem.click();
+   if(language==='en'){
+    await page.waitForFunction(()=>{
+     const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+     const title=root?.querySelector('.focus-panel h3')?.textContent||'';
+     const chosen=root?.querySelector('.selected-footer strong')?.textContent||'';
+     return title.includes('November')&&chosen.includes('November')&&
+       !/[ぁ-んァ-ン一-龯]/.test(title+chosen);
+    },null,{timeout:12000});
+   }
    assert.equal(await history.locator('[data-delete-gps-record]').count(),1,'GPS selected record can be explicitly deleted');
    assert.equal(await history.locator('[data-annotate-record]').count(),1,'GPS annotation entry preserved');
    assert.match(await history.locator('.focus-panel').innerText(),language==='en'?/GPS Measurement/:/GPSで計測/);
