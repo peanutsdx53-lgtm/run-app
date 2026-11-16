@@ -143,28 +143,30 @@ export function mountGpsDynamicResult(host,summary,detail){
  const speedSvg=()=>{
   const n=speed.length;
   const top=speed.reduce((max,p)=>p.speedMps===null?max:Math.max(max,p.speedMps),1)*3.6;
-  const stride=Math.max(1,Math.ceil(n/180)),paths=[];
+  const stride=Math.max(1,Math.ceil(n/180)),paths=[],isolated=[];
   let line=[];
   for(let i=0;i<n;i++){
    const p=speed[i];
    if(p.speedMps===null){
     if(line.length>1)paths.push(svgLine(line));
+    else if(line.length===1)isolated.push(line[0]);
     line=[];continue;
    }
    const atEnd=i===n-1||speed[i+1]?.speedMps===null;
    if(i%stride===0||line.length===0||atEnd)line.push([gpsReplayChartX(speed,i),61-53*(p.speedMps*3.6/top)]);
-   if(atEnd){if(line.length>1)paths.push(svgLine(line));line=[];}
+   if(atEnd){if(line.length>1)paths.push(svgLine(line));else if(line.length===1)isolated.push(line[0]);line=[];}
   }
   const ix=gpsReplayChartX(speed,index);
   return '<svg class="gd-speed-svg" viewBox="0 0 700 70" role="img" aria-label="GPS速度変化（運動中の経過時間を横軸に配置、GPS欠損区間は接続しない）"><path d="M5 61H695" stroke="#418093" stroke-width="1"/>'
    +paths.map(path=>'<path d="'+path+'" stroke="#46d9dc" stroke-width="2.5" fill="none" stroke-linejoin="round"/>').join('')
+   +isolated.map(([x,y])=>'<circle class="gd-speed-isolated" cx="'+x.toFixed(2)+'" cy="'+y.toFixed(2)+'" r="3.5"/>').join('')
    +'<path d="M'+ix.toFixed(2)+' 3 V63" stroke="#ffc47e" stroke-width="2" stroke-dasharray="3 3"/></svg>';
  };
  function render(){
   const frame=getFrame(),ref=refAt();
   const v=gpsReplayRowForBody(ref?.rows,selected);
   const text=v?.calculationState==='CALCULATED'&&Number.isFinite(v.value)?v.value.toFixed(1):'—';
-  const diff=text==='—'?'':'基準との差 '+(v.value>=100?'+':'')+(v.value-100).toFixed(1);
+  const diff=text==='—'?'':'<span>基準との差</span> '+(v.value>=100?'+':'')+(v.value-100).toFixed(1);
   const speedText=Number.isFinite(frame.speedMps)?(frame.speedMps*3.6).toFixed(1):'—';
   const note=activeFlagIndex===null?labels.find(f=>Math.abs(f.t-frame.t)<=1500):labels[activeFlagIndex];
   const evidence=gpsReplayEvidenceState(frame,ref);
@@ -174,14 +176,14 @@ export function mountGpsDynamicResult(host,summary,detail){
    +'<button type="button" data-flag-step="1" '+(activeFlagIndex===labels.length-1?'disabled':'')+'>次のフラッグ</button></div>':'';
   const flagInfo=note?'<span class="gd-flag-title">⚑ '+esc(note.note||'記録した地点')+'</span><span class="gd-flag-detail"><span>近傍のGPS採用点</span>：'+time(elapsed(frame))+' / '+frame.km.toFixed(2)+' km · '+speedText+' km/h</span>':'<span class="gd-flag-empty">地図上の旗をタップして地点を確認</span>';
   host.innerHTML='<section class="gd-root" aria-label="GPS動的結果">'
-   +'<header class="gd-head"><div class="gd-heading"><a href="#/result?gps='+encodeURIComponent(summary.id)+'" class="gd-back" style="display:grid;place-items:center;color:inherit;text-decoration:none" aria-label="通常結果に戻る">‹</a><div><div class="gd-eyebrow">DYNAMIC RESULT / GPS</div><h1>動的結果</h1><p class="gd-head-sub">'+esc(summary.date)+'　'+esc(types[summary.activity])+'</p></div></div><div class="gd-tag">文献参考値の変化</div></header>'
+   +'<header class="gd-head"><div class="gd-heading"><a href="#/result?gps='+encodeURIComponent(summary.id)+'" class="gd-back" style="display:grid;place-items:center;color:inherit;text-decoration:none" aria-label="通常結果に戻る">‹</a><div><div class="gd-eyebrow">DYNAMIC RESULT / GPS</div><h1>動的結果</h1><p class="gd-head-sub">'+esc(summary.date)+'　<span>'+esc(types[summary.activity])+'</span></p></div></div><div class="gd-tag">文献参考値の変化</div></header>'
    +'<div class="gd-metrics"><div class="gd-metric"><span>経過時間</span><strong>'+time(elapsed(frame))+'</strong></div><div class="gd-metric"><span>走行距離</span><strong>'+frame.km.toFixed(2)+' <em>km</em></strong></div><div class="gd-metric"><span>GPS速度</span><strong>'+speedText+' <em>km/h</em></strong></div></div>'
    +'<p class="gd-evidence-status" role="group" aria-label="GPS採用点と文献参考値の適用状態" data-gps-replay-state="'+evidence.code+'"><strong><span>GPS採用点</span> '+(index+1)+' / '+speed.length+'</strong><span>'+esc(evidence.label)+'</span></p>'
    +'<div class="gd-view-bar"><div class="gd-view-bar-copy"><strong>人体図とコース</strong><span>同じ再生位置に連動</span></div><div class="gd-tabs" role="group" aria-label="人体図の表示面">'
    +BODY_REGION_VIEWS.map(v=>'<button data-view="'+v.key+'" aria-pressed="'+(v.key===view)+'">'+v.title+'</button>').join('')+'</div></div>'
-   +'<div class="gd-main"><section class="gd-panel gd-anatomy-panel"><header class="gd-panel-head"><strong>部位別文献参考値</strong><small>身体負荷の実測ではありません</small></header>'
+   +'<div class="gd-main"><section class="gd-panel gd-anatomy-panel"><header class="gd-panel-head"><strong>部位別文献参考値</strong><small>非実測の参考値</small></header>'
    +'<div class="gd-stage">'+bodySvg(ref)+'</div><div class="gd-panel-foot"><span>選択部位</span><strong>'+esc(names[selected])+'</strong></div></section>'
-   +'<section class="gd-panel gd-course-panel"><header class="gd-panel-head"><strong>GPSコース</strong><small>⚑ '+labels.length+' 地点</small></header>'
+   +'<section class="gd-panel gd-course-panel"><header class="gd-panel-head"><strong>GPSコース</strong><small>⚑ '+labels.length+' <span>地点</span></small></header>'
    +'<div class="gd-stage">'+courseSvg()+'</div><div class="gd-panel-foot"><span>保存経路上の近傍位置</span><strong>'+frame.km.toFixed(2)+' km</strong></div></section></div>'
    +'<div class="gd-linked-insight" aria-label="地点と身体の連動情報"><div class="gd-region-insight"><small>選択部位の文献参考値</small><div class="gd-region-reading"><strong>'+text+'</strong><span>'+esc(names[selected])+'</span></div><div class="gd-reading-actions"><span>'+diff+'</span><button type="button" data-body-label-toggle aria-pressed="'+showBodyNumbers+'">'+(showBodyNumbers?'図の数値を隠す':'数値表示')+'</button></div></div>'
    +'<div class="gd-flag-insight"><small>フラッグ地点の振り返り</small><div class="gd-flag-content">'+flagInfo+'</div>'+flagActions+'<span class="gd-flag-hint">フラッグ選択時にコース・速度・人体図が同期します</span></div></div>'
