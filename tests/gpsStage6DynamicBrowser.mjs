@@ -80,6 +80,9 @@ try{
   const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'home',{waitUntil:'networkidle'});
   const saved=await createFixture(page);
+  // GPS V2 summary listing is intentionally snapshotted at app startup.
+  // Reload to reproduce opening a stored record after the normal save flow.
+  await page.reload({waitUntil:'networkidle'});
   await page.goto(base+'result?gps='+encodeURIComponent(saved.id),{waitUntil:'networkidle'});
   const rootResult=page.locator('#runload-result-v4');
   await rootResult.locator('[data-gps-dynamic-gate]').waitFor({timeout:15000});
@@ -103,6 +106,10 @@ try{
    assert.ok(!/[ぁ-んァ-ン一-龯]/.test(english),'English dynamic source UI not fully translated: '+english);
   }
   await capture(page,width,language,'01-reference-first');
+  await page.locator('[data-seek]').evaluate(el=>{el.value='0';el.dispatchEvent(new Event('input',{bubbles:true}));});
+  assert.equal(await page.locator('[data-gps-replay-state]').getAttribute('data-gps-replay-state'),'INITIAL_FIX');
+  assert.match(await page.locator('.gd-metric').nth(2).innerText(),/—/,'initial GPS fix has no speed');
+  await capture(page,width,language,'01b-first-fix-not-measured');
   await page.locator('[data-seek]').evaluate(el=>{el.value='3';el.dispatchEvent(new Event('input',{bubbles:true}));});
   assert.equal(await page.locator('[data-gps-replay-state]').getAttribute('data-gps-replay-state'),'GPS_GAP');
   assert.match(await page.locator('.gd-metric').nth(2).innerText(),/—/,'gap speed not fabricated');
