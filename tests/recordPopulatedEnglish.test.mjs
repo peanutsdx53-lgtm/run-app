@@ -50,8 +50,9 @@ test('review markup isolates authored course name, environment report and body n
  const html=reviewView({date:'2026-11-17',distance:'6',minutes:'35',activityGait:'RUNNING',
   courseName:japanese,environmentNote:'【本人申告の環境選択】天候：くもり、風が強い',
   temperatureC:'18.5',bodyObservation:'殿部',shoeName:'くもり',memo:'向かい風の体感があった。'});
- for(const original of [japanese,'天候：くもり、風が強い','殿部','くもり','向かい風の体感があった。'])
+ for(const original of [japanese,'天候：くもり、風が強い','殿部','くもり'])
   assert.ok(html.includes('<span data-user-authored>'+original+'</span>'),'authored span missing: '+original);
  assert.match(html,/<span>本人申告：<\/span><span data-user-authored>/);
  assert.match(html,/<span>シューズ：<\/span><span data-user-authored>/);
+ assert.match(html,/<span>メモあり<\/span>/,'review intentionally summarizes the memo; stored text stays unchanged');
 });
