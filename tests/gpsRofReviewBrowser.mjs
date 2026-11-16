@@ -51,7 +51,8 @@ try{
   await shot('method-selection');
   if(!phone){
     assert.equal(await page.locator('a.rv-method-gps[href="#/measurement"]').count(),0,'PC cannot select GPS');
-    assert.match(await page.locator('.rv-method-gps.is-unavailable').innerText(),/スマートフォン専用/);
+    assert.match(await page.locator('.rv-method-gps.is-unavailable').innerText(),/スマートフォンで利用できます/);
+    assert.equal(await page.locator('.rv-method-gps.is-unavailable').getAttribute('aria-disabled'),'true','PC GPS method remains explicitly unavailable');
     await page.goto(host+'measurement',{waitUntil:'networkidle'});
     assert.match(await page.locator('.gps-platform-unavailable').innerText(),/スマートフォン専用/);
     assert.equal(await page.locator('[data-gps-action="start"]').count(),0,'PC direct URL does not start');
