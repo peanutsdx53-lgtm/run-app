@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {prepareGpsV2Run,validGpsV2Summary} from '../ui/gpsReplayIndexedDbStore.js';
 import {gpsSummariesToHistoryRows} from '../ui/historyGpsAdapter.js';
+import {translateResidualDynamic} from '../ui/englishSurfaceRemainders.js';
 import {createHistoryUi,filterRecords,normalizeRecords,renderHistory} from '../ui/historyExperience.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const point=(i,km)=>({lat:37.502+i*.0001,lon:139.902,km,t:1700000000000+i*10000,
@@ -99,4 +100,13 @@ test('stage 5: source and selected ID cannot silently change during result navig
  assert.match(result,/fromGps\?'GPS記録では/);
  assert.match(result,/data-result-source/);
  assert.match(result,/\['body','身体'\],\['fatigue','疲労感'\],\['radar','過去と比較'\]/);
+});
+
+test('stage 5: contextual English only converts history system captions and weekday markers',()=>{
+ const caption={matches:selector=>selector==='[data-history-system-caption]',closest:()=>null};
+ const weekday={matches:()=>false,closest:selector=>selector==='.datebox'?{}:null};
+ assert.equal(translateResidualDynamic('走行時間 33:00　・　ペース 5:30 /km',{element:caption}),'Duration 33:00 · Pace 5:30 /km');
+ assert.equal(translateResidualDynamic('月曜日',{element:weekday}),'Monday');
+ assert.equal(translateResidualDynamic('月曜日',{element:caption}),null,'unscoped authored text must not be translated');
+ assert.equal(translateResidualDynamic('走行時間 33:00　・　ペース 5:30 /km',{element:weekday}),null,'no arbitrary user note replacement');
 });
