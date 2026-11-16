@@ -222,3 +222,19 @@
   padding-bottom:max(calc(193px + env(safe-area-inset-bottom,0px)),calc(10.5rem + env(safe-area-inset-bottom,0px)))!important;
  }
 }
+
+
+/* Stage 7: prevent long English lesson labels at 200% from setting the
+ * auto-minimum width of the app's grid track (the observed 324/320 overflow). */
+@media(max-width:430px){
+ .app-shell:has(.lr-root) .main-content{
+  min-width:0;grid-template-columns:minmax(0,1fr);
+ }
+ .app-shell:has(.lr-root) .lr-root,
+ .app-shell:has(.lr-root) .lr-lesson,
+ .app-shell:has(.lr-root) .lr-page-heading,
+ .app-shell:has(.lr-root) .lr-back,
+ .app-shell:has(.lr-root) .lr-chapter{
+  min-width:0;max-width:100%;
+ }
+}
