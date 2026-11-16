@@ -132,6 +132,7 @@ try{
    assert.equal(await result.locator('[data-pane="fatigue"]').isVisible(),true);
    await capture(page,width,language,'05-result-manual-fatigue');
    await page.goto(base+'result?gps=gps-v2-nonexistent-000001',{waitUntil:'networkidle'});
+   await page.locator('#runload-result-v4 .gd-empty').waitFor({state:'visible',timeout:15000});
    assert.match(await page.locator('#runload-result-v4').innerText(),language==='en'?/(GPS|record)/:/指定されたGPS記録がありません/);
    assert.equal(await result.locator('[data-result-source]').count(),0,'unknown GPS must not silently show manual result');
    await capture(page,width,language,'06-unknown-gps-fail-closed');
