@@ -83,6 +83,33 @@ async function record(page,screen,route,selector){
     }
    }
   }
+  // Check text paint *inside* record cards. A clipped flex child may leave
+  // document.scrollWidth unchanged, so page-level overflow alone is insufficient.
+  const recordTextClipping=[];
+  const checkTextWithin=(item,frame,context)=>{
+   if(!shown(item))return;
+   const range=document.createRange();range.selectNodeContents(item);
+   for(const part of range.getClientRects()){
+    if(part.width<=0)continue;
+    if(part.left<frame.left-2||part.right>frame.right+2)
+     recordTextClipping.push({context,text:item.textContent.trim().slice(0,80),
+      left:Math.round(part.left),right:Math.round(part.right),
+      frameLeft:Math.round(frame.left),frameRight:Math.round(frame.right)});
+   }
+  };
+  for(const [i,card] of [...document.querySelectorAll('.rv-method-card')].entries()){
+   const rect=card.getBoundingClientRect();
+   for(const label of card.querySelectorAll('strong,small'))checkTextWithin(label,rect,'method '+i);
+  }
+  for(const badge of document.querySelectorAll('.rv-manual .rv-section-title small')){
+   const panel=badge.closest('.rv-panel');
+   if(panel)checkTextWithin(badge,panel.getBoundingClientRect(),'manual required/optional');
+  }
+  for(const label of document.querySelectorAll('.rv-manual .rv-link-content small')){
+   if(shown(label)&&label.scrollWidth>label.clientWidth+3)
+    recordTextClipping.push({context:'manual optional detail',text:label.textContent.trim().slice(0,80),
+     scrollWidth:label.scrollWidth,clientWidth:label.clientWidth});
+  }
   const overflowNodes=document.documentElement.scrollWidth>innerWidth+3
    ?[...document.body.querySelectorAll('*')].filter(el=>{
      const rect=el.getBoundingClientRect();
@@ -132,7 +159,7 @@ async function record(page,screen,route,selector){
     delta:el.scrollWidth-el.clientWidth,
     rect:frame(el)})).sort((a,b)=>b.delta-a.delta).slice(0,20);
   return {remaining:[...found].sort(),width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,latestMetricOverlap,title:document.title,
+   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,recordTextClipping,latestMetricOverlap,title:document.title,
    lang:document.documentElement.lang,navLabels,layoutDiagnostics,internalScroll};
  });
  reports.push({screen,route:route||'(in-place)',mode:font200?'root-font-200':'normal',...sample});
@@ -140,6 +167,7 @@ async function record(page,screen,route,selector){
  if(sample.overflowNodes.length)console.log('ENGLISH-OVERFLOW '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.overflowNodes));
  if(sample.scrollWidth>sample.width+3)console.log('STAGE7-LAYOUT '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify({frames:sample.layoutDiagnostics,inner:sample.internalScroll}));
  if(sample.cardTextOverflow.length)console.log('ENGLISH-CARD-OVERLAP '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.cardTextOverflow));
+ if(sample.recordTextClipping.length)console.log('RECORD-INTERNAL-CLIPPING '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.recordTextClipping));
  if(captureAll || ((sample.remaining.length||sample.cardTextOverflow.length)&&screenshotCount<6)){
   screenshotCount++;
   await page.screenshot({path:resolve(out,screen.replace(/[^a-zA-Z0-9-]/g,'_')+(captureAll?'-full':'-untranslated')+'.png'),fullPage:true,animations:'disabled'});
@@ -224,6 +252,8 @@ try{
  assert.deepEqual(leftover,[],'all inspected visible English UI must be translated, excluding legal originals and user text');
  const cardOverlaps=reports.flatMap(entry=>entry.cardTextOverflow.map(hit=>({screen:entry.screen,...hit})));
  assert.deepEqual(cardOverlaps,[],'translated Home summary text must stay inside its own card, not overlap neighbors');
+ const recordClips=reports.flatMap(entry=>entry.recordTextClipping.map(hit=>({screen:entry.screen,...hit})));
+ assert.deepEqual(recordClips,[],'record method and optional information must be fully visible inside their cards');
  const overflow=reports.filter(entry=>entry.scrollWidth>entry.width+3);
  assert.deepEqual(overflow,[],'English UI must not horizontally overflow at the audited viewport');
  const metricCollisions=reports.flatMap(entry=>entry.latestMetricOverlap.map(x=>({screen:entry.screen,...x})));
@@ -234,6 +264,7 @@ try{
  const summary={engine,width:auditWidth,font200,scope:'English displayed copy inventory; Japanese legal original and user-authored data excluded',observed:reports.length,byScreen:reports,errors:scriptErrors,
   totalUntranslated:reports.reduce((sum,x)=>sum+x.remaining.length,0),
   totalCardOverlaps:reports.reduce((sum,x)=>sum+x.cardTextOverflow.length,0),
+  totalRecordTextClipping:reports.reduce((sum,x)=>sum+x.recordTextClipping.length,0),
   excludedFromCertification:['physical iOS/Android','official English legal equivalence','unvisited error and permission states','PNG content tested independently in englishUiBrowser.mjs']};
  await writeFile(resolve(out,'report.json'),JSON.stringify(summary,null,2));
  console.log('ENGLISH-SURFACE-SUMMARY '+JSON.stringify({engine,width:auditWidth,font200,observed:summary.observed,totalUntranslated:summary.totalUntranslated,errors:summary.errors}));
