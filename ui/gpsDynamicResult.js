@@ -94,7 +94,7 @@ export function mountGpsDynamicResult(host,summary,detail){
   host.innerHTML='<p class="gd-empty">速度時系列の整合性を確認できません。</p>';return {ok:false,reason:'INVALID_SERIES'};
  }
  if(speed.length<2)return {ok:false,reason:'TOO_FEW_SAMPLES'};
- const elapsed=f=>gpsReplayElapsed(speed,speed.indexOf(f));
+ const elapsed=f=>Number.isFinite(f.activeMs)?f.activeMs:Math.max(0,f.t-speed[0].t);
  const duration=gpsReplayElapsed(speed,speed.length-1);
  let index=0,view='front',selected='BA-DISP-014',playing=false,timer=null,playElapsed=0,showBodyNumbers=false,activeFlagIndex=null;
  const geom=routeGeometry(detail.route);
