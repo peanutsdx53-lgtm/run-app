@@ -35,11 +35,22 @@ async function capture(page,width,language,state){
    fixedNavVisible:[...document.querySelectorAll('.app-shell .mobile-nav,.app-shell .bottom-nav')]
     .filter(el=>getComputedStyle(el).display!=='none'&&el.getBoundingClientRect().width>0)
     .map(el=>({className:el.className,position:getComputedStyle(el).position,...rect(el)})),
+   replayActive:!!document.querySelector('.gd-root:not(.gd-summary) .gd-main'),
+   unavailable:!!document.querySelector('[data-gps-dynamic] .gd-empty'),
    heading:(()=>{const root=document.querySelector('.gd-anatomy-panel .gd-panel-head');if(!root)return null;return {outer:rect(root),strong:rect(root.querySelector('strong')),small:rect(root.querySelector('small'))};})(),
    state:document.querySelector('[data-gps-replay-state]')?.dataset.gpsReplayState};
  });
- assert.deepEqual(layout.fixedNavVisible,[],
-  'dynamic GPS content must never be covered by mobile/tablet fixed navigation '+engineName+' '+language+' '+width+' '+state);
+ if(layout.replayActive){
+  assert.deepEqual(layout.fixedNavVisible,[],
+   'active GPS replay must never be covered by mobile/tablet fixed navigation '+engineName+' '+language+' '+width+' '+state);
+ }else{
+  // An unavailable replay has no dynamic chart to cover. Keep ordinary app
+  // navigation accessible so a no-consent record cannot become a dead end.
+  assert.equal(state,'07-no-detail-not-available','only explicitly tested unavailable state may lack the replay root');
+  assert.equal(layout.unavailable,true,'unavailable state must show an explanation');
+  if(width<=680)assert.ok(layout.fixedNavVisible.some(nav=>String(nav.className).includes('mobile-nav')),
+    'unavailable GPS replay must preserve the normal mobile navigation');
+ }
  assert.ok(layout.scroll<=layout.width+2&&layout.body<=layout.width+2,
   'horizontal overflow '+engineName+' '+language+' '+width+' '+state+' '+JSON.stringify(layout));
  for(const [key,r] of Object.entries(layout.boxes)){
