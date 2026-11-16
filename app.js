@@ -772,8 +772,7 @@ function recordExtras(){
    const gpsAttention=!gpsV2Cache.ok||Boolean(pendingGpsV2Backup);
    gpsPanel.innerHTML='<p class="gps-history-privacy">保存済みのGPS記録とデータ管理を確認できます。位置情報はこの端末内で扱います。</p>';
    if(!gpsV2Cache.ok)gpsPanel.insertAdjacentHTML("beforeend",`<p role="alert">${esc(gpsV2Cache.reason)}</p>`);
-   if(gpsV2Cache.ok){
-    // The common history now owns selection and navigation for both sources;
+   // The common history now owns selection and navigation for both sources;
     // this disclosure is retained exclusively for GPS storage management.
     gpsPanel.insertAdjacentHTML('beforeend','<p class="gps-history-integrated">GPSの記録は上の履歴一覧に含まれます。ここではバックアップと保存容量を管理します。</p>');
    gpsPanel.insertAdjacentHTML('beforeend',`<div class="gps-history-backup"><h3>GPS記録のバックアップ</h3><p>位置情報を含む場合があり、ファイルは暗号化されません。保存場所に注意してください。</p><div class="gps-history-backup-actions"><button data-gps-v2-backup-export type="button">GPS記録を書き出す</button><label>GPS記録のバックアップを読み込む<input data-gps-v2-backup-file type="file" accept=".json,application/json"></label></div>${gpsV2BackupNotice?`<p role="status" class="gps-history-backup-notice">${esc(gpsV2BackupNotice)}</p>`:''}${pendingGpsV2Backup?`<div class="gps-history-backup-confirm"><p>${pendingGpsV2Backup.count}件（詳細保存 ${pendingGpsV2Backup.detailCount}件）を検証しました。</p><button data-gps-v2-backup-confirm type="button">GPS記録の復元を確定</button><button data-gps-v2-backup-cancel type="button">キャンセル</button></div>`:''}</div>`);
