@@ -184,7 +184,6 @@ export const ENGLISH_FINAL_GPS=Object.freeze({
  "速度条件に適用できる文献参考値はありません（測定値のゼロではありません）": "No Applicable Research Reference for This Speed (Not a Measured Value of Zero)",
  "隣接GPS点から算出した区間速度に対応する文献参考値です。身体負荷の実測ではありません": "Research Reference for Speed Calculated Between Adjacent GPS Fixes; Not a Direct Measurement of Body Load",
  "部位別文献参考値": "Regional Research Reference Values",
- "身体負荷の実測ではありません": "Not a Direct Measurement of Body Load",
  "保存したGPS経路と近傍の採用GPS点": "Saved GPS Route and Nearest Recorded GPS Fix",
  "保存経路上の近傍位置": "Nearest Position on Saved Route",
  "近傍のGPS採用点": "Nearest Recorded GPS Fix",
