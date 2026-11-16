@@ -31,28 +31,8 @@
 .gps-history-disclosure[open]>summary .gps-history-chevron{transform:rotate(180deg)}
 .gps-history-content{padding:14px 18px 18px;display:grid;gap:12px;min-width:0}
 .gps-history-content>.gps-history-privacy{margin:0;color:#a9c8d1;font-size:.8rem;line-height:1.6}
-.gps-history-content>.gps-history-empty{
- margin:0;padding:14px;border:1px dashed #4a8090;border-radius:12px;
- color:#c3dce3;background:#0b2938;font-size:.88rem
-}
-.gps-history-item{
- display:flex;align-items:flex-start;gap:10px;justify-content:space-between;flex-wrap:wrap;
- padding:14px;border:1px solid #396e80;border-radius:14px;
- background:#0c2b3d;min-width:0
-}
-.gps-history-item>span{display:grid;gap:6px;flex:1 1 220px;min-width:0}
-.gps-history-item strong{font-size:.86rem;line-height:1.5}
-.gps-history-item small{color:#a7c6d0;font-size:.75rem;line-height:1.6;overflow-wrap:anywhere}
-.gps-history-item>div{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.gps-history-item button,.gps-history-item a{
- display:inline-flex;align-items:center;justify-content:center;min-height:44px;
- padding:9px 12px;border-radius:10px;border:1px solid #508b9a;
- background:#164353;color:#dbf6f5;font-weight:750;font-size:.8rem;text-decoration:none
-}
-.gps-history-item aside{width:100%;padding:10px;border-radius:10px;background:#34302b}
-.gps-v2-history{display:grid;gap:10px}
-.gps-v2-history h3{margin:3px 0;color:#c2e7e8;font-size:.91rem}
-.gps-history-tools{min-width:0;border:1px solid #315f70;border-radius:14px;background:#0a2636}
+.gps-history-content>.gps-history-integrated{margin:0;color:#bfdfe6;font-size:.83rem;line-height:1.7;overflow-wrap:anywhere}
+.gps-history-content>.gps-history-tools{min-width:0;border:1px solid #315f70;border-radius:14px;background:#0a2636}
 .gps-history-tools>summary{
  display:flex;align-items:center;justify-content:space-between;gap:12px;
  padding:13px 15px;min-height:49px;cursor:pointer;list-style:none;
@@ -86,9 +66,6 @@
  .gps-history-disclosure>summary{padding:15px 14px;gap:8px}
  .gps-history-heading{flex:1 1 165px;font-size:.96rem}
  .gps-history-content{padding:12px;gap:10px}
- .gps-history-item{padding:12px}
- .gps-history-item>div{width:100%}
- .gps-history-item>div>*{flex:1 1 115px}
  .gps-history-tools-content{padding:0 9px 10px}
  .gps-history-tools>summary{padding:12px}
 }

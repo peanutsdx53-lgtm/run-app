@@ -239,3 +239,9 @@
  .rv4-actions{gap:6px}
 }
 @media print{.rv4-header-help{display:none!important}}
+
+/* Stage 5: provenance remains visible without changing the approved 3-tab layout. */
+.rv4-notice{flex-wrap:wrap;gap:8px 12px}
+.rv4-result-detail-state{display:inline-block;flex:0 1 auto;font-size:12px;line-height:1.5;color:#d4eff5;overflow-wrap:anywhere}
+.rv4-history-back{display:inline-flex;align-items:center;justify-content:center;max-width:100%;min-height:44px;padding:9px 15px;margin-top:14px;border:1px solid #5fa6b4;border-radius:11px;background:#13465b;color:#e7ffff;text-decoration:none;font-size:13px;font-weight:750;line-height:1.5;text-align:center;overflow-wrap:anywhere}
+.rv4-history-back:focus-visible{outline:3px solid #82faf2;outline-offset:3px}

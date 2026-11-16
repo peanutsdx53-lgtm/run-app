@@ -196,6 +196,21 @@ const REGIONS=Object.freeze({'股関節部':'Hip region','大腿前面':'Front t
 export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  const s=String(text??'').trim();
  let m;
+ // Only system-owned history fields are translated; stored user notes remain untouched.
+ if(element?.closest?.('.datebox')&&(m=s.match(/^([日月火水木金土])曜日$/))){
+  const day={日:'Sunday',月:'Monday',火:'Tuesday',水:'Wednesday',木:'Thursday',金:'Friday',土:'Saturday'};
+  return day[m[1]];
+ }
+ if(element?.matches?.('[data-history-system-caption]')&&(m=s.match(/^走行時間 ([0-9:]+)\s*・\s*ペース ([0-9:—]+) \/km$/)))
+  return 'Duration '+m[1]+' · Pace '+m[2]+' /km';
+ if((element?.matches?.('.focus-panel h3,.selected-footer strong'))&&
+  (m=s.match(/^(\d{4})年(\d{1,2})月(\d{1,2})日[の　](.+)$/))){
+  const activity={'ランニング':'Running','ジョギング':'Jogging','ウォーキング':'Walking',
+   '走歩混在':'Mixed Running and Walking','休養':'Rest'}[m[4]];
+  const month=MONTHS[Number(m[2])-1];
+  if(!activity||!month)return null;
+  return month+' '+Number(m[3])+', '+m[1]+' · '+activity;
+ }
  if(attribute==='aria-label'&&element?.tagName?.toLowerCase()==='path'&&(m=s.match(/^(.+?)：([0-9.]+)$/))&&REGIONS[m[1]])
   return REGIONS[m[1]]+': '+m[2];
  if(attribute==='aria-label'&&(m=s.match(/^(\d{1,2})日、(\d+)件$/)))

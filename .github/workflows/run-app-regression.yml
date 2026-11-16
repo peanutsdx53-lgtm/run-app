@@ -98,6 +98,16 @@ jobs:
           path: audit-output/gps-stage4-save/
           if-no-files-found: warn
           retention-days: 7
+      - name: Audit unified GPS/manual history and 3 result tabs in JA/EN at five widths
+        run: node tests/gpsStage5HistoryResultBrowser.mjs
+      - name: Preserve stage 5 history and result screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gps-stage5-${{ matrix.engine }}
+          path: audit-output/stage5-history-result/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify bilingual interface
         run: node tests/englishUiBrowser.mjs
       - name: Verify 19 active screen states and retired S18 absence
