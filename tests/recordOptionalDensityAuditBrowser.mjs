@@ -33,9 +33,18 @@ async function take(page,w,id){
    '.rr-row[data-review-link="record-compare"] .rr-row-desc',
    '.rr-row[data-review-link="record-rof"] .rr-row-desc'
   ];
+  const visibleSystemText=el=>{
+   const walk=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),bits=[];
+   while(walk.nextNode()){
+    const t=walk.currentNode,p=t.parentElement;
+    if(p?.closest('select,option,textarea,input,[data-user-authored],[hidden],[aria-hidden="true"]'))continue;
+    if(p?.getClientRects().length&&t.textContent.trim())bits.push(t.textContent.trim());
+   }
+   return bits.join(' ').slice(0,130);
+  };
   const systemResidue=systemNodes.flatMap(selector=>[...document.querySelectorAll(selector)]
    .filter(el=>!el.closest('[hidden]')&&el.getClientRects().length)
-   .map(el=>({selector,text:el.textContent.trim().slice(0,130)}))
+   .map(el=>({selector,text:visibleSystemText(el)}))
    .filter(item=>/[ぁ-ゟァ-ヿ一-龯]/.test(item.text)));
   const fields=[...document.querySelectorAll('textarea,input[maxlength]')].map(e=>({name:e.id||e.dataset.draft,limit:e.maxLength,length:e.value.length,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight}));
   return {viewport:innerWidth,document:document.documentElement.scrollWidth,body:document.body.scrollWidth,
