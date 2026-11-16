@@ -262,7 +262,11 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
   if(is('.cx-picker-title')&&(m=s.match(/^(.+)で選べる部位$/))&&Object.hasOwn({'前面':'Front','後面':'Back','足裏':'Sole'},m[1]))
    return 'Regions on '+({'前面':'Front','後面':'Back','足裏':'Sole'}[m[1]]);
  }
- if(inView('[data-record-review]')&&is('.rr-row-desc')){
+ if(inView('[data-record-review]')&&inView('.rr-row-desc')){
+  const parts={'本人申告：':'Self-reported: ','シューズ：':'Shoes: ',
+   'メモあり':'Note Entered','環境メモあり':'Environment Note Entered'};
+  if(Object.hasOwn(parts,s))return parts[s];
+  if((m=s.match(/^気になった部位 (\d+)件$/)))return m[1]+' Regions of Interest';
   if((m=s.match(/^(\d+)歩 ・ (端末で計測|推定・手入力|出所不明)$/))){
    const t={'端末で計測':'Measured by Device','推定・手入力':'Estimated / Manually Entered','出所不明':'Source Unknown'};
    return m[1]+' steps · '+t[m[2]];
