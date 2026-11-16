@@ -94,6 +94,18 @@ async function record(page,screen,route,selector){
       scrollWidth:el.scrollWidth,minWidth:getComputedStyle(el).minWidth,
       text:(el.textContent||'').replace(/\s+/g,' ').slice(0,90)};
     }).sort((a,b)=>b.right-a.right).slice(0,30):[];
+  const latestMetricOverlap=[];
+  for(const [i,card] of [...document.querySelectorAll('.hx-latest-fig>div')].entries()){
+   const frame=card.getBoundingClientRect();
+   for(const label of card.querySelectorAll('small,strong,em')){
+    if(!shown(label))continue;
+    const range=document.createRange();range.selectNodeContents(label);
+    for(const box of range.getClientRects()){
+     if(box.width>0&&(box.left<frame.left-2||box.right>frame.right+2))
+      latestMetricOverlap.push({metric:i+1,text:label.textContent.trim().slice(0,45),left:Math.round(box.left),right:Math.round(box.right),frameLeft:Math.round(frame.left),frameRight:Math.round(frame.right)});
+    }
+   }
+  }
   const navLabels=[...document.querySelectorAll('.mobile-nav .mobile-link')]
    .filter(el=>el.getClientRects().length>0).map(el=>{
      const text=[...el.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
@@ -104,7 +116,7 @@ async function record(page,screen,route,selector){
       outside:parts.some(r=>r.left<parent.left-1||r.right>parent.right+1)};
    });
   return {remaining:[...found].sort(),width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,title:document.title,lang:document.documentElement.lang,navLabels};
+   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,latestMetricOverlap,title:document.title,lang:document.documentElement.lang,navLabels};
  });
  reports.push({screen,route:route||'(in-place)',mode:font200?'root-font-200':'normal',...sample});
  console.log('ENGLISH-SURFACE '+engine+' '+screen+' remaining='+sample.remaining.length+' overflow='+Math.max(0,sample.scrollWidth-sample.width)+' samples='+JSON.stringify(sample.remaining.slice(0,14)));
@@ -196,6 +208,8 @@ try{
  assert.deepEqual(cardOverlaps,[],'translated Home summary text must stay inside its own card, not overlap neighbors');
  const overflow=reports.filter(entry=>entry.scrollWidth>entry.width+3);
  assert.deepEqual(overflow,[],'English UI must not horizontally overflow at the audited viewport');
+ const metricCollisions=reports.flatMap(entry=>entry.latestMetricOverlap.map(x=>({screen:entry.screen,...x})));
+ assert.deepEqual(metricCollisions,[],'Latest Run summary text must stay within its own metric card under 200% text');
  const brokenNav=reports.flatMap(entry=>entry.navLabels.filter(x=>x.fragments!==1||x.outside).map(x=>({screen:entry.screen,...x})));
  assert.deepEqual(brokenNav,[],'English mobile nav labels must not split into fragments or overflow their targets');
 }finally{
