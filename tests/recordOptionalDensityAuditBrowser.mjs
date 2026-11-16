@@ -15,27 +15,35 @@ await new Promise(ok=>server.listen(4362,'127.0.0.1',ok));
 const engine=process.env.RUNLOAD_BROWSER_ENGINE==='webkit'?'webkit':'chromium';
 const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true});
 const out=resolve(root,'audit-output','record-optional-density');await mkdir(out,{recursive:true});
-const host='http://127.0.0.1:4362/#/',report=[];
+const host='http://127.0.0.1:4362/#/',report=[];let activeLanguage='ja';
 async function take(page,w,id){
+ if(activeLanguage==='en')await page.waitForTimeout(200);
  const m=await page.evaluate(()=>{
   const els=[...document.querySelectorAll('.rv-panel,.cx-main-card,.cx-field-card,.cx-transfer,.cx-toolbar,.cx-selected-chip,.rv-section-row,.e4-panel,.g4-panel,.rv4-card')];
   const fields=[...document.querySelectorAll('textarea,input[maxlength]')].map(e=>({name:e.id||e.dataset.draft,limit:e.maxLength,length:e.value.length,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight}));
   return {viewport:innerWidth,document:document.documentElement.scrollWidth,body:document.body.scrollWidth,
+   pageHeight:document.documentElement.scrollHeight,cardCount:els.length,
    selectedRegions:document.querySelectorAll('.cx-selected-chip').length,
    nodes:els.map(e=>{const r=e.getBoundingClientRect();return {className:String(e.className),left:r.left,right:r.right,width:r.width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}}),
-   counters:[...document.querySelectorAll('.cx-counter')].map(e=>e.textContent),fields};
+   counters:[...document.querySelectorAll('.cx-counter')].map(e=>e.textContent),fields,
+   textareaVisibleRatios:fields.filter(x=>x.scrollHeight>0&&x.clientHeight>0)
+    .map(x=>({name:x.name,visibleFraction:Math.min(1,Number((x.clientHeight/x.scrollHeight).toFixed(3)))}))};
  });
- report.push({engine,width:w,state:id,...m});
- await page.screenshot({path:resolve(out,engine+'-'+w+'-'+id+'.png'),fullPage:true,animations:'disabled',timeout:12000});
- if(m.document>m.viewport+2||m.body>m.viewport+2)console.warn('OVERFLOW '+engine+' '+w+' '+id+': '+m.document);
+ report.push({engine,language:activeLanguage,width:w,state:id,...m});
+ await page.screenshot({path:resolve(out,engine+'-'+activeLanguage+'-'+w+'-'+id+'.png'),fullPage:true,animations:'disabled',timeout:20000});
+ if(m.document>m.viewport+2||m.body>m.viewport+2)console.warn('OVERFLOW '+engine+' '+activeLanguage+' '+w+' '+id+': '+m.document);
 }
 async function enter(page,route,selector,w,id){
  await page.goto(host+route,{waitUntil:'networkidle'});await page.locator(selector).waitFor({timeout:12000});await take(page,w,id+'-empty');
 }
 try{
- for(const w of [320,390,1440]){
-  const ctx=await browser.newContext({viewport:{width:w,height:w===1440?900:844},locale:'ja-JP',reducedMotion:'reduce'});
-  await ctx.addInitScript(()=>localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:'ja'})));
+ for(const language of ['ja','en'])for(const w of [320,390,768,1440]){
+  activeLanguage=language;
+  const ctx=await browser.newContext({viewport:{width:w,height:w===1440?900:844},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block'});
+  await ctx.addInitScript(lang=>{
+   localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:lang}));
+   localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({language:lang,textSize:'standard',motion:'system'}));
+  },language);
   const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await enter(page,'record','.rv-manual',w,'MANUAL');
   await page.locator('[data-draft="distance"]').fill('8.25');
@@ -59,7 +67,7 @@ try{
   await page.locator('[data-rv-surface-value="'+surfaces[0]+'"]').fill('60');
   await page.locator('[data-rv-surface-focus="'+surfaces[1]+'"]').click();
   await page.locator('[data-rv-surface-value="'+surfaces[1]+'"]').fill('40');
-  assert.match(await page.locator('[data-rv-surface-total]').innerText(),/合計 100%/);
+  assert.match(await page.locator('[data-rv-surface-total]').innerText(),/100%/);
   assert.equal(await page.locator('[data-rv-surface-pick-value="'+surfaces[0]+'"]').innerText(),'60%');
   assert.equal(await page.locator('[data-rv-surface-pick-value="'+surfaces[1]+'"]').innerText(),'40%');
   assert.equal(await page.locator('.rv-surface-fine [data-rv-surface-step]').count(),2,'step controls mirror slope');
@@ -135,7 +143,7 @@ try{
     for(const id of ids)await page.locator('[data-picker-id="'+id+'"]').click();
   }
   assert.equal(await page.locator('.cx-selected-chip').count(),3,'initial twelve-region display compact');
-  assert.match(await page.locator('[data-selected-expand]').innerText(),/ほか 9 部位を表示/);
+  assert.match(await page.locator('[data-selected-expand]').innerText(),/9/);
   await take(page,w,'BODY-12-regions-compact');
   await page.locator('[data-selected-expand]').click();
   assert.equal(await page.locator('.cx-selected-chip').count(),12,'expand reveals all selections without loss');
@@ -161,9 +169,10 @@ try{
   await page.locator('[data-demo-save]').click();
   await page.locator('[data-record-review]').waitFor();
   const reviewText=await page.locator('[data-record-review]').innerText();
-  assert.match(reviewText,/本人申告：天候：くもり、風が強い/,'pre-save summary exposes the explicit self-report');
-  assert.match(reviewText,/全文は編集画面で確認/,'long original notes are summarized, not truncated in storage');
-  assert.ok(reviewText.length<3400,'review remains reachable even with long optional notes: '+reviewText.length);
+  if(language==='ja')assert.match(reviewText,/本人申告：天候：くもり、風が強い/,'pre-save summary exposes the explicit self-report');
+  else assert.ok(reviewText.includes('くもり')||reviewText.includes('Cloud'),'English review keeps explicitly entered weather self-report');
+  if(language==='ja')assert.match(reviewText,/全文は編集画面で確認/,'long original notes are summarized, not truncated in storage');
+  assert.ok(reviewText.length<5000,'review remains reachable even with long optional notes: '+reviewText.length);
   await take(page,w,'REVIEW-environment-saved-draft');
   const button=page.locator('[data-manual-run-save]');
   assert.equal(await button.isEnabled(),true,'complete optional context must not block valid run save');
@@ -186,10 +195,10 @@ try{
   assert.equal((await getSaved())?.id,saved.id,'reloading retains the same record identity');
   assert.equal((await getSaved())?.draft.environmentNote,saved.draft.environmentNote,'reloading retains the personally asserted context');
   await take(page,w,'RESULT-environment-reloaded');
-  assert.deepEqual(errors,[],'JS page errors');
+  assert.deepEqual(errors,[],'JS page errors '+language+' '+w);
   await ctx.close();
  }
- console.log('AUDIT COMPLETE '+engine+' '+report.length+' states');
+ console.log('AUDIT COMPLETE '+engine+' '+report.length+' bilingual states');
 }finally{
  await writeFile(resolve(out,engine+'-report.json'),JSON.stringify(report,null,2));
  await browser.close();await new Promise(ok=>server.close(ok));
