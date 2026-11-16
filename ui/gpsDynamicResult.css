@@ -215,3 +215,11 @@
 .gd-note-disclosure summary{cursor:pointer;display:flex;align-items:center;min-height:44px;width:fit-content;max-width:100%;font-size:12px;line-height:1.5;font-weight:750;overflow-wrap:anywhere}
 .gd-note-disclosure summary:focus-visible{outline:3px solid #92fff1;outline-offset:3px;border-radius:4px}
 .gd-note-disclosure .gd-note{margin:0 0 8px;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+
+/* Stage 6 screenshot audit: keep bilingual anatomy panel headings wholly visible. */
+.gd-speed-isolated{fill:#ffe6ab;stroke:#275c70;stroke-width:1.3}
+@media(max-width:680px){
+ .gd-panel-head{height:auto;min-height:82px;flex:0 0 82px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;padding:8px 7px}
+ .gd-panel-head strong{min-width:0;max-width:100%;line-height:1.25;font-size:11px;overflow-wrap:anywhere}
+ .gd-panel-head small{min-width:0;max-width:100%;line-height:1.3;font-size:9px;overflow-wrap:anywhere}
+}
