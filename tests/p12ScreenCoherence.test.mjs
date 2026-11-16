@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261116-gps-stage6-v1';
+const cacheVersion='20261116-gps-stage7-v1';
 
 test('P12: Home guide, learning header, History and Exploration controls preserve behavior',()=>{
  const home=read('app.js');
