@@ -115,12 +115,30 @@ async function record(page,screen,route,selector){
      return {text:text.textContent.trim(),fragments:parts.length,
       outside:parts.some(r=>r.left<parent.left-1||r.right>parent.right+1)};
    });
+  const frame=el=>{if(!el)return null;const r=el.getBoundingClientRect(),c=getComputedStyle(el);
+   return {left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),
+    scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,minWidth:c.minWidth,
+    overflowX:c.overflowX,fontSize:c.fontSize,gridColumns:c.gridTemplateColumns};
+  };
+  const suspectSelectors=['html','body','#app','.app-shell','.main-frame','.main-content',
+   '.record-v3','.rv-head','.rv-screen-help','.rv4-page','.lr-root','.lr-lesson','.lr-page-heading',
+   '.lr-screen-help','.lr-chapter'];
+  const layoutDiagnostics=Object.fromEntries(suspectSelectors.map(key=>[key,frame(document.querySelector(key))]));
+  const internalScroll=[...document.body.querySelectorAll('*')].filter(el=>{
+    return el.clientWidth>0&&el.scrollWidth>el.clientWidth+4&&
+      el.getBoundingClientRect().top<1200;
+   }).map(el=>({tag:el.tagName.toLowerCase(),
+    class:String(el.className?.baseVal??el.className??'').slice(0,65),
+    delta:el.scrollWidth-el.clientWidth,
+    rect:frame(el)})).sort((a,b)=>b.delta-a.delta).slice(0,20);
   return {remaining:[...found].sort(),width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,latestMetricOverlap,title:document.title,lang:document.documentElement.lang,navLabels};
+   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,latestMetricOverlap,title:document.title,
+   lang:document.documentElement.lang,navLabels,layoutDiagnostics,internalScroll};
  });
  reports.push({screen,route:route||'(in-place)',mode:font200?'root-font-200':'normal',...sample});
  console.log('ENGLISH-SURFACE '+engine+' '+screen+' remaining='+sample.remaining.length+' overflow='+Math.max(0,sample.scrollWidth-sample.width)+' samples='+JSON.stringify(sample.remaining.slice(0,14)));
  if(sample.overflowNodes.length)console.log('ENGLISH-OVERFLOW '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.overflowNodes));
+ if(sample.scrollWidth>sample.width+3)console.log('STAGE7-LAYOUT '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify({frames:sample.layoutDiagnostics,inner:sample.internalScroll}));
  if(sample.cardTextOverflow.length)console.log('ENGLISH-CARD-OVERLAP '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.cardTextOverflow));
  if(captureAll || ((sample.remaining.length||sample.cardTextOverflow.length)&&screenshotCount<6)){
   screenshotCount++;
