@@ -184,3 +184,30 @@
  .gd-root:not(.gd-summary) .gd-metric span{font-size:clamp(9px,2.55vw,11px)}
  .gd-root:not(.gd-summary) .gd-metric em{font-size:9px}
 }
+
+
+/* GPS stage 6: evidence status stays visible outside collapsible help.
+ * Location and speed are recorded data; anatomy is a speed-conditioned
+ * literature reference, never a measurement of personal tissue load. */
+.gd-evidence-status{min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:5px 12px;margin:0 0 11px;padding:11px 14px;border:1px solid #5c93a2;border-radius:12px;background:#133849;color:#e2f5f5;font-size:12px;line-height:1.6}
+.gd-evidence-status strong{flex:0 0 auto;color:#eaffff;font-size:12px}
+.gd-evidence-status span{flex:1 1 180px;min-width:0;overflow-wrap:anywhere}
+.gd-evidence-status[data-gps-replay-state="GPS_GAP"],.gd-evidence-status[data-gps-replay-state="INITIAL_FIX"],.gd-evidence-status[data-gps-replay-state="REFERENCE_UNAVAILABLE"]{border-color:#ba9a63;background:#403327}
+.gd-evidence-status[data-gps-replay-state="GPS_GAP"] strong,.gd-evidence-status[data-gps-replay-state="INITIAL_FIX"] strong,.gd-evidence-status[data-gps-replay-state="REFERENCE_UNAVAILABLE"] strong{color:#ffe9bb}
+.gd-flag-actions{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;max-width:100%;margin:6px 0 0}
+.gd-flag-actions button{min-height:44px;min-width:0;max-width:100%;border:1px solid #68a7af;border-radius:10px;padding:8px 9px;background:#154c5c;color:#ebffff;font-size:12px;font-weight:750;line-height:1.35;white-space:normal}
+.gd-flag-actions button[disabled]{opacity:.48;cursor:not-allowed}
+.gd-flag-step-status{white-space:nowrap;font-variant-numeric:tabular-nums;font-size:12px;color:#d8edf0;text-align:center}
+.gd-time-axis-note{margin:6px 0 7px;font-size:11px;line-height:1.55;color:#c2e2e9;overflow-wrap:anywhere}
+.gd-flag-title,.gd-flag-detail,.gd-panel-head{overflow-wrap:anywhere}
+.gd-panel-head{height:auto;min-height:48px}
+@media(max-width:680px){
+ .gd-evidence-status{padding:10px 11px;font-size:11px;gap:3px 8px}
+ .gd-evidence-status strong{font-size:11px}
+ .gd-flag-actions{gap:5px}
+ .gd-flag-actions button{font-size:11px;padding:8px 5px}
+ .gd-flag-step-status{font-size:11px}
+ .gd-time-axis-note{font-size:10px}
+ .gd-panel-head small{line-height:1.4}
+}
+@media(max-width:360px){.gd-flag-actions{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}.gd-flag-step-status{font-size:10px}}
