@@ -5,6 +5,7 @@ import {GPS_ACTIVITY,formatGpsClock,gpsPace} from './gpsMeasurementCore.js';
 import {gpsEnergyDisplay} from './gpsEnergyDisplay.js';
 import {updateGpsLiveMap} from './gpsLiveMap.js';
 import {SURFACES} from './recordExperience.js';
+import {saveReviewScope} from './saveReviewShared.js?v=20261116-gps-stage4-v1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const descriptions={RUNNING:'連続した走行を記録します。速度の目標は自動設定しません。',JOGGING:'ゆっくり走ったことを記録します。走行速度による活動区分の自動判定は行いません。',WALK:'歩いた経路と時間を記録します。走行の12部位モデルは適用しません。'};
 const gpsIcon='<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>';
@@ -38,7 +39,7 @@ export function gpsGoalProgress(s,elapsedMs=0){
  return s.goalReached?'目標に到達しました。測定は自動で終了しません。'
   :'目標 '+value+' '+unit+' ／ 残り '+remaining;
 }
-export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml=''){
+export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml='',reviewUi={}){
  if(s.phase!=='finished')return '<section class="gps-v2 gps-review" data-gps-review><h1>GPS記録内容の確認</h1><p role="alert">終了したGPS測定がありません。未保存の記録は再読込後に復元できません。</p><a href="#/measurement">GPS測定へ戻る</a></section>';
  const data=format(s,elapsedMs);
  const ready=canSave(s);
@@ -52,13 +53,13 @@ export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml=''){
  mentalHtml+
  '<label class="gps-review-note">今回の気づき・メモ（任意）<textarea data-gps-note maxlength="500" rows="3" placeholder="次に確かめたいこと、気づいたことなど">'+esc(experience.memo||'')+'</textarea></label>'+
  '</section>'+
- '<section class="gps-v35-panel gps-review-save"><h2>保存する</h2><p class="gps-review-storage-note">記録の距離・時間と本人の任意回答をこの端末に保存します。位置情報を含むコース詳細は、次のチェックを入れた場合だけ追加保存します。</p>'+
+ '<section class="gps-v35-panel gps-review-save"><h2>保存する</h2>'+saveReviewScope({source:'gps',routeOptIn:experience.saveRoute===true,notice:reviewUi.notice||'',busy:!!reviewUi.saving})+'<p class="gps-review-storage-note">記録の距離・時間と本人の任意回答をこの端末に保存します。位置情報を含むコース詳細は、次のチェックを入れた場合だけ追加保存します。</p>'+
  '<label class="gps-live-checkbox"><input type="checkbox" data-gps-save-route '+(experience.saveRoute?'checked':'')+'><span><b>コースと動的結果用データを保存する</b><small>位置・速度・フラッグを含みます。初期OFFで、本人が選んだ場合だけ保存します。</small></span></label>'+
  (s.flags?.length?flagCards(s):'')+
- '<div class="gps-live-actions"><button type="button" data-gps-action="save" class="gps-v2-button gps-v2-primary" '+(ready?'':'disabled')+'>走行記録を保存する</button><a href="#/measurement" class="gps-v2-button gps-v2-secondary">測定終了画面に戻る</a></div>'+
+ '<div class="gps-live-actions"><button type="button" data-gps-action="save" class="gps-v2-button gps-v2-primary" '+(ready&&!reviewUi.saving?'':'disabled')+'>'+(reviewUi.notice?'同じ保存操作を再確認':'走行記録を保存する')+'</button><a href="#/measurement" class="gps-v2-button gps-v2-secondary">測定終了画面に戻る</a></div>'+
  (!ready?'<p role="alert">有効なGPS移動距離が10m未満のため保存できません。</p>':'')+'</section></div>';
 }
-export function measurementPage(s,elapsedMs=0,experience={}){
+export function measurementPage(s,elapsedMs=0,experience={},reviewUi={}){
  const ready=s.phase==='ready',active=s.phase==='running',paused=s.phase==='paused',finished=s.phase==='finished',working=active||paused;
  const data=format(s,elapsedMs);
  const status=gpsMeasurementStatus(s);
@@ -68,6 +69,7 @@ export function measurementPage(s,elapsedMs=0,experience={}){
  const target=s.goalMode==='time'?`${esc(s.goalValue||'—')}分`:s.goalMode==='distance'?`${esc(s.goalValue||'—')}km`:'目標なし';
  return `<div class="gps-v2 gps-v35" data-measurement-v2 data-gps-live-page data-phase="${s.phase}">
   <header class="gps-v2-header"><a class="gps-v2-back" href="#/record-start" aria-label="記録方法へ戻る">‹</a><div><h1>GPSで走行を記録</h1></div><details class="rl-screen-help"><summary aria-label="GPS測定の使い方">？</summary><p>測定開始時に位置情報の許可を確認します。未保存の測定はアプリ終了・再読み込みで失われます。測定中に別画面へ移動すると一時停止します。測位には誤差があり、軌跡は本人が選んだ場合だけ端末に保存します。</p></details></header>
+  ${ready&&reviewUi.pendingSave?'<section class="gps-v35-panel gps-recovery" data-gps-recovery role="status"><strong>前回のGPS保存結果が未確認です</strong><p>測定内容は再読込で復元できません。保存済みかどうかを同じ操作IDで確認できます。新しく測定を始めても前回の記録は自動保存しません。</p><button type="button" class="gps-v2-button gps-v2-secondary" data-gps-action="recover">前回の保存結果を確認</button></section>':''}
   <div class="gps-live-steps" aria-label="操作順序"><span class="${ready?'is-current':''}" ${ready?'aria-current="step"':''}><b>01</b> 準備</span><span class="${working?'is-current':''}" ${working?'aria-current="step"':''}><b>02</b> 測定</span><span class="${finished?'is-current':''}" ${finished?'aria-current="step"':''}><b>03</b> 保存</span></div>
   ${ready?`<section class="gps-v35-panel gps-live-prep"><div class="gps-live-section-head"><b>01</b><div><h2>今回の活動</h2></div></div>
    <div class="gps-activity-surface"><label for="gps-activity"><span class="gps-activity-icon">${gpsIcon}</span><span><small>運動の形式</small><select id="gps-activity" data-gps-activity>${opt(Object.entries(GPS_ACTIVITY),s.activity)}</select></span><span class="gps-activity-arrow" aria-hidden="true">⌄</span></label></div>

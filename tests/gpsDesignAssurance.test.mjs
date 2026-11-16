@@ -15,7 +15,8 @@ test('GPS design guard: consent, screen visibility, stale wake lock and opt-in s
  assert.match(app,/gpsWakeLockGeneration!==generation/);
  assert.match(app,/gpsController\.pause\(\)/);
  assert.match(app,/data-gps-save-route/);
- assert.match(app,/saveRoute,/);
+ assert.match(app,/saveDetails:gpsSelfReport\.saveRoute===true/);
+ assert.match(app,/requestId:operation\.id/);
 });
 test('GPS design guard: unsaved run is explicitly described as ephemeral',()=>{
  const gps=createGpsSession({geo:{watchPosition:()=>1,clearWatch:()=>{}},now:()=>1000000});
