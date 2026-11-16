@@ -150,8 +150,12 @@
   max-width:calc(100% - 12px);
  }
  .cx-page .cx-context-action{
-  min-width:0;max-width:100%;white-space:normal;
-  overflow-wrap:anywhere;line-height:1.25;
+  display:block;min-width:0;max-width:100%;white-space:normal;
+  text-align:center;overflow-wrap:anywhere;line-height:1.25;
+  padding-inline:5px;
+ }
+ .cx-page .cx-context-action span{
+  display:block;margin-top:4px;
  }
  .cx-page .cx-context strong{overflow-wrap:anywhere}
 }
