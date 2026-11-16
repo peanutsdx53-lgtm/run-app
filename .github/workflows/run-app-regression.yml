@@ -108,6 +108,16 @@ jobs:
           path: audit-output/stage5-history-result/
           if-no-files-found: warn
           retention-days: 7
+      - name: Verify stage 6 dynamic GPS speed, gaps, flag-by-flag controls and research reference boundaries
+        run: node tests/gpsStage6DynamicBrowser.mjs
+      - name: Preserve stage 6 dynamic GPS bilingual screen and viewport evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gps-stage6-${{ matrix.engine }}
+          path: audit-output/gps-stage6-dynamic/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify bilingual interface
         run: node tests/englishUiBrowser.mjs
       - name: Verify 19 active screen states and retired S18 absence
