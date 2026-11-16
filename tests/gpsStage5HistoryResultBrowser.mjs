@@ -91,6 +91,13 @@ try{
    const history=page.locator('#runload-history-v2');await history.waitFor();
    const rows=history.locator('[data-select-id]');
    assert.equal(await rows.count(),3,'one GPS, one manual run and one rest day in one history');
+   if(language==='en'){
+    await page.waitForFunction(()=>{
+     const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+     const text=[...(root?.querySelectorAll('[data-history-system-caption],.datebox span')||[])];
+     return text.length===6&&text.every(el=>!/[ぁ-んァ-ン一-龯]/.test(el.textContent));
+    },null,{timeout:12000});
+   }
    assert.equal(await history.locator('[data-record-source]').count(),3,'source filter All/Manual/GPS');
    assert.match(await history.locator('.stats').innerText(),language==='en'?/(2|Two)/:/2/,'two runs included in monthly totals');
    assert.equal(await page.locator('.gps-history-item').count(),0,'old duplicate GPS list retired');
