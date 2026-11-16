@@ -179,8 +179,11 @@ try{
   if(language==='en'){
    await page.waitForFunction(()=>document.querySelector('.toast-notice')?.textContent.includes('GPS Activity'),
     null,{timeout:10000});
-   await page.locator('.rv4-notice').getByText('GPS Record',{exact:true}).waitFor({timeout:10000});
-   await page.locator('[data-source-distance]').getByText('Source: GPS Measurement',{exact:true}).waitFor({timeout:10000});
+   await page.waitForFunction(()=>{
+    const root=document.querySelector('#runload-result-v4')?.shadowRoot;
+    return root?.querySelector('.rv4-notice')?.textContent.includes('GPS Record')&&
+      root?.querySelector('[data-source-distance]')?.textContent.includes('Source: GPS Measurement');
+   },null,{timeout:10000});
   }
   await capture(page,language,width,'gps-result-confirmed');
   // Reconstruct only the opaque ID, not the GPS route, as if acknowledgment
