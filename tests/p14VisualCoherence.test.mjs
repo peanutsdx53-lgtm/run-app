@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261116-gps-stage6-v1';
+const cacheVersion='20261116-gps-stage7-v3';
 
 test('P14: History matches GPS card density, and Shadow DOM no longer adds blank viewport height',()=>{
  const history=HISTORY_STYLES;

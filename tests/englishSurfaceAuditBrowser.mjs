@@ -14,6 +14,7 @@ const engine=process.env.RUNLOAD_BROWSER_ENGINE==='webkit'?'webkit':'chromium';
 const auditWidth=Number(process.env.RUNLOAD_ENGLISH_AUDIT_WIDTH||390);
 if(![320,375,390,414,768,1024,1440].includes(auditWidth))throw Error('English audit: unexpected width');
 const font200=process.env.RUNLOAD_ENGLISH_FONT200==='1';
+const captureAll=process.env.RUNLOAD_STAGE7_CAPTURE_ALL==='1';
 const out=resolve(root,'audit-output','english-surface-'+engine+'-'+auditWidth+(font200?'-font200':''));
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.webmanifest':'application/manifest+json','.svg':'image/svg+xml','.png':'image/png'};
 const server=createServer(async(req,res)=>{
@@ -93,16 +94,55 @@ async function record(page,screen,route,selector){
       scrollWidth:el.scrollWidth,minWidth:getComputedStyle(el).minWidth,
       text:(el.textContent||'').replace(/\s+/g,' ').slice(0,90)};
     }).sort((a,b)=>b.right-a.right).slice(0,30):[];
+  const latestMetricOverlap=[];
+  for(const [i,card] of [...document.querySelectorAll('.hx-latest-fig>div')].entries()){
+   const frame=card.getBoundingClientRect();
+   for(const label of card.querySelectorAll('small,strong,em')){
+    if(!shown(label))continue;
+    const range=document.createRange();range.selectNodeContents(label);
+    for(const box of range.getClientRects()){
+     if(box.width>0&&(box.left<frame.left-2||box.right>frame.right+2))
+      latestMetricOverlap.push({metric:i+1,text:label.textContent.trim().slice(0,45),left:Math.round(box.left),right:Math.round(box.right),frameLeft:Math.round(frame.left),frameRight:Math.round(frame.right)});
+    }
+   }
+  }
+  const navLabels=[...document.querySelectorAll('.mobile-nav .mobile-link')]
+   .filter(el=>el.getClientRects().length>0).map(el=>{
+     const text=[...el.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
+     if(!text)return {text:'',fragments:0,outside:true};
+     const range=document.createRange();range.selectNodeContents(text);
+     const parts=[...range.getClientRects()],parent=el.getBoundingClientRect();
+     return {text:text.textContent.trim(),fragments:parts.length,
+      outside:parts.some(r=>r.left<parent.left-1||r.right>parent.right+1)};
+   });
+  const frame=el=>{if(!el)return null;const r=el.getBoundingClientRect(),c=getComputedStyle(el);
+   return {left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),
+    scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,minWidth:c.minWidth,
+    overflowX:c.overflowX,fontSize:c.fontSize,gridColumns:c.gridTemplateColumns};
+  };
+  const suspectSelectors=['html','body','#app','.app-shell','.main-frame','.main-content',
+   '.record-v3','.rv-head','.rv-screen-help','.rv4-page','.lr-root','.lr-lesson','.lr-page-heading',
+   '.lr-screen-help','.lr-chapter'];
+  const layoutDiagnostics=Object.fromEntries(suspectSelectors.map(key=>[key,frame(document.querySelector(key))]));
+  const internalScroll=[...document.body.querySelectorAll('*')].filter(el=>{
+    return el.clientWidth>0&&el.scrollWidth>el.clientWidth+4&&
+      el.getBoundingClientRect().top<1200;
+   }).map(el=>({tag:el.tagName.toLowerCase(),
+    class:String(el.className?.baseVal??el.className??'').slice(0,65),
+    delta:el.scrollWidth-el.clientWidth,
+    rect:frame(el)})).sort((a,b)=>b.delta-a.delta).slice(0,20);
   return {remaining:[...found].sort(),width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,title:document.title,lang:document.documentElement.lang};
+   overflowNodes,statsCount:conditionStats.length,cardTextOverflow,latestMetricOverlap,title:document.title,
+   lang:document.documentElement.lang,navLabels,layoutDiagnostics,internalScroll};
  });
  reports.push({screen,route:route||'(in-place)',mode:font200?'root-font-200':'normal',...sample});
  console.log('ENGLISH-SURFACE '+engine+' '+screen+' remaining='+sample.remaining.length+' overflow='+Math.max(0,sample.scrollWidth-sample.width)+' samples='+JSON.stringify(sample.remaining.slice(0,14)));
  if(sample.overflowNodes.length)console.log('ENGLISH-OVERFLOW '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.overflowNodes));
+ if(sample.scrollWidth>sample.width+3)console.log('STAGE7-LAYOUT '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify({frames:sample.layoutDiagnostics,inner:sample.internalScroll}));
  if(sample.cardTextOverflow.length)console.log('ENGLISH-CARD-OVERLAP '+engine+' '+auditWidth+' '+screen+' '+JSON.stringify(sample.cardTextOverflow));
- if((sample.remaining.length||sample.cardTextOverflow.length)&&screenshotCount<6){
+ if(captureAll || ((sample.remaining.length||sample.cardTextOverflow.length)&&screenshotCount<6)){
   screenshotCount++;
-  await page.screenshot({path:resolve(out,screen.replace(/[^a-zA-Z0-9-]/g,'_')+'-untranslated.png'),fullPage:true,animations:'disabled'});
+  await page.screenshot({path:resolve(out,screen.replace(/[^a-zA-Z0-9-]/g,'_')+(captureAll?'-full':'-untranslated')+'.png'),fullPage:true,animations:'disabled'});
  }
 }
 try{
@@ -186,6 +226,10 @@ try{
  assert.deepEqual(cardOverlaps,[],'translated Home summary text must stay inside its own card, not overlap neighbors');
  const overflow=reports.filter(entry=>entry.scrollWidth>entry.width+3);
  assert.deepEqual(overflow,[],'English UI must not horizontally overflow at the audited viewport');
+ const metricCollisions=reports.flatMap(entry=>entry.latestMetricOverlap.map(x=>({screen:entry.screen,...x})));
+ assert.deepEqual(metricCollisions,[],'Latest Run summary text must stay within its own metric card under 200% text');
+ const brokenNav=reports.flatMap(entry=>entry.navLabels.filter(x=>x.fragments!==1||x.outside).map(x=>({screen:entry.screen,...x})));
+ assert.deepEqual(brokenNav,[],'English mobile nav labels must not split into fragments or overflow their targets');
 }finally{
  const summary={engine,width:auditWidth,font200,scope:'English displayed copy inventory; Japanese legal original and user-authored data excluded',observed:reports.length,byScreen:reports,errors:scriptErrors,
   totalUntranslated:reports.reduce((sum,x)=>sum+x.remaining.length,0),

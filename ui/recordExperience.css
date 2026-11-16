@@ -723,3 +723,41 @@ html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{white-space:n
 @media(max-width:650px){
  html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{font-size:.69rem}
 }
+
+
+/* Stage 7 at 320–430px / 200% text: course, ROF-J and optional-entry
+ * headers must give the title a full row, above the description and away
+ * from the two 44px controls. Do not split or clip English words. */
+@media(max-width:430px){
+ .app-shell:has(.record-v3) .main-content{
+  grid-template-columns:minmax(0,1fr);
+ }
+ .record-v3:is(.rv-course,.rv-aux,.rv4-page) .rv-head{
+  display:grid;grid-template-columns:44px minmax(0,1fr) 44px;
+  column-gap:7px;row-gap:7px;align-items:start;
+ }
+ .record-v3:is(.rv-course,.rv-aux,.rv4-page) .rv-head>.rv-back{
+  grid-column:1;grid-row:1;justify-self:start;
+ }
+ .record-v3:is(.rv-course,.rv-aux,.rv4-page) .rv-head>.rv-screen-help{
+  grid-column:3;grid-row:1;justify-self:end;margin-left:0;
+ }
+ .record-v3:is(.rv-course,.rv-aux,.rv4-page) .rv-head>div,
+ .record-v3:is(.rv-course,.rv-aux,.rv4-page) .rv-head>h1{
+  grid-column:1/-1;grid-row:2;min-width:0;width:100%;
+ }
+ .record-v3:is(.rv-course,.rv-aux,.rv4-page) .rv-head h1{
+  /* Override the later P14 !important screen-title rule only at 320px.
+   * Cap the long English Course & Conditions heading by available width,
+   * keeping whole words and the full 200% root-font scaling path. */
+  font-size:min(1.3rem,10vw)!important;
+  line-height:1.32;word-break:normal;overflow-wrap:normal;
+  max-width:100%;
+ }
+ /* These two translated English titles have a single word wider than a
+  * 320px line at 1.1rem when the root font is doubled. 1rem still follows
+  * browser/user text scaling and leaves words unbroken at 200%. */
+ .record-v3:is(.rv-aux,.rv4-page) .rv-head h1{
+  font-size:1rem!important;
+ }
+}

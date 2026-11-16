@@ -196,3 +196,65 @@
  outline:3px solid #acebe6;outline-offset:3px;
 }
 .lr-root .lr-panel .lr-partial-form button.lr-action:disabled{opacity:.55;cursor:not-allowed}
+
+
+/* Stage 7: the shared dark shell owns the mobile nav with !important, so
+ * earlier styles.css responsive overrides did not apply. Reflow based on
+ * rem-scaled target width. Normal 16px root fits five columns at 320px;
+ * at 200% text the same buttons get two wider columns without splitting
+ * English words or making horizontally scrolling navigation. */
+@media(max-width:430px){
+ .app-shell .mobile-nav{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,3.6rem),1fr))!important;
+  grid-auto-rows:minmax(54px,auto)!important;
+  width:100%;box-sizing:border-box;
+ }
+ .app-shell .mobile-link{
+  min-width:0!important;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  padding:5px 3px!important;
+  text-align:center;
+ }
+ .app-shell .main-content{
+  padding-bottom:max(calc(193px + env(safe-area-inset-bottom,0px)),calc(10.5rem + env(safe-area-inset-bottom,0px)))!important;
+ }
+}
+
+
+/* Stage 7: prevent long English lesson labels at 200% from setting the
+ * auto-minimum width of the app's grid track (the observed 324/320 overflow). */
+@media(max-width:430px){
+ .app-shell:has(.lr-root) .main-content{
+  min-width:0;grid-template-columns:minmax(0,1fr);
+ }
+ .app-shell:has(.lr-root) .lr-root,
+ .app-shell:has(.lr-root) .lr-lesson,
+ .app-shell:has(.lr-root) .lr-page-heading,
+ .app-shell:has(.lr-root) .lr-back,
+ .app-shell:has(.lr-root) .lr-chapter{
+  min-width:0;max-width:100%;
+ }
+}
+
+/* Stage 7: at 320px with 200% text, a 44px help control cannot share
+ * the Learning heading's flex row. Give the help and full title separate
+ * rows, preserve both controls, and avoid horizontal clipping. */
+@media(max-width:355px){
+ .app-shell:has(.lr-root) .lr-root .lr-page-heading{
+  flex-direction:column-reverse;
+  align-items:stretch;
+  gap:8px;
+ }
+ .app-shell:has(.lr-root) .lr-root .lr-page-heading .lr-screen-help{
+  align-self:flex-end;
+  margin-left:0;
+  width:44px;
+ }
+ .app-shell:has(.lr-root) .lr-root .lr-page-heading h1{
+  min-width:0;
+  max-width:100%;
+ }
+}
