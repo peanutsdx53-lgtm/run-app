@@ -106,7 +106,7 @@ try{
    await capture(page,width,language,'02-history-gps-selected');
    await history.locator('[data-open-record]').click();
    await page.waitForFunction(id=>location.hash==='#/result?gps='+encodeURIComponent(id),saved.gpsId);
-   const result=page.locator('#runload-result-v4');await result.waitFor();
+   const result=page.locator('#runload-result-v4');await result.locator('[data-tab="body"]').waitFor({state:'visible',timeout:15000});
    assert.equal(await result.locator('[data-tab]').count(),3,'existing result 3 tabs unchanged');
    assert.equal(await result.locator('[data-result-source]').getAttribute('data-result-source'),'GPS_V2');
    assert.equal(await result.locator('[data-gps-dynamic-gate]').count(),0,'no dynamic route when opt-out');
@@ -123,6 +123,7 @@ try{
    await capture(page,width,language,'04-history-manual-selected');
    await history.locator('[data-open-record]').click();
    await page.waitForFunction(id=>location.hash==='#/result?record='+encodeURIComponent(id),saved.manualId);
+   await result.locator('[data-tab="body"]').waitFor({state:'visible',timeout:15000});
    assert.equal(await result.locator('[data-tab]').count(),3,'manual result also has exactly 3 tabs');
    assert.equal(await result.locator('[data-result-source]').getAttribute('data-result-source'),'MANUAL');
    await result.locator('[data-tab="fatigue"]').click();
