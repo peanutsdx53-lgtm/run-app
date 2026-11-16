@@ -20,16 +20,35 @@ async function take(page,w,id){
  if(activeLanguage==='en')await page.waitForTimeout(200);
  const m=await page.evaluate(()=>{
   const els=[...document.querySelectorAll('.rv-panel,.cx-main-card,.cx-field-card,.cx-transfer,.cx-toolbar,.cx-selected-chip,.rv-section-row,.e4-panel,.g4-panel,.rv4-card')];
+  // Restricted to generated UI, excluding user-entered course names, free
+  // text, transferred environmentNote and saved body observations.
+  const systemNodes=[
+   '.rv-section-progress','.rv-section-row-head strong','.rv-section-row-head small',
+   '.rv-section-row-head button','.rv-section-fields label',
+   '[data-rv-add]','[data-rv-surface-total]',
+   '[data-g4-source]','[data-g4-format]','[data-g4-summary-steps]',
+   '[data-g4-summary-format]','[data-g4-run-text]','[data-g4-other]',
+   '[data-e4-weather]','[data-e4-flag]','[data-e4-summary]',
+   '[data-selected-expand]','.cx-context-action','.cx-picker-option',
+   '.rr-row[data-review-link="record-compare"] .rr-row-desc',
+   '.rr-row[data-review-link="record-rof"] .rr-row-desc'
+  ];
+  const systemResidue=systemNodes.flatMap(selector=>[...document.querySelectorAll(selector)]
+   .filter(el=>!el.closest('[hidden]')&&el.getClientRects().length)
+   .map(el=>({selector,text:el.textContent.trim().slice(0,130)}))
+   .filter(item=>/[ぁ-ゟァ-ヿ一-龯]/.test(item.text)));
   const fields=[...document.querySelectorAll('textarea,input[maxlength]')].map(e=>({name:e.id||e.dataset.draft,limit:e.maxLength,length:e.value.length,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight}));
   return {viewport:innerWidth,document:document.documentElement.scrollWidth,body:document.body.scrollWidth,
    pageHeight:document.documentElement.scrollHeight,cardCount:els.length,
    selectedRegions:document.querySelectorAll('.cx-selected-chip').length,
+   systemResidue,
    nodes:els.map(e=>{const r=e.getBoundingClientRect();return {className:String(e.className),left:r.left,right:r.right,width:r.width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}}),
    counters:[...document.querySelectorAll('.cx-counter')].map(e=>e.textContent),fields,
    textareaVisibleRatios:fields.filter(x=>x.scrollHeight>0&&x.clientHeight>0)
     .map(x=>({name:x.name,visibleFraction:Math.min(1,Number((x.clientHeight/x.scrollHeight).toFixed(3)))}))};
  });
  report.push({engine,language:activeLanguage,width:w,state:id,...m});
+ if(activeLanguage==='en'&&m.systemResidue.length)console.warn('RECORD-LANGUAGE-RESIDUE '+engine+' '+w+' '+id+' '+JSON.stringify(m.systemResidue));
  await page.screenshot({path:resolve(out,engine+'-'+activeLanguage+'-'+w+'-'+id+'.png'),fullPage:true,animations:'disabled',timeout:20000});
  if(m.document>m.viewport+2||m.body>m.viewport+2)console.warn('OVERFLOW '+engine+' '+activeLanguage+' '+w+' '+id+': '+m.document);
 }
