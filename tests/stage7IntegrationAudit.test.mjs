@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('stage7: responsive 200% navigation text remains full-length and PWA uses one new stylesheet generation',()=>{
- const css=read('styles.css'),html=read('index.html'),sw=read('sw.js');
- assert.match(css,/@media\(max-width:430px\)\{[\s\S]*?\.app-shell \.mobile-nav\{[\s\S]*?flex-wrap:wrap/);
- assert.match(css,/\.app-shell \.mobile-nav \.mobile-link\{[\s\S]*?min-width:max-content;[\s\S]*?white-space:nowrap/);
+ const shell=read('ui/unifiedLearningShell.css'),html=read('index.html'),sw=read('sw.js');
+ assert.match(shell,/grid-template-columns:repeat\(auto-fit,minmax\(min\(100%,3\.6rem\),1fr\)\)!important/);
+ assert.match(shell,/white-space:nowrap!important/);
+ assert.match(shell,/grid-template-columns:minmax\(0,1fr\)/);
  assert.match(html,/styles\.css\?v=20261116-gps-stage7-v1/);
  assert.match(sw,/runload-ui-next-shell-20261116-gps-stage7-v1/);
  assert.match(sw,/\.\/styles\.css\?v=20261116-gps-stage7-v1/);
