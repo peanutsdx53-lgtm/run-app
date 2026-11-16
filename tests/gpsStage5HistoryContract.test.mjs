@@ -108,5 +108,9 @@ test('stage 5: contextual English only converts history system captions and week
  assert.equal(translateResidualDynamic('走行時間 33:00　・　ペース 5:30 /km',{element:caption}),'Duration 33:00 · Pace 5:30 /km');
  assert.equal(translateResidualDynamic('月曜日',{element:weekday}),'Monday');
  assert.equal(translateResidualDynamic('月曜日',{element:caption}),null,'unscoped authored text must not be translated');
+ const heading={matches:selector=>selector==='.focus-panel h3,.selected-footer strong',closest:()=>null};
+ assert.equal(translateResidualDynamic('2026年11月16日のジョギング',{element:heading}),'November 16, 2026 · Jogging');
+ assert.equal(translateResidualDynamic('2026年11月16日　ランニング',{element:heading}),'November 16, 2026 · Running');
+ assert.equal(translateResidualDynamic('2026年11月16日の本人の気づき',{element:heading}),null,'never translate unknown authored phrases');
  assert.equal(translateResidualDynamic('走行時間 33:00　・　ペース 5:30 /km',{element:weekday}),null,'no arbitrary user note replacement');
 });
