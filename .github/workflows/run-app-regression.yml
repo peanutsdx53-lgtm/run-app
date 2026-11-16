@@ -133,6 +133,12 @@ jobs:
           RUNLOAD_ENGLISH_FONT200: '1'
           RUNLOAD_STAGE7_CAPTURE_ALL: '1'
         run: node tests/englishSurfaceAuditBrowser.mjs
+      - name: Stage 7 inspect English S01–S20 and Learning at 390px font 200-percent
+        env:
+          RUNLOAD_ENGLISH_AUDIT_WIDTH: '390'
+          RUNLOAD_ENGLISH_FONT200: '1'
+          RUNLOAD_STAGE7_CAPTURE_ALL: '1'
+        run: node tests/englishSurfaceAuditBrowser.mjs
       - name: Stage 7 inspect English S01–S20 and Learning at 768px font 200-percent
         env:
           RUNLOAD_ENGLISH_AUDIT_WIDTH: '768'
