@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi} from './ui/englishUi.js?v=20261116-gps-stage5-v1';
+import {startEnglishUi} from './ui/englishUi.js?v=20261116-gps-stage6-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -73,7 +73,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/measurementExperience.js?v=20261116-gps-stage4-v1"),
     import("./ui/gpsMeasurementCore.js?v=20261116-gps-stage2-controls-v1"),
     import("./ui/gpsReplayIndexedDbStore.js?v=20261116-gps-stage4-v1"),
-    import("./ui/gpsDynamicResult.js?v=20261028-back-symmetry-v2"),
+    import("./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
     import("./ui/resultExperience.js?v=20261116-gps-stage5-v1"),
     import("./ui/runQuestionContinuation.js"),
