@@ -725,10 +725,10 @@ html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{white-space:n
 }
 
 
-/* Stage 7 320px / 200% text: course, ROF-J and optional-entry headers
- * need the full available line width instead of squeezing the title
- * between two 44px navigation/help controls. Preserve each whole word. */
-@media(max-width:355px){
+/* Stage 7 at 320–430px / 200% text: course, ROF-J and optional-entry
+ * headers must give the title a full row, above the description and away
+ * from the two 44px controls. Do not split or clip English words. */
+@media(max-width:430px){
  .app-shell:has(.record-v3) .main-content{
   grid-template-columns:minmax(0,1fr);
  }
