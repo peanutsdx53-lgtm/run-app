@@ -60,6 +60,7 @@ async function take(page,w,id){
  if(activeLanguage==='en'&&m.systemResidue.length)console.warn('RECORD-LANGUAGE-RESIDUE '+engine+' '+w+' '+id+' '+JSON.stringify(m.systemResidue));
  await page.screenshot({path:resolve(out,engine+'-'+activeLanguage+'-'+w+'-'+id+'.png'),fullPage:true,animations:'disabled',timeout:20000});
  if(m.document>m.viewport+2||m.body>m.viewport+2)console.warn('OVERFLOW '+engine+' '+activeLanguage+' '+w+' '+id+': '+m.document);
+ if(id.endsWith('-font200'))assert.ok(m.document<=m.viewport+2&&m.body<=m.viewport+2,'populated 200% screen must fit viewport: '+JSON.stringify({engine,language:activeLanguage,width:w,state:id,document:m.document,body:m.body}));
 }
 async function takePopulatedZoom(page,w,id){
  if(activeLanguage!=='en'||![320,390].includes(w))return;
