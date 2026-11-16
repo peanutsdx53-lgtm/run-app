@@ -36,10 +36,9 @@ test('P12: newest stylesheet, module imports and PWA precache share one release 
  assert.ok(html.includes('ui/screenCoherenceP14.css?v='+presentationVersion),'missing HTML reference screenCoherenceP14.css');
  assert.ok(sw.includes('runload-ui-next-shell-'+cacheVersion));
  assert.ok(sw.includes('app.js?v='+version),'missing cached resource app.js');
- for(const asset of ['ui/screenCoherenceP14.css','ui/historyExperience.js'])
-  assert.ok(sw.includes(asset+'?v='+presentationVersion),'missing cached resource '+asset);
- for(const asset of ['ui/historyExperience.js'])
-  assert.ok(app.includes(asset+'?v='+presentationVersion),'missing dynamic module update '+asset);
+ assert.ok(sw.includes('ui/screenCoherenceP14.css?v='+presentationVersion),'P14 CSS unchanged');
+ assert.ok(sw.includes('ui/historyExperience.js?v='+version),'current history precache');
+ assert.ok(app.includes('ui/historyExperience.js?v='+version),'current dynamic history module');
  for(const selector of ['.lr-course-icon','.lr-screen-help-content','.ex-reflection-footer','.hx-help-toggle'])
   assert.ok(css.includes(selector),'missing P12 style '+selector);
 });
