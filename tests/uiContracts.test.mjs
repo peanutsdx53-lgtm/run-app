@@ -126,7 +126,7 @@ test("global double-tap suppression preserves accessible pinch zoom and approved
  for(const token of ['background:#0c1d2bef','border-top-color:#2e5263','color:#c0cbd5','color:#55dce3','background:transparent']){
   assert.ok(condition.includes(token),"condition uses approved Home navigation: "+token);
  }
- assert.match(html,/styles\.css\?v=20261116-gps-stage7-v2/);
+ assert.match(html,/styles\.css\?v=20261116-gps-stage7-v3/);
  assert.match(html,/conditionJourney\.css\?v=20261109-p6e-crossscreen-v1/);
  assert.ok(sw.includes('./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1'),'current GPS dynamic module must be precached');
  assert.match(sw,/\.\/ui\/gpsReplayReference\.js/);
