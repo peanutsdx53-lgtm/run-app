@@ -7,7 +7,7 @@ export const ENGLISH_RESULT_COPY=Object.freeze({
  "疲労感（本人回答）": "Fatigue (Self-Reported)",
  "活動種別未設定": "Activity Type Not Selected",
  "前後差や原因は判定しません。": "Differences or causes are not determined.",
- "GPS記録の文献参考値は自動で比較しません。": "GPS research reference values are not automatically compared.",
+ "GPS記録の文献参考値は自動で比較しません。": "We do not automatically compare GPS research reference values.",
  "GPS比較の条件と限界": "GPS Comparison Conditions & Limits",
  "保存方法・活動条件・計算基準を確認できない参考値は同列に並べません。": "Reference values are not directly compared unless the recording method, activity conditions and calculation basis are verified.",
  "出所：ROF-J／本人回答。前後差や原因は判定しません。": "Source: ROF-J self-report. Differences or causes are not determined.",

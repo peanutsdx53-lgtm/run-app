@@ -52,6 +52,16 @@ async function capture(page,meta){
   await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
   await page.screenshot({path:resolve(out,filename+'-bottom.png'),animations:'disabled'});
  }
+ // A long label can still spill into its neighbour even when document width is valid.
+ if(m.nav&&meta.width<=800){
+  assert.ok(m.nav.height<=90,meta.width+' '+meta.language+' navigation grew beyond one row');
+  assert.equal(m.navComputed.grid.trim().split(/\\s+/).length,5,'keep five labeled navigation destinations');
+ }
+ if(meta.tab==='body'){
+  const views=m.controls.filter(x=>['前面','背面','足裏','Front','Back','Sole'].includes(x.text));
+  assert.equal(views.length,3,'all anatomy views stay reachable');
+  for(const v of views)assert.ok(v.rect.height>=43,'anatomy view target too small: '+v.text+' '+meta.width);
+ }
  report.push({meta,metrics:m});
 }
 try{
