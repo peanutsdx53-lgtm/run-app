@@ -38,7 +38,7 @@ async function capture(page,meta){
   const svg=one('.rv4-body-svg');
   const regions=svg?[...svg.querySelectorAll('[data-region]')].map(x=>{const b=x.getBBox();return {id:x.dataset.region,selected:x.classList.contains('selected'),x:b.x,y:b.y,w:b.width,h:b.height}}):[];
   const parts=['.rv4-hero','.rv4-notice','.rv4-body-figure','.rv4-body-svg','.rv4-reading','.rv4-reference-scale-section','.rv4-fatigue','.rv4-history','.rv4-method-disclosure'].map(s=>({selector:s,rect:rect(one(s))}));
-  return {viewport:innerWidth,documentWidth:doc.scrollWidth,bodyWidth:document.body.scrollWidth,rootFont:getComputedStyle(doc).fontSize,scrollHeight:doc.scrollHeight,
+  return {viewport:innerWidth,documentWidth:doc.scrollWidth,bodyWidth:document.body.scrollWidth,rootFont:getComputedStyle(doc).fontSize,scrollHeight:doc.scrollHeight,mobileTouch:navigator.maxTouchPoints,
     nav:nav&&getComputedStyle(nav).display!=='none'?rect(nav):null,
     navComputed:nav?{height:getComputedStyle(nav).height,grid:getComputedStyle(nav).gridTemplateColumns,
       resultSelectorMatches:!!document.querySelector('.app-shell:has(#runload-result-v4) .mobile-nav'),
@@ -104,7 +104,7 @@ async function capture(page,meta){
 }
 try{
  for(const language of ['ja','en'])for(const width of [320,375,390,414,768,1024,1440])for(const zoom of [100,200]){
-  const context=await browser.newContext({viewport:{width,height:width>=1024?900:850},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block'});
+  const context=await browser.newContext({viewport:{width,height:width>=1024?900:850},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block',...(width===390?{isMobile:true,hasTouch:true,deviceScaleFactor:3}:{})});
   try{
    await context.addInitScript(lang=>{
     localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:lang}));

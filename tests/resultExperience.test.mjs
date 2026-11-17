@@ -251,3 +251,15 @@ test('S09 reference range and color-cap message occupy full width outside select
  assert.match(js,/\+'<\/div><\/div>'\s*\+\(r\.value===null/,'reading and body grid close before range status');
  assert.match(js,/data-reference-region=/,'real selected region scientific value remains visible');
 });
+
+test('iPhone 16e: explicit 390px mobile fallback bypasses unreliable @container-only anatomy switch',()=>{
+ const inline=read('ui/resultInlineStyles.js');
+ assert.match(inline,/@media screen and \(min-width:375px\) and \(max-width:800px\)/);
+ assert.match(inline,/@media screen and \(max-width:374px\)/);
+ assert.match(inline,/grid-template-columns:minmax\(0,1\.03fr\) minmax\(0,\.97fr\)/);
+ assert.match(inline,/iPhone 16e installed-PWA fallback/);
+ const app=read('ui/resultExperience.js');
+ assert.match(app,/rv4-reference-scale-section/);
+ assert.match(app,/rv4-body-figure/);
+ assert.match(app,/rv4-reading/);
+});
