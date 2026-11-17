@@ -52,17 +52,18 @@ try{
    const layout=await page.evaluate(()=>{
     const r=sel=>{const e=document.querySelector(sel),x=e?.getBoundingClientRect();return x&&{left:x.left,right:x.right,top:x.top,bottom:x.bottom,width:x.width,height:x.height};};
     return {windowWidth:innerWidth,documentWidth:document.documentElement.scrollWidth,
-     title:r('.s2-heading-main h1'),help:r('.s2-heading-main .rl-screen-help>summary'),
+     title:r('.s2-heading-main h1'),header:r('.s2-heading'),help:r('.s2-heading>.rl-screen-help>summary'),
      passiveChipCount:document.querySelectorAll('.s2-locale').length};
    });
    assert.ok(layout.title&&layout.help,'S16 title and help must exist');
    assert.equal(layout.passiveChipCount,0,'remove passive language and theme status');
-   assert.ok(layout.help.left>=layout.title.right-1&&layout.help.left-layout.title.right<=25,
-      'help must sit immediately after heading, not in middle of screen: '+JSON.stringify(layout));
+   assert.ok(layout.header.right-layout.help.right>=-1&&layout.header.right-layout.help.right<=14,
+      'help must be at top-right edge of Settings, not next to the title: '+JSON.stringify(layout));
+   assert.ok(layout.help.left>=layout.title.right-1,'help must not overlap heading: '+JSON.stringify(layout));
    assert.ok(Math.abs((layout.help.top+layout.help.bottom)/2-(layout.title.top+layout.title.bottom)/2)<=12,
       'help and heading must be vertically aligned: '+JSON.stringify(layout));
-   assert.ok(layout.help.width>=43&&layout.help.height>=43,'help touch target at least 44px');
-   const helpDisclosure=rootNode.locator('.s2-heading-main .rl-screen-help');
+   assert.ok(Math.abs(layout.help.width-44)<=1&&Math.abs(layout.help.height-44)<=1,'help must be exactly 44x44px');
+   const helpDisclosure=rootNode.locator('.s2-heading>.rl-screen-help');
    await helpDisclosure.locator('summary').click();
    const helpPopup=await helpDisclosure.locator('p').boundingBox();
    assert.ok(helpPopup&&helpPopup.x>=-1&&helpPopup.x+helpPopup.width<=width+2,

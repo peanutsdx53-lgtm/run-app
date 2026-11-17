@@ -27,6 +27,6 @@ test('P5 source gates: learning, nav and scientific provenance preserved',()=>{
  assert.match(app,/fromLearning&&saved\.ok===true\?\{ok:true,records:\[\]\}/);
  assert.match(read('ui/resultExperience.js'),/data-compare-date/,'new main date wrap correction retained');
  assert.match(read('ui/resultInlineStyles.js'),/\.rv4-region-compare-date/);
- assert.match(read('sw.js'),/resultExperience\.js\?v=20261117-s16-settings-v1/);
+ assert.match(read('sw.js'),/resultExperience\.js\?v=20261117-s17-help-v1/);
  assert.match(read('sw.js'),/ui\/learningExperience\.js/);
 });
