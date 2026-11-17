@@ -114,8 +114,13 @@ try{
    await page.locator('[data-demo-save]').click();
    await page.locator('[data-record-review]').waitFor({state:'visible',timeout:4500});
    if(font===200)await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
+   // The review wrapper may appear before its help control has finished painting.
+   // A missing help control still fails after an explicit visibility wait.
+   const reviewHelp=page.locator('[data-record-review] .rr-heading>.rr-screen-help>summary');
+   await reviewHelp.waitFor({state:'visible',timeout:7000});
+   await reviewHelp.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
    const hb=await page.locator('[data-record-review] .rr-heading').boundingBox();
-   const bb=await page.locator('[data-record-review] .rr-heading>.rr-screen-help>summary').boundingBox();
+   const bb=await reviewHelp.boundingBox();
    // Safari/WebKit may report a null box for the heading wrapper at desktop size
    // while its summary has a stable visible rectangle. In that case check
    // strict viewport-right placement rather than treating null as visual failure.
