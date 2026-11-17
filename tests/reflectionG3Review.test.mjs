@@ -60,6 +60,7 @@ test('G3 result links to explicit memories view; print and privacy remain protec
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  assert.match(app,/explorationUi\.modal=params\.get\('memories'\)==='1'/);
  assert.match(app,/onOpenReflection:/);
+ assert.match(app,/if\(page!=="exploration-tree"\)lastExploreRoute=null/);
  const css=readFileSync(new URL('../ui/historyExperience.js',import.meta.url),'utf8');
  assert.match(css,/@media print\{\.hx-focus-reflection\{display:none!important\}\}/);
 });
