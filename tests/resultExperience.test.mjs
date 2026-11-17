@@ -118,7 +118,7 @@ test('Result and manual-save surfaces use the approved dark chrome and button st
   '.rr-page .rr-foot-actions .rr-save:focus-visible{outline:3px',
  ]) assert.ok(review.includes(style),style);
  assert.match(html,/20261115-retire-whatif-v1/);
- assert.match(html,/recordReviewExperience\.css\?v=20261109-p6c-recordhistory-v1/);
+ assert.match(html,/recordReviewExperience\.css\?v=20261117-record-stage3-v1/);
 });
 
 test('public-facing result copy omits internal branding and preserves formal names',()=>{
