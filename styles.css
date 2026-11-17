@@ -1903,3 +1903,29 @@ html:has(#runload-result-v4),body:has(#runload-result-v4),body:has(#runload-resu
  }
  #app .home-v3 .hx-latest-fig>div{min-width:0}
 }
+
+
+/* S09 only: unifiedLearningShell.css sets nav grid/links globally with !important,
+ * including auto-fit columns in rems that became 2 or 3 rows at 200% font.
+ * Override just those competing properties, preserving every labeled destination.
+ * No horizontal clipping, no icon-only replacement and 44px+ tap areas. */
+@media(max-width:800px){
+ #app .app-shell:has(#runload-result-v4) .mobile-nav{
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  grid-auto-rows:minmax(52px,auto)!important;height:auto!important;
+  align-items:stretch;gap:0;padding:6px 2px calc(7px + env(safe-area-inset-bottom))!important
+ }
+ #app .app-shell:has(#runload-result-v4) .mobile-link{
+  display:grid!important;align-content:center;justify-items:center;
+  min-width:0;min-height:52px!important;height:auto!important;
+  padding:5px 1px!important;gap:3px!important;
+  font-size:clamp(12px,2.9vw,13px)!important;line-height:1.25!important;
+  white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important
+ }
+ #app .app-shell:has(#runload-result-v4) .mobile-link .nav-icon{
+  display:grid;place-items:center;width:23px;height:23px;line-height:1
+ }
+ #app .app-shell:has(#runload-result-v4) .main-content{
+  padding-bottom:calc(95px + env(safe-area-inset-bottom))
+ }
+}

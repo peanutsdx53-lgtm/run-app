@@ -207,3 +207,13 @@ test('obsolete region helpers and mock graph generation have been fully retired 
  assert.ok(app.includes('bodyExperience.focusRegion'),'separate anatomy selection experience stays available');
  assert.ok(app.includes('data-body-detail-source="saved-only"'),'legacy direct details route to saved results');
 });
+
+test('S09 optional mental self-report details are user-controlled while pending recovery remains visible',()=>{
+ const result=read('ui/resultExperience.js');
+ const inline=read('ui/resultInlineStyles.js');
+ assert.match(result,/class="rv4-mental-details"/);
+ assert.match(result,/options\.showMentalPending\?'open':'/);
+ assert.match(result,/data-mental-result role="status"/);
+ assert.doesNotMatch(result,/<style>\.rv4-grid \.rv4-mental/,'temporary nested CSS must be deleted');
+ assert.match(inline,/\.rv4-mental-details>summary/);
+});

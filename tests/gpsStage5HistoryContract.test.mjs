@@ -97,7 +97,8 @@ test('stage 5: source and selected ID cannot silently change during result navig
  assert.match(app,/location\.hash='#\/result\?gps='/);
  assert.doesNotMatch(app,/gps-history-item/,'duplicate GPS list is removed');
  const result=read('ui/resultExperience.js');
- assert.match(result,/fromGps\?'GPS記録では/);
+ assert.match(result,/fromGps\?'GPS記録の文献参考値は自動で比較しません。/);
+ assert.match(result,/rv4-gps-compare-method/,'the shortened GPS summary must retain accessible method limits');
  assert.match(result,/data-result-source/);
  assert.match(result,/\['body','身体'\],\['fatigue','疲労感'\],\['radar','過去と比較'\]/);
 });

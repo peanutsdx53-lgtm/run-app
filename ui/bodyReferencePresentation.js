@@ -19,19 +19,19 @@ export const bodyReferenceRow=(rows,bodyId)=>Array.isArray(rows)?
  rows.find(r=>r.regionId===bodyReferenceEngineId(bodyId))||null:null;
 export const calculatedReference=(row)=>row?.calculationState==='CALCULATED'&&
  typeof row.value==='number'&&Number.isFinite(row.value);
-/* Seven restrained stops on the existing RunLoad navy surface.
- * Continuous cool-hue color shows the magnitude/direction of deviation from
+/* Seven continuous blue–teal–orange stops on the existing RunLoad navy surface.
+ * The display color shows the magnitude/direction of deviation from
  * EACH body's own reference 100; it is never a risk or clinical ranking.
  * Endpoints are display caps, NOT validity limits of any scientific model.
  */
 export const BODY_REFERENCE_COLOR_STOPS=Object.freeze([
  Object.freeze({value:60,hex:'#4776A6'}),
- Object.freeze({value:80,hex:'#4D92B2'}),
- Object.freeze({value:92,hex:'#56ACB7'}),
+ Object.freeze({value:80,hex:'#4C91AA'}),
+ Object.freeze({value:92,hex:'#57B5B7'}),
  Object.freeze({value:100,hex:'#66C4B5'}),
- Object.freeze({value:108,hex:'#76CBBE'}),
- Object.freeze({value:120,hex:'#90D6CD'}),
- Object.freeze({value:140,hex:'#ADDFD9'})
+ Object.freeze({value:108,hex:'#A9BEA0'}),
+ Object.freeze({value:120,hex:'#D4AC7F'}),
+ Object.freeze({value:140,hex:'#EA9659'})
 ]);
 export const BODY_REFERENCE_RANGE=Object.freeze({min:60,max:140});
 export const BODY_REFERENCE_GRADIENT='linear-gradient(90deg,'+
