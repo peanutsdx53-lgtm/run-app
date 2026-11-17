@@ -84,6 +84,18 @@ async function takePopulatedZoom(page,w,id){
  if(activeLanguage!=='en'||![320,390].includes(w))return;
  await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
  await take(page,w,id+'-font200');
+ if(id==='COURSE-dense'){
+  const buttons=await page.locator('.rv-course .rv-choice-row.rv-four .rv-choice').evaluateAll(nodes=>nodes.map(el=>{
+   const r=el.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(el);
+   const fragments=[...range.getClientRects()].filter(x=>x.width>0.1);
+   return {label:el.textContent.trim(),fragmentCount:fragments.length,
+    textLeft:Math.min(...fragments.map(x=>x.left)),textRight:Math.max(...fragments.map(x=>x.right)),
+    left:r.left,right:r.right};
+  }));
+  assert.equal(buttons.length,4,'all four English course modes are available at 200%');
+  assert.ok(buttons.every(x=>x.fragmentCount===1&&x.textLeft>=x.left-2&&x.textRight<=x.right+2),
+   'English course-mode words must fit whole within their buttons: '+JSON.stringify(buttons));
+ }
  await page.evaluate(()=>{document.documentElement.style.fontSize='';});
 }
 async function enter(page,route,selector,w,id){
