@@ -79,6 +79,27 @@ async function capture(page,meta){
    assert.ok(reading.left>=fig.right-2,'375–414px should display the diagram and reading side by side at '+meta.width+'px '+meta.zoom+'%');
    assert.ok(reading.top<fig.bottom&&fig.top<reading.bottom,'body diagram and region card need shared viewing height');
   }
+  // Static full-page screenshots always show a fixed bottom nav at its initial scroll
+  // position. Check the actual viewport after scrolling, not just document geometry.
+  if(meta.zoom===200&&[375,390].includes(meta.width)){
+   const visible=await page.evaluate(()=>{
+    const host=document.querySelector('#runload-result-v4'),shadow=host?.shadowRoot;
+    const target=shadow?.querySelector('.rv4-body-content');
+    const nav=document.querySelector('.mobile-nav');
+    if(!target||!nav)return null;
+    scrollTo(0,Math.max(0,scrollY+target.getBoundingClientRect().top-72));
+    const fig=shadow.querySelector('.rv4-body-figure')?.getBoundingClientRect();
+    const read=shadow.querySelector('.rv4-reading')?.getBoundingClientRect();
+    const foot=nav.getBoundingClientRect();
+    return {figure:{top:fig.top,bottom:fig.bottom},reading:{top:read.top,bottom:read.bottom},navTop:foot.top,scrollY};
+   });
+   assert.ok(visible&&visible.figure.top>=-1,'diagram should be in visible viewport');
+   assert.ok(visible.reading.top>=-1,'selected value should be in visible viewport');
+   assert.ok(Math.max(visible.figure.bottom,visible.reading.bottom)<=visible.navTop-5,
+     'diagram and selected value must both fit above fixed navigation after scrolling: '+JSON.stringify(visible));
+   await page.screenshot({path:resolve(out,filename+'-co-readable-viewport.png'),animations:'disabled',fullPage:false});
+   await page.evaluate(()=>scrollTo(0,0));
+  }
  }
 }
 try{
