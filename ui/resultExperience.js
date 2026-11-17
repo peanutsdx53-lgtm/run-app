@@ -47,7 +47,7 @@ const RESULT_HELP_RIGHT_STYLES=String.raw`
 .rv4-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:9px}
 .rv4-header-left{min-width:0;flex:1 1 auto}
 .rv4-actions{min-width:0;flex:0 1 auto}
-.rv4-header>.rv4-header-help{flex:0 0 44px;margin-left:0;position:relative;z-index:60}
+.rv4-header>.rv4-header-help{flex:0 0 44px;margin-left:0;align-self:flex-start;position:relative;z-index:60}
 .rv4-header>.rv4-header-help>summary{
  box-sizing:border-box;display:grid;place-items:center;list-style:none;
  width:44px;height:44px;min-width:44px;min-height:44px;padding:0;margin:0;

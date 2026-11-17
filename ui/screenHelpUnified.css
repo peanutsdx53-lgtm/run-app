@@ -3,7 +3,7 @@
 :root{--rl-help-size:44px;--rl-help-border:#579eab;--rl-help-bg:#12485b;--rl-help-ink:#cff8f5;--rl-help-active-border:#89e8e7;--rl-help-active-bg:#176276}
 :is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help){
  position:relative!important;flex:0 0 var(--rl-help-size)!important;
- margin-left:auto!important;z-index:50
+ margin-left:auto!important;align-self:flex-start!important;z-index:50
 }
 :is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help)>summary,
 .home-v3 .home-head .home-heading-actions>.hx-help-toggle,
@@ -45,6 +45,8 @@
  font-weight:450!important;letter-spacing:normal!important;
  text-align:left!important;overflow-wrap:anywhere!important;z-index:51!important
 }
+.home-v3 .home-head .home-heading-actions,
+.ex-page .ex-heading .ex-heading-actions{align-self:flex-start!important}
 .s2-page .s2-heading>.rl-screen-help{margin-left:auto!important}
 .rr-page .rr-heading{display:flex;align-items:center;flex-wrap:nowrap;gap:10px}
 .rr-page .rr-heading-left{min-width:0;flex:1 1 auto}

@@ -62,6 +62,10 @@ try{
     localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({textSize:'standard',motion:'system',language:selected}));
     localStorage.setItem('runload-v2-legal-consent-v1',JSON.stringify({termsAccepted:true,privacyConfirmed:true,acceptedAt:'2026-11-17T00:00:00Z',termsVersion:LEGAL_VERSION,privacyVersion:LEGAL_VERSION}));
    },lang);
+   // The app reads onboarding and legal state on boot; hash navigation alone
+   // does not recreate startup state or remove the first-use overlay.
+   await page.reload({waitUntil:'networkidle'});
+   await page.locator('[data-onboard-overlay]').waitFor({state:'detached',timeout:6000});
    for(const [route,headerSelector,helpSelector,kind] of screenDefs.filter(([name])=>width===390||['home','record-start','record','record-reflection','exploration-tree','learning','settings','history','result'].includes(name))){
     if(route==='measurement'&&!phone)continue;
     const pageName=route;
