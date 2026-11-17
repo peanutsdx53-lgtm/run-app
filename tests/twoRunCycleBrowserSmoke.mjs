@@ -386,7 +386,20 @@ try{
  assert.match(await page.locator('.ex-note-preview').innerText(),/今回の走行ではペースの違い/);
  await page.locator('[data-ex-action="memories"]').click();
  assert.match(await page.locator('[data-ex-overlay]').innerText(),/元の問いから本人が明示的に続けたメモ/);
- assert.ok((await page.locator('[data-ex-overlay]').innerText()).includes(sourceQuestion));
+ const targetRunMemories=await page.locator('[data-ex-overlay]').innerText();
+ assert.match(targetRunMemories,/今回の走行ではペースの違いを感じた/,'selected B shows its own written continuation');
+ assert.ok(!targetRunMemories.includes(sourceQuestion),'B scoped notes must not disclose the original A question');
+ assert.equal((await page.evaluate(()=>JSON.parse(localStorage.getItem('runload-v2-exploration-notes-v1')))).find(n=>n.id===prior.id)?.text,sourceQuestion,
+  'the prior question persists under original A after continuation');
+ await page.locator('[data-ex-action="close"]').click();
+ // The original question remains available by explicitly revisiting its source run.
+ await page.goto(host+'#/exploration-tree?record='+encodeURIComponent(sameDayA)+'&category=01&topic='+encodeURIComponent('距離・時間・ペース'),{waitUntil:'networkidle'});
+ await page.locator('.ex-note-preview').filter({hasText:sourceQuestion}).waitFor({timeout:15000});
+ await page.locator('[data-ex-action="memories"]').click();
+ await page.waitForFunction(question=>document.querySelector('[data-ex-overlay]')?.textContent?.includes(question),sourceQuestion,{timeout:15000});
+ const sourceRunMemories=await page.locator('[data-ex-overlay]').innerText();
+ assert.ok(sourceRunMemories.includes(sourceQuestion),'A original question remains revisitable from its own record');
+ assert.ok(!sourceRunMemories.includes('今回の走行ではペースの違いを感じた'),'A scoped notes must not disclose B continuation');
  await page.locator('[data-ex-action="close"]').click();
  await page.goto(host+'#/result?record='+encodeURIComponent(sameDayB)+'&compare='+encodeURIComponent(walkId)+'&view=compare',{waitUntil:'networkidle'});
  assert.equal(await page.locator('[data-run-question-source]').count(),0,'cross-gait comparison cannot offer linked continuation');
