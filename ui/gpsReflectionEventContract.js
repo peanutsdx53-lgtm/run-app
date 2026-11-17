@@ -31,13 +31,16 @@ export function validateGpsReflectionEvent(event){
  if(!exactKeys(event,keys))return fail('BAD_EVENT','記述履歴の項目構成が不正です');
  const ref=normalizeRecordRef(event.recordRef);
  if(!ref.ok||ref.value.sourceType!=='GPS_V2')return fail('SOURCE_MISMATCH','GPS V2に関連づく記述だけを扱います');
- if(event.schemaVersion!==GPS_REFLECTION_EVENT_SCHEMA||!EVENT.test(event.eventId)||
-    !NOTE.test(event.noteId)||!REQUEST.test(event.requestId)||!ACTIONS.has(event.action)||
+ if(event.schemaVersion!==GPS_REFLECTION_EVENT_SCHEMA||
+    typeof event.eventId!=='string'||!EVENT.test(event.eventId)||
+    typeof event.noteId!=='string'||!NOTE.test(event.noteId)||
+    typeof event.requestId!=='string'||!REQUEST.test(event.requestId)||
+    !ACTIONS.has(event.action)||
     !Number.isSafeInteger(event.revision)||event.revision<1||event.revision>GPS_REFLECTION_MAX_REVISIONS||
     !validDate(event.savedAt))return fail('BAD_EVENT','記述履歴のID・版・日時が不正です');
  if(event.action==='CREATE'){
   if(event.revision!==1||event.predecessorEventId!==null)return fail('BAD_EVENT','新規作成は改訂1から開始します');
- }else if(!EVENT.test(event.predecessorEventId||'')||event.revision===1)
+ }else if(typeof event.predecessorEventId!=='string'||!EVENT.test(event.predecessorEventId)||event.revision===1)
   return fail('BAD_EVENT','修正・削除には直前イベントが必要です');
  return ok(Object.freeze({...event,recordRef:ref.value}));
 }
@@ -84,12 +87,24 @@ export function inspectGpsReflectionThread(recordRef,noteId,events){
 }
 
 /** Compare-and-swap planning only. Must re-evaluate under an IDB write transaction. */
-export function inspectGpsReflectionChange(thread,{expectedRevision,expectedLastEventId,action}={}){
+export function inspectGpsReflectionChange(thread,request={}){
  if(thread?.ok!==true||!thread.value)return fail('BAD_THREAD','改訂履歴が未検証です');
+ if(!request||typeof request!=='object'||Array.isArray(request))
+  return fail('BAD_CHANGE','変更の指定が不正です');
+ const {expectedRevision,expectedLastEventId,action}=request;
  const {revision,latestEventId,status}=thread.value;
+ if(!Number.isSafeInteger(revision)||revision<0||revision>GPS_REFLECTION_MAX_REVISIONS||
+    !['ABSENT','ACTIVE','DELETED'].includes(status)||
+    (revision===0)!==(status==='ABSENT')||
+    (revision===0?latestEventId!==null:typeof latestEventId!=='string'||!EVENT.test(latestEventId)))
+  return fail('BAD_THREAD','改訂履歴の状態が不正です');
  if(!Number.isSafeInteger(expectedRevision)||expectedRevision!==revision||
    expectedLastEventId!==latestEventId)return fail('HEAD_CONFLICT','別の操作で自由記述が変更されました');
  if(action==='CREATE'&&status==='ABSENT'||action==='EDIT'&&status==='ACTIVE'||
-    action==='DELETE'&&status==='ACTIVE')return ok(Object.freeze({nextRevision:revision+1,predecessorEventId:latestEventId}));
+    action==='DELETE'&&status==='ACTIVE'){
+  if(revision===GPS_REFLECTION_MAX_REVISIONS)
+   return fail('REVISION_LIMIT','改訂回数の安全上限に達しています');
+  return ok(Object.freeze({nextRevision:revision+1,predecessorEventId:latestEventId}));
+ }
  return fail('BAD_TRANSITION','削除済みの自由記述の誤復活や二重作成はできません');
 }
