@@ -20,7 +20,7 @@ test('selected-run notes do not borrow another run or legacy free notes',()=>{
  const notes=[{topicId:'PACE',text:'one',recordId:id(1)},{topicId:'PACE',text:'two',recordId:id(2)},
   {topicId:'PACE',text:'legacy'},{topicId:'OTHER',text:'other',recordId:id(1)}];
  assert.deepEqual(visibleTopicNotes(notes,'PACE',id(1)).map(x=>x.text),['one']);
- assert.deepEqual(visibleTopicNotes(notes,'PACE').map(x=>x.text),['one','two','legacy']);
+ assert.deepEqual(visibleTopicNotes(notes,'PACE').map(x=>x.text),['legacy']);
  assert.equal(noteIsForRun(notes[2],id(1)),false);
 });
 test('deleted linked run does not create an invented backlink',()=>{
@@ -38,6 +38,6 @@ test('orphan notes and legacy unlinked notes cannot inherit a different run',()=
  assert.equal(noteRunBackLink(old,remaining),null);
  assert.equal(noteRunBackLink(orphan,remaining),null);
  assert.deepEqual(visibleTopicNotes([old,orphan],'PACE',id(2)),[]);
- assert.deepEqual(visibleTopicNotes([old,orphan],'PACE').map(x=>x.text),[old.text,orphan.text]);
+ assert.deepEqual(visibleTopicNotes([old,orphan],'PACE').map(x=>x.text),[old.text]);
  assert.equal(resolveOptionalNoteRunLink(id(1),remaining).ok,false);
 });

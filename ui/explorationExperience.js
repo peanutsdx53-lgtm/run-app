@@ -25,13 +25,13 @@ const meta={
 };
 const isProvided=x=>x!==null&&x!==undefined&&String(x).trim()!=="";
 export function makeUi(storage){
- const ui={selected:"03",topic:"",search:"",tab:"field",sample:false,notes:[],emptyNotesRaw:null,storage,canSave:true,notice:"",modal:"",trialDistance:5,trialMinutes:30,toolChoice:"up",bodyChoice:"hip",lifeA:"",lifeB:"",followup:"",editingNoteId:null,deletingNoteId:null};
+ const ui={selected:"03",topic:"上り坂・下り坂",search:"",tab:"field",sample:false,notes:[],emptyNotesRaw:null,storage,canSave:true,notice:"",modal:"",trialDistance:5,trialMinutes:30,toolChoice:"up",bodyChoice:"hip",lifeA:"",lifeB:"",followup:"",editingNoteId:null,deletingNoteId:null};
  if(!storage){ui.canSave=false;return ui;}
  try{
   const raw=storage.getItem(EXPLORATION_NOTE_KEY);
   if(raw===null)return ui;
   const list=JSON.parse(raw);
-  if(!Array.isArray(list)||list.length>LIMIT||list.some(n=>!n||typeof n!=="object"||typeof n.id!=="string"||typeof n.category!=="string"||typeof n.text!=="string"||!n.text.trim()||n.text.length>500||!/^[A-Za-z0-9_-]{1,32}$/.test(n.category)||n.id.length>80||typeof n.createdAt!=="string"||(n.topicId!==undefined&&typeof n.topicId!=="string")||(n.recordId!==undefined&&!isRunId(n.recordId))||(n.continuedFromNoteId!==undefined&&(typeof n.continuedFromNoteId!=='string'||!n.continuedFromNoteId||n.continuedFromNoteId.length>80))||(n.updatedAt!==undefined&&(typeof n.updatedAt!=='string'||Number.isNaN(Date.parse(n.updatedAt))))||(n.revisions!==undefined&&(!Array.isArray(n.revisions)||n.revisions.length>50||n.revisions.some(v=>!v||typeof v.text!=='string'||!v.text.trim()||v.text.length>500||typeof v.editedAt!=='string'||Number.isNaN(Date.parse(v.editedAt)))))))throw Error("invalid notes");
+  if(!Array.isArray(list)||list.length>LIMIT||new Set(list.map(n=>n?.id)).size!==list.length||list.some(n=>!n||typeof n!=="object"||typeof n.id!=="string"||typeof n.category!=="string"||typeof n.text!=="string"||!n.text.trim()||n.text.length>500||!/^[A-Za-z0-9_-]{1,32}$/.test(n.category)||n.id.length>80||typeof n.createdAt!=="string"||(n.topicId!==undefined&&typeof n.topicId!=="string")||(n.recordId!==undefined&&!isRunId(n.recordId))||(n.continuedFromNoteId!==undefined&&(typeof n.continuedFromNoteId!=='string'||!n.continuedFromNoteId||n.continuedFromNoteId.length>80))||(n.updatedAt!==undefined&&(typeof n.updatedAt!=='string'||Number.isNaN(Date.parse(n.updatedAt))))||(n.revisions!==undefined&&(!Array.isArray(n.revisions)||n.revisions.length>50||n.revisions.some(v=>!v||typeof v.text!=='string'||!v.text.trim()||v.text.length>500||typeof v.editedAt!=='string'||Number.isNaN(Date.parse(v.editedAt)))))))throw Error("invalid notes");
   ui.notes=list;
   // Preserve the exact empty-array snapshot left by a prior last-note deletion.
   // A missing key (null) remains distinct for cross-tab write protection.
@@ -270,7 +270,10 @@ function experience(ui,ctx,cat,topic,inquiry=''){
 
 function field(ui,ctx){
  const links=relevance(ui,ctx),cats=ctx.categories;
- const counts=Object.create(null);for(const n of ui.notes)counts[n.category]=(counts[n.category]||0)+1;
+ const counts=Object.create(null);for(const n of ui.notes){
+  const visible=ctx.focusRunId?ctx.focusRun?.id===ctx.focusRunId&&n.recordId===ctx.focusRunId:!n.recordId;
+  if(visible)counts[n.category]=(counts[n.category]||0)+1;
+ }
  const selected=cats.find(c=>c.id===ui.selected)||cats[0],linked=links.linked.get(selected.id);
  const nodes=cats.map(c=>{
   const p=meta[c.id]||{glyph:"○",accent:"#69d5d7",x:50,y:50};
@@ -317,7 +320,7 @@ export function render(ui,ctx){
  '<div class="ex-switch" role="group" aria-label="探し方"><button type="button" data-ex-tab="field" aria-pressed="'+(ui.tab==="field")+'">気になることから</button><button type="button" data-ex-tab="catalog" aria-pressed="'+(ui.tab==="catalog")+'">テーマから探す</button></div>'+
  (ui.tab==="catalog"?catalog(ui,ctx):field(ui,ctx))+
  '<section class="ex-reflection-footer" aria-label="ふり返りノート"><div><strong>ふり返りノート</strong></div>'+
- '<button type="button" class="ex-header-memo" data-ex-action="memories">ふり返り <span>'+ui.notes.length+'</span></button></section>'+modal(ui,ctx)+'</section>';
+ '<button type="button" class="ex-header-memo" data-ex-action="memories">ふり返り <span>'+(ui.canSave?ui.notes.length:'確認不可')+'</span></button></section>'+modal(ui,ctx)+'</section>';
 }
 function modal(ui,ctx){if(!ui.modal)return "";const category=ctx.categories.find(c=>c.id===ui.selected)||ctx.categories[0],title=ui.topic||category.topics[0]||category.name,links=relevance(ui,ctx);let body="";
  if(ui.modal==="field-help")body='<p>強調表示は、現在入力している情報や保存した走行・生活記録と関連する分野を示します。優先順位や身体への負担の大きさを示すものではありません。</p><p>記録がなくても、どの分野も自由に選べます。</p>';
@@ -340,7 +343,7 @@ function modal(ui,ctx){if(!ui.modal)return "";const category=ctx.categories.find
    (current.revisions?.length?'<details><summary>以前の文章（'+current.revisions.length+'件）</summary>'+current.revisions.map(v=>'<p>'+esc(v.text)+'</p>').join('')+'</details>':''):
    '<p role="alert">修正対象のメモが見つかりません。ほかの記録へ変更しません。</p>';
  }
- if(ui.modal==="memories")body=ui.notes.length?`<div class="ex-saved-list">${ui.notes.map(n=>`<div class="ex-saved"><div><small>${esc(ctx.categories.find(c=>c.id===n.category)?.name||"探究")} · ${esc(n.createdAt.slice(0,10))} · ${n.recordId?'走行に関連づけたメモ':'単独メモ'}</small><p>${esc(n.text)}</p>${n.continuedFromNoteId?(ui.notes.find(source=>source.id===n.continuedFromNoteId&&source.id!==n.id&&noteRunBackLink(source,ctx.manualRuns))?'<small>元の問いから本人が明示的に続けたメモ</small>':'<small>元の問いの出所を確認できません。別の記録に付け替えません。</small>'):''}${n.recordId?(noteRunBackLink(n,ctx.manualRuns)?'<a href="#/result?record='+encodeURIComponent(n.recordId)+'">元の走行結果に戻る ›</a>':'<small>元の走行記録が見つからないためリンクを表示しません</small>'):''}</div><div class="ex-saved-actions"><button type="button" data-ex-edit="${esc(n.id)}" ${!ui.canSave?"disabled":""} aria-label="この記録の文章を修正">修正</button><button type="button" data-ex-delete="${esc(n.id)}" ${!ui.canSave?"disabled":""} aria-label="この記録を削除">削除</button></div></div>`).join("")}</div>`:"<p>まだ書いたことはありません。テーマを読んで、気になったことがあれば残せます。</p>";
+ if(ui.modal==="memories")body=!ui.canSave?'<p role="alert">'+esc(ui.notice||'保存したメモを確認できません。原本は変更していません。')+'</p>':ui.notes.length?`<div class="ex-saved-list">${ui.notes.map(n=>`<div class="ex-saved"><div><small>${esc(ctx.categories.find(c=>c.id===n.category)?.name||"探究")} · ${esc(n.createdAt.slice(0,10))} · ${n.recordId?'走行に関連づけたメモ':'単独メモ'}</small><p>${esc(n.text)}</p>${n.continuedFromNoteId?(ui.notes.find(source=>source.id===n.continuedFromNoteId&&source.id!==n.id&&noteRunBackLink(source,ctx.manualRuns))?'<small>元の問いから本人が明示的に続けたメモ</small>':'<small>元の問いの出所を確認できません。別の記録に付け替えません。</small>'):''}${n.recordId?(noteRunBackLink(n,ctx.manualRuns)?'<a href="#/result?record='+encodeURIComponent(n.recordId)+'">元の走行結果に戻る ›</a>':'<small>元の走行記録が見つからないためリンクを表示しません</small>'):''}</div><div class="ex-saved-actions"><button type="button" data-ex-edit="${esc(n.id)}" ${!ui.canSave?"disabled":""} aria-label="この記録の文章を修正">修正</button><button type="button" data-ex-delete="${esc(n.id)}" ${!ui.canSave?"disabled":""} aria-label="この記録を削除">削除</button></div></div>`).join("")}</div>`:"<p>まだ書いたことはありません。テーマを読んで、気になったことがあれば残せます。</p>";
  if(ui.modal==="delete-note"){
   const target=ui.notes.find(n=>n.id===ui.deletingNoteId);
   body=target?'<div class="ex-delete-confirm" role="group" aria-label="削除するメモを確認"><p>このメモだけを削除します。削除後は元に戻せません。走行記録や別のメモは変更しません。</p><blockquote>'+esc(target.text)+'</blockquote><div class="ex-dialog-actions"><button type="button" data-ex-action="cancel-delete-note">削除しない</button><button type="button" class="ex-delete-danger" data-ex-action="confirm-delete-note">このメモを削除する</button></div></div>':'<p role="alert">削除対象のメモが見つかりません。保存済みの内容は変更しません。</p>';
@@ -354,14 +357,14 @@ export function saveNote(ui,text,{focusRunId=null,manualRuns=null}={}){
  if(!link.ok)return link;
  if(ui.sample&&link.recordId)return {ok:false,reason:'説明用の表示例では、実際の走行記録にメモを関連づけられません'};if(!ui.canSave||!ui.storage)return {ok:false,reason:"保存領域が利用できません"};const value=String(text??"").trim();if(!value||value.length>500)return {ok:false,reason:"1〜500文字で入力してください"};const time=new Date().toISOString();const id=`${time}-${Math.random().toString(36).slice(2,12)}`;const key=LEARNING_TOPICS[ui.selected+"|"+ui.topic]||EXPLORATION_DRAFT_GUIDES[ui.selected+"|"+ui.topic]?.id;if(ui.notes.length>=LIMIT)return {ok:false,reason:"保存上限の50件に達しています。既存メモを自動削除しません。必要なら本人が選んで削除してください"};
  const next=[{id,category:ui.selected,text:value,createdAt:time,...(key?{topicId:key}:{}),...(link.recordId?{recordId:link.recordId}:{})},...ui.notes];try{const old=ui.storage.getItem(EXPLORATION_NOTE_KEY);const expected=JSON.stringify(next);if(old!==(ui.notes.length?JSON.stringify(ui.notes):ui.emptyNotesRaw)){ui.canSave=false;return {ok:false,reason:"他の画面で変更されています。元のデータを保護しました"};}ui.storage.setItem(EXPLORATION_NOTE_KEY,expected);if(ui.storage.getItem(EXPLORATION_NOTE_KEY)!==expected)return {ok:false,reason:"保存を確認できませんでした"};ui.notes=next;ui.emptyNotesRaw=null;return {ok:true};}catch{return {ok:false,reason:"保存できませんでした"}}}
-export function deleteNote(ui,id){if(!ui.canSave||!ui.storage)return false;const oldList=ui.notes;const next=oldList.filter(n=>n.id!==id);if(next.length===oldList.length)return false;try{const old=ui.storage.getItem(EXPLORATION_NOTE_KEY);if(old!==JSON.stringify(oldList)){ui.canSave=false;return false;}const nextRaw=JSON.stringify(next);ui.storage.setItem(EXPLORATION_NOTE_KEY,nextRaw);if(ui.storage.getItem(EXPLORATION_NOTE_KEY)!==nextRaw)return false;ui.notes=next;ui.emptyNotesRaw=next.length===0?nextRaw:null;return true}catch{return false}}
+export function deleteNote(ui,id){if(!ui.canSave||!ui.storage)return false;const oldList=ui.notes;const matches=oldList.filter(n=>n.id===id);if(matches.length!==1)return false;const next=oldList.filter(n=>n.id!==id);try{const old=ui.storage.getItem(EXPLORATION_NOTE_KEY);if(old!==JSON.stringify(oldList)){ui.canSave=false;return false;}const nextRaw=JSON.stringify(next);ui.storage.setItem(EXPLORATION_NOTE_KEY,nextRaw);if(ui.storage.getItem(EXPLORATION_NOTE_KEY)!==nextRaw)return false;ui.notes=next;ui.emptyNotesRaw=next.length===0?nextRaw:null;return true}catch{return false}}
 
 /** Explicit revision: old text and identity are retained, including the
  * original record link and any continuation chain. No silent migration. */
 export function editNote(ui,id,text){
  if(!ui?.canSave||!ui.storage)return {ok:false,reason:"保存領域が利用できません"};
  const index=ui.notes.findIndex(n=>n?.id===id);
- if(index<0)return {ok:false,reason:"修正対象のメモが見つかりません。別の記録を変更しません"};
+ if(index<0||ui.notes.filter(n=>n?.id===id).length!==1)return {ok:false,reason:"修正対象のメモを一意に確認できません。別の記録を変更しません"};
  const nextText=String(text??"").trim();
  if(!nextText||nextText.length>500)return {ok:false,reason:"1〜500文字で入力してください"};
  const current=ui.notes[index];
