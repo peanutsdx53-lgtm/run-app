@@ -13,12 +13,12 @@ test('environment subjective selections are transient and reversible',()=>{
 });
 test('page never silently serializes weather or claims automatic measurements',()=>{
  const html=environmentPage({temperatureC:'0',environmentNote:'強風 <test>'},{weather:'RAIN',flags:['WIND'],notice:''});
- assert.match(html,/data-draft="temperatureC"/);assert.match(html,/data-draft="environmentNote"/);assert.match(html,/天候・風・湿度の選択はこの画面だけの一時表示/);assert.match(html,/移動や再読み込みで消えます/);assert.match(html,/class="rv-screen-help"/);assert.match(html,/天候などの選択は未保存です/);
+ assert.match(html,/data-draft="temperatureC"/);assert.match(html,/data-draft="environmentNote"/);assert.match(html,/天候・風・湿度の選択は一時表示/);assert.match(html,/画面移動や再読み込みでは選択が解除されます/);assert.match(html,/class="rv-screen-help"/);assert.doesNotMatch(html,/class="e4-draft-note"/);assert.match(html,/data-e4-selection-status/);
  assert.doesNotMatch(html,/data-draft="weather"/);assert.match(html,/強風 &lt;test&gt;/);
 });
 test('transient weather choices are stated as non-persistent at the choice and confirmation exit',()=>{
  const html=environmentPage({},newEnvironmentUi());
- assert.match(html,/天候・風・湿度の選択はこの画面だけの一時表示/);
+ assert.match(html,/天候・風・湿度の選択は一時表示/);
  assert.match(html,/気温とメモは保存前の確認画面に引き継がれます/);assert.match(html,/data-e4-commit/);
  assert.doesNotMatch(html,/data-draft="weather"|data-draft="flags"/);
 });

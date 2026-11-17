@@ -159,3 +159,14 @@ test('S09 optional mental report is confirmed separately without changing the fi
  assert.doesNotMatch(injected,/<img src=x/);
  assert.match(injected,/&lt;img src=x onerror=alert\(1\)&gt;/);
 });
+
+test('unfilled optional items show status once while preserving editing links',()=>{
+ const html=reviewView(base,{source:'manual',recordType:'run'});
+ assert.equal((html.match(/data-review-empty="true"/g)||[]).length,4);
+ assert.equal((html.match(/data-review-link=/g)||[]).length,5);
+ assert.match(html,/data-review-link="record-compare" data-review-empty="true"/);
+ assert.doesNotMatch(html,/class="rr-row-desc">未入力<\/small>/);
+ const filled=reviewView({...base,steps:'3456',stepsProvenance:'ESTIMATED'},{source:'manual',recordType:'run'});
+ assert.match(filled,/data-review-link="record-compare" data-review-empty="false"/);
+ assert.match(filled,/class="rr-row-desc">3456歩/);
+});
