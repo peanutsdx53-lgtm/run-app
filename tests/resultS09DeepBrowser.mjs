@@ -63,6 +63,26 @@ async function capture(page,meta){
   for(const v of views)assert.ok(v.rect.height>=43,'anatomy view target too small: '+v.text+' '+meta.width);
  }
  report.push({meta,metrics:m});
+ // Regression for iOS installed-app reports: even if the browser does not
+ // apply container-query layout, 390px mobile must still use two columns.
+ if(meta.tab==='body'&&meta.view==='front'&&meta.width===390){
+  const fallback=await page.evaluate(()=>{
+   const host=document.querySelector('#runload-result-v4'),shadow=host?.shadowRoot;
+   const body=shadow?.querySelector('.rv4-body'),fig=shadow?.querySelector('.rv4-body-figure');
+   const reading=shadow?.querySelector('.rv4-reading');
+   if(!body||!fig||!reading)return null;
+   const extra=document.createElement('style');
+   extra.textContent='.rv4-body{container-type:normal!important}';
+   shadow.append(extra);
+   try{
+    const f=fig.getBoundingClientRect(),r=reading.getBoundingClientRect();
+    return {figureRight:f.right,readingLeft:r.left,figureTop:f.top,readingBottom:r.bottom,columns:getComputedStyle(shadow.querySelector('.rv4-body-content')).gridTemplateColumns,windowWidth:innerWidth};
+   }finally{extra.remove()}
+  });
+  assert.ok(fallback&&fallback.windowWidth===390,'mobile viewport must stay 390 CSS pixels');
+  assert.ok(fallback.readingLeft>=fallback.figureRight-2,
+   '390px must remain side-by-side without CSS container query support: '+JSON.stringify(fallback));
+ }
  if(meta.tab==='body'&&meta.view==='front'&&[320,375,390,414].includes(meta.width)){
   const scale=m.parts.find(x=>x.selector==='.rv4-reference-scale-section')?.rect;
   const selected=m.parts.find(x=>x.selector==='.rv4-reading')?.rect;
