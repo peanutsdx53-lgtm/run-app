@@ -222,8 +222,8 @@ test('S09 anatomy and ROF-J are co-readable without conflating zero with unanswe
  const js=read('ui/resultExperience.js'),css=read('ui/resultInlineStyles.js');
  assert.match(js,/rv4-body-content/);
  assert.match(css,/container-type:inline-size/);
- assert.match(css,/@container \(min-width:340px\)/);
- assert.match(css,/@container \(max-width:339px\)/);
+ assert.match(css,/@container \(min-width:315px\)/);
+ assert.match(css,/@container \(max-width:314px\)/);
  assert.match(js,/rv4-fatigue-scale-zero/,'valid zero has an explicit marker');
  assert.match(js,/is-unanswered/,'unanswered is visually different');
  assert.match(js,/data-rof-stage/,'both self-reported ratings have separate rows');

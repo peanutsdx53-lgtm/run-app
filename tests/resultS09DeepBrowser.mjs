@@ -63,6 +63,17 @@ async function capture(page,meta){
   for(const v of views)assert.ok(v.rect.height>=43,'anatomy view target too small: '+v.text+' '+meta.width);
  }
  report.push({meta,metrics:m});
+ if(meta.tab==='body'&&meta.view==='front'&&[320,375,390,414].includes(meta.width)){
+  const fig=m.parts.find(x=>x.selector==='.rv4-body-figure')?.rect;
+  const reading=m.parts.find(x=>x.selector==='.rv4-reading')?.rect;
+  assert.ok(fig&&reading,'body diagram and selected region card are present');
+  if(meta.width===320){
+   assert.ok(reading.top>=fig.bottom-2,'320px must use accessible stacked layout at '+meta.zoom+'%');
+  }else{
+   assert.ok(reading.left>=fig.right-2,'375–414px should display the diagram and reading side by side at '+meta.width+'px '+meta.zoom+'%');
+   assert.ok(reading.top<fig.bottom&&fig.top<reading.bottom,'body diagram and region card need shared viewing height');
+  }
+ }
 }
 try{
  for(const language of ['ja','en'])for(const width of [320,375,390,414,768,1024,1440])for(const zoom of [100,200]){
