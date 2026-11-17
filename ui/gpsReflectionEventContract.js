@@ -12,6 +12,7 @@ import {inspectGpsReflectionDraft} from './gpsReflectionPreflight.js';
 
 export const GPS_REFLECTION_EVENT_SCHEMA=1;
 export const GPS_REFLECTION_MAX_EVENTS=10000;
+// CREATE/EDIT revision ceiling. A final DELETE may use one extra revision.
 export const GPS_REFLECTION_MAX_REVISIONS=1000;
 const EVENT=/^gps-refevent-[a-z0-9-]{8,64}$/;
 const NOTE=/^gps-refnote-[a-z0-9-]{8,64}$/;
@@ -36,7 +37,8 @@ export function validateGpsReflectionEvent(event){
     typeof event.noteId!=='string'||!NOTE.test(event.noteId)||
     typeof event.requestId!=='string'||!REQUEST.test(event.requestId)||
     !ACTIONS.has(event.action)||
-    !Number.isSafeInteger(event.revision)||event.revision<1||event.revision>GPS_REFLECTION_MAX_REVISIONS||
+    !Number.isSafeInteger(event.revision)||event.revision<1||
+    event.revision>GPS_REFLECTION_MAX_REVISIONS+(event.action==='DELETE'?1:0)||
     !validDate(event.savedAt))return fail('BAD_EVENT','記述履歴のID・版・日時が不正です');
  if(event.action==='CREATE'){
   if(event.revision!==1||event.predecessorEventId!==null)return fail('BAD_EVENT','新規作成は改訂1から開始します');
@@ -93,7 +95,8 @@ export function inspectGpsReflectionChange(thread,request={}){
   return fail('BAD_CHANGE','変更の指定が不正です');
  const {expectedRevision,expectedLastEventId,action}=request;
  const {revision,latestEventId,status}=thread.value;
- if(!Number.isSafeInteger(revision)||revision<0||revision>GPS_REFLECTION_MAX_REVISIONS||
+ if(!Number.isSafeInteger(revision)||revision<0||
+    revision>GPS_REFLECTION_MAX_REVISIONS+(status==='DELETED'?1:0)||
     !['ABSENT','ACTIVE','DELETED'].includes(status)||
     (revision===0)!==(status==='ABSENT')||
     (revision===0?latestEventId!==null:typeof latestEventId!=='string'||!EVENT.test(latestEventId)))
@@ -102,7 +105,7 @@ export function inspectGpsReflectionChange(thread,request={}){
    expectedLastEventId!==latestEventId)return fail('HEAD_CONFLICT','別の操作で自由記述が変更されました');
  if(action==='CREATE'&&status==='ABSENT'||action==='EDIT'&&status==='ACTIVE'||
     action==='DELETE'&&status==='ACTIVE'){
-  if(revision===GPS_REFLECTION_MAX_REVISIONS)
+  if(revision===GPS_REFLECTION_MAX_REVISIONS&&action!=='DELETE')
    return fail('REVISION_LIMIT','改訂回数の安全上限に達しています');
   return ok(Object.freeze({nextRevision:revision+1,predecessorEventId:latestEventId}));
  }
