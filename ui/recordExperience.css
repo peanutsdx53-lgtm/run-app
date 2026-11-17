@@ -879,3 +879,24 @@ html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{white-space:n
   grid-template-columns:minmax(0,1fr);
  }
 }
+
+/* D28 surface mode: the three-way control includes the long action
+   "Multiple Surfaces by Proportion"; show it in a full-width row and keep
+   "Total 100%" below the surface chart heading when type is enlarged. */
+@media(max-width:430px){
+ html[lang="en"] .record-v3.rv-course .rv-step-surface .rv-choice-row{
+  grid-template-columns:minmax(0,1fr);
+  gap:7px;
+ }
+ html[lang="en"] .record-v3.rv-course .rv-step-surface .rv-choice-row .rv-choice{
+  font-size:.70rem;line-height:1.28;min-height:48px;
+  white-space:normal;overflow-wrap:normal;word-break:normal;hyphens:none;
+  padding:8px 7px;
+ }
+ html[lang="en"] .record-v3.rv-course .rv-surface-head{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:5px;
+ }
+ html[lang="en"] .record-v3.rv-course .rv-surface-head strong{
+  white-space:normal;min-width:0;
+ }
+}
