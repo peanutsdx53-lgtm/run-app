@@ -43,6 +43,7 @@ async function take(page,w,id){
    '.rv-section-progress','.rv-section-row-head strong','.rv-section-row-head small',
    '.rv-section-row-head button','.rv-section-fields label',
    '[data-rv-add]','[data-rv-surface-total]',
+   '.rv-surface-fine .rv-fine-top strong','[data-rv-summary-surface]',
    '[data-g4-source]','[data-g4-format]','[data-g4-summary-steps]',
    '[data-g4-summary-format]','[data-g4-run-text]','[data-g4-other]',
    '[data-e4-weather]','[data-e4-flag]','[data-e4-summary]',
@@ -95,6 +96,19 @@ async function takePopulatedZoom(page,w,id){
   assert.equal(buttons.length,4,'all four English course modes are available at 200%');
   assert.ok(buttons.every(x=>x.fragmentCount===1&&x.textLeft>=x.left-2&&x.textRight<=x.right+2),
    'English course-mode words must fit whole within their buttons: '+JSON.stringify(buttons));
+
+  const tileMetrics=await page.locator('.rv-course .rv-surfaces .rv-surface-tile').evaluateAll(nodes=>nodes.map(el=>{
+   const outer=el.getBoundingClientRect();
+   const label=el.querySelector('span:first-child');
+   if(!label)return {name:'missing',clipped:true};
+   const range=document.createRange();range.selectNodeContents(label);
+   const boxes=[...range.getClientRects()].filter(r=>r.width>0.1);
+   return {name:label.textContent.trim(),clipped:boxes.some(r=>r.left<outer.left-2||r.right>outer.right+2),
+    tileWidth:outer.width,textWidth:Math.max(...boxes.map(r=>r.width))};
+  }));
+  assert.equal(tileMetrics.length,8,'all eight surface choices remain accessible');
+  assert.ok(tileMetrics.every(x=>!x.clipped),'surface labels must stay inside full buttons: '+JSON.stringify(tileMetrics));
+
  }
  await page.evaluate(()=>{document.documentElement.style.fontSize='';});
 }
