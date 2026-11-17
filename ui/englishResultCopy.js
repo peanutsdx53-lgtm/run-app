@@ -3,6 +3,8 @@
  * timing uncertainty, and the difference between unanswered and score zero. */
 export const ENGLISH_RESULT_COPY=Object.freeze({
  "操作": "More",
+ "記録の出所を確認": "View Data Sources",
+ "疲労感（本人回答）": "Fatigue (Self-Reported)",
  "活動種別未設定": "Activity Type Not Selected",
  "前後差や原因は判定しません。": "Differences or causes are not determined.",
  "GPS記録の文献参考値は自動で比較しません。": "GPS research reference values are not automatically compared.",
