@@ -243,3 +243,11 @@ test('S09 side-by-side bilingual strings preserve reference provenance',()=>{
  assert.match(remainder,/vs. This Region’s Reference 100/);
  assert.match(remainder,/Outside the 60–140 color scale/);
 });
+
+test('S09 reference range and color-cap message occupy full width outside selected-region card',()=>{
+ const js=read('ui/resultExperience.js'), css=read('ui/resultInlineStyles.js');
+ assert.match(js,/<div class="rv4-reference-scale-section">/);
+ assert.match(css,/\.rv4-reference-scale-section/);
+ assert.match(js,/\+'<\/div><\/div>'\s*\+\(r\.value===null/,'reading and body grid close before range status');
+ assert.match(js,/data-reference-region=/,'real selected region scientific value remains visible');
+});

@@ -37,7 +37,7 @@ async function capture(page,meta){
   }
   const svg=one('.rv4-body-svg');
   const regions=svg?[...svg.querySelectorAll('[data-region]')].map(x=>{const b=x.getBBox();return {id:x.dataset.region,selected:x.classList.contains('selected'),x:b.x,y:b.y,w:b.width,h:b.height}}):[];
-  const parts=['.rv4-hero','.rv4-notice','.rv4-body-figure','.rv4-body-svg','.rv4-reading','.rv4-fatigue','.rv4-history','.rv4-method-disclosure'].map(s=>({selector:s,rect:rect(one(s))}));
+  const parts=['.rv4-hero','.rv4-notice','.rv4-body-figure','.rv4-body-svg','.rv4-reading','.rv4-reference-scale-section','.rv4-fatigue','.rv4-history','.rv4-method-disclosure'].map(s=>({selector:s,rect:rect(one(s))}));
   return {viewport:innerWidth,documentWidth:doc.scrollWidth,bodyWidth:document.body.scrollWidth,rootFont:getComputedStyle(doc).fontSize,scrollHeight:doc.scrollHeight,
     nav:nav&&getComputedStyle(nav).display!=='none'?rect(nav):null,
     navComputed:nav?{height:getComputedStyle(nav).height,grid:getComputedStyle(nav).gridTemplateColumns,
@@ -64,6 +64,12 @@ async function capture(page,meta){
  }
  report.push({meta,metrics:m});
  if(meta.tab==='body'&&meta.view==='front'&&[320,375,390,414].includes(meta.width)){
+  const scale=m.parts.find(x=>x.selector==='.rv4-reference-scale-section')?.rect;
+  const selected=m.parts.find(x=>x.selector==='.rv4-reading')?.rect;
+  if(scale&&selected){
+   assert.ok(scale.top>=selected.bottom-2,'reference color scale must come after the selected region and free narrow card space');
+   assert.ok(scale.width>=selected.width,'reference color scale must not be squeezed into selected region column');
+  }
   const fig=m.parts.find(x=>x.selector==='.rv4-body-figure')?.rect;
   const reading=m.parts.find(x=>x.selector==='.rv4-reading')?.rect;
   assert.ok(fig&&reading,'body diagram and selected region card are present');

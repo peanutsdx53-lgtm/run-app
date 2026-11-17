@@ -144,12 +144,13 @@ export function mountResult(host,inputDraft={},options={}){
     +'<div class="rv4-reading"><small>選択中の部位</small><h3>'+clean(r.name)+'</h3>'
     +'<div class="rv4-big-score" data-reference-region="'+clean(r.id)+'">'+(r.value===null?'—':format(r.value,1))+'</div>'
     +(r.value!==null?'<div class="rv4-value-diff">部位の文献基準100との差 <strong>'+delta+'</strong></div>':'')
-     +(r.value===null?'<div class="rv4-score-caption">この部位の参考値は算出できません</div>':
-      '<div class="rv4-scale" style="background-image:'+BODY_REFERENCE_GRADIENT+';background-color:#66C4B5" role="img" aria-label="部位ごとの文献参考値の色目盛り。左端60、中央は文献基準100、右端140。色は数値の相対的な違いを示します。">'+
+     +'</div></div>'
+    +(r.value===null?'<div class="rv4-score-caption">この部位の参考値は算出できません</div>':
+      '<div class="rv4-reference-scale-section"><div class="rv4-scale" style="background-image:'+BODY_REFERENCE_GRADIENT+';background-color:#66C4B5" role="img" aria-label="部位ごとの文献参考値の色目盛り。左端60、中央は文献基準100、右端140。色は数値の相対的な違いを示します。">'+
       '<span class="rv4-scale-ref"></span>'+(scale?'<span class="rv4-scale-current" style="left:'+scale.position.toFixed(2)+'%"></span>':'')+'</div>'+
       '<div class="rv4-scale-labels"><span>60</span><span>100</span><span>140</span></div>'+
-      (scale?.clipped?'<div class="rv4-scale-note">配色範囲（60〜140）外。数値はそのままです。</div>':''))
-     +'</div></div><div class="rv4-figure-actions"><span>タップで部位を確認</span><button type="button" data-label-toggle aria-pressed="'+showBodyNumbers+'">'+(showBodyNumbers?'数値を隠す':'図に数値を表示')+'</button></div><div class="rv4-region-selection"><button type="button" class="rv4-picker" data-picker-toggle aria-expanded="'+picker+'"><span>部位を選ぶ</span><span aria-hidden="true">⌄</span></button></div>'
+      (scale?.clipped?'<div class="rv4-scale-note">配色範囲（60〜140）外。数値はそのままです。</div>':'')+'</div>')
+     +'<div class="rv4-figure-actions"><span>タップで部位を確認</span><button type="button" data-label-toggle aria-pressed="'+showBodyNumbers+'">'+(showBodyNumbers?'数値を隠す':'図に数値を表示')+'</button></div><div class="rv4-region-selection"><button type="button" class="rv4-picker" data-picker-toggle aria-expanded="'+picker+'"><span>部位を選ぶ</span><span aria-hidden="true">⌄</span></button></div>'
     +(picker?'<div class="rv4-choices">'+v.paths.map(([id])=>{const n=data.find(x=>x.id===id);return '<button type="button" data-region="'+id+'" class="'+(id===chosen?'active':'')+'">'+clean(n?.name||id)+'</button>'}).join('')+'</div>':'')
     +(fromGps&&gps.detailSaved&&['RUNNING','JOGGING','WALK'].includes(gps.activity)?
        '<div class="rv4-gps-gate"><div><small>GPSコースと身体の変化</small><strong>フラッグ地点の参考値を振り返る</strong><span>コース上の地点・速度・人体図を連動表示します</span></div><a data-gps-dynamic-gate href="#/dynamic-result?record='+encodeURIComponent(gps.id)+'">動的結果を見る ›</a></div>':'')
