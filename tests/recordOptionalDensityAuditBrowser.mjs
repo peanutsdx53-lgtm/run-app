@@ -109,6 +109,25 @@ async function takePopulatedZoom(page,w,id){
   assert.equal(tileMetrics.length,8,'all eight surface choices remain accessible');
   assert.ok(tileMetrics.every(x=>!x.clipped),'surface labels must stay inside full buttons: '+JSON.stringify(tileMetrics));
 
+  const surfaceModes=await page.locator('.rv-course .rv-step-surface [data-rv-surface-mode]').evaluateAll(nodes=>nodes.map(el=>{
+   const outer=el.getBoundingClientRect(),node=[...el.childNodes].find(n=>n.nodeType===Node.TEXT_NODE),text=node?.textContent||'';
+   const words=[...text.matchAll(/\S+/g)].map(match=>{
+    const r=document.createRange();r.setStart(node,match.index);r.setEnd(node,match.index+match[0].length);
+    const boxes=[...r.getClientRects()].filter(x=>x.width>0.1);
+    return {word:match[0],parts:boxes.length,outside:boxes.some(x=>x.left<outer.left-2||x.right>outer.right+2)};
+   });
+   return {label:text.trim(),words};
+  }));
+  assert.equal(surfaceModes.length,3,'surface input keeps all three modes');
+  assert.ok(surfaceModes.every(mode=>mode.words.every(w=>w.parts===1&&!w.outside)),
+   'English surface mode must keep every word whole within its button: '+JSON.stringify(surfaceModes));
+  const surfaceHeader=await page.locator('.rv-course .rv-surface-head').evaluate(el=>{
+   const title=el.querySelector('h3').getBoundingClientRect(),total=el.querySelector('strong').getBoundingClientRect();
+   return {titleBottom:title.bottom,totalTop:total.top,overlap:total.top<title.bottom-2};
+  });
+  assert.equal(surfaceHeader.overlap,false,'surface ratio total must follow its heading without overlap at 200%');
+
+
  }
  await page.evaluate(()=>{document.documentElement.style.fontSize='';});
 }
