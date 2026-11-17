@@ -26,6 +26,7 @@ try{
  for(const [width,language,zoom] of cases){
   const ctx=await browser.newContext({viewport:{width,height:width>1000?900:844},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block'});
   const page=await ctx.newPage(),errors=[];page.setDefaultTimeout(12000);page.on('pageerror',e=>errors.push(e.message));
+  let stage='boot';
   try{
    await page.goto(origin,{waitUntil:'networkidle'});
    await page.evaluate(async lang=>{
@@ -54,6 +55,7 @@ try{
     localStorage.setItem('runload-v2-exploration-notes-v1',JSON.stringify(notes));
     return [a,b];
    });
+   stage='open result';
    await page.goto(origin+'#/result?record='+encodeURIComponent(savedId),{waitUntil:'networkidle'});
    const summary=page.locator('[data-result-reflection-count]'),review=page.locator('[data-result-review-notes]');
    await summary.waitFor({state:'visible'});
@@ -65,14 +67,17 @@ try{
    const rect=await review.boundingBox();assert.ok(rect&&rect.height>=43&&rect.x>=-1&&rect.x+rect.width<=width+2,'revisit link reachable');
    assert.ok(!(await page.locator('#runload-result-v4').innerText()).includes('OTHER_RUN_B_PRIVATE'),'no private note body in Result');
    await page.screenshot({path:resolve(out,engine+'-'+language+'-'+width+'-'+zoom+'-result.png'),fullPage:true,animations:'disabled'});
+   stage='open review from result';
    await review.click();
    await page.waitForURL(u=>u.hash.includes('memories=1'));
+   stage='await explicit run-scoped memory dialog';
    const modal=page.locator('.ex-dialog');await modal.waitFor({state:'visible'});
    assert.match(await modal.innerText(),/NOTE_FOR_EXACT_A/);
    assert.match(await modal.innerText(),/LEGACY_NO_TOPIC_FOR_A/);
    assert.ok(!(await modal.innerText()).includes('OTHER_RUN_B_PRIVATE'),'B must not leak into run A dialog');
    assert.ok(!(await modal.innerText()).includes('UNLINKED_OLD_NOTE'),'unlinked must not be reattached to A');
    assert.ok(!(await modal.innerText()).includes('ORPHAN_NO_PARENT'),'orphan must not be rebound to A');
+   stage='edit same-run memo';
    await page.locator('[data-ex-edit="g3-note-a"]').click();
    await page.locator('#ex-note-edit').fill('A_REVISED_BY_THE_USER');
    await page.locator('[data-ex-action="save-edited-note"]').click();
@@ -85,24 +90,30 @@ try{
    await summary.waitFor({state:'visible'});
    assert.equal(new URLSearchParams(new URL(page.url()).hash.split('?')[1]).get('record'),savedId,'exact same result after edit');
    assert.match(await summary.innerText(),/2/);
+   stage='open history';
    await page.goto(origin+'#/history',{waitUntil:'networkidle'});
    const chosen=page.locator('[data-select-id="'+savedId+'"]');await chosen.waitFor({state:'visible'});await chosen.click();
    const historyNotes=page.locator('[data-history-reflection-count]');await historyNotes.waitFor({state:'visible'});
    assert.match(await historyNotes.innerText(),/2/);
    const historyText=await page.locator('#runload-history-v2').innerText();
    assert.ok(!historyText.includes('OTHER_RUN_B_PRIVATE')&&!historyText.includes('A_REVISED_BY_THE_USER'),'history never auto-discloses memo body');
+   stage='open review from history';
    await page.locator('[data-open-reflections]').click();
    await page.locator('.ex-dialog').waitFor({state:'visible'});
    assert.match(await page.locator('.ex-dialog').innerText(),/A_REVISED_BY_THE_USER/);
    assert.ok(!(await page.locator('.ex-dialog').innerText()).includes('OTHER_RUN_B_PRIVATE'));
    // User can explicitly view all historical notes from general inquiry; missing parents retain identity.
+   stage='open global all-notes view';
    await page.goto(origin+'#/exploration-tree?category=01&topic='+encodeURIComponent('気付きと次の確認')+'&memories=1',{waitUntil:'networkidle'});
    await page.locator('.ex-dialog').waitFor({state:'visible'});
    const all=await page.locator('.ex-dialog').innerText();
    assert.match(all,/OTHER_RUN_B_PRIVATE/);assert.match(all,/UNLINKED_OLD_NOTE/);assert.match(all,/ORPHAN_NO_PARENT/);
    assert.deepEqual(errors,[],'no browser runtime exception');
    successes.push({width,language,zoom,selectedRunOnly:true,legacyVisible:true,revisionKept:true,historyLinked:true,orphanNotRebound:true});
-  }catch(e){failures.push({width,language,zoom,error:String(e)});}finally{await ctx.close();}
+  }catch(e){
+   const context=await page.evaluate(()=>({hash:location.hash,explore:!!document.querySelector('.ex-page'),dialog:!!document.querySelector('.ex-dialog'),invalid:document.querySelector('[data-ex-inquiry-error]')?.innerText||'',text:(document.querySelector('#app')?.innerText||'').slice(0,600)})).catch(()=>null);
+   failures.push({width,language,zoom,stage,context,error:String(e)});
+  }finally{await ctx.close();}
  }
 }finally{await writeFile(resolve(out,'summary.json'),JSON.stringify({engine,successes,failures},null,2));await browser.close();await new Promise(done=>server.close(done))}
 assert.deepEqual(failures,[],'G3 saved reflection revisit browser failures');
