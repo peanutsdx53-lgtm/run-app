@@ -125,7 +125,7 @@ test('English DELETE confirmation never weakens the destructive-action double ch
  const {renderDataDelete,makeDataUi}=await import('../ui/dataManagementUi.js');
  const empty=makeDataUi();
  const en=renderDataDelete(empty,'en'),ja=renderDataDelete(empty,'ja');
- assert.match(en,/Type DELETE to confirm/);
+ assert.match(en,/<label class="dm-confirm">Enter DELETE/);
  assert.match(en,/data-dm-delete-word maxlength="6"/);
  assert.match(en,/data-dm-delete-confirm[^>]*disabled/);
  assert.match(ja,/data-dm-delete-word maxlength="2"/);

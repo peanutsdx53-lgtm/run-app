@@ -17,5 +17,5 @@ test('PWA status bar matches dark RunLoad design without shifting regular Safari
  assert.match(html,/name="apple-mobile-web-app-status-bar-style" content="black-translucent"/);
  assert.match(css,/html, body \{ background-color:#061725; \}/);
  assert.match(css,/@media \(display-mode:standalone\)/);
- assert.match(html,/styles\.css\?v=20261117-s09-result-v2/);
+ assert.match(html,/styles\.css\?v=20261117-s16-settings-v1/);
 });

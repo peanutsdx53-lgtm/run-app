@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi} from './ui/englishUi.js?v=20261117-s09-result-v2';
+import {startEnglishUi} from './ui/englishUi.js?v=20261117-s16-settings-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -75,10 +75,10 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/gpsReplayIndexedDbStore.js?v=20261116-gps-stage4-v1"),
     import("./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261117-s09-result-v2"),
+    import("./ui/resultExperience.js?v=20261117-s16-settings-v1"),
     import("./ui/runQuestionContinuation.js"),
     import("./ui/historyExperience.js?v=20261116-gps-stage5-v1"),
-    import("./ui/settingsExperience.js?v=20261111-settings-dialog-v1"),
+    import("./ui/settingsExperience.js?v=20261117-s16-settings-v1"),
     import("./ui/portableDataV2.js?v=20261108-professor-m3-v1"),
     import("./ui/mentalExperience.js?v=20261108-professor-m4-v1"),
     import("./ui/mentalSaveFlow.js?v=20261108-professor-m4-v1"),
@@ -89,7 +89,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/recordRef.js"),
     import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1"),
     import("./ui/annotationEditor.js?v=20261108-professor-m5-v1"),
-    import("./ui/dataManagementUi.js?v=20261111-settings-dialog-v1"),
+    import("./ui/dataManagementUi.js?v=20261117-s16-settings-v1"),
     import("./ui/firstUseExperience.js?v=20261115-onboarding-bilingual-v1"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
     import("./ui/consultationExperience.js?v=20261109-p7-wording-v1"),

@@ -105,13 +105,14 @@ test("settings copy gives explicit GPS disclosure, verification, and deliberate 
  assert.match(backup,/暗号化されません/);
  assert.match(backup,/第三者と共有せず、安全な場所に保管してください/,'prominent warning should be visible before expanding details');
  assert.match(backup,/外部へ自動送信されません/);
- assert.match(backup,/<details class="dm-details"><summary>保存内容と注意点<\/summary>/);
+ assert.match(backup,/<details class="dm-details"><summary>保存対象・対象外<\/summary>/);
  assert.match(remove,/<details class="dm-details"><summary>削除する情報・削除されない情報<\/summary>/);
  assert.match(backup,/data-dm-file/);
- assert.match(backup,/GPSを含む復元は複数の保存先に順番に追加/);
+ assert.match(backup,/GPSを含む場合は複数の保存先に順番に追加/);
  assert.match(remove,/元に戻せません/);
- assert.match(remove,/data-dm-delete-confirm aria-describedby="dm-delete-rule" disabled/);
- assert.match(remove,/次のチェックと「削除」の入力が両方そろうまで/);
+ assert.match(remove,/data-dm-delete-confirm disabled/);
+ assert.match(remove,/「削除」を入力/);
+ assert.doesNotMatch(remove,/次のチェックと「削除」の入力が両方そろうまで|確認のため「削除」と入力してください/);
  assert.doesNotMatch(backup+remove,/RunLoad|ランロード/);
 });
 
@@ -307,4 +308,25 @@ test("portable restore preview names all ten data keys in the correct order (009
  const html=renderDataBackup({includeGps:false,busy:false,preview:{ok:true,hasExisting:false,parsed:{counts:Object.fromEntries(DATA_KEYS.map(key=>[key,1])),gpsCount:0}}});
  for(const label of expected)assert.ok(html.includes(label),label+" should appear in the restore preview");
  assert.doesNotMatch(html,/<span>undefined<\/span>/);
+});
+
+test("S16 compact backup/deletion keeps essential risk visible and eliminates duplicate guidance",()=>{
+ const plain=renderDataBackup(makeDataUi());
+ const existing=renderDataBackup({...makeDataUi(),preview:{ok:true,hasExisting:true,parsed:{counts:{},gpsCount:0}}});
+ const del=renderDataDelete(makeDataUi());
+ const en=renderDataDelete({...makeDataUi(),deleteAgreed:true,deleteWord:'DELETE'},'en');
+ assert.equal((plain.match(/暗号化されません/g)||[]).length,1,'unencrypted warning visible exactly once');
+ assert.equal((plain.match(/復元前に現在の記録をバックアップしてください/g)||[]).length,1,'backup-first warning not duplicated');
+ assert.equal((existing.match(/復元前に現在の記録をバックアップしてください/g)||[]).length,1,'restore preview must not repeat warning');
+ assert.match(existing,/data-dm-safety/,'restore safety checkbox stays present');
+ assert.match(existing,/data-dm-restore disabled/,'safety checkbox gates restore');
+ assert.match(plain,/保存対象・対象外/);
+ assert.match(plain,/同意記録、利用開始時の案内の完了状態及びブラウザのキャッシュはバックアップに含まれません/);
+ assert.match(plain,/個人情報を含み、暗号化されません/);
+ assert.match(del,/削除後は元に戻せません/);
+ assert.match(del,/data-dm-delete-agree/);
+ assert.match(del,/data-dm-delete-word/);
+ assert.match(del,/data-dm-delete-confirm disabled/);
+ assert.match(en,/data-dm-delete-confirm >/,'English confirm requires both checked and exact DELETE');
+ assert.doesNotMatch(del,/dm-delete-rule|次のチェックと「削除」の入力が両方そろうまで|確認のため「削除」と入力してください/);
 });
