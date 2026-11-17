@@ -97,6 +97,21 @@ try{
      });
      metrics.saveViewport=focus;
     }
+    // A page-level width check misses text spilling into the adjacent action control.
+    const actionTextBounds=await page.evaluate(()=>[...document.querySelectorAll('.gps-review .gps-live-actions>*')].map(element=>{
+     const button=element.getBoundingClientRect(),walker=document.createTreeWalker(element,NodeFilter.SHOW_TEXT),textRects=[];
+     while(walker.nextNode()){
+      if(!walker.currentNode.textContent.trim())continue;
+      const range=document.createRange();range.selectNodeContents(walker.currentNode);
+      for(const r of range.getClientRects())textRects.push({left:r.left,right:r.right,top:r.top,bottom:r.bottom});
+     }
+     return {button:{left:button.left,right:button.right,top:button.top,bottom:button.bottom},textRects};
+    }));
+    for(const action of actionTextBounds){
+     assert.ok(action.textRects.length>0,'GPS action must have visible text');
+     for(const t of action.textRects)assert.ok(t.left>=action.button.left-2&&t.right<=action.button.right+2&&t.top>=action.button.top-2&&t.bottom<=action.button.bottom+2,
+      'GPS action label spills outside own button '+JSON.stringify({engine,language,width,optIn,scale,action,text:t}));
+    }
     rows.push({engine,language,width,optIn,scale,...metrics});
    }
   }
