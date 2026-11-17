@@ -65,7 +65,9 @@ try{
    },savedId);
    await page.locator('.ex-record-return a[href^="#/result?record="]').click();
    await page.waitForURL(u=>u.hash.startsWith('#/result?record='));
-   assert.ok((await btn.count())===1,'return to the same saved result');
+   assert.equal(new URLSearchParams(new URL(page.url()).hash.split('?')[1]).get('record'),savedId,'return retains the exact run id');
+   await btn.waitFor({state:'visible'});
+   assert.equal(await btn.count(),1,'return to the same saved result after asynchronous render');
    assert.deepEqual(errors,[],'no browser runtime exceptions');
    successes.push({width,language,zoom,recordIdType:'MANUAL',linkIsExplicit:true,translated:true,saveAndReturn:true});
   }catch(e){failures.push({width,language,zoom,error:String(e)});}finally{await ctx.close();}
