@@ -132,22 +132,11 @@ html.rl-text-large{font-size:112.5%}html.rl-reduce-motion *,html.rl-reduce-motio
 @media(max-width:355px){.s2-page .s2-heading .s2-locale{display:none}.s2-page .s2-heading{flex-wrap:nowrap}}
 
 
-/* S16 mobile-first cleanup (2026-11-17): keep ? next to 設定, not between
-   the title and a noninteractive language/theme status pill. */
-.s2-page .s2-heading{justify-content:flex-start;align-items:center;flex-wrap:nowrap;min-width:0}
-.s2-page .s2-heading-main{display:flex;align-items:center;gap:clamp(9px,2vw,14px);min-width:0;max-width:100%}
-.s2-page .s2-heading-main h1{flex:0 1 auto;min-width:0;margin:0}
-.s2-page .s2-heading .s2-heading-main .rl-screen-help{margin-left:0;flex:0 0 auto}
-.s2-page .s2-heading .s2-heading-main .rl-screen-help>summary{min-height:44px;min-width:44px}
-@media(max-width:800px){.s2-page .s2-heading{flex-wrap:nowrap;gap:0}}
-
-/* Help disclosure must anchor to the heading group, not to the small ? button:
-   otherwise its 320px popup extends off the left side after moving help beside title. */
-.s2-page .s2-heading{position:relative;z-index:51}
-.s2-page .s2-heading .s2-heading-main{position:relative;z-index:1}
-.s2-page .s2-heading .s2-heading-main .rl-screen-help{position:static}
-.s2-page .s2-heading .s2-heading-main .rl-screen-help>p{
- left:0;right:auto;top:calc(100% + 8px);
- width:min(320px,calc(100vw - 48px));
- max-width:calc(100vw - 32px);
-}
+/* S17 cross-screen help rule: Settings title at left; help at the far right.
+   The passive language/theme pill remains removed. */
+.s2-page .s2-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:nowrap;gap:12px;position:relative;z-index:51;min-width:0}
+.s2-page .s2-heading-main{display:flex;align-items:center;min-width:0;flex:1 1 auto}
+.s2-page .s2-heading-main h1{min-width:0;flex:0 1 auto;margin:0}
+.s2-page .s2-heading>.rl-screen-help{margin-left:auto;flex:0 0 44px;position:relative;z-index:52}
+.s2-page .s2-heading>.rl-screen-help>p{right:0;left:auto;width:min(320px,calc(100vw - 32px));max-width:calc(100vw - 32px)}
+@media(max-width:800px){.s2-page .s2-heading{flex-wrap:nowrap;gap:9px}}
