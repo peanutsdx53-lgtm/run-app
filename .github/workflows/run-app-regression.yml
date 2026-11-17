@@ -171,6 +171,16 @@ jobs:
           path: audit-output/record-optional-density/
           if-no-files-found: warn
           retention-days: 7
+      - name: Audit GPS post-measurement record review, consent, and 200-percent text
+        run: node tests/gpsPostreviewZoomBrowser.mjs
+      - name: Preserve GPS postreview responsive screenshot and scroll evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gps-postreview-zoom-${{ matrix.engine }}
+          path: audit-output/gps-postreview-zoom/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify portable backup export, legacy restore and annotation provenance
         run: node tests/professorPortableV2Browser.mjs
       - name: Verify complete two-run cycle twice
