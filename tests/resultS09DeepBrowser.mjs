@@ -11,8 +11,9 @@ const mime={'.html':'text/html;charset=utf-8','.js':'text/javascript;charset=utf
 const server=createServer(async(req,res)=>{
  try{const pathname=decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname);
  const file=resolve(root,'.'+pathname);if(file!==root&&!file.startsWith(root+sep))throw Error('outside root');
- res.setHeader('content-type',mime[extname(file)]||'application/octet-stream');
- res.end(await readFile(file===root?resolve(root,'index.html'):file));}
+ const actual=file===root?resolve(root,'index.html'):file;
+ res.setHeader('content-type',mime[extname(actual)]||'application/octet-stream');
+ res.end(await readFile(actual));}
  catch{res.statusCode=404;res.end('Not found')}
 });
 await mkdir(out,{recursive:true});
