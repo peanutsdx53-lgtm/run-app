@@ -1,5 +1,5 @@
-import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js';
-import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261117-reflection-g2-v1';
+import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261117-reflection-g3-v1';
+import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261117-reflection-g3-v1';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261111-exploration-inquiry-v1';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261117-s16-settings-v1';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js';
@@ -25,6 +25,10 @@ import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurf
  * user text, record IDs, scientific numbers, consent or legal document bodies.
  * The Japanese app remains the canonical source of UI behavior and evidence. */
 export const ENGLISH_UI_TEXT=Object.freeze({
+ "この走行の気づきだけを表示しています。": "Showing Notes Linked to This Activity Only.",
+ "すべてのメモを表示しています。記録に結びついた文章は、その記録と区別して扱います。": "Showing All Notes. Each Activity-Linked Note Retains Its Original Activity.",
+ "元の走行が見つかりません。以前に結びつけたメモは残っています。": "The Original Activity Is Missing. Its Notes Remain Available.",
+ "この範囲にはまだメモがありません。記録を変更したり、ほかの走行の文章を移したりしません。": "No Notes in This Scope. We Do Not Reassign Notes from Other Activities.",
  "走行記録と振り返り": "Running Records & Reflection",
  "ホーム": "Home",
  "記録": "Record",

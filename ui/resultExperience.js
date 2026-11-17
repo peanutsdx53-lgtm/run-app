@@ -7,7 +7,7 @@ import {compareBodyReferenceRows} from './regionReferenceComparison.js';
 import {calculateActivityReference,ACTIVITY_LABELS} from '../core/activity/activityReference.js';
 import {describeRegionEvidence} from './referenceEvidenceInfo.js';
 import {explorationHref,FATIGUE_TOPIC} from './explorationLinkPolicy.js';
-import {isRunId} from './noteRunLink.js';
+import {isRunId,linkedReflectionNotes} from './noteRunLink.js';
 import {resultExportDisclosure,sourceProvenance} from './resultSharingPolicy.js';
 import {englishResultImageCopy} from './englishResultExport.js';
 const clean=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -56,6 +56,9 @@ const RESULT_REFLECTION_ENTRY_STYLES=String.raw`
 .rv4-reflection-next>a{flex:0 1 auto;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border:1px solid #73d4d4;border-radius:10px;background:#176676;color:#f3ffff;text-decoration:none;font-size:13px;font-weight:700;line-height:1.5}
 .rv4-reflection-next>a:focus-visible{outline:3px solid #a1f6e8;outline-offset:3px}
 @media(max-width:560px){.rv4-reflection-next{padding:14px}.rv4-reflection-next>a{width:100%}}
+.rv4-reflection-memory{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;width:100%;padding-top:9px;border-top:1px solid #316574;font-size:12px;line-height:1.6;color:#d6ebee}
+.rv4-reflection-memory>a{min-height:44px;display:inline-flex;align-items:center;padding:8px 12px;border-radius:9px;border:1px solid #6fabb5;color:#e8fcff;text-decoration:none}
+.rv4-reflection-memory>a:focus-visible{outline:3px solid #a1f6e8;outline-offset:3px}
 @media print{.rv4-reflection-next{display:none!important}}
 `;
 const RESULT_HELP_RIGHT_STYLES=String.raw`
@@ -274,10 +277,12 @@ export function mountResult(host,inputDraft={},options={}){
   return '<section class="rv4-card rv4-history" data-pane="radar"><div class="rv4-card-heading"><span class="rv4-icon">'+icon('radar')+'</span><div><h2>過去と比較</h2><p>保存した走行の違いを確かめる</p></div></div>'+selector+provenance+regionCmpView+compareTable+(fromGps?'<a class="rv4-history-back" href="#/history">保存履歴でほかの記録を確認する</a><details class="rv4-gps-compare-method"><summary>GPS比較の条件と限界</summary><p>保存方法・活動条件・計算基準を確認できない参考値は同列に並べません。</p></details>':'')+questionPanel+
    '</section>';
  };
+  const reflectionNotes=options.reflectionData?linkedReflectionNotes(options.reflectionData,options.recordId):null;
+  const reflectionMemory=()=>!reflectionNotes?'':reflectionNotes.status==='unavailable'?'<div class="rv4-reflection-memory" role="status">保存した気づきを確認できません。メモの原本は変更していません。</div>':reflectionNotes.status==='ready'?'<div class="rv4-reflection-memory" data-result-reflection-count><span>保存した気づき</span><strong>('+reflectionNotes.notes.length+')</strong>'+(reflectionNotes.notes.length?'<a data-result-review-notes href="'+clean(resultReflectionHref+'&memories=1')+'">この走行のメモを確認・修正</a>':'<span>この走行のメモはまだありません。</span>')+'</div>':'';
   const reflectionInvite=()=>!resultReflectionHref?'':
    '<section class="rv4-reflection-next" data-result-reflection-entry aria-label="今回の走行を振り返る">'+
    '<div><h2>今回の走行を振り返る</h2><p>結果を見て気になったことや、次に確かめたいことを自分の言葉で残せます。書かなくても構いません。</p></div>'+
-   '<a href="'+clean(resultReflectionHref)+'" data-result-to-reflection>気づき・次の問いを書く（任意）</a></section>';
+   '<a href="'+clean(resultReflectionHref)+'" data-result-to-reflection>気づき・次の問いを書く（任意）</a>'+reflectionMemory()+'</section>';
   const extras=()=>!hasInput?'':'<details class="rv4-details"><summary><span class="rv4-icon">'+icon('memo')+'</span><span><strong>その日の記録</strong><small>使用品・コース・メモ</small></span><b>⌄</b></summary><div class="rv4-extra-grid"><div><small>シューズ</small><strong>'+clean(draft.shoeName||'—')+'</strong></div><div><small>歩数</small><strong>'+(positive(draft.steps)!==null?format(positive(draft.steps))+' 歩':'—')+'</strong></div><div><small>上り割合</small><strong>'+(number(draft.upPercent)!==null?format(number(draft.upPercent))+'%':'—')+'</strong></div></div><div class="rv4-note"><small>メモ</small><p>'+clean(draft.memo||'記録がありません')+'</p></div></details>';
  const missingActivityPanel=()=>!activityMissing?'':`<section class="rv4-activity-missing" role="group" aria-label="保存済み記録の活動種別を設定"><div><strong>12部位の参考値を表示するために、活動種別を選択してください</strong><p>この記録は活動種別が未設定です。距離と時間から活動の種類を推測しないため、数値は未取得となっています。</p></div><div class="rv4-activity-options">${[['RUNNING','ランニング'],['JOGGING','ジョギング'],['WALK','ウォーキング']].map(([id,label])=>`<button type="button" data-result-gait="${id}">${label}</button>`).join('')}</div><small>選択した活動種別だけをこの記録に保存します。走歩混在や文献の適用速度範囲外では、数値を算出できない場合があります。</small></section>`;
  const reflectionPath=()=>'<details class="rv4-reading-route rv4-header-help"><summary aria-label="結果の見方を開く">？</summary><p>記録を理解する順番：走行の事実、疲労感、文献の参考情報、過去比較。詳しい条件は各項目で確認できます。</p></details>';
