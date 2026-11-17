@@ -39,7 +39,11 @@ async function capture(page,meta){
   const regions=svg?[...svg.querySelectorAll('[data-region]')].map(x=>{const b=x.getBBox();return {id:x.dataset.region,selected:x.classList.contains('selected'),x:b.x,y:b.y,w:b.width,h:b.height}}):[];
   const parts=['.rv4-hero','.rv4-notice','.rv4-body-figure','.rv4-body-svg','.rv4-reading','.rv4-fatigue','.rv4-history','.rv4-method-disclosure'].map(s=>({selector:s,rect:rect(one(s))}));
   return {viewport:innerWidth,documentWidth:doc.scrollWidth,bodyWidth:document.body.scrollWidth,rootFont:getComputedStyle(doc).fontSize,scrollHeight:doc.scrollHeight,
-    nav:nav&&getComputedStyle(nav).display!=='none'?rect(nav):null,parts,controls,leaks,regions};
+    nav:nav&&getComputedStyle(nav).display!=='none'?rect(nav):null,
+    navComputed:nav?{height:getComputedStyle(nav).height,grid:getComputedStyle(nav).gridTemplateColumns,
+      resultSelectorMatches:!!document.querySelector('.app-shell:has(#runload-result-v4) .mobile-nav'),
+      firstLinkStyle:(()=>{const item=nav.querySelector('.mobile-link');return item?{fontSize:getComputedStyle(item).fontSize,display:getComputedStyle(item).display,whiteSpace:getComputedStyle(item).whiteSpace,rect:rect(item),html:item.outerHTML.slice(0,350)}:null;})()}:null,
+    parts,controls,leaks,regions};
  });
  const filename=[engine,meta.language,meta.width,meta.zoom,meta.tab,meta.view].join('-');
  await page.screenshot({path:resolve(out,filename+'-full.png'),animations:'disabled',fullPage:true,timeout:25000});
