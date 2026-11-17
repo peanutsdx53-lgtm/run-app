@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {reviewView} from '../ui/recordReviewExperience.js';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261117-record-stage4-v1';
+const cacheVersion='20261117-record-stage4-v2';
 
 test('P13 history help is right-aligned and GPS content is a single compact disclosure',()=>{
  const app=read('app.js'),hist=HISTORY_STYLES;
