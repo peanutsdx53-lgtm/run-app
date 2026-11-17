@@ -6,6 +6,7 @@ export const ENGLISH_RESULT_COPY=Object.freeze({
  "記録の出所を確認": "View Data Sources",
  "疲労感（本人回答）": "Fatigue (Self-Reported)",
  "ROF-Jの0〜10の本人回答": "ROF-J Self-Reported Ratings on a 0–10 Scale",
+ "出所：ROF-J／本人回答": "Source: ROF-J Self-Report",
  "ROF-J・本人回答｜時間的変化・原因は未判定": "ROF-J Self-Report · Changes and Causes Not Verified",
  "活動種別未設定": "Activity Type Not Selected",
  "前後差や原因は判定しません。": "Differences or causes are not determined.",

@@ -232,3 +232,14 @@ test('S09 anatomy and ROF-J are co-readable without conflating zero with unanswe
  assert.doesNotMatch(js,/rv4-tracks/,'obsolete ambiguous overlapping bars removed from output');
  assert.doesNotMatch(js,/rv4-fatigue-numbers/,'the separate scale replaces duplicate numeric chips');
 });
+
+test('S09 side-by-side bilingual strings preserve reference provenance',()=>{
+ const js=read('ui/resultExperience.js');
+ const english=read('ui/englishResultCopy.js');
+ const remainder=read('ui/englishSurfaceRemainders.js');
+ assert.match(js,/部位の文献基準100との差/);
+ assert.match(js,/配色範囲（60〜140）外。数値はそのままです。/);
+ assert.match(english,/出所：ROF-J／本人回答/);
+ assert.match(remainder,/vs. This Region’s Reference 100/);
+ assert.match(remainder,/Outside the 60–140 color scale/);
+});
