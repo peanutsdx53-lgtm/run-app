@@ -105,7 +105,7 @@ test("settings copy gives explicit GPS disclosure, verification, and deliberate 
  assert.match(backup,/暗号化されません/);
  assert.match(backup,/第三者と共有せず、安全な場所に保管してください/,'prominent warning should be visible before expanding details');
  assert.match(backup,/外部へ自動送信されません/);
- assert.match(backup,/<details class="dm-details"><summary>保存内容と注意点<\/summary>/);
+ assert.match(backup,/<details class="dm-details"><summary>保存対象・対象外<\/summary>/);
  assert.match(remove,/<details class="dm-details"><summary>削除する情報・削除されない情報<\/summary>/);
  assert.match(backup,/data-dm-file/);
  assert.match(backup,/GPSを含む場合は複数の保存先に順番に追加/);
@@ -320,7 +320,7 @@ test("S16 compact backup/deletion keeps essential risk visible and eliminates du
  assert.equal((existing.match(/復元前に現在の記録をバックアップしてください/g)||[]).length,1,'restore preview must not repeat warning');
  assert.match(existing,/data-dm-safety/,'restore safety checkbox stays present');
  assert.match(existing,/data-dm-restore disabled/,'safety checkbox gates restore');
- assert.match(plain,/保存内容と注意点/);
+ assert.match(plain,/保存対象・対象外/);
  assert.match(plain,/同意記録、利用開始時の案内の完了状態及びブラウザのキャッシュはバックアップに含まれません/);
  assert.match(plain,/個人情報を含み、暗号化されません/);
  assert.match(del,/削除後は元に戻せません/);

@@ -10,6 +10,7 @@ export const ENGLISH_SETTINGS_COPY=Object.freeze({
  "GPSを含む場合は複数の保存先に順番に追加します。失敗時は既存の記録と追加済みの記録を確認してください。": "GPS data is added to multiple stores in sequence. If a restore fails, check existing records and records already added.",
  "この端末の記録と設定を削除します。": "Delete records and preferences stored on this device.",
  "「削除」を入力": "Enter DELETE",
+ "保存対象・対象外": "Included and Excluded Data",
  "文字サイズ": "Text Size",
  "端末の設定を尊重": "Follow Device Preferences",
  "日本語・English (preview)": "Japanese · English (preview)",

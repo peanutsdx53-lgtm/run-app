@@ -34,7 +34,7 @@ export function renderDataBackup(ui){
   +'<label class="dm-choice"><input type="checkbox" data-dm-include-gps '+(ui.includeGps?'checked':'')+'><span>GPS記録・走行経路も含める</span></label>'
   +'<p class="dm-gps-notice">GPSを含めると自宅周辺の経路などの位置情報も保存されます。</p>'
   +'<button class="dm-btn dm-primary" type="button" data-dm-export '+(ui.busy?'disabled':'')+'>バックアップファイルを保存</button>'
-  +'<details class="dm-details"><summary>保存内容と注意点</summary><div class="dm-details-body">'
+  +'<details class="dm-details"><summary>保存対象・対象外</summary><div class="dm-details-body">'
   +'<p>保存対象：運動記録、体調、保存コース、メモ、プロフィール、表示設定、任意回答・後日追記。</p>'
   +'<p>GPS由来の走行に結び付いた補助回答は、GPSを含めると選んだ場合だけ含まれます。学習教材の「学習済み」チェックは含まれません。</p>'
   +'<p>'+esc(BACKUP_NOTICE)+'</p>'
