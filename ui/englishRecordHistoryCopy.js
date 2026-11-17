@@ -1,6 +1,8 @@
 /* Reviewed English fixed UI copy for manual recording, review, and history.
  * Exact-match display translation only; stored records remain Japanese/user-authored. */
 export const ENGLISH_RECORD_HISTORY_COPY=Object.freeze({
+ "この走行のメモを確認・修正": "Review or Edit Notes for This Activity",
+ "保存した気づき：確認不可": "Saved Notes: Unavailable",
  "日付・距離・時間・活動種目を入力します。追加情報は任意です。入力後に内容を確認して保存します。": "Enter a date, distance, duration, and activity type. Other details are optional. Review the information before saving.",
  "手入力で記録": "Enter a Record Manually",
  "手入力の使い方": "How to Enter a Record",

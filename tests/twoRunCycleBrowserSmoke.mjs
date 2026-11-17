@@ -152,15 +152,17 @@ try{
  assert.equal(await page.locator('.rv4-comparison-table').count(),0,'invalid compare ID never substitutes an arbitrary record');
  await page.goto(host+'#/exploration-tree?record='+encodeURIComponent(secondId)+'&category=01&topic='+encodeURIComponent('距離・時間・ペース'),{waitUntil:'networkidle'});
  await page.locator('[data-ex-action="memories"]').click();
- assert.match(await page.locator('[data-ex-overlay]').innerText(),/次回は距離と平均ペース/,'prior question can be revisited after second run');
+ const otherRunNotes=await page.locator('[data-ex-overlay]').innerText();
+ assert.doesNotMatch(otherRunNotes,/次回は距離と平均ペース/,
+  'second run must not expose the first run\'s private question in its scoped list');
+ assert.match(otherRunNotes,/この走行の気づきだけ/,
+  'the modal explicitly identifies the selected-run scope');
  const noteData=await page.evaluate(()=>JSON.parse(localStorage.getItem('runload-v2-exploration-notes-v1')));
  assert.equal(noteData.length,1);
  assert.equal(noteData[0].text,note);
  // The note is linked to the specific saved run selected at the time of writing.
  assert.equal(noteData[0].recordId,firstId,'explicit selected run ID must persist');
  assert.notEqual(noteData[0].recordId,secondId,'a later run must not inherit a prior note');
- assert.ok(await page.locator('.ex-saved a[href="#/result?record='+firstId+'"]').count(),
-  'the note can return to its original, still-saved run');
  await page.locator('[data-ex-action="close"]').click();
  // The record-aware exploration view may render asynchronously after navigation.
  // Compare only after its second-run context is visible; never accept stale notes.
@@ -171,6 +173,12 @@ try{
  await page.locator('.ex-note-preview').waitFor();
  assert.match(await page.locator('.ex-note-preview').innerText(),/次回は距離と平均ペース/,
   'the original run can still revisit its own note');
+ await page.locator('[data-ex-action="memories"]').click();
+ assert.match(await page.locator('[data-ex-overlay]').innerText(),/次回は距離と平均ペース/,
+  'prior question can be revisited from its original saved run after a second run');
+ assert.ok(await page.locator('.ex-saved a[href="#/result?record='+firstId+'"]').count(),
+  'the original-run note links back only to its verified original result');
+ await page.locator('[data-ex-action="close"]').click();
  // Save an unlinked note and verify it does not become the second run's note.
  await page.goto(host+'#/exploration-tree?category=01&topic='+encodeURIComponent('距離・時間・ペース'),{waitUntil:'networkidle'});
  await page.locator('[data-ex-action="note"]').first().click();
@@ -378,7 +386,20 @@ try{
  assert.match(await page.locator('.ex-note-preview').innerText(),/今回の走行ではペースの違い/);
  await page.locator('[data-ex-action="memories"]').click();
  assert.match(await page.locator('[data-ex-overlay]').innerText(),/元の問いから本人が明示的に続けたメモ/);
- assert.ok((await page.locator('[data-ex-overlay]').innerText()).includes(sourceQuestion));
+ const targetRunMemories=await page.locator('[data-ex-overlay]').innerText();
+ assert.match(targetRunMemories,/今回の走行ではペースの違いを感じた/,'selected B shows its own written continuation');
+ assert.ok(!targetRunMemories.includes(sourceQuestion),'B scoped notes must not disclose the original A question');
+ assert.equal((await page.evaluate(()=>JSON.parse(localStorage.getItem('runload-v2-exploration-notes-v1')))).find(n=>n.id===prior.id)?.text,sourceQuestion,
+  'the prior question persists under original A after continuation');
+ await page.locator('[data-ex-action="close"]').click();
+ // The original question remains available by explicitly revisiting its source run.
+ await page.goto(host+'#/exploration-tree?record='+encodeURIComponent(sameDayA)+'&category=01&topic='+encodeURIComponent('距離・時間・ペース'),{waitUntil:'networkidle'});
+ await page.locator('.ex-note-preview').filter({hasText:sourceQuestion}).waitFor({timeout:15000});
+ await page.locator('[data-ex-action="memories"]').click();
+ await page.waitForFunction(question=>document.querySelector('[data-ex-overlay]')?.textContent?.includes(question),sourceQuestion,{timeout:15000});
+ const sourceRunMemories=await page.locator('[data-ex-overlay]').innerText();
+ assert.ok(sourceRunMemories.includes(sourceQuestion),'A original question remains revisitable from its own record');
+ assert.ok(!sourceRunMemories.includes('今回の走行ではペースの違いを感じた'),'A scoped notes must not disclose B continuation');
  await page.locator('[data-ex-action="close"]').click();
  await page.goto(host+'#/result?record='+encodeURIComponent(sameDayB)+'&compare='+encodeURIComponent(walkId)+'&view=compare',{waitUntil:'networkidle'});
  assert.equal(await page.locator('[data-run-question-source]').count(),0,'cross-gait comparison cannot offer linked continuation');

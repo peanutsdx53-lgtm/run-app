@@ -23,3 +23,11 @@ export function noteRunBackLink(note,manualRuns){
  const run=findLinkableRun(manualRuns,note.recordId);
  return run?{recordId:run.id,date:run.date}:null;
 }
+/** G3: read-only per-record reflection selection, never guessing a deleted parent.
+ * Legacy notes without a topicId remain eligible when their exact recordId matches.
+ * The explicit all-notes catalog remains accessible in general Explore. */
+export function linkedReflectionNotes(snapshot,recordId){
+ if(!snapshot||snapshot.readable!==true||!Array.isArray(snapshot.notes))return {status:'unavailable',notes:[]};
+ if(!findLinkableRun(snapshot.manualRuns,recordId))return {status:'not-linkable',notes:[]};
+ return {status:'ready',notes:snapshot.notes.filter(n=>n&&n.recordId===recordId)};
+}

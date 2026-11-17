@@ -2,6 +2,10 @@
  * Caveats preserve per-region baseline=100, source applicability, self-report
  * timing uncertainty, and the difference between unanswered and score zero. */
 export const ENGLISH_RESULT_COPY=Object.freeze({
+ "保存した気づき": "Saved Reflections",
+ "この走行のメモを確認・修正": "Review or Edit Notes for This Activity",
+ "この走行のメモはまだありません。": "No Notes Saved for This Activity Yet.",
+ "保存した気づきを確認できません。メモの原本は変更していません。": "Saved Notes Are Unavailable. Existing Notes Were Not Changed.",
  "今回の走行を振り返る": "Reflect on This Activity",
  "結果を見て気になったことや、次に確かめたいことを自分の言葉で残せます。書かなくても構いません。": "If you wish, write what you noticed in these results or what you want to check next. Writing is optional.",
  "気づき・次の問いを書く（任意）": "Write a Note or Question (Optional)",
