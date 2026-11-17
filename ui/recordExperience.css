@@ -871,3 +871,11 @@ html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice{white-space:n
   text-align:left;min-width:0;
  }
 }
+
+/* At 320px, 200% text makes the single word "Percentage" wider than a
+   half-width mode button. One column preserves the full name and hit area. */
+@media(max-width:355px){
+ html[lang="en"] .record-v3.rv-course .rv-condition-pair .rv-choice-row.rv-four{
+  grid-template-columns:minmax(0,1fr);
+ }
+}
