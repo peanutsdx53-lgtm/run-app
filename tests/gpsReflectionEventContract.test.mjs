@@ -83,3 +83,10 @@ test('G4-B0: no modification of caller-owned evidence and no mutable escape valu
  assert.equal('write' in result.value,false);assert.equal('export' in result.value,false);
  assert.equal(GPS_REFLECTION_MAX_EVENTS>=1000,true);
 });
+test('G4-B0: timestamp inversion and future schema are rejected without repairing history',()=>{
+ const a=event(),b=event(2,'EDIT');
+ assert.equal(stream(a,{...b,savedAt:'2026-11-17T00:00:00.000Z'}).code,'BROKEN_CHAIN');
+ assert.equal(stream(a,{...b,schemaVersion:2}).code,'BAD_EVENT');
+ assert.equal(stream(a,{...b,predecessorEventId:null}).code,'BAD_EVENT');
+ assert.equal(stream({...a,action:'DELETE'}).ok,false);
+});
