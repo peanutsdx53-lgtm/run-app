@@ -28,7 +28,7 @@ async function capture(page,meta){
   const rect=e=>{if(!e)return null;const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
   const one=s=>shadow?.querySelector(s),doc=document.documentElement;
   const nav=document.querySelector('.mobile-nav');
-  const controls=[...(shadow?.querySelectorAll('.rv4-mobile-tabs button,.rv4-view-tabs button,.rv4-figure-actions button,.rv4-export-menu>summary')||[])].map(x=>({text:x.textContent.trim(),rect:rect(x)}));
+  const controls=[...(shadow?.querySelectorAll('.rv4-mobile-tabs button,.rv4-view-tabs button,.rv4-figure-actions button,.rv4-export-menu>summary')||[])].map(x=>({text:x.textContent.trim(),rect:rect(x),anatomy:!!x.closest('.rv4-view-tabs')}));
   const leaks=[];
   for(const x of shadow?.querySelectorAll('.rv4-reading h3,.rv4-reading small,.rv4-view-tabs button,.rv4-mobile-tabs button,.rv4-figure-actions button')||[]){
    if(!x.getClientRects().length)continue;
@@ -58,7 +58,7 @@ async function capture(page,meta){
   assert.equal(m.navComputed.grid.trim().split(/\s+/).length,5,'keep five labeled navigation destinations');
  }
  if(meta.tab==='body'){
-  const views=m.controls.filter(x=>['前面','背面','足裏','Front','Back','Sole'].includes(x.text));
+  const views=m.controls.filter(x=>x.anatomy);
   assert.equal(views.length,3,'all anatomy views stay reachable');
   for(const v of views)assert.ok(v.rect.height>=43,'anatomy view target too small: '+v.text+' '+meta.width);
  }
