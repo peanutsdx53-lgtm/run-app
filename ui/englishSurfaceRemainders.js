@@ -89,6 +89,8 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  '印刷':'Print',
  '現在値は配色表示範囲（60〜140）の外側です。数値はそのまま表示しています。':'Current value is outside the color display range (60–140). The numeric value remains unchanged.',
  '部位内基準100との差':'Difference from This Region’s Reference of 100',
+ '部位の文献基準100との差':'vs. This Region’s Reference 100',
+ '配色範囲（60〜140）外。数値はそのままです。':'Outside the 60–140 color scale; numeric value unchanged.',
  'ROF-Jの本人回答を画像・印刷に含める（任意）':'Include Self-Reported ROF-J Answers in Image or Print (Optional)',
  '日付を画像に含める（任意）':'Include Date in Image (Optional)',
  'シューズ':'Shoes',

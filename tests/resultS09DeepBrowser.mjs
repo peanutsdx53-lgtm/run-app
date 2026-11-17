@@ -37,7 +37,7 @@ async function capture(page,meta){
   }
   const svg=one('.rv4-body-svg');
   const regions=svg?[...svg.querySelectorAll('[data-region]')].map(x=>{const b=x.getBBox();return {id:x.dataset.region,selected:x.classList.contains('selected'),x:b.x,y:b.y,w:b.width,h:b.height}}):[];
-  const parts=['.rv4-hero','.rv4-notice','.rv4-body-figure','.rv4-body-svg','.rv4-reading','.rv4-fatigue','.rv4-history','.rv4-method-disclosure'].map(s=>({selector:s,rect:rect(one(s))}));
+  const parts=['.rv4-hero','.rv4-notice','.rv4-body-figure','.rv4-body-svg','.rv4-reading','.rv4-reference-scale-section','.rv4-fatigue','.rv4-history','.rv4-method-disclosure'].map(s=>({selector:s,rect:rect(one(s))}));
   return {viewport:innerWidth,documentWidth:doc.scrollWidth,bodyWidth:document.body.scrollWidth,rootFont:getComputedStyle(doc).fontSize,scrollHeight:doc.scrollHeight,
     nav:nav&&getComputedStyle(nav).display!=='none'?rect(nav):null,
     navComputed:nav?{height:getComputedStyle(nav).height,grid:getComputedStyle(nav).gridTemplateColumns,
@@ -63,6 +63,44 @@ async function capture(page,meta){
   for(const v of views)assert.ok(v.rect.height>=43,'anatomy view target too small: '+v.text+' '+meta.width);
  }
  report.push({meta,metrics:m});
+ if(meta.tab==='body'&&meta.view==='front'&&[320,375,390,414].includes(meta.width)){
+  const scale=m.parts.find(x=>x.selector==='.rv4-reference-scale-section')?.rect;
+  const selected=m.parts.find(x=>x.selector==='.rv4-reading')?.rect;
+  if(scale&&selected){
+   assert.ok(scale.top>=selected.bottom-2,'reference color scale must come after the selected region and free narrow card space');
+   assert.ok(scale.width>=selected.width,'reference color scale must not be squeezed into selected region column');
+  }
+  const fig=m.parts.find(x=>x.selector==='.rv4-body-figure')?.rect;
+  const reading=m.parts.find(x=>x.selector==='.rv4-reading')?.rect;
+  assert.ok(fig&&reading,'body diagram and selected region card are present');
+  if(meta.width===320){
+   assert.ok(reading.top>=fig.bottom-2,'320px must use accessible stacked layout at '+meta.zoom+'%');
+  }else{
+   assert.ok(reading.left>=fig.right-2,'375–414px should display the diagram and reading side by side at '+meta.width+'px '+meta.zoom+'%');
+   assert.ok(reading.top<fig.bottom&&fig.top<reading.bottom,'body diagram and region card need shared viewing height');
+  }
+  // Static full-page screenshots always show a fixed bottom nav at its initial scroll
+  // position. Check the actual viewport after scrolling, not just document geometry.
+  if(meta.zoom===200&&[375,390].includes(meta.width)){
+   const visible=await page.evaluate(()=>{
+    const host=document.querySelector('#runload-result-v4'),shadow=host?.shadowRoot;
+    const target=shadow?.querySelector('.rv4-body-content');
+    const nav=document.querySelector('.mobile-nav');
+    if(!target||!nav)return null;
+    scrollTo(0,Math.max(0,scrollY+target.getBoundingClientRect().top-72));
+    const fig=shadow.querySelector('.rv4-body-figure')?.getBoundingClientRect();
+    const read=shadow.querySelector('.rv4-reading')?.getBoundingClientRect();
+    const foot=nav.getBoundingClientRect();
+    return {figure:{top:fig.top,bottom:fig.bottom},reading:{top:read.top,bottom:read.bottom},navTop:foot.top,scrollY};
+   });
+   assert.ok(visible&&visible.figure.top>=-1,'diagram should be in visible viewport');
+   assert.ok(visible.reading.top>=-1,'selected value should be in visible viewport');
+   assert.ok(Math.max(visible.figure.bottom,visible.reading.bottom)<=visible.navTop-5,
+     'diagram and selected value must both fit above fixed navigation after scrolling: '+JSON.stringify(visible));
+   await page.screenshot({path:resolve(out,filename+'-co-readable-viewport.png'),animations:'disabled',fullPage:false});
+   await page.evaluate(()=>scrollTo(0,0));
+  }
+ }
 }
 try{
  for(const language of ['ja','en'])for(const width of [320,375,390,414,768,1024,1440])for(const zoom of [100,200]){

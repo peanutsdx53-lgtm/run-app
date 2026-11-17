@@ -1,6 +1,6 @@
 import {BODY_REGION_VIEWS} from '../assets/bodyRegionVisuals.js';
 import {bodyReferenceRow,bodyReferenceEngineId,bodyReferenceColor,bodyReferenceScale,BODY_REFERENCE_GRADIENT,renderBodyReferenceLabels,referenceReliefDefs,referenceReliefOverlays,bodyReferenceSilhouetteClipDef} from './bodyReferencePresentation.js';
-import {RESULT_STYLES,RESULT_GAIT_STYLES,RESULT_VISUAL_STYLES,RESULT_BODY_LAYOUT_STYLES,RESULT_ANATOMY_RELIEF_STYLES,RESULT_GPS_GATE_STYLES,RESULT_REFLECTION_STYLES,RESULT_ROF_AUDIT_STYLES,RESULT_QUESTION_STYLES,RESULT_UI_CLEAN_STYLES,RESULT_P6B_STYLES} from './resultInlineStyles.js?v=20261117-s09-result-v1';
+import {RESULT_STYLES,RESULT_GAIT_STYLES,RESULT_VISUAL_STYLES,RESULT_BODY_LAYOUT_STYLES,RESULT_ANATOMY_RELIEF_STYLES,RESULT_GPS_GATE_STYLES,RESULT_REFLECTION_STYLES,RESULT_ROF_AUDIT_STYLES,RESULT_QUESTION_STYLES,RESULT_UI_CLEAN_STYLES,RESULT_P6B_STYLES} from './resultInlineStyles.js?v=20261117-s09-result-v2';
 import {REGIONS} from './bodyContextExperience.js';
 import {comparableRunChoices,compareSavedRuns,gaitOf} from './runReflection.js';
 import {compareBodyReferenceRows} from './regionReferenceComparison.js';
@@ -140,24 +140,37 @@ export function mountResult(host,inputDraft={},options={}){
    return '<section class="rv4-card rv4-body" data-pane="body"><div class="rv4-card-heading"><span class="rv4-icon">'+icon('body')+'</span><div><h2>部位の参考値</h2></div></div>'
 
     +'<div class="rv4-view-tabs">'+BODY_REGION_VIEWS.map(item=>'<button type="button" data-view="'+item.key+'" aria-pressed="'+(view===item.key)+'" class="'+(view===item.key?'active':'')+'">'+item.title+'</button>').join('')+'</div>'
-    +'<div class="rv4-body-content"><div class="rv4-body-figure"><span class="rv4-orbit"></span>'+svgMap()
-    +'<div class="rv4-figure-actions"><span>タップで部位を確認</span><button type="button" data-label-toggle aria-pressed="'+showBodyNumbers+'">'+(showBodyNumbers?'数値を隠す':'図に数値を表示')+'</button></div></div>'
+    +'<div class="rv4-body-content"><div class="rv4-body-figure"><span class="rv4-orbit"></span>'+svgMap()+'</div>'
     +'<div class="rv4-reading"><small>選択中の部位</small><h3>'+clean(r.name)+'</h3>'
     +'<div class="rv4-big-score" data-reference-region="'+clean(r.id)+'">'+(r.value===null?'—':format(r.value,1))+'</div>'
-    +(r.value!==null?'<div class="rv4-value-diff">部位内基準100との差 <strong>'+delta+'</strong></div>':'')
-     +(r.value===null?'<div class="rv4-score-caption">この部位の参考値は算出できません</div>':
-      '<div class="rv4-scale" style="background-image:'+BODY_REFERENCE_GRADIENT+';background-color:#66C4B5" role="img" aria-label="部位ごとの文献参考値の色目盛り。左端60、中央は文献基準100、右端140。色は数値の相対的な違いを示します。">'+
+    +(r.value!==null?'<div class="rv4-value-diff">部位の文献基準100との差 <strong>'+delta+'</strong></div>':'')
+     +'</div></div>'
+    +(r.value===null?'<div class="rv4-score-caption">この部位の参考値は算出できません</div>':
+      '<div class="rv4-reference-scale-section"><div class="rv4-scale" style="background-image:'+BODY_REFERENCE_GRADIENT+';background-color:#66C4B5" role="img" aria-label="部位ごとの文献参考値の色目盛り。左端60、中央は文献基準100、右端140。色は数値の相対的な違いを示します。">'+
       '<span class="rv4-scale-ref"></span>'+(scale?'<span class="rv4-scale-current" style="left:'+scale.position.toFixed(2)+'%"></span>':'')+'</div>'+
       '<div class="rv4-scale-labels"><span>60</span><span>100</span><span>140</span></div>'+
-      (scale?.clipped?'<div class="rv4-scale-note">現在値は配色表示範囲（60〜140）の外側です。数値はそのまま表示しています。</div>':''))
-     +'</div></div><div class="rv4-region-selection"><button type="button" class="rv4-picker" data-picker-toggle aria-expanded="'+picker+'"><span>部位を選ぶ</span><span aria-hidden="true">⌄</span></button></div>'
+      (scale?.clipped?'<div class="rv4-scale-note">配色範囲（60〜140）外。数値はそのままです。</div>':'')+'</div>')
+     +'<div class="rv4-figure-actions"><span>タップで部位を確認</span><button type="button" data-label-toggle aria-pressed="'+showBodyNumbers+'">'+(showBodyNumbers?'数値を隠す':'図に数値を表示')+'</button></div><div class="rv4-region-selection"><button type="button" class="rv4-picker" data-picker-toggle aria-expanded="'+picker+'"><span>部位を選ぶ</span><span aria-hidden="true">⌄</span></button></div>'
     +(picker?'<div class="rv4-choices">'+v.paths.map(([id])=>{const n=data.find(x=>x.id===id);return '<button type="button" data-region="'+id+'" class="'+(id===chosen?'active':'')+'">'+clean(n?.name||id)+'</button>'}).join('')+'</div>':'')
     +(fromGps&&gps.detailSaved&&['RUNNING','JOGGING','WALK'].includes(gps.activity)?
        '<div class="rv4-gps-gate"><div><small>GPSコースと身体の変化</small><strong>フラッグ地点の参考値を振り返る</strong><span>コース上の地点・速度・人体図を連動表示します</span></div><a data-gps-dynamic-gate href="#/dynamic-result?record='+encodeURIComponent(gps.id)+'">動的結果を見る ›</a></div>':'')
 
     +evidencePanel()+'</section>';
   };
- const fatigue=()=>!hasInput?'<section class="rv4-card rv4-fatigue rv4-empty-card" data-pane="fatigue"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2></div></div><p class="rv4-empty-note">疲労感の回答はありません。</p></section>':'<section class="rv4-card rv4-fatigue" data-pane="fatigue" data-rof-time-status="unverified"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2><p>「運動前／後」として入力した回答（0〜10）</p></div></div><div class="rv4-fatigue-numbers"><div><small>運動前</small><strong>'+ (before??'—')+'</strong></div><span class="rv4-arrow" aria-hidden="true">／</span><div><small>運動後</small><strong>'+(after??'—')+'</strong></div></div><div class="rv4-tracks"><span style="width:'+(before===null?0:before*10)+'%"></span><span style="width:'+(after===null?0:after*10)+'%"></span></div><p class="rv4-fatigue-caption" data-source-rof>出所：'+clean(origin.rof)+'。前後差や原因は判定しません。</p><details class="rv4-fatigue-method"><summary>'+(fromSaved&&options.record?.rofEvidence?'回答時刻・訂正履歴を確認・訂正':'回答時点と解釈上の注意を確認')+'</summary><div class="rv4-fatigue-method-content"><p>'+(fromGps?'GPSが測定した疲労感ではなく、本人の回答です。入力操作時刻は評価・発生時刻の実測ではないため、時間的な差や原因は判定しません。':'「運動前／後」は回答区分です。入力操作時刻と本人申告の評価時刻を記録しますが、実際の時間的な順序が検証できないため、変化量や原因は判定しません。')+'未回答は「—」で、0と区別します。</p>'
+
+ const fatigueScaleRow=(phase,value)=>{
+  const stage=phase==='before'?'運動前':'運動後';
+  const valid=value!==null&&Number.isFinite(value);
+  const shown=valid?value+' / 10':'未回答';
+  return '<div class="rv4-fatigue-scale-row" data-rof-stage="'+phase+'"><div class="rv4-fatigue-scale-heading"><span>'+stage+'</span><strong>'+shown+'</strong></div>'+
+    '<div class="rv4-fatigue-scale-rail'+(!valid?' is-unanswered':value===0?' is-zero':'')+'" aria-hidden="true">'+
+    (valid?'<span class="rv4-fatigue-scale-fill" style="width:'+(value*10)+'%"></span>':'')+
+    (valid&&value===0?'<span class="rv4-fatigue-scale-zero"></span>':'')+'</div></div>';
+ };
+ const fatigueScale=()=>'<div class="rv4-fatigue-scale" role="group" aria-label="ROF-Jの0〜10の本人回答">'+
+   fatigueScaleRow('before',before)+fatigueScaleRow('after',after)+
+   '<div class="rv4-fatigue-scale-axis" aria-hidden="true"><span>0</span><span>5</span><span>10</span></div></div>';
+ const fatigue=()=>!hasInput?'<section class="rv4-card rv4-fatigue rv4-empty-card" data-pane="fatigue"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2></div></div><p class="rv4-empty-note">疲労感の回答はありません。</p></section>':'<section class="rv4-card rv4-fatigue" data-pane="fatigue" data-rof-time-status="unverified"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2><p>「運動前／後」として入力した回答（0〜10）</p></div></div>'+fatigueScale()+'<p class="rv4-fatigue-caption" data-source-rof>ROF-J・本人回答｜時間的変化・原因は未判定</p><details class="rv4-fatigue-method"><summary>'+(fromSaved&&options.record?.rofEvidence?'回答時刻・訂正履歴を確認・訂正':'回答時点と解釈上の注意を確認')+'</summary><div class="rv4-fatigue-method-content"><p>'+(fromGps?'GPSが測定した疲労感ではなく、本人の回答です。入力操作時刻は評価・発生時刻の実測ではないため、時間的な差や原因は判定しません。':'「運動前／後」は回答区分です。入力操作時刻と本人申告の評価時刻を記録しますが、実際の時間的な順序が検証できないため、変化量や原因は判定しません。')+'未回答は「—」で、0と区別します。</p>'
  +(fromGps&&gps.experience?'<section class="rv4-rof-audit"><h3>GPS時の入力操作時刻</h3><p>運動前の入力：'+clean(gps.experience.beforeCapturedAt||'未回答・不明')+'</p><p>運動後の入力：'+clean(gps.experience.afterCapturedAt||'未回答・不明')+'</p></section>':'')
  +(fromSaved&&options.record?.rofEvidence?'<section class="rv4-rof-audit"><h3>保存された回答時刻・訂正履歴</h3><p>取得時刻は端末での入力操作の時刻、評価時刻は本人申告です。実測的な保証ではありません。</p>'+
  ['before','after'].map(phase=>{const e=options.record.rofCorrections?.filter(x=>x.phase===phase).at(-1)?.next||options.record.rofEvidence[phase];return '<p>'+(phase==='before'?'運動前':'運動後')+'：入力 '+clean(e?.capturedAt||'不明')+'／評価（本人申告） '+clean(e?.assessedAt||'不明')+'／評価時点の扱い：'+clean(ROF_TIME_BASIS_DISPLAY[e?.timeBasis]||'不明')+'</p>'}).join('')+
@@ -241,7 +254,8 @@ export function mountResult(host,inputDraft={},options={}){
  const sourceDetails=()=>'<details class="rv4-hero-sources"><summary>記録の出所を確認</summary><div class="rv4-hero-source-grid">'+
  '<p><strong>距離</strong><span data-source-distance>出所：'+clean(origin.distance)+'</span></p>'+
  '<p><strong>時間</strong><span data-source-duration>出所：'+clean(origin.duration)+'</span></p>'+
- '<p><strong>平均ペース</strong><span data-source-pace>出所：'+clean(origin.pace)+'</span></p></div></details>';
+ '<p><strong>平均ペース</strong><span data-source-pace>出所：'+clean(origin.pace)+'</span></p>'+
+ '<p><strong>疲労感</strong><span data-source-rof-detail>出所：'+clean(origin.rof)+'</span></p></div></details>';
  const hero=()=>!hasInput?'':'<section class="rv4-hero"><div class="rv4-hero-glow"></div><div class="rv4-hero-left"><small class="rv4-date">'+titleDate+'　<span>'+clean(ACTIVITY_LABELS[fromGps?gps.activity:fromSaved?gaitOf(options.record):draft.activityGait]||'活動種別未設定')+'</span></small><div class="rv4-measures"><div class="rv4-distance"><small>距離</small><strong>'+format(distance,2)+'</strong><span>km</span></div><div class="rv4-secondary"><div><small>時間</small><strong>'+(duration>0?format(duration,0)+' 分':'—')+'</strong></div><div><small>平均ペース</small><strong>'+pace+' <em>/km</em></strong></div></div></div></div><div class="rv4-hero-report"><span>疲労感（本人回答）</span><div class="rv4-today-chips"><span>運動前 <b>'+(before??'—')+'</b></span><span>運動後 <b>'+(after??'—')+'</b></span></div></div>'+resultNotice()+sourceDetails()+'</section>';
  function draw(){
   root.querySelector('.rv4-app').innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1>'+reflectionPath()+'</div>'+resultActions()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+mentalCard()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+extras()+referenceHelp()+'</div>';
