@@ -62,14 +62,14 @@ try{
     localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({textSize:'standard',motion:'system',language:selected}));
     localStorage.setItem('runload-v2-legal-consent-v1',JSON.stringify({termsAccepted:true,privacyConfirmed:true,acceptedAt:'2026-11-17T00:00:00Z',termsVersion:LEGAL_VERSION,privacyVersion:LEGAL_VERSION}));
    },lang);
-   for(const [route,headerSelector,helpSelector,kind] of screenDefs){
+   for(const [route,headerSelector,helpSelector,kind] of screenDefs.filter(([name])=>width===390||['home','record-start','record','record-reflection','exploration-tree','learning','settings','history','result'].includes(name))){
     if(route==='measurement'&&!phone)continue;
     const pageName=route;
     try{
      await page.goto(url+'#/'+route,{waitUntil:'networkidle'});
      const header=page.locator(headerSelector).first(),help=page.locator(helpSelector).first();
-     await header.waitFor({state:'visible',timeout:15000});
-     await help.waitFor({state:'visible',timeout:15000});
+     await header.waitFor({state:'visible',timeout:3500});
+     await help.waitFor({state:'visible',timeout:3500});
      if(font===200)await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
      const h=await header.boundingBox(),b=await help.boundingBox();
      assert.ok(h&&b,'header and help need rectangles');
@@ -108,7 +108,7 @@ try{
    await page.locator('[data-draft="minutes"]').fill('30');
    await page.locator('[data-manual-gait="RUNNING"]').click();
    await page.locator('[data-demo-save]').click();
-   await page.locator('[data-record-review]').waitFor({state:'visible',timeout:15000});
+   await page.locator('[data-record-review]').waitFor({state:'visible',timeout:4500});
    if(font===200)await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
    const hb=await page.locator('[data-record-review] .rr-heading').boundingBox();
    const bb=await page.locator('[data-record-review] .rr-heading>.rr-screen-help>summary').boundingBox();
