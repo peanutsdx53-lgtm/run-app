@@ -45,7 +45,7 @@ test('ROF-J results and image export do not manufacture time-eligible before/aft
  assert.match(js,/回答の実際の時間的前後差は判定しません/);
  assert.doesNotMatch(js,/評価時刻未記録：前後差は判定不可/,'PNG must not falsely claim no time evidence is stored');
  assert.doesNotMatch(js,/<small>前後差<\/small>|rv4-change/,'remove obsolete difference field');
- assert.match(js,/<p class="rv4-fatigue-caption" data-source-rof>出所：/,'show neutral provenance under the bars');
+ assert.match(js,/<p class="rv4-fatigue-caption" data-source-rof>ROF-J・本人回答/,'retain concise scientific status');
  assert.doesNotMatch(js,/rv4-fatigue-note|role="note"/,'do not render a callout');
  for(const css of [read('ui/resultExperience.css'),read('ui/resultInlineStyles.js')]){
   const caption=css.match(/\.rv4-fatigue-caption\{([^}]+)\}/);
@@ -64,8 +64,8 @@ test('ROF-J results and image export do not manufacture time-eligible before/aft
  assert.match(js,/rofCorrections/,'saved correction history remains');
  assert.match(js,/GPS時の入力操作時刻/);
  assert.match(js,/未回答は「—」で、0と区別します。/);
- assert.match(js,/before\?\?'—'/,'valid zero must not become missing');
- assert.match(js,/after\?\?'—'/,'valid zero must not become missing');
+ assert.match(js,/value!==null&&Number\.isFinite\(value\)/,'valid zero must not become missing');
+ assert.match(js,/value!==null&&Number\.isFinite\(value\)/,'valid zero must not become missing');
  for(const css of [read('ui/resultExperience.css'),read('ui/resultInlineStyles.js')]){
   assert.doesNotMatch(css,/\.rv4-change/,'obsolete delta styling absent');
   assert.match(css,/\.rv4-fatigue-numbers>div\{/,'retain two-value layout');
@@ -216,4 +216,19 @@ test('S09 optional mental self-report details are user-controlled while pending 
  assert.match(result,/data-mental-result role="status"/);
  assert.doesNotMatch(result,/<style>\.rv4-grid \.rv4-mental/,'temporary nested CSS must be deleted');
  assert.match(inline,/\.rv4-mental-details>summary/);
+});
+
+test('S09 anatomy and ROF-J are co-readable without conflating zero with unanswered',()=>{
+ const js=read('ui/resultExperience.js'),css=read('ui/resultInlineStyles.js');
+ assert.match(js,/rv4-body-content/);
+ assert.match(css,/container-type:inline-size/);
+ assert.match(css,/@container \(min-width:340px\)/);
+ assert.match(css,/@container \(max-width:339px\)/);
+ assert.match(js,/rv4-fatigue-scale-zero/,'valid zero has an explicit marker');
+ assert.match(js,/is-unanswered/,'unanswered is visually different');
+ assert.match(js,/data-rof-stage/,'both self-reported ratings have separate rows');
+ assert.match(js,/data-source-rof-detail/,'full provenance is available in top disclosure');
+ assert.match(js,/rv4-fatigue-method/,'ROF-J timing and history remain accessible');
+ assert.doesNotMatch(js,/rv4-tracks/,'obsolete ambiguous overlapping bars removed from output');
+ assert.doesNotMatch(js,/rv4-fatigue-numbers/,'the separate scale replaces duplicate numeric chips');
 });
