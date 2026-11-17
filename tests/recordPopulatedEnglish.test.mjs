@@ -14,6 +14,8 @@ const cases=[
  ['segment heading','区間 3','Segment 3','.rv-section-row-head strong','.rv-course'],
  ['segment share','割合 20%','Share: 20%','.rv-section-row-head small','.rv-course'],
  ['segment add','＋ 区間を追加（3 / 5）','+ Add Segment (3 / 5)','[data-rv-add]','.rv-course'],
+ ['surface focus','陸上トラックを調整','Adjust Athletics Track','.rv-surface-fine .rv-fine-top strong','.rv-course'],
+ ['surface summary','舗装路・陸上トラック','Paved Road · Athletics Track','[data-rv-summary-surface]','.rv-course'],
  ['surface total','合計 100% / 100%','Total 100% / 100%','[data-rv-surface-total]','.rv-course'],
  ['steps source','端末計測','Measured by Device','[data-g4-source]','[data-g4-page]'],
  ['running format','走行＋歩行','Run + Walk','[data-g4-format]','[data-g4-page]'],
