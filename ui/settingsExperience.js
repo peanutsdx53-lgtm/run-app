@@ -1,4 +1,4 @@
-import {renderDataBackup,renderDataDelete,makeDataUi} from "./dataManagementUi.js?v=20261111-settings-dialog-v1";
+import {renderDataBackup,renderDataDelete,makeDataUi} from "./dataManagementUi.js?v=20261117-s16-settings-v1";
 // Local-only opt-in display preferences. Legal consent is handled separately.
 export const PROFILE_KEY='runload-v2-user-profile-v1';
 export const DISPLAY_KEY='runload-v2-display-preferences-v1';
