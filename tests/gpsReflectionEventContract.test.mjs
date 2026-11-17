@@ -130,4 +130,24 @@ test('G4-B0: no overflow beyond maximum revision even with a fully valid thread'
   expectedRevision:GPS_REFLECTION_MAX_REVISIONS,
   expectedLastEventId:id(GPS_REFLECTION_MAX_REVISIONS),action:'EDIT'
  }).code,'REVISION_LIMIT');
+ const deletionPlan=inspectGpsReflectionChange(full,{
+  expectedRevision:GPS_REFLECTION_MAX_REVISIONS,
+  expectedLastEventId:id(GPS_REFLECTION_MAX_REVISIONS),action:'DELETE'
+ });
+ assert.deepEqual(deletionPlan,{ok:true,value:{
+  nextRevision:GPS_REFLECTION_MAX_REVISIONS+1,
+  predecessorEventId:id(GPS_REFLECTION_MAX_REVISIONS)
+ }},'privacy erasure must remain available at the edit ceiling');
+ const deletion={...event(2,'DELETE'),revision:GPS_REFLECTION_MAX_REVISIONS+1,
+  eventId:id(GPS_REFLECTION_MAX_REVISIONS+1),
+  requestId:request(GPS_REFLECTION_MAX_REVISIONS+1),
+  predecessorEventId:id(GPS_REFLECTION_MAX_REVISIONS),savedAt};
+ const erased=inspectGpsReflectionThread(ref,noteId,[...events,deletion]);
+ assert.equal(erased.ok,true,erased.reason);
+ assert.equal(erased.value.status,'DELETED');
+ assert.equal(inspectGpsReflectionChange(erased,{
+  expectedRevision:GPS_REFLECTION_MAX_REVISIONS+1,
+  expectedLastEventId:deletion.eventId,action:'EDIT'
+ }).code,'BAD_TRANSITION');
+ assert.equal(validateGpsReflectionEvent({...deletion,revision:GPS_REFLECTION_MAX_REVISIONS+2}).ok,false);
 });
