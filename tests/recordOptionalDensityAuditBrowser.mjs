@@ -15,27 +15,133 @@ await new Promise(ok=>server.listen(4362,'127.0.0.1',ok));
 const engine=process.env.RUNLOAD_BROWSER_ENGINE==='webkit'?'webkit':'chromium';
 const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true});
 const out=resolve(root,'audit-output','record-optional-density');await mkdir(out,{recursive:true});
-const host='http://127.0.0.1:4362/#/',report=[];
+const host='http://127.0.0.1:4362/#/',report=[];let activeLanguage='ja';
 async function take(page,w,id){
+ if(activeLanguage==='en')await page.waitForTimeout(200);
  const m=await page.evaluate(()=>{
   const els=[...document.querySelectorAll('.rv-panel,.cx-main-card,.cx-field-card,.cx-transfer,.cx-toolbar,.cx-selected-chip,.rv-section-row,.e4-panel,.g4-panel,.rv4-card')];
+  // Restricted to generated UI, excluding user-entered course names, free
+  // text, transferred environmentNote and saved body observations.
+  const bodyTextClipping=[];
+  for(const el of document.querySelectorAll('.cx-header h1,.cx-context-action')){
+   if(!el.getClientRects().length)continue;
+   const outer=el.getBoundingClientRect(),walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+   while(walker.nextNode()){
+    if(!walker.currentNode.textContent.trim())continue;
+    const range=document.createRange();range.selectNodeContents(walker.currentNode);
+    for(const r of range.getClientRects()){
+     if(r.width>0&&(r.left<outer.left-2||r.right>outer.right+2||
+       r.top<outer.top-2||r.bottom>outer.bottom+2)){
+      bodyTextClipping.push({parent:el.className||el.tagName,text:walker.currentNode.textContent.trim(),
+       textBox:{left:r.left,right:r.right,top:r.top,bottom:r.bottom},
+       container:{left:outer.left,right:outer.right,top:outer.top,bottom:outer.bottom}});
+     }
+    }
+   }
+  }
+  const systemNodes=[
+   '.rv-section-progress','.rv-section-row-head strong','.rv-section-row-head small',
+   '.rv-section-row-head button','.rv-section-fields label',
+   '[data-rv-add]','[data-rv-surface-total]',
+   '.rv-surface-fine .rv-fine-top strong','[data-rv-summary-surface]',
+   '[data-g4-source]','[data-g4-format]','[data-g4-summary-steps]',
+   '[data-g4-summary-format]','[data-g4-run-text]','[data-g4-other]',
+   '[data-e4-weather]','[data-e4-flag]','[data-e4-summary]',
+   '[data-selected-expand]','.cx-context-action','.cx-picker-option',
+   '.rr-row[data-review-link="record-compare"] .rr-row-desc',
+   '.rr-row[data-review-link="record-rof"] .rr-row-desc'
+  ];
+  const visibleSystemText=el=>{
+   const walk=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),bits=[];
+   while(walk.nextNode()){
+    const t=walk.currentNode,p=t.parentElement;
+    if(p?.closest('select,option,textarea,input,[data-user-authored],[hidden],[aria-hidden="true"]'))continue;
+    if(p?.getClientRects().length&&t.textContent.trim())bits.push(t.textContent.trim());
+   }
+   return bits.join(' ').slice(0,130);
+  };
+  const systemResidue=systemNodes.flatMap(selector=>[...document.querySelectorAll(selector)]
+   .filter(el=>!el.closest('[hidden]')&&el.getClientRects().length)
+   .map(el=>({selector,text:visibleSystemText(el)}))
+   .filter(item=>/[ぁ-ゟァ-ヿ一-龯]/.test(item.text)));
   const fields=[...document.querySelectorAll('textarea,input[maxlength]')].map(e=>({name:e.id||e.dataset.draft,limit:e.maxLength,length:e.value.length,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight}));
   return {viewport:innerWidth,document:document.documentElement.scrollWidth,body:document.body.scrollWidth,
+   pageHeight:document.documentElement.scrollHeight,cardCount:els.length,
    selectedRegions:document.querySelectorAll('.cx-selected-chip').length,
+   systemResidue,bodyTextClipping,
    nodes:els.map(e=>{const r=e.getBoundingClientRect();return {className:String(e.className),left:r.left,right:r.right,width:r.width,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}}),
-   counters:[...document.querySelectorAll('.cx-counter')].map(e=>e.textContent),fields};
+   counters:[...document.querySelectorAll('.cx-counter')].map(e=>e.textContent),fields,
+   textareaVisibleRatios:fields.filter(x=>x.scrollHeight>0&&x.clientHeight>0)
+    .map(x=>({name:x.name,visibleFraction:Math.min(1,Number((x.clientHeight/x.scrollHeight).toFixed(3)))}))};
  });
- report.push({engine,width:w,state:id,...m});
- await page.screenshot({path:resolve(out,engine+'-'+w+'-'+id+'.png'),fullPage:true,animations:'disabled',timeout:12000});
- if(m.document>m.viewport+2||m.body>m.viewport+2)console.warn('OVERFLOW '+engine+' '+w+' '+id+': '+m.document);
+ report.push({engine,language:activeLanguage,width:w,state:id,...m});
+ if(activeLanguage==='en'&&m.systemResidue.length)console.warn('RECORD-LANGUAGE-RESIDUE '+engine+' '+w+' '+id+' '+JSON.stringify(m.systemResidue));
+ await page.screenshot({path:resolve(out,engine+'-'+activeLanguage+'-'+w+'-'+id+'.png'),fullPage:true,animations:'disabled',timeout:20000});
+ if(m.document>m.viewport+2||m.body>m.viewport+2)console.warn('OVERFLOW '+engine+' '+activeLanguage+' '+w+' '+id+': '+m.document);
+ if(id.endsWith('-font200'))assert.ok(m.document<=m.viewport+2&&m.body<=m.viewport+2,'populated 200% screen must fit viewport: '+JSON.stringify({engine,language:activeLanguage,width:w,state:id,document:m.document,body:m.body}));
+ if(id.endsWith('-font200'))assert.deepEqual(m.bodyTextClipping,[],'body heading and region-action text must remain in their controls at 200%');
+}
+async function takePopulatedZoom(page,w,id){
+ if(activeLanguage!=='en'||![320,390].includes(w))return;
+ await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
+ await take(page,w,id+'-font200');
+ if(id==='COURSE-dense'){
+  const buttons=await page.locator('.rv-course .rv-choice-row.rv-four .rv-choice').evaluateAll(nodes=>nodes.map(el=>{
+   const r=el.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(el);
+   const fragments=[...range.getClientRects()].filter(x=>x.width>0.1);
+   return {label:el.textContent.trim(),fragmentCount:fragments.length,
+    textLeft:Math.min(...fragments.map(x=>x.left)),textRight:Math.max(...fragments.map(x=>x.right)),
+    left:r.left,right:r.right};
+  }));
+  assert.equal(buttons.length,4,'all four English course modes are available at 200%');
+  assert.ok(buttons.every(x=>x.fragmentCount===1&&x.textLeft>=x.left-2&&x.textRight<=x.right+2),
+   'English course-mode words must fit whole within their buttons: '+JSON.stringify(buttons));
+
+  const tileMetrics=await page.locator('.rv-course .rv-surfaces .rv-surface-tile').evaluateAll(nodes=>nodes.map(el=>{
+   const outer=el.getBoundingClientRect();
+   const label=el.querySelector('span:first-child');
+   if(!label)return {name:'missing',clipped:true};
+   const range=document.createRange();range.selectNodeContents(label);
+   const boxes=[...range.getClientRects()].filter(r=>r.width>0.1);
+   return {name:label.textContent.trim(),clipped:boxes.some(r=>r.left<outer.left-2||r.right>outer.right+2),
+    tileWidth:outer.width,textWidth:Math.max(...boxes.map(r=>r.width))};
+  }));
+  assert.equal(tileMetrics.length,8,'all eight surface choices remain accessible');
+  assert.ok(tileMetrics.every(x=>!x.clipped),'surface labels must stay inside full buttons: '+JSON.stringify(tileMetrics));
+
+  const surfaceModes=await page.locator('.rv-course .rv-step-surface [data-rv-surface-mode]').evaluateAll(nodes=>nodes.map(el=>{
+   const outer=el.getBoundingClientRect(),node=[...el.childNodes].find(n=>n.nodeType===Node.TEXT_NODE),text=node?.textContent||'';
+   const words=[...text.matchAll(/\S+/g)].map(match=>{
+    const r=document.createRange();r.setStart(node,match.index);r.setEnd(node,match.index+match[0].length);
+    const boxes=[...r.getClientRects()].filter(x=>x.width>0.1);
+    return {word:match[0],parts:boxes.length,outside:boxes.some(x=>x.left<outer.left-2||x.right>outer.right+2)};
+   });
+   return {label:text.trim(),words};
+  }));
+  assert.equal(surfaceModes.length,3,'surface input keeps all three modes');
+  assert.ok(surfaceModes.every(mode=>mode.words.every(w=>w.parts===1&&!w.outside)),
+   'English surface mode must keep every word whole within its button: '+JSON.stringify(surfaceModes));
+  const surfaceHeader=await page.locator('.rv-course .rv-surface-head').evaluate(el=>{
+   const title=el.querySelector('h3').getBoundingClientRect(),total=el.querySelector('strong').getBoundingClientRect();
+   return {titleBottom:title.bottom,totalTop:total.top,overlap:total.top<title.bottom-2};
+  });
+  assert.equal(surfaceHeader.overlap,false,'surface ratio total must follow its heading without overlap at 200%');
+
+
+ }
+ await page.evaluate(()=>{document.documentElement.style.fontSize='';});
 }
 async function enter(page,route,selector,w,id){
  await page.goto(host+route,{waitUntil:'networkidle'});await page.locator(selector).waitFor({timeout:12000});await take(page,w,id+'-empty');
 }
 try{
- for(const w of [320,390,1440]){
-  const ctx=await browser.newContext({viewport:{width:w,height:w===1440?900:844},locale:'ja-JP',reducedMotion:'reduce'});
-  await ctx.addInitScript(()=>localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:'ja'})));
+ for(const language of ['ja','en'])for(const w of [320,390,768,1440]){
+  activeLanguage=language;
+  const ctx=await browser.newContext({viewport:{width:w,height:w===1440?900:844},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block'});
+  await ctx.addInitScript(lang=>{
+   localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:lang}));
+   localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({language:lang,textSize:'standard',motion:'system'}));
+  },language);
   const page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await enter(page,'record','.rv-manual',w,'MANUAL');
   await page.locator('[data-draft="distance"]').fill('8.25');
@@ -59,11 +165,12 @@ try{
   await page.locator('[data-rv-surface-value="'+surfaces[0]+'"]').fill('60');
   await page.locator('[data-rv-surface-focus="'+surfaces[1]+'"]').click();
   await page.locator('[data-rv-surface-value="'+surfaces[1]+'"]').fill('40');
-  assert.match(await page.locator('[data-rv-surface-total]').innerText(),/合計 100%/);
+  assert.match(await page.locator('[data-rv-surface-total]').innerText(),/100%/);
   assert.equal(await page.locator('[data-rv-surface-pick-value="'+surfaces[0]+'"]').innerText(),'60%');
   assert.equal(await page.locator('[data-rv-surface-pick-value="'+surfaces[1]+'"]').innerText(),'40%');
   assert.equal(await page.locator('.rv-surface-fine [data-rv-surface-step]').count(),2,'step controls mirror slope');
   await take(page,w,'COURSE-dense');
+  await takePopulatedZoom(page,w,'COURSE-dense');
   assert.equal(await page.locator('.rv-inline-preset-tools').count(),0,'new course has no edit/copy controls');
   await page.locator('.rv-course-summary [data-course-save]').click();
   await page.locator('.rv-inline-preset-tools').waitFor({state:'visible',timeout:6000});
@@ -135,11 +242,12 @@ try{
     for(const id of ids)await page.locator('[data-picker-id="'+id+'"]').click();
   }
   assert.equal(await page.locator('.cx-selected-chip').count(),3,'initial twelve-region display compact');
-  assert.match(await page.locator('[data-selected-expand]').innerText(),/ほか 9 部位を表示/);
+  assert.match(await page.locator('[data-selected-expand]').innerText(),/9/);
   await take(page,w,'BODY-12-regions-compact');
   await page.locator('[data-selected-expand]').click();
   assert.equal(await page.locator('.cx-selected-chip').count(),12,'expand reveals all selections without loss');
   await take(page,w,'BODY-12-regions-expanded');
+  await takePopulatedZoom(page,w,'BODY-12-regions-expanded');
   await page.locator('[data-selected-expand]').click();
   assert.equal(await page.locator('.cx-selected-chip').count(),3,'collapse does not discard selected regions');
   const shoeBefore=await page.locator('#cx-shoeName').evaluate(el=>({limit:el.maxLength,length:el.value.length}));
@@ -161,10 +269,12 @@ try{
   await page.locator('[data-demo-save]').click();
   await page.locator('[data-record-review]').waitFor();
   const reviewText=await page.locator('[data-record-review]').innerText();
-  assert.match(reviewText,/本人申告：天候：くもり、風が強い/,'pre-save summary exposes the explicit self-report');
-  assert.match(reviewText,/全文は編集画面で確認/,'long original notes are summarized, not truncated in storage');
-  assert.ok(reviewText.length<3400,'review remains reachable even with long optional notes: '+reviewText.length);
+  if(language==='ja')assert.match(reviewText,/本人申告：天候：くもり、風が強い/,'pre-save summary exposes the explicit self-report');
+  else assert.ok(reviewText.includes('くもり')||reviewText.includes('Cloud'),'English review keeps explicitly entered weather self-report');
+  if(language==='ja')assert.match(reviewText,/全文は編集画面で確認/,'long original notes are summarized, not truncated in storage');
+  assert.ok(reviewText.length<5000,'review remains reachable even with long optional notes: '+reviewText.length);
   await take(page,w,'REVIEW-environment-saved-draft');
+  await takePopulatedZoom(page,w,'REVIEW-environment-saved-draft');
   const button=page.locator('[data-manual-run-save]');
   assert.equal(await button.isEnabled(),true,'complete optional context must not block valid run save');
   await button.click();
@@ -186,10 +296,10 @@ try{
   assert.equal((await getSaved())?.id,saved.id,'reloading retains the same record identity');
   assert.equal((await getSaved())?.draft.environmentNote,saved.draft.environmentNote,'reloading retains the personally asserted context');
   await take(page,w,'RESULT-environment-reloaded');
-  assert.deepEqual(errors,[],'JS page errors');
+  assert.deepEqual(errors,[],'JS page errors '+language+' '+w);
   await ctx.close();
  }
- console.log('AUDIT COMPLETE '+engine+' '+report.length+' states');
+ console.log('AUDIT COMPLETE '+engine+' '+report.length+' bilingual states');
 }finally{
  await writeFile(resolve(out,engine+'-report.json'),JSON.stringify(report,null,2));
  await browser.close();await new Promise(ok=>server.close(ok));

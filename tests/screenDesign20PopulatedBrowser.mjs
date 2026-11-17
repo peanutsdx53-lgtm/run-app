@@ -149,11 +149,11 @@ if(extended&&(!widths.length||widths.length>3||
    assert.ok(buttonStyles.every(x=>x.background!==x.cardBackground),'Open is distinct from each parent card');
    assert.ok(buttonStyles.every(x=>x.labelWidth<=x.available+2),'Open text is not clipped');
   });
-  await verify('S03','record-start','main',async t=>{assert.match(await t.innerText(),/手入力/);});
+  await verify('S03','record-start','.rv-method',async t=>{assert.match(await t.innerText(),/手入力/);});
   await verify('S04','record','[data-draft="distance"]',async t=>{assert.equal(await t.count(),1);});
-  await verify('S05','record-course','main',async t=>{assert.match(await t.innerText(),/コース|路面|坂/);});
+  await verify('S05','record-course','.rv-course',async t=>{assert.match(await t.innerText(),/コース|路面|坂/);});
   await verify('S06','record-rof','[data-rof-v4-root]',async t=>{assert.match(await t.innerText(),/ROF-J|疲労感/);});
-  await verify('S07','record-more','main',async t=>{
+  await verify('S07','record-more','.rv-aux',async t=>{
    // WebKit can settle navigation before hashchange replaces S06's main.
    await page.waitForFunction(()=>/追加情報|身体|メモ|環境/.test(document.querySelector('main')?.innerText||''),null,{timeout:15000});
    assert.match(await t.innerText(),/追加情報|身体|メモ|環境/);

@@ -19,7 +19,7 @@ import {ENGLISH_FINAL_GPS} from './englishFinalGps.js';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261117-record-stage2-v1';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
@@ -216,6 +216,7 @@ export const ENGLISH_UI_TEXT=Object.freeze({
 });
 export function translateUiText(text,context={}){
  const raw=String(text??'');const trimmed=raw.trim();
+ if(context.element?.closest?.('[data-user-authored]'))return raw;
  const exact=Object.prototype.hasOwnProperty.call(ENGLISH_UI_TEXT,trimmed)?ENGLISH_UI_TEXT[trimmed]:null;
  const translated=exact??translateResidualDynamic(trimmed,context);
  return translated===null?raw:raw.replace(trimmed,translated);

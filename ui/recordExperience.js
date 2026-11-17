@@ -145,7 +145,7 @@ export function coursePage(state,ui,library={ok:true,records:[]},fromHome=false)
  </section>
  <section class="rv-panel rv-course-conditions rv-course-step" aria-label="坂道と路面の条件"><div class="rv-section-title rv-block-heading"><span class="rv-step-index">02</span><h2>走行条件</h2></div><div class="rv-condition-pair">${slopeSection(d,ui).replace('class="rv-panel"','class="rv-panel rv-step-slope"')}${surfaceSection(d,ui).replace('class="rv-panel"','class="rv-panel rv-step-surface"')}</div></section>
  <section class="rv-panel rv-course-summary rv-course-step"><div class="rv-section-title rv-block-heading"><span class="rv-step-index">03</span><h2>設定内容の確認</h2></div>
- <div class="rv-summary-facts"><div class="rv-summary-line"><span>コース名</span><strong>${escape(d.courseName||'未入力')}</strong></div><div class="rv-summary-line"><span>坂道</span><strong data-rv-summary-slope>${escape(s.slope)}</strong></div><div class="rv-summary-line"><span>路面</span><strong data-rv-summary-surface>${escape(s.surface)}</strong></div></div>
+ <div class="rv-summary-facts"><div class="rv-summary-line"><span>コース名</span><strong${filled(d.courseName)?' data-user-authored':''}>${escape(d.courseName||'未入力')}</strong></div><div class="rv-summary-line"><span>坂道</span><strong data-rv-summary-slope>${escape(s.slope)}</strong></div><div class="rv-summary-line"><span>路面</span><strong data-rv-summary-surface>${escape(s.surface)}</strong></div></div>
  <div class="rv-summary-actions ${selectedPreset?'rv-summary-actions--single':''}">
   <div class="rv-commit-group rv-commit-group--apply"><div class="rv-commit-label">今回の記録に使う</div>
    <button type="button" data-rv-apply class="rv-main-button">この条件を記録に使う</button>

@@ -196,6 +196,114 @@ const REGIONS=Object.freeze({'股関節部':'Hip region','大腿前面':'Front t
 export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  const s=String(text??'').trim();
  let m;
+ // Populated recording views: these strings are UI-generated and have known
+ // rendering contexts. Do not process textarea/input values or user-entered
+ // course names, notes, dates, region annotations, or saved record bodies.
+ const inView=selector=>!!element?.closest?.(selector);
+ const is=selector=>!!element?.matches?.(selector);
+ if(inView('.rv-course')){
+  // Generated course conditions and focus messages, never user-authored names.
+  const surfaceLabels={'舗装路':'Paved Road','陸上トラック':'Athletics Track',
+   'トレッドミル':'Treadmill','締まった土道':'Compacted Dirt Road',
+   '不整地トレイル':'Uneven Trail','天然芝':'Natural Grass',
+   '人工芝':'Artificial Turf','砂地':'Sand'};
+  if(is('.rv-surface-fine .rv-fine-top strong')&&
+   (m=s.match(/^(.+)を調整$/))&&Object.hasOwn(surfaceLabels,m[1]))
+   return 'Adjust '+surfaceLabels[m[1]];
+  if(is('[data-rv-summary-surface]')){
+   const parts=s.split('・');
+   if(parts.length>0&&parts.every(x=>Object.hasOwn(surfaceLabels,x)))
+    return parts.map(x=>surfaceLabels[x]).join(' · ');
+  }
+
+  if(is('[data-rv-section-progress]')&&(m=s.match(/^区間割合 (\d+) \/ (\d+) 件入力・入力分の合計 ([\d.]+)%(（100%）)?$/)))
+   return 'Segment Shares: '+m[1]+' / '+m[2]+' Entered · Entered Total '+m[3]+'%'+(m[4]?' (100%)':'');
+  if(is('.rv-section-row-head strong')&&(m=s.match(/^区間 (\d+)$/)))return 'Segment '+m[1];
+  if(is('.rv-section-row-head small')&&(m=s.match(/^割合 ([\d.]+%|未入力)$/)))
+   return 'Share: '+(m[1]==='未入力'?'Unanswered':m[1]);
+  if(attribute==='aria-label'&&is('[data-rv-remove]')&&(m=s.match(/^区間 (\d+) を削除$/)))return 'Remove Segment '+m[1];
+  if(is('[data-rv-add]')&&(m=s.match(/^＋ 区間を追加（(\d+) \/ 5）$/)))return '+ Add Segment ('+m[1]+' / 5)';
+  if(is('[data-rv-surface-total]')&&(m=s.match(/^合計 ([\d.]+)% \/ 100%$/)))return 'Total '+m[1]+'% / 100%';
+  if(is('.rv-section-fields label,.rv-fine-top label')&&s==='割合 (%)')return 'Share (%)';
+  if(is('.rv-section-fields label')&&s==='傾斜 (%)')return 'Grade (%)';
+  if(is('.rv-section-fields label')&&s==='坂道')return 'Grade';
+  if(is('.rv-section-fields label')&&s==='路面')return 'Surface';
+  if(is('.rv-section-row-head button')&&s==='削除')return 'Remove';
+ }
+ if(inView('[data-g4-page]')){
+  if(is('.g4-step-input b')&&s==='歩')return 'steps';
+  const stepsLabels={'端末計測':'Measured by Device','概数入力':'Estimated Count','連続走行':'Continuous Running',
+   '走行＋歩行':'Run + Walk','不明・未設定':'Unknown / Unspecified'};
+  if(is('[data-g4-source],[data-g4-format],[data-g4-summary-format]')&&Object.hasOwn(stepsLabels,s))
+   return stepsLabels[s];
+  if(is('[data-g4-summary-steps]')&&(m=s.match(/^(\d+)歩・(取得方法不明|端末・時計で計測|手入力・概数)$/))){
+   const sources={'取得方法不明':'Source Unknown','端末・時計で計測':'Measured by Device or Watch','手入力・概数':'Manual Entry / Estimate'};
+   return m[1]+' steps · '+sources[m[2]];
+  }
+  if(is('[data-g4-run-text]')&&(m=s.match(/^走行 ([\d.]+) km$/)))return 'Running '+m[1]+' km';
+  if(is('[data-g4-other]')&&(m=s.match(/^残り（差分） ([\d.]+) km$/)))return 'Remaining (Difference) '+m[1]+' km';
+  const labels={'記録全体':'Entire Activity','走り方':'Running Pattern','全体距離に占める走行部分':'Running Portion of Total Distance'};
+  if(is('.g4-summary p,.g4-bar-title')&&Object.hasOwn(labels,s))return labels[s];
+ }
+ if(inView('[data-e4-page]')){
+  const weather={'晴れ':'Sunny','くもり':'Cloudy','雨':'Rain','雪':'Snow',
+   '風が強い':'Strong Wind','湿度が高い':'High Humidity'};
+  if(is('[data-e4-weather],[data-e4-flag]')&&Object.hasOwn(weather,s))return weather[s];
+  if(is('.e4-label')&&s==='気温')return 'Temperature';
+  // This is an ephemeral UI summary, not the user's environmentNote text.
+  if(is('[data-e4-summary]')){
+   const words={'気温未入力':'Temperature Unanswered','天候未入力':'Weather Unselected',
+    '気温を確認':'Check Temperature','選択は未反映':'Choices Pending',...weather};
+   const translated=s.split(' · ').map(part=>{
+    if(Object.hasOwn(words,part))return words[part];
+    const match=part.match(/^(-?[\d.]+)℃$/);
+    return match?match[1]+'°C':null;
+   });
+   if(translated.every(x=>x!==null))return translated.join(' · ');
+  }
+ }
+ if(inView('[data-rof-v4-root]')){
+  const guidance={'少し疲れている付近':'Near A Little Fatigued',
+   'とても疲れている付近':'Near Very Fatigued',
+   '目安の間の値':'Between Illustrated Reference Points'};
+  if(is('.rv4-description-main')&&Object.hasOwn(guidance,s))return guidance[s];
+  if(is('[data-rof-v4-caption]')&&(m=s.match(/^選択値：(\d+) \/ 10$/)))
+   return 'Selected Rating: '+m[1]+' / 10';
+  if(is('.rv4-end-day-caption')&&(m=s.match(/^終了日：(\d{4}\/\d{1,2}\/\d{1,2})（(当日|翌日)）$/)))
+   return 'End Date: '+m[1]+' ('+(m[2]==='当日'?'Same Day':'Next Day')+')';
+ }
+ if(inView('[data-cx-page]')){
+  const names={'股関節部':'Hip Region','殿部':'Gluteal Region','大腿前面':'Front Thigh',
+   '大腿後面':'Back Thigh','膝蓋大腿関節部':'Patellofemoral Region','脛骨部':'Tibial Region',
+   '下腿後面':'Back of Lower Leg','足関節部':'Ankle Region','アキレス腱部':'Achilles Tendon Region',
+   '後足部':'Hindfoot','足底中部・内側縦足弓':'Midfoot / Medial Longitudinal Arch','前足部':'Forefoot'};
+  if(is('.cx-picker-title span')&&(m=s.match(/^(\d+)件$/)))return m[1]+' Regions';
+  if(attribute==='aria-label'&&is('path[data-region-focus]')&&(m=s.match(/^(.+)を確認$/))&&Object.hasOwn(names,m[1]))
+   return 'Review '+names[m[1]];
+  if(is('.cx-selected-chip,.cx-picker-option,.cx-context strong,.cx-stage svg title')&&Object.hasOwn(names,s))
+   return names[s];
+  if(attribute==='aria-label'&&is('.cx-selected-chip')&&(m=s.match(/^(.+)の選択を解除$/))&&Object.hasOwn(names,m[1]))
+   return 'Deselect '+names[m[1]];
+  if(is('[data-selected-expand]')&&s==='折りたたむ')return 'Collapse';
+  if(is('[data-selected-expand]')&&(m=s.match(/^ほか (\d+) 部位を表示$/)))return 'Show '+m[1]+' More Regions';
+  if(is('.cx-context-action')&&s==='選択を解除')return 'Deselect Region';
+  if(is('.cx-picker-title')&&(m=s.match(/^(.+)で選べる部位$/))&&Object.hasOwn({'前面':'Front','後面':'Back','足裏':'Sole'},m[1]))
+   return 'Regions on '+({'前面':'Front','後面':'Back','足裏':'Sole'}[m[1]]);
+ }
+ if(inView('[data-record-review]')&&inView('.rr-row-desc')){
+  const parts={'本人申告：':'Self-reported: ','シューズ：':'Shoes: ',
+   'メモあり':'Note Entered','環境メモあり':'Environment Note Entered'};
+  if(Object.hasOwn(parts,s))return parts[s];
+  if((m=s.match(/^気になった部位 (\d+)件$/)))return m[1]+' Regions of Interest';
+  if((m=s.match(/^(\d+)歩 ・ (端末で計測|推定・手入力|出所不明)$/))){
+   const t={'端末で計測':'Measured by Device','推定・手入力':'Estimated / Manually Entered','出所不明':'Source Unknown'};
+   return m[1]+' steps · '+t[m[2]];
+  }
+  if((m=s.match(/^運動前 ([\d—]+) ／ 運動後 ([\d—]+)$/)))return 'Before '+m[1]+' / After '+m[2];
+  if(s==='走歩混在（歩数未入力）')return 'Run + Walk (Steps Unanswered)';
+  if(s==='連続走行（歩数未入力）')return 'Continuous Running (Steps Unanswered)';
+  if((m=s.match(/^気温 (-?[\d.]+)℃$/)))return 'Temperature '+m[1]+'°C';
+ }
  // Only system-owned history fields are translated; stored user notes remain untouched.
  if(element?.closest?.('.datebox')&&(m=s.match(/^([日月火水木金土])曜日$/))){
   const day={日:'Sunday',月:'Monday',火:'Tuesday',水:'Wednesday',木:'Thursday',金:'Friday',土:'Saturday'};
