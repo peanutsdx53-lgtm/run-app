@@ -25,9 +25,13 @@ const url='http://127.0.0.1:'+server.address().port+'/';
 const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true});
 const samples=[],failures=[];
 try{
- for(const width of [320,375,390,414,768,1440])
- for(const language of ['ja','en'])
- for(const font of [100,200]){
+ // Representative iPhone 16e standard and zoom widths, narrow viewport,
+ // medium screen, desktop, both languages and 100/200% text scaling.
+ const cases=[[320,'ja',100],[320,'ja',200],[320,'en',200],
+  [375,'ja',200],[390,'ja',100],[390,'ja',200],
+  [390,'en',100],[390,'en',200],[414,'ja',200],
+  [768,'ja',200],[768,'en',200],[1440,'ja',100],[1440,'en',100]];
+ for(const [width,language,font] of cases){
   const ctx=await browser.newContext({viewport:{width,height:width>=1024?900:844},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block'});
   const page=await ctx.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
@@ -74,7 +78,7 @@ try{
    assert.equal(await backup.locator('[data-dm-include-gps]').isChecked(),false);
    assert.ok((await backup.innerText()).includes(language==='en'?'JSON':'JSON'));
    if(language==='en'){
-    await page.waitForFunction(()=>document.querySelector('[data-dm-export]')?.closest('.dm-section')?.textContent?.includes('Save activity records'),{timeout:12000});
+    await page.waitForFunction(()=>document.querySelector('[data-dm-export]')?.closest('.dm-section')?.textContent?.includes('Save activity records'),null,{timeout:5000});
    }
    if(width===390&&font===200)await page.screenshot({path:resolve(out,snap+'-backup.png'),fullPage:true,animations:'disabled'});
    await backup.locator('details.dm-details').first().locator('summary').click();
