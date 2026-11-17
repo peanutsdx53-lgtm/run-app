@@ -1,0 +1,33 @@
+name: S09 Result Screenshot Audit
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Audit seven widths, bilingual, zoom, three tabs and all anatomy views
+        run: node tests/resultS09DeepBrowser.mjs
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s09-deep-${{ matrix.engine }}
+          path: audit-output/s09-deep-${{ matrix.engine }}/
+          retention-days: 7
+          if-no-files-found: warn
