@@ -13,6 +13,7 @@ test('GPS fatigue before/after lead with the perceived-fatigue heading and keep 
 test('GPS review save controls scale with text magnification while keeping responsive layouts',()=>{
  assert.match(css,/\.gps-review \.gps-live-actions>\*\{min-height:52px;font-size:clamp\(\.8rem,3vw,\.92rem\)/);
  assert.doesNotMatch(css,/\.gps-review \.gps-live-actions>\*\{min-height:50px;font-size:clamp\(11px/);
+ assert.match(css,/@media\(max-width:480px\)\{\.gps-review \.gps-live-actions\{grid-template-columns:minmax\(0,1fr\)\}\}/);
  assert.match(view,/data-gps-save-route/);
  assert.match(view,/data-gps-action="save"/);
 });

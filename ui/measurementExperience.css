@@ -472,3 +472,6 @@
 /* An active timer alone does not establish GPS reception. */
 .gps-v35 .gps-v2-dot--waiting{background:#efcf89;box-shadow:0 0 0 4px #efcf8933}
 .gps-v35 .gps-v2-dot--error{background:#ff9f92;box-shadow:0 0 0 4px #ff9f9238}
+
+/* Narrow GPS review: long JA/EN action labels must stay within each button at 200% text. */
+@media(max-width:480px){.gps-review .gps-live-actions{grid-template-columns:minmax(0,1fr)}}
