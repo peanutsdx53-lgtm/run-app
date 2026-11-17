@@ -202,6 +202,20 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  const inView=selector=>!!element?.closest?.(selector);
  const is=selector=>!!element?.matches?.(selector);
  if(inView('.rv-course')){
+  // Generated course conditions and focus messages, never user-authored names.
+  const surfaceLabels={'舗装路':'Paved Road','陸上トラック':'Athletics Track',
+   'トレッドミル':'Treadmill','締まった土道':'Compacted Dirt Road',
+   '不整地トレイル':'Uneven Trail','天然芝':'Natural Grass',
+   '人工芝':'Artificial Turf','砂地':'Sand'};
+  if(is('.rv-surface-fine .rv-fine-top strong')&&
+   (m=s.match(/^(.+)を調整$/))&&Object.hasOwn(surfaceLabels,m[1]))
+   return 'Adjust '+surfaceLabels[m[1]];
+  if(is('[data-rv-summary-surface]')){
+   const parts=s.split('・');
+   if(parts.length>0&&parts.every(x=>Object.hasOwn(surfaceLabels,x)))
+    return parts.map(x=>surfaceLabels[x]).join(' · ');
+  }
+
   if(is('[data-rv-section-progress]')&&(m=s.match(/^区間割合 (\d+) \/ (\d+) 件入力・入力分の合計 ([\d.]+)%(（100%）)?$/)))
    return 'Segment Shares: '+m[1]+' / '+m[2]+' Entered · Entered Total '+m[3]+'%'+(m[4]?' (100%)':'');
   if(is('.rv-section-row-head strong')&&(m=s.match(/^区間 (\d+)$/)))return 'Segment '+m[1];
