@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi} from './ui/englishUi.js?v=20261117-record-stage2-v1';
+import {startEnglishUi} from './ui/englishUi.js?v=20261117-record-stage3-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -60,14 +60,14 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/rofJScale.js"),
     import("./ui/rofExperience.js?v=20261116-record-stage1-v1"),
     import("./ui/recordDraftReview.js"),
-    import("./ui/recordReviewExperience.js?v=20261117-record-stage2-v1"),
+    import("./ui/recordReviewExperience.js?v=20261117-record-stage3-v1"),
     import("./ui/manualRunStore.js?v=20261030-rof-evidence-v2"),
     import("./ui/manualRunLock.js"),
     import("./ui/manualRunCanonical.js"),
-    import("./ui/recordExperience.js?v=20261117-record-stage2-v1"),
+    import("./ui/recordExperience.js?v=20261117-record-stage3-v1"),
     import("./ui/coursePresetStore.js?v=20261026-courses-v30"),
     import("./ui/gaitExperience.js?v=20261109-p6d-recorddetails-v1"),
-    import("./ui/environmentExperience.js?v=20261109-p6d-recorddetails-v1"),
+    import("./ui/environmentExperience.js?v=20261117-record-stage3-v1"),
     import("./ui/bodyContextExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
     import("./ui/measurementExperience.js?v=20261116-gps-stage4-v1"),
