@@ -19,14 +19,15 @@ test('S15 share mode and mobile preview buttons expose actual checked state',()=
 test('S16 deletion requires acknowledgement plus exact word and explains why',()=>{
  const ui=makeDataUi();
  let html=renderDataDelete(ui);
- assert.match(html,/id="dm-delete-rule"/);
- assert.match(html,/aria-describedby="dm-delete-rule" disabled/);
+ assert.match(html,/「削除」を入力/,'short visible instruction is sufficient');
+ assert.match(html,/data-dm-delete-confirm disabled/);
+ assert.doesNotMatch(html,/id="dm-delete-rule"|次のチェックと「削除」の入力が両方そろうまで/);
  ui.deleteAgreed=true;html=renderDataDelete(ui);
- assert.match(html,/aria-describedby="dm-delete-rule" disabled/);
+ assert.match(html,/data-dm-delete-confirm disabled/,'checkbox alone is insufficient');
  ui.deleteAgreed=false;ui.deleteWord='削除';html=renderDataDelete(ui);
- assert.match(html,/aria-describedby="dm-delete-rule" disabled/);
+ assert.match(html,/data-dm-delete-confirm disabled/,'keyword alone is insufficient');
  ui.deleteAgreed=true;html=renderDataDelete(ui);
- assert.doesNotMatch(html,/aria-describedby="dm-delete-rule" disabled/);
+ assert.doesNotMatch(html,/data-dm-delete-confirm disabled/,'both conditions enable deletion');
  assert.match(html,/削除後は元に戻せません/);
 });
 
