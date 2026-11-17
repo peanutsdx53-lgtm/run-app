@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi} from './ui/englishUi.js?v=20261117-reflection-g2-v1';
+import {startEnglishUi} from './ui/englishUi.js?v=20261117-reflection-g3-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -75,9 +75,9 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/gpsReplayIndexedDbStore.js?v=20261116-gps-stage4-v1"),
     import("./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261117-reflection-g2-v1"),
+    import("./ui/resultExperience.js?v=20261117-reflection-g3-v1"),
     import("./ui/runQuestionContinuation.js"),
-    import("./ui/historyExperience.js?v=20261117-s17-help-v1"),
+    import("./ui/historyExperience.js?v=20261117-reflection-g3-v1"),
     import("./ui/settingsExperience.js?v=20261117-s17-help-v1"),
     import("./ui/portableDataV2.js?v=20261108-professor-m3-v1"),
     import("./ui/mentalExperience.js?v=20261108-professor-m4-v1"),
@@ -93,7 +93,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/firstUseExperience.js?v=20261115-onboarding-bilingual-v1"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
     import("./ui/consultationExperience.js?v=20261109-p7-wording-v1"),
-    import("./ui/explorationExperience.js?v=20261117-reflection-g0-v1"),
+    import("./ui/explorationExperience.js?v=20261117-reflection-g3-v1"),
     import("./ui/learningExperience.js?v=20261111-explore-controls-v1"),
     import("./ui/interpretationView.js?v=20261026-interpret-v14"),
     import("./ui/interpretationRules.js?v=20261026-interpret-v14"),
@@ -601,7 +601,8 @@ function recordExtras(){
         lastExploreRoute=route;
         const cat=CATEGORIES.find(c=>c.id===params.get('category'));
         if(cat&&cat.topics.includes(params.get('topic'))){
-          explorationUi.selected=cat.id;explorationUi.topic=params.get('topic');explorationUi.tab='field';explorationUi.modal='';explorationUi.sample=false;
+          explorationUi.selected=cat.id;explorationUi.topic=params.get('topic');explorationUi.tab='field';explorationUi.modal=params.get('memories')==='1'?'memories':'';explorationUi.sample=false;
+          if(explorationUi.modal==='memories'){const fresh=explorationExperience.makeUi(onboardStorage);explorationUi.notes=fresh.notes;explorationUi.canSave=fresh.canSave;explorationUi.emptyNotesRaw=fresh.emptyNotesRaw;explorationUi.notice=fresh.notice;explorationReturnAction='memories';}
         }
       }
       const focusRun=resolved.ok&&resolved.value.kind==='MANUAL'?resolved.value.record:null;
@@ -699,6 +700,7 @@ function recordExtras(){
    const found=manualRunStore.findManualRun(onboardStorage,runId);
    const record=found.ok?found.record:null;
    const resultHost=app.querySelector("#runload-result-v4");
+   const reflectionState=record?explorationExperience.makeUi(onboardStorage):null;
    if(params.has("record")&&!record){
     // Explicit deleted/unknown IDs never fall through to another saved run.
     const message=found.ok
@@ -709,7 +711,7 @@ function recordExtras(){
     resultExperience.mountResult(resultHost,record?.draft||{},record?{
      ...resultMentalOptions({sourceType:'MANUAL',recordId:record.id},resultHost),...resultPostHocOptions({sourceType:'MANUAL',recordId:record.id},resultHost),
      annotationLink:annotationEditor.editorLink({sourceType:'MANUAL',recordId:record.id}),showFatigue:params.get('view')==='fatigue',
-     saved:true,recordId:record.id,record,compareRecords:stored,questionNotes:explorationExperience.makeUi(onboardStorage).notes,compareId:params.has('compare')?params.get('compare'):undefined,showCompare:params.get('view')==='compare',
+     saved:true,recordId:record.id,record,compareRecords:stored,questionNotes:reflectionState.notes,reflectionData:{readable:reflectionState.canSave,notes:reflectionState.notes,manualRuns:stored},compareId:params.has('compare')?params.get('compare'):undefined,showCompare:params.get('view')==='compare',
      onContinueQuestion:async (sourceNoteId,text,fromRunId)=>{
       const saved=await manualRunLock.withManualRunWriteLock(()=>
        questionContinuation.saveRunQuestionContinuation(onboardStorage,manualRunStore.readManualRuns(onboardStorage),
@@ -802,7 +804,12 @@ function recordExtras(){
      gpsHistoryManageExpanded=event.currentTarget.open;
    });
    app.querySelector('#runload-history-v2')?.after(gpsPanel);
+   const historyNoteState=explorationExperience.makeUi(onboardStorage);
    historyExperience.mountHistory(app.querySelector("#runload-history-v2"),{
+    reflectionData:{readable:historyNoteState.canSave,notes:historyNoteState.notes,manualRuns:saved},
+    onOpenReflection:(id,sourceType)=>{if(sourceType==='MANUAL'&&manualRunStore.findManualRun(onboardStorage,id).record?.id===id){
+      location.hash=explorationLinkPolicy.explorationHref({sourceType:'MANUAL',recordId:id},'01','気付きと次の確認')+'&memories=1';
+    }},
     records:[...manualRunStore.toHistoryRows(saved),...(restDays.ok?restDays.records:[]),...gpsSummariesToHistoryRows(gpsV2Cache)],
     connected:saved.ok&&restDays.ok,gpsReadFailed:!gpsV2Cache.ok,ui:historyUi,
     onOpen:(id,sourceType)=>{
