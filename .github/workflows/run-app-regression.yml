@@ -235,6 +235,36 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  result-reflection-entry:
+    name: G2 ${{ matrix.engine }} saved-result reflection round trip
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test tool
+        run: npm install --no-save playwright@1.56.1
+      - name: Install browser and OS dependencies
+        run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Verify results to linked optional note and back
+        run: node tests/resultReflectionEntryBrowser.mjs
+      - name: Preserve G2 browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: g2-reflection-${{ matrix.engine }}
+          path: audit-output/g2-reflection-${{ matrix.engine }}/
+          if-no-files-found: warn
+          retention-days: 7
+
   offline:
     name: Installed PWA offline storage and bilingual flow
     runs-on: ubuntu-24.04
