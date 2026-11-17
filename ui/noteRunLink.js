@@ -16,7 +16,7 @@ export function resolveOptionalNoteRunLink(focusRunId,manualRuns){
 export function noteIsForRun(note,recordId){return isRunId(recordId)&&note?.recordId===recordId;}
 export function visibleTopicNotes(notes,topicId,focusRunId=null){
  if(!Array.isArray(notes))return [];
- return notes.filter(n=>n?.topicId===topicId&&(!focusRunId||noteIsForRun(n,focusRunId)));
+ return notes.filter(n=>n?.topicId===topicId&&(focusRunId?noteIsForRun(n,focusRunId):!n.recordId));
 }
 export function noteRunBackLink(note,manualRuns){
  if(!note?.recordId)return null;
