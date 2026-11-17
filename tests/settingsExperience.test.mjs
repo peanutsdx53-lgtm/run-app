@@ -82,20 +82,27 @@ test('unapproved shoe library and GPS alert cards are not displayed (038)',()=>{
  assert.ok(body.includes('shoeName'));
 });
 
-test('S16 help is next to Settings title and noninteractive language/theme chip is removed',()=>{
+test('S17 Settings help is a rightmost sibling, without passive language/theme chip',()=>{
  const html=renderSettings({profile:loadProfile(null),display:loadDisplay(null)});
- assert.match(html,/<header class="s2-heading"><div class="s2-heading-main"><h1>設定<\/h1><details class="rl-screen-help">/);
+ assert.match(html,/<header class="s2-heading"><div class="s2-heading-main"><h1>設定<\/h1><\/div><details class="rl-screen-help">/);
  assert.doesNotMatch(html,/class="s2-locale"|s2-status-dot|暗い画面/);
- assert.match(html,/data-settings-language="ja"/,'real interactive language settings are retained');
+ assert.match(html,/data-settings-language="ja"/);
  assert.match(html,/data-settings-language="en"/);
  const css=readFileSync(new URL('../ui/settingsExperience.css',import.meta.url),'utf8');
- assert.match(css,/\.s2-heading-main\{display:flex;align-items:center/);
- assert.match(css,/\.s2-heading \.s2-heading-main \.rl-screen-help\{margin-left:0/);
+ assert.match(css,/\.s2-page \.s2-heading>\.rl-screen-help\{margin-left:auto/);
+ assert.match(css,/\.s2-page \.s2-heading>\.rl-screen-help>p\{right:0;left:auto/);
 });
-
-test('S16 help disclosure is anchored within the viewport when opened',()=>{
- const css=readFileSync(new URL('../ui/settingsExperience.css',import.meta.url),'utf8');
- assert.match(css,/\.s2-page \.s2-heading \.s2-heading-main \.rl-screen-help\{position:static\}/);
- assert.match(css,/\.s2-page \.s2-heading \.s2-heading-main \.rl-screen-help>p\{/);
- assert.match(css,/width:min\(320px,calc\(100vw - 48px\)\)/);
+test('S17 all main-screen help controls share the same 44px visual contract',()=>{
+ const css=readFileSync(new URL('../ui/screenHelpUnified.css',import.meta.url),'utf8');
+ const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+ for(const token of ['.rl-screen-help','.rv-screen-help','.cx-screen-help','.rr-screen-help','.hx-help-toggle','.ex-top-help'])assert.ok(css.includes(token),token);
+ assert.match(css,/--rl-help-size:44px/);
+ assert.match(css,/--rl-help-border:#579eab/);
+ assert.match(css,/right:0!important;left:auto!important/);
+ assert.match(index,/screenHelpUnified\.css\?v=20261117-s17-help-v1/);
+ const review=readFileSync(new URL('../ui/recordReviewExperience.js',import.meta.url),'utf8');
+ assert.match(review,/class="rr-top-tag"[^>]*>[\s\S]*?<details class="rr-screen-help"/);
+ const result=readFileSync(new URL('../ui/resultExperience.js',import.meta.url),'utf8');
+ assert.match(result,/resultActions\(\)\+reflectionPath\(\)\+'<\/header>'/);
+ assert.match(result,/RESULT_BODY_LAYOUT_STYLES\+RESULT_HELP_RIGHT_STYLES/);
 });

@@ -100,5 +100,5 @@ export function renderSettings({profile,display,notice='',dataUi}){
    item('ⓘ','このアプリについて','アプリの現在の状態',`<p>手入力した走行やGPSで測定した記録を端末に保存できます。身体部位別の参考値は医学的な診断や傷害の予測を示すものではありません。</p>`,{hint:'アプリ情報'})
   ])
  ];
- return `<div class="s2-page" data-settings-v2><header class="s2-heading"><div class="s2-heading-main"><h1>設定</h1><details class="rl-screen-help"><summary aria-label="設定画面の使い方">？</summary><p>表示・利用者情報・記録・バックアップとプライバシーを管理します。保存と削除の操作はそれぞれの項目で確認できます。</p></details></div></header>${notice?`<p class="s2-notice" role="status">${escape(notice)}</p>`:''}<div class="s2-grid"><div class="s2-column">${groups.slice(0,3).join('')}</div><div class="s2-column">${groups.slice(3).join('')}</div></div><p class="s2-footer">${d.language==='en'?'English':'日本語版'} · 設定はこの端末に保存されます</p></div>`;
+ return `<div class="s2-page" data-settings-v2><header class="s2-heading"><div class="s2-heading-main"><h1>設定</h1></div><details class="rl-screen-help"><summary aria-label="設定画面の使い方">？</summary><p>表示・利用者情報・記録・バックアップとプライバシーを管理します。保存と削除の操作はそれぞれの項目で確認できます。</p></details></header>${notice?`<p class="s2-notice" role="status">${escape(notice)}</p>`:''}<div class="s2-grid"><div class="s2-column">${groups.slice(0,3).join('')}</div><div class="s2-column">${groups.slice(3).join('')}</div></div><p class="s2-footer">${d.language==='en'?'English':'日本語版'} · 設定はこの端末に保存されます</p></div>`;
 }

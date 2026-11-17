@@ -41,6 +41,32 @@ const M6_PRIVATE_PRINT_STYLES=`
 
 `;
 const RESULT_ACTIONS_V2_STYLES="\n/* Result layout redesign: facts first, one secondary More menu in Japanese and English. */\n.rv4-header{align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:10px}\n.rv4-header-left{flex:1 1 auto;min-width:0}\n.rv4-actions{flex:0 0 auto;min-width:0}\n.rv4-export-menu{position:relative;min-width:0}\n.rv4-export-menu>summary{min-width:94px;min-height:44px;white-space:normal;gap:8px}\n.rv4-export-options{position:absolute;right:0;left:auto;top:calc(100% + 6px);width:min(330px,calc(100vw - 28px));max-height:min(72vh,580px);overflow-y:auto;overscroll-behavior:contain;z-index:50;padding:12px;gap:9px}\n.rv4-export-options .rv4-posthoc-entry{display:block;width:100%;min-width:0;min-height:44px;padding:12px 13px;border:1px solid #56a4ae;border-radius:10px;color:#efffff;background:#124456;font-size:14px;font-weight:720;text-decoration:none;line-height:1.45;overflow-wrap:anywhere}\n.rv4-export-options .rv4-posthoc-entry:focus-visible{outline:2px solid #a8fff0;outline-offset:2px}\n.rv4-export-options .rv4-export-heading{padding:8px 0 2px;margin:0;font-size:12px;color:#aed4dc;border-top:1px solid #2e6678}\n.rv4-export-options button{white-space:normal;min-height:44px;font-size:13px;text-align:left}\n.rv4-export-privacy{padding:8px 4px 4px;max-width:100%}\n.rv4-hero{margin-top:3px}\n.rv4-notice{background:transparent;border:0;border-bottom:1px solid #2d6073;border-radius:0;box-shadow:none;margin:9px 0 3px;padding:8px 3px;color:#b4d2db;font-size:12px;line-height:1.5}\n.rv4-notice strong{font-size:12px;color:#95e6dd}\n.rv4-method-disclosure{margin:12px 2px 0;border-top:1px solid #2b6376;padding-top:8px}\n.rv4-method-disclosure>summary{font-size:13px;min-height:44px}\n.rv4-method-disclosure p{font-size:13px;line-height:1.7;overflow-wrap:anywhere}\n@media(max-width:800px){.rv4-header{flex-wrap:nowrap}.rv4-actions{width:auto}.rv4-export-options{max-width:calc(100vw - 28px)}.rv4-hero{margin-top:2px}}\n@media(max-width:375px){.rv4-header-left{gap:6px}.rv4-header h1{font-size:24px}.rv4-export-menu>summary{min-width:82px;padding:8px 10px}}\n@media print{.rv4-export-menu,.rv4-export-options,.rv4-method-disclosure,.rv4-header-help{display:none!important}}\n";
+
+const RESULT_HELP_RIGHT_STYLES=String.raw`
+/* S17 screen help: identical control to all ordinary RunLoad screen headers. */
+.rv4-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:9px}
+.rv4-header-left{min-width:0;flex:1 1 auto}
+.rv4-actions{min-width:0;flex:0 1 auto}
+.rv4-header>.rv4-header-help{flex:0 0 44px;margin-left:0;align-self:flex-start;position:relative;z-index:60}
+.rv4-header>.rv4-header-help>summary{
+ box-sizing:border-box;display:grid;place-items:center;list-style:none;
+ width:44px;height:44px;min-width:44px;min-height:44px;padding:0;margin:0;
+ appearance:none;border:1px solid #579eab;border-radius:11px;background:#12485b;
+ color:#cff8f5;font:850 20px/1 system-ui,-apple-system,sans-serif;cursor:pointer
+}
+.rv4-header>.rv4-header-help[open]>summary{border-color:#89e8e7;background:#176276}
+.rv4-header>.rv4-header-help>summary:focus-visible{outline:3px solid #a4f7ed;outline-offset:3px}
+.rv4-header>.rv4-header-help>p{
+ box-sizing:border-box;position:absolute;left:auto;right:0;top:calc(100% + 8px);
+ width:min(320px,calc(100vw - 32px));max-width:calc(100vw - 32px);
+ padding:13px 15px;margin:0;border:1px solid #5399aa;border-radius:12px;
+ background:#0b3447;color:#e9fbff;box-shadow:0 15px 32px #001522c4;
+ font-size:13px;line-height:1.75;font-weight:450;letter-spacing:normal;
+ text-align:left;overflow-wrap:anywhere;z-index:61
+}
+@media(max-width:380px){.rv4-header{gap:6px}.rv4-actions{min-width:0}}
+@media print{.rv4-header-help{display:none!important}}
+`;
 export function mountResult(host,inputDraft={},options={}){
  // GPS summaries reuse the same result experience; never convert GPS
  // reference values into an invented manual record.
@@ -233,7 +259,7 @@ export function mountResult(host,inputDraft={},options={}){
  };
  const extras=()=>!hasInput?'':'<details class="rv4-details"><summary><span class="rv4-icon">'+icon('memo')+'</span><span><strong>その日の記録</strong><small>使用品・コース・メモ</small></span><b>⌄</b></summary><div class="rv4-extra-grid"><div><small>シューズ</small><strong>'+clean(draft.shoeName||'—')+'</strong></div><div><small>歩数</small><strong>'+(positive(draft.steps)!==null?format(positive(draft.steps))+' 歩':'—')+'</strong></div><div><small>上り割合</small><strong>'+(number(draft.upPercent)!==null?format(number(draft.upPercent))+'%':'—')+'</strong></div></div><div class="rv4-note"><small>メモ</small><p>'+clean(draft.memo||'記録がありません')+'</p></div></details>';
  const missingActivityPanel=()=>!activityMissing?'':`<section class="rv4-activity-missing" role="group" aria-label="保存済み記録の活動種別を設定"><div><strong>12部位の参考値を表示するために、活動種別を選択してください</strong><p>この記録は活動種別が未設定です。距離と時間から活動の種類を推測しないため、数値は未取得となっています。</p></div><div class="rv4-activity-options">${[['RUNNING','ランニング'],['JOGGING','ジョギング'],['WALK','ウォーキング']].map(([id,label])=>`<button type="button" data-result-gait="${id}">${label}</button>`).join('')}</div><small>選択した活動種別だけをこの記録に保存します。走歩混在や文献の適用速度範囲外では、数値を算出できない場合があります。</small></section>`;
- const reflectionPath=()=>!hasInput?'':'<details class="rv4-reading-route rv4-header-help"><summary aria-label="結果の見方を開く">？</summary><p>記録を理解する順番：走行の事実、疲労感、文献の参考情報、過去比較。詳しい条件は各項目で確認できます。</p></details>';
+ const reflectionPath=()=>'<details class="rv4-reading-route rv4-header-help"><summary aria-label="結果の見方を開く">？</summary><p>記録を理解する順番：走行の事実、疲労感、文献の参考情報、過去比較。詳しい条件は各項目で確認できます。</p></details>';
  const resultNotice=()=>{
   const label=fromGps?'GPS記録':fromSaved?'保存した手入力記録':hasInput?'保存前の入力':'記録なし';
   const unavailableHint=reference?.reason==='MIXED_GAIT_NOT_QUANTIFIED'?'（走歩混在）':reference?.reason==='GAIT_NOT_SELECTED'?'（活動種別未設定）':reference?.state==='NO_AUTHORIZED_SPEED_REFERENCE'?'（文献条件外）':'';
@@ -258,7 +284,7 @@ export function mountResult(host,inputDraft={},options={}){
  '<p><strong>疲労感</strong><span data-source-rof-detail>出所：'+clean(origin.rof)+'</span></p></div></details>';
  const hero=()=>!hasInput?'':'<section class="rv4-hero"><div class="rv4-hero-glow"></div><div class="rv4-hero-left"><small class="rv4-date">'+titleDate+'　<span>'+clean(ACTIVITY_LABELS[fromGps?gps.activity:fromSaved?gaitOf(options.record):draft.activityGait]||'活動種別未設定')+'</span></small><div class="rv4-measures"><div class="rv4-distance"><small>距離</small><strong>'+format(distance,2)+'</strong><span>km</span></div><div class="rv4-secondary"><div><small>時間</small><strong>'+(duration>0?format(duration,0)+' 分':'—')+'</strong></div><div><small>平均ペース</small><strong>'+pace+' <em>/km</em></strong></div></div></div></div><div class="rv4-hero-report"><span>疲労感（本人回答）</span><div class="rv4-today-chips"><span>運動前 <b>'+(before??'—')+'</b></span><span>運動後 <b>'+(after??'—')+'</b></span></div></div>'+resultNotice()+sourceDetails()+'</section>';
  function draw(){
-  root.querySelector('.rv4-app').innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1>'+reflectionPath()+'</div>'+resultActions()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+mentalCard()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+extras()+referenceHelp()+'</div>';
+  root.querySelector('.rv4-app').innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1></div>'+resultActions()+reflectionPath()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+mentalCard()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+extras()+referenceHelp()+'</div>';
   root.querySelector('.rv4-app').dataset.printRof=exportRof?'true':'false';
   root.querySelector('[data-export-date]')?.addEventListener('change',e=>{exportDate=e.target.checked});
   root.querySelector('[data-export-rof]')?.addEventListener('change',e=>{
@@ -409,6 +435,6 @@ export function mountResult(host,inputDraft={},options={}){
    },'image/png');
   }catch{exportNotice(failText,true);}
  }
- if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BODY_LAYOUT_STYLES+'</style><div class="rv4-app"></div>';
+ if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_HELP_RIGHT_STYLES+'</style><div class="rv4-app"></div>';
  draw();
 }

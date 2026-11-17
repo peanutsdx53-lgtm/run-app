@@ -1,0 +1,78 @@
+/* S17: one screen-help visual contract across all ordinary screens.
+   Screen content remains local and unchanged; dialogs' close buttons are not screen help. */
+:root{--rl-help-size:44px;--rl-help-border:#579eab;--rl-help-bg:#12485b;--rl-help-ink:#cff8f5;--rl-help-active-border:#89e8e7;--rl-help-active-bg:#176276}
+:is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help){
+ position:relative!important;flex:0 0 var(--rl-help-size)!important;
+ margin-left:auto!important;align-self:flex-start!important;z-index:50
+}
+:is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help)>summary,
+.home-v3 .home-head .home-heading-actions>.hx-help-toggle,
+.ex-page .ex-heading .ex-top-help{
+ box-sizing:border-box!important;display:grid!important;place-items:center!important;
+ width:var(--rl-help-size)!important;height:var(--rl-help-size)!important;
+ min-width:var(--rl-help-size)!important;min-height:var(--rl-help-size)!important;
+ max-width:var(--rl-help-size)!important;max-height:var(--rl-help-size)!important;
+ padding:0!important;margin:0!important;
+ border:1px solid var(--rl-help-border)!important;
+ border-radius:11px!important;background:var(--rl-help-bg)!important;
+ color:var(--rl-help-ink)!important;font-size:20px!important;
+ font-weight:850!important;line-height:1!important;
+ font-family:system-ui,-apple-system,sans-serif!important;
+ text-align:center!important;white-space:nowrap!important;
+ cursor:pointer!important;appearance:none!important
+}
+:is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help)>summary::-webkit-details-marker{display:none}
+:is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help)[open]>summary,
+.home-v3 .home-head .home-heading-actions>.hx-help-toggle[aria-expanded="true"]{
+ background:var(--rl-help-active-bg)!important;
+ border-color:var(--rl-help-active-border)!important
+}
+:is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help)>summary:focus-visible,
+.home-v3 .home-head .home-heading-actions>.hx-help-toggle:focus-visible,
+.ex-page .ex-heading .ex-top-help:focus-visible{
+ outline:3px solid #a4f7ed!important;outline-offset:3px!important
+}
+:is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help)>:is(p,.lr-screen-help-content){
+ box-sizing:border-box!important;position:absolute!important;
+ right:0!important;left:auto!important;top:calc(100% + 8px)!important;
+ width:min(320px,calc(100vw - 32px))!important;
+ max-width:calc(100vw - 32px)!important;
+ padding:13px 15px!important;margin:0!important;
+ border:1px solid #5399aa!important;border-radius:12px!important;
+ background:#0b3447!important;color:#e9fbff!important;
+ box-shadow:0 15px 32px #001522c4!important;
+ font-size:13px!important;line-height:1.75!important;
+ font-weight:450!important;letter-spacing:normal!important;
+ text-align:left!important;overflow-wrap:anywhere!important;z-index:51!important
+}
+.home-v3 .home-head .home-heading-actions,
+.ex-page .ex-heading .ex-heading-actions{align-self:flex-start!important}
+.s2-page .s2-heading>.rl-screen-help{margin-left:auto!important}
+.rr-page .rr-heading{display:flex;align-items:center;flex-wrap:nowrap;gap:10px}
+.rr-page .rr-heading-left{min-width:0;flex:1 1 auto}
+.rr-page .rr-heading>.rr-screen-help{margin-left:0!important}
+@media(max-width:380px){.rr-page .rr-heading{gap:7px}}
+@media print{
+ :is(.rl-screen-help,.rv-screen-help,.cx-screen-help,.rr-screen-help):not(.hx-ach-help),
+ .home-v3 .home-head .hx-help-toggle,
+ .ex-page .ex-top-help{display:none!important}
+}
+
+/* S17 narrow Environment header: match Course/ROF two-row header.
+   English 200% text must not push the help outside the right boundary. */
+@media(max-width:430px){
+ .record-v3.environment-v4 .rv-head{
+  display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px!important;
+  column-gap:7px!important;row-gap:7px!important;align-items:start!important
+ }
+ .record-v3.environment-v4 .rv-head>.rv-back{
+  grid-column:1;grid-row:1;justify-self:start
+ }
+ .record-v3.environment-v4 .rv-head>.rv-screen-help{
+  grid-column:3;grid-row:1;justify-self:end;margin-left:0!important
+ }
+ .record-v3.environment-v4 .rv-head>h1{
+  grid-column:1/-1;grid-row:2;min-width:0;width:100%;
+  white-space:normal;word-break:normal;overflow-wrap:normal
+ }
+}
