@@ -33,7 +33,7 @@ try{
   [768,'ja',200],[768,'en',200],[1440,'ja',100],[1440,'en',100]];
  for(const [width,language,font] of cases){
   const ctx=await browser.newContext({viewport:{width,height:width>=1024?900:844},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block'});
-  const page=await ctx.newPage(),errors=[];
+  const page=await ctx.newPage(),errors=[];page.setDefaultTimeout(9000);page.setDefaultNavigationTimeout(14000);
   page.on('pageerror',e=>errors.push(e.message));
   try{
    await page.goto(url,{waitUntil:'networkidle'});
@@ -69,7 +69,7 @@ try{
    if([320,390,414].includes(width)&&([320,390].includes(width)||font===100)){
     await page.screenshot({path:resolve(out,snap+'-overview.png'),fullPage:true,animations:'disabled'});
    }
-   const backup=rootNode.locator('details.s2-item').filter({has:rootNode.locator('[data-dm-export]')});
+   const backup=rootNode.locator('details.s2-item').filter({has:page.locator('[data-dm-export]')});
    await backup.locator('summary').first().click();
    assert.equal(await backup.locator('details.dm-details').count(),2);
    assert.equal(await backup.locator('details.dm-details').first().evaluate(e=>e.open),false,'advanced backup contents collapsed');
@@ -84,7 +84,7 @@ try{
    await backup.locator('details.dm-details').first().locator('summary').click();
    assert.equal(await backup.locator('details.dm-details').first().evaluate(e=>e.open),true);
    await backup.locator('summary').first().click();
-   const deletion=rootNode.locator('details.s2-item').filter({has:rootNode.locator('[data-dm-delete-confirm]')});
+   const deletion=rootNode.locator('details.s2-item').filter({has:page.locator('[data-dm-delete-confirm]')});
    await deletion.locator('summary').first().click();
    assert.equal(await deletion.locator('[data-dm-delete-confirm]').isDisabled(),true);
    assert.equal(await deletion.locator('details.dm-details').first().evaluate(e=>e.open),false);
