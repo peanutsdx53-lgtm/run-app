@@ -57,3 +57,22 @@
  .home-v3 .home-head .hx-help-toggle,
  .ex-page .ex-top-help{display:none!important}
 }
+
+/* S17 narrow Environment header: match Course/ROF two-row header.
+   English 200% text must not push the help outside the right boundary. */
+@media(max-width:430px){
+ .record-v3.environment-v4 .rv-head{
+  display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px!important;
+  column-gap:7px!important;row-gap:7px!important;align-items:start!important
+ }
+ .record-v3.environment-v4 .rv-head>.rv-back{
+  grid-column:1;grid-row:1;justify-self:start
+ }
+ .record-v3.environment-v4 .rv-head>.rv-screen-help{
+  grid-column:3;grid-row:1;justify-self:end;margin-left:0!important
+ }
+ .record-v3.environment-v4 .rv-head>h1{
+  grid-column:1/-1;grid-row:2;min-width:0;width:100%;
+  white-space:normal;word-break:normal;overflow-wrap:normal
+ }
+}
