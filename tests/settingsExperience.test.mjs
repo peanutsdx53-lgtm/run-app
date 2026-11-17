@@ -104,5 +104,5 @@ test('S17 all main-screen help controls share the same 44px visual contract',()=
  assert.match(review,/class="rr-top-tag"[^>]*>[\s\S]*?<details class="rr-screen-help"/);
  const result=readFileSync(new URL('../ui/resultExperience.js',import.meta.url),'utf8');
  assert.match(result,/resultActions\(\)\+reflectionPath\(\)\+'<\/header>'/);
- assert.match(result,/RESULT_BODY_LAYOUT_STYLES\+RESULT_HELP_RIGHT_STYLES/);
+ assert.match(result,/RESULT_BODY_LAYOUT_STYLES\+RESULT_REFLECTION_ENTRY_STYLES\+RESULT_HELP_RIGHT_STYLES/);
 });
