@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateGpsReflectionEvent,inspectGpsReflectionContent,inspectGpsReflectionThread,inspectGpsReflectionChange,
- GPS_REFLECTION_EVENT_SCHEMA,GPS_REFLECTION_MAX_EVENTS} from '../ui/gpsReflectionEventContract.js';
+ GPS_REFLECTION_EVENT_SCHEMA,GPS_REFLECTION_MAX_EVENTS,GPS_REFLECTION_MAX_REVISIONS} from '../ui/gpsReflectionEventContract.js';
 
 const rid='gps-v2-aaaaaaaa-bbbb',mid='run-v1-aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
 const ref={sourceType:'GPS_V2',recordId:rid};const noteId='gps-refnote-aaaa1111';
@@ -89,4 +89,45 @@ test('G4-B0: timestamp inversion and future schema are rejected without repairin
  assert.equal(stream(a,{...b,schemaVersion:2}).code,'BAD_EVENT');
  assert.equal(stream(a,{...b,predecessorEventId:null}).code,'BAD_EVENT');
  assert.equal(stream({...a,action:'DELETE'}).ok,false);
+});
+
+test('G4-B0: coercible object IDs cannot enter immutable revision metadata',()=>{
+ const first=event(),second=event(2,'EDIT');
+ for(const [field,value] of [
+  ['eventId', {toString:()=>first.eventId}],
+  ['requestId', {toString:()=>first.requestId}],
+  ['noteId', {toString:()=>first.noteId}]
+ ])assert.equal(validateGpsReflectionEvent({...first,[field]:value}).ok,false,field);
+ assert.equal(validateGpsReflectionEvent({
+  ...second,predecessorEventId:{toString:()=>first.eventId}
+ }).ok,false,'coercible predecessor cannot be admitted');
+});
+
+test('G4-B0: malformed change requests and forged impossible snapshots fail closed',()=>{
+ const empty=stream();
+ for(const bad of [null,[],42,'CREATE'])
+  assert.equal(inspectGpsReflectionChange(empty,bad).code,'BAD_CHANGE');
+ const impossible={ok:true,value:{revision:GPS_REFLECTION_MAX_REVISIONS+1,
+  latestEventId:'gps-refevent-abcdefgh',status:'ACTIVE'}};
+ assert.equal(inspectGpsReflectionChange(impossible,{
+  expectedRevision:GPS_REFLECTION_MAX_REVISIONS+1,
+  expectedLastEventId:'gps-refevent-abcdefgh',action:'EDIT'
+ }).code,'BAD_THREAD');
+});
+
+test('G4-B0: no overflow beyond maximum revision even with a fully valid thread',()=>{
+ const id=i=>'gps-refevent-e'+String(i).padStart(8,'0');
+ const request=i=>'gps-refrequest-r'+String(i).padStart(8,'0');
+ const events=Array.from({length:GPS_REFLECTION_MAX_REVISIONS},(_,i)=>({
+  ...event(1),revision:i+1,eventId:id(i+1),requestId:request(i+1),
+  predecessorEventId:i===0?null:id(i),
+  action:i===0?'CREATE':'EDIT',savedAt
+ }));
+ const full=inspectGpsReflectionThread(ref,noteId,events);
+ assert.equal(full.ok,true,full.reason);
+ assert.equal(full.value.revision,GPS_REFLECTION_MAX_REVISIONS);
+ assert.equal(inspectGpsReflectionChange(full,{
+  expectedRevision:GPS_REFLECTION_MAX_REVISIONS,
+  expectedLastEventId:id(GPS_REFLECTION_MAX_REVISIONS),action:'EDIT'
+ }).code,'REVISION_LIMIT');
 });
