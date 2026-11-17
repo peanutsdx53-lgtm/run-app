@@ -140,3 +140,14 @@ html.rl-text-large{font-size:112.5%}html.rl-reduce-motion *,html.rl-reduce-motio
 .s2-page .s2-heading .s2-heading-main .rl-screen-help{margin-left:0;flex:0 0 auto}
 .s2-page .s2-heading .s2-heading-main .rl-screen-help>summary{min-height:44px;min-width:44px}
 @media(max-width:800px){.s2-page .s2-heading{flex-wrap:nowrap;gap:0}}
+
+/* Help disclosure must anchor to the heading group, not to the small ? button:
+   otherwise its 320px popup extends off the left side after moving help beside title. */
+.s2-page .s2-heading{position:relative;z-index:51}
+.s2-page .s2-heading .s2-heading-main{position:relative;z-index:1}
+.s2-page .s2-heading .s2-heading-main .rl-screen-help{position:static}
+.s2-page .s2-heading .s2-heading-main .rl-screen-help>p{
+ left:0;right:auto;top:calc(100% + 8px);
+ width:min(320px,calc(100vw - 48px));
+ max-width:calc(100vw - 32px);
+}

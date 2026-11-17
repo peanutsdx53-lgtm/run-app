@@ -62,6 +62,12 @@ try{
    assert.ok(Math.abs((layout.help.top+layout.help.bottom)/2-(layout.title.top+layout.title.bottom)/2)<=12,
       'help and heading must be vertically aligned: '+JSON.stringify(layout));
    assert.ok(layout.help.width>=43&&layout.help.height>=43,'help touch target at least 44px');
+   const helpDisclosure=rootNode.locator('.s2-heading-main .rl-screen-help');
+   await helpDisclosure.locator('summary').click();
+   const helpPopup=await helpDisclosure.locator('p').boundingBox();
+   assert.ok(helpPopup&&helpPopup.x>=-1&&helpPopup.x+helpPopup.width<=width+2,
+    'help text must remain within screen, even on 320px and 200% text: '+JSON.stringify(helpPopup));
+   await helpDisclosure.locator('summary').click();
    assert.ok(layout.documentWidth<=width+2,'settings must not overflow viewport: '+JSON.stringify(layout));
    assert.equal(await rootNode.locator('[data-settings-language="ja"]').count(),1);
    assert.equal(await rootNode.locator('[data-settings-language="en"]').count(),1);

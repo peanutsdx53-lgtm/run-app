@@ -92,3 +92,10 @@ test('S16 help is next to Settings title and noninteractive language/theme chip 
  assert.match(css,/\.s2-heading-main\{display:flex;align-items:center/);
  assert.match(css,/\.s2-heading \.s2-heading-main \.rl-screen-help\{margin-left:0/);
 });
+
+test('S16 help disclosure is anchored within the viewport when opened',()=>{
+ const css=readFileSync(new URL('../ui/settingsExperience.css',import.meta.url),'utf8');
+ assert.match(css,/\.s2-page \.s2-heading \.s2-heading-main \.rl-screen-help\{position:static\}/);
+ assert.match(css,/\.s2-page \.s2-heading \.s2-heading-main \.rl-screen-help>p\{/);
+ assert.match(css,/width:min\(320px,calc\(100vw - 48px\)\)/);
+});
