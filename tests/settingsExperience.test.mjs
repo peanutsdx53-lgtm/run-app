@@ -81,3 +81,14 @@ test('unapproved shoe library and GPS alert cards are not displayed (038)',()=>{
  assert.match(app,/shoeName:""/);
  assert.ok(body.includes('shoeName'));
 });
+
+test('S16 help is next to Settings title and noninteractive language/theme chip is removed',()=>{
+ const html=renderSettings({profile:loadProfile(null),display:loadDisplay(null)});
+ assert.match(html,/<header class="s2-heading"><div class="s2-heading-main"><h1>設定<\/h1><details class="rl-screen-help">/);
+ assert.doesNotMatch(html,/class="s2-locale"|s2-status-dot|暗い画面/);
+ assert.match(html,/data-settings-language="ja"/,'real interactive language settings are retained');
+ assert.match(html,/data-settings-language="en"/);
+ const css=readFileSync(new URL('../ui/settingsExperience.css',import.meta.url),'utf8');
+ assert.match(css,/\.s2-heading-main\{display:flex;align-items:center/);
+ assert.match(css,/\.s2-heading \.s2-heading-main \.rl-screen-help\{margin-left:0/);
+});
