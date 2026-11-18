@@ -320,7 +320,9 @@ jobs:
   gps-reflection-g4b2:
     name: G4-B2 ${{ matrix.engine }} atomic GPS note revision and erasure
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    # OS dependency installation for WebKit can take ~20 min on loaded runners.
+    # This is an execution limit change only; every browser test remains required.
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
