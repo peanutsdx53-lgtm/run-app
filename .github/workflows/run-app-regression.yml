@@ -295,6 +295,28 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  gps-reflection-g4b1:
+    name: G4-B1 ${{ matrix.engine }} V1 upgrade and atomic dependent-data erasure
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install supported browser test tool
+        run: npm install --no-save playwright@1.56.1
+      - name: Install browser with OS dependencies
+        run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Reject GPS parent/child atomic deletion and migration regressions
+        run: node tests/gpsReflectionSchemaUpgradeBrowser.mjs
+
   offline:
     name: Installed PWA offline storage and bilingual flow
     runs-on: ubuntu-24.04
