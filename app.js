@@ -374,6 +374,8 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   const settingsUi={profile:settingsExperience.loadProfile(onboardStorage,introStored||{}),display:settingsExperience.loadDisplay(onboardStorage),notice:"",
    profileSnapshot:readSettingsSnapshot(settingsExperience.PROFILE_KEY),displaySnapshot:readSettingsSnapshot(settingsExperience.DISPLAY_KEY)};
   const dataUi=dataManagementUi.makeDataUi();
+  const gpsNotesUi={recordId:null,loaded:null,selectedId:null,draft:null,busy:false,notice:""};
+  const gpsNoteScreen=await import("./ui/gpsReflectionScreen.js");
   const confirmedDeleteWord=()=>dataUi.deleteWord===(settingsUi.display.language==='en'?'DELETE':'削除');
   settingsExperience.applyDisplay(settingsUi.display,document.documentElement);
   const englishUi=startEnglishUi(document,{language:settingsUi.display.language});
@@ -691,7 +693,11 @@ function recordExtras(){
     const v2id=params.get('gps');
     const saved=gpsV2Cache.ok?gpsV2Cache.records.find(r=>r.id===v2id):null;
     const host=app.querySelector('#runload-result-v4');
-    if(saved)resultExperience.mountResult(host,{}, {gpsSummary:saved,annotationLink:annotationEditor.editorLink({sourceType:'GPS_V2',recordId:saved.id}),showFatigue:params.get('view')==='fatigue',...resultMentalOptions({sourceType:'GPS_V2',recordId:saved.id},host),...resultPostHocOptions({sourceType:'GPS_V2',recordId:saved.id},host)});
+    if(saved){
+     resultExperience.mountResult(host,{}, {gpsSummary:saved,annotationLink:annotationEditor.editorLink({sourceType:'GPS_V2',recordId:saved.id}),showFatigue:params.get('view')==='fatigue',...resultMentalOptions({sourceType:'GPS_V2',recordId:saved.id},host),...resultPostHocOptions({sourceType:'GPS_V2',recordId:saved.id},host)});
+     if(gpsNotesUi.recordId!==saved.id)Object.assign(gpsNotesUi,{recordId:saved.id,loaded:null,selectedId:null,draft:null,busy:false,notice:''});
+     host.insertAdjacentHTML('afterend',gpsNoteScreen.renderGpsNotes(gpsNotesUi));
+    }
     else host.innerHTML='<div class="gd-empty">指定されたGPS記録がありません。</div>';
    }else{
    const stored=manualRunStore.readManualRuns(onboardStorage);
@@ -1240,6 +1246,58 @@ function recordExtras(){
     render();app.querySelector("[data-condition-open]")?.focus({preventScroll:true});
   });
   app.addEventListener("click",async(event)=>{
+    const noteAction=event.target.closest('[data-gps-n-open],[data-gps-n-select],[data-gps-n-new],[data-gps-n-save],[data-gps-n-delete],[data-gps-n-close]');
+    if(noteAction){
+     const panel=noteAction.closest('[data-gps-reflect-id]'),id=panel?.dataset.gpsReflectId;
+     const params=new URLSearchParams(location.hash.split('?')[1]||'');
+     if(!panel||currentPage()!=='result'||params.get('gps')!==id||
+        !gpsV2Cache.ok||!gpsV2Cache.records.some(x=>x.id===id)||gpsNotesUi.busy)return;
+     const refresh=()=>{if(panel.isConnected)panel.outerHTML=gpsNoteScreen.renderGpsNotes(gpsNotesUi);};
+     if(noteAction.matches('[data-gps-n-close]')){
+      Object.assign(gpsNotesUi,{loaded:null,selectedId:null,draft:null,notice:''});refresh();return;
+     }
+     if(noteAction.matches('[data-gps-n-new]')){
+      Object.assign(gpsNotesUi,{selectedId:null,draft:'',notice:''});refresh();return;
+     }
+     if(noteAction.matches('[data-gps-n-select]')){
+      const note=gpsNotesUi.loaded?.notes?.find(n=>n.noteId===noteAction.dataset.gpsNSelect);
+      if(!note)return;
+      Object.assign(gpsNotesUi,{selectedId:note.noteId,draft:note.text,notice:''});refresh();return;
+     }
+     if(noteAction.matches('[data-gps-n-open]')){
+      gpsNotesUi.busy=true;gpsNotesUi.notice='読み取り中です。';refresh();
+      const loaded=await gpsNoteScreen.readPrivateGpsRunNotes(id);
+      if(gpsNotesUi.recordId!==id||currentPage()!=='result')return;
+      Object.assign(gpsNotesUi,{loaded,busy:false,selectedId:null,draft:null,notice:loaded.ok?'記述を読み込みました。':loaded.reason});
+      refresh();return;
+     }
+     if(!gpsNotesUi.loaded?.ok)return;
+     const chosen=gpsNotesUi.loaded.notes.find(n=>n.noteId===gpsNotesUi.selectedId);
+     const remove=noteAction.matches('[data-gps-n-delete]');
+     if(remove&&!chosen)return;
+     if(remove&&!window.confirm('現在の本文を完全に削除します。取り消せません。削除しますか？'))return;
+     const guid=globalThis.crypto?.randomUUID?.();
+     if(!guid){gpsNotesUi.notice='安全な操作IDを生成できません';refresh();return;}
+     const draft=panel.querySelector('[data-gps-n-text]')?.value??'';
+     const action=remove?'DELETE':chosen?'EDIT':'CREATE';
+     const noteId=chosen?.noteId||'gps-refnote-'+guid;
+     gpsNotesUi.busy=true;gpsNotesUi.draft=draft;gpsNotesUi.notice='保存中です。';refresh();
+     const result=await gpsV2.commitGpsV2ReflectionChange({
+      action,recordRef:{sourceType:'GPS_V2',recordId:id},noteId,
+      requestId:'gps-refrequest-'+globalThis.crypto.randomUUID(),
+      expectedRevision:chosen?.revision??0,
+      expectedLastEventId:chosen?.lastEventId??null,
+      ...(remove?{}:{text:draft})
+     });
+     if(gpsNotesUi.recordId!==id||currentPage()!=='result')return;
+     if(result.ok){
+      const loaded=await gpsNoteScreen.readPrivateGpsRunNotes(id);
+      Object.assign(gpsNotesUi,{loaded,busy:false,selectedId:remove?null:noteId,draft:null,
+       notice:loaded.ok?(remove?'本文を削除しました。':'自由記述を保存しました。'):loaded.reason});
+     }else Object.assign(gpsNotesUi,{busy:false,notice:'保存できません：'+(result.reason||result.code)});
+     refresh();return;
+    }
+
     const dismissEntry=event.target.closest('[data-ex-entry-dismiss]');
     if(dismissEntry){dismissEntry.closest('[data-ex-learning-entry]')?.remove();return;}
     // E6: the user chooses both the source type and one exact saved date.
