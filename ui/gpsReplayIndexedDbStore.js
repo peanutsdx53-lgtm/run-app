@@ -3,6 +3,9 @@ import {prepareGpsMeasurement,GPS_RECORD_LIMIT,validGpsCalendarDate,validGpsCrea
 import {estimateGpsEnergy} from './gpsEnergyDisplay.js';
 import {checkReplayPoints,evaluateGpsReplayReference} from './gpsReplayReference.js';
 import {surfaceKeys} from './recordDraftReview.js';
+import {normalizeRecordRef} from './recordRef.js';
+import {inspectGpsReflectionContent,inspectGpsReflectionThread,inspectGpsReflectionChange,
+ validateGpsReflectionEvent,GPS_REFLECTION_EVENT_SCHEMA} from './gpsReflectionEventContract.js';
 export const GPS_V2_DB='runload-v2-gps-dynamic-v2';
 export const GPS_V2_SUMMARIES='summaries',GPS_V2_DETAILS='details';
 // G4-B1: same-origin, same-DB dependent stores. No note writer or public UI yet.
@@ -363,4 +366,138 @@ export async function clearGpsV2Runs(){
   await done;
   return {ok:true};
  }catch{return {ok:false,reason:'GPS結果の削除に失敗しました'};}
+}
+
+/**
+ * G4-B2: explicit, voluntary GPS V2 reflection CREATE/EDIT/DELETE.
+ * This API is NOT yet called by screens. Caller must provide the full typed
+ * identity, note ID, unique request ID and CAS head. Never infer a latest run.
+ *
+ * The GPS parent, current private text and metadata-only history are read
+ * and changed in ONE IndexedDB readwrite transaction. A stale head, missing
+ * parent, unreadable source, corrupted note, duplicate request or invalid
+ * transition aborts that transaction with no partial write. Deleting a note
+ * physically removes the only current text row; DELETE events have no text.
+ *
+ * G4-C backup / G4-D UI remain separate gates; old backup formats are unchanged.
+ */
+export async function commitGpsV2ReflectionChange(input){
+ const fail=(code,reason)=>({ok:false,code,reason});
+ const exact=(obj,fields)=>obj&&typeof obj==='object'&&!Array.isArray(obj)&&
+  Object.keys(obj).length===fields.length&&fields.every(key=>Object.hasOwn(obj,key));
+ const base=['action','expectedLastEventId','expectedRevision','noteId','recordRef','requestId'];
+ try{
+  if(!input||!['CREATE','EDIT','DELETE'].includes(input.action)||
+    !exact(input,input.action==='DELETE'?base:[...base,'text']))
+   return fail('BAD_CHANGE','自由記述の変更内容が正しくありません');
+  const checkedRef=normalizeRecordRef(input.recordRef);
+  if(!checkedRef.ok)return checkedRef;
+  if(checkedRef.value.sourceType!=='GPS_V2')
+   return fail('SOURCE_MISMATCH','保存済みGPS V2記録のみ対象です');
+  const ref=checkedRef.value;
+  const empty=inspectGpsReflectionThread(ref,input.noteId,[]);
+  if(!empty.ok)return empty;
+  const noteContent=input.action==='DELETE'?null:inspectGpsReflectionContent({
+   recordRef:ref,noteId:input.noteId,text:input.text
+  });
+  if(noteContent&&!noteContent.ok)return noteContent;
+  if(typeof input.requestId!=='string'||!/^gps-refrequest-[a-z0-9-]{8,64}$/.test(input.requestId))
+   return fail('BAD_REQUEST_ID','自由記述の操作IDが正しくありません');
+  if(typeof globalThis.crypto?.randomUUID!=='function')
+   return fail('ID_UNAVAILABLE','安全な操作識別子を生成できません');
+  // Reject invalid CAS values before opening a write transaction.
+  if(!Number.isSafeInteger(input.expectedRevision)||input.expectedRevision<0||
+     !(input.expectedLastEventId===null||
+       typeof input.expectedLastEventId==='string'&&
+       /^gps-refevent-[a-z0-9-]{8,64}$/.test(input.expectedLastEventId)))
+   return fail('BAD_CHANGE','改訂版の指定が不正です');
+
+  let tx,done;
+  try{
+   const db=await database();
+   tx=db.transaction([
+    GPS_V2_SUMMARIES,GPS_V2_DETAILS,GPS_V2_REFLECTION_CONTENT,GPS_V2_REFLECTION_EVENTS
+   ],'readwrite');
+   done=completion(tx);
+   const reject=async(code,reason)=>{
+    try{tx.abort();}catch{}
+    await done.catch(()=>{});
+    return fail(code,reason);
+   };
+   const summaryStore=tx.objectStore(GPS_V2_SUMMARIES);
+   const detailStore=tx.objectStore(GPS_V2_DETAILS);
+   const textStore=tx.objectStore(GPS_V2_REFLECTION_CONTENT);
+   const eventStore=tx.objectStore(GPS_V2_REFLECTION_EVENTS);
+
+   // Parent check is authoritative ONLY inside this commit transaction.
+   const [parent,detail]=await Promise.all([
+    result(summaryStore.get(ref.recordId)),
+    result(detailStore.get(ref.recordId))
+   ]);
+   if(!validGpsV2Summary(parent)||
+      (parent.detailSaved?!validGpsV2Pair(parent,detail):detail!==undefined))
+    return reject('UNREADABLE_PARENT','保存元のGPS V2記録を検証できません');
+
+   // Use the compound index order, never try to repair historical revisions.
+   // [noteId]..[noteId,[]] is the exact IndexedDB tuple-prefix range,
+   // also catching invalidly-typed revision keys instead of hiding them.
+   const range=IDBKeyRange.bound([input.noteId],[input.noteId,[]]);
+   const [events,textRow,priorRequest]=await Promise.all([
+    result(eventStore.index('byNoteRevision').getAll(range)),
+    result(textStore.get(input.noteId)),
+    result(eventStore.index('byRequestId').get(input.requestId))
+   ]);
+   if(priorRequest!==undefined)
+    return reject('REQUEST_CONFLICT','操作IDはすでに使用されています');
+   const inspected=inspectGpsReflectionThread(ref,input.noteId,events);
+   if(!inspected.ok)return reject(inspected.code,inspected.reason);
+   const active=inspected.value.status==='ACTIVE';
+   if(active){
+    const content=inspectGpsReflectionContent(textRow);
+    if(!content.ok||content.value.text!==textRow.text||
+       content.value.recordRef.recordId!==ref.recordId||
+       content.value.noteId!==input.noteId)
+     return reject('BAD_CONTENT','保存済み自由記述に不整合があります');
+   }else if(textRow!==undefined){
+    return reject('BAD_CONTENT','履歴と本文の保存状態が一致しません');
+   }
+   const next=inspectGpsReflectionChange(inspected,{
+    action:input.action,expectedRevision:input.expectedRevision,
+    expectedLastEventId:input.expectedLastEventId
+   });
+   if(!next.ok)return reject(next.code,next.reason);
+   const timestamp=new Date().toISOString();
+   const orderedTimestamp=input.action==='DELETE'&&inspected.value.updatedAt>timestamp
+    ?inspected.value.updatedAt:timestamp;
+   const event={
+    schemaVersion:GPS_REFLECTION_EVENT_SCHEMA,
+    eventId:'gps-refevent-'+globalThis.crypto.randomUUID(),
+    requestId:input.requestId,noteId:input.noteId,recordRef:ref,
+    predecessorEventId:next.value.predecessorEventId,
+    revision:next.value.nextRevision,action:input.action,
+    // A clock rollback must not make private text impossible to erase.
+    // DELETE may reuse the previous event time to preserve monotonic history;
+    // when that occurs, savedAt is a monotonic ordering marker, not a verified
+    // wall-clock time of deletion. Do not present it as an observed timestamp.
+    savedAt:orderedTimestamp
+   };
+   const validEvent=validateGpsReflectionEvent(event);
+   if(!validEvent.ok)return reject(validEvent.code,validEvent.reason);
+   const full=inspectGpsReflectionThread(ref,input.noteId,[...events,event]);
+   if(!full.ok)return reject(full.code,full.reason);
+   // All keys remain private and note text NEVER enters immutable event metadata.
+   if(input.action==='DELETE')textStore.delete(input.noteId);
+   else textStore.put(noteContent.value);
+   eventStore.add(validEvent.value);
+   await done;
+   return {ok:true,recordRef:ref,noteId:input.noteId,revision:event.revision,
+    latestEventId:event.eventId,status:full.value.status};
+  }catch{
+   try{tx?.abort();}catch{}
+   if(done)await done.catch(()=>{});
+   return fail('WRITE_UNKNOWN','自由記述の保存状態を確認できません。既存記録を再確認してください');
+  }
+ }catch{
+  return fail('BAD_CHANGE','自由記述の指定が正しくありません');
+ }
 }
