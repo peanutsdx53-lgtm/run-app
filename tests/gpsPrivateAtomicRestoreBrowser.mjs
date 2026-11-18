@@ -93,6 +93,10 @@ try{
     const denied=await restoreGpsPrivateV3Atomic(v3,params);
     if(denied.ok||denied.code!=='CONSENT_REQUIRED')throw Error('Restore without consent '+json(denied));
    }
+   const inherited=Object.assign(Object.create({confirmPrivateRestore:true}),choice);
+   const bypass=await restoreGpsPrivateV3Atomic(v3,inherited);
+   if(bypass.ok||bypass.code!=='CONSENT_REQUIRED')
+    throw Error('Inherited restore consent bypassed explicit own-property gate');
    const bad=await restoreGpsPrivateV3Atomic(v3,{...confirmed,unexpected:true});
    if(bad.ok||bad.code!=='BAD_CHOICE')throw Error('Unknown option did not fail closed');
   }finally{
