@@ -73,10 +73,14 @@ function existingGpsDatabase(){
  */
 export async function restoreGpsPrivateV3Atomic(v3Text,choice={}){
  // Gate consent before even examining a private backup file or IndexedDB.
- const permission=inspectGpsPrivateBackupChoice(choice);
+ if(!choice||typeof choice!=='object'||Array.isArray(choice)||
+    Object.keys(choice).some(k=>!['includeGps','includeGpsReflections','confirmPrivateRestore'].includes(k)))
+  return fail('BAD_CHOICE','復元の選択が不正です');
+ const {confirmPrivateRestore,...selection}=choice;
+ const permission=inspectGpsPrivateBackupChoice(selection);
  if(!permission.ok)return permission;
  if(!permission.value.includeGps||!permission.value.includeGpsReflections||
-    choice.confirmPrivateRestore!==true)
+    confirmPrivateRestore!==true)
   return fail('CONSENT_REQUIRED','GPSと任意記述の復元を個別に明示選択してください');
 
  const checked=inspectPortableV3Backup(v3Text);
