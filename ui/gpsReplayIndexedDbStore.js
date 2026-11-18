@@ -5,6 +5,11 @@ import {checkReplayPoints,evaluateGpsReplayReference} from './gpsReplayReference
 import {surfaceKeys} from './recordDraftReview.js';
 export const GPS_V2_DB='runload-v2-gps-dynamic-v2';
 export const GPS_V2_SUMMARIES='summaries',GPS_V2_DETAILS='details';
+// G4-B1: same-origin, same-DB dependent stores. No note writer or public UI yet.
+// Version 2 upgrades existing V1 rows in place; never clear or rewrite originals.
+export const GPS_V2_DB_VERSION=2;
+export const GPS_V2_REFLECTION_CONTENT='reflectionContent';
+export const GPS_V2_REFLECTION_EVENTS='reflectionEvents';
 export const GPS_V2_BACKUP_FORMAT='gps-records-backup-v2';
 // Keep accepting the original exported format; the IndexedDB name must not change.
 const LEGACY_GPS_V2_BACKUP_FORMAT='runload-gps-v2-backup';
@@ -25,11 +30,21 @@ function database(){
   let request,settled=false;
   const timer=setTimeout(()=>fail(Error('GPS_DB_TIMEOUT')),7000);
   function fail(error){if(settled)return;settled=true;clearTimeout(timer);reject(error);}
-  try{request=globalThis.indexedDB.open(GPS_V2_DB,1);}catch(e){fail(e);return;}
+  try{request=globalThis.indexedDB.open(GPS_V2_DB,GPS_V2_DB_VERSION);}catch(e){fail(e);return;}
   request.onupgradeneeded=()=>{
    try{const db=request.result;
     if(!db.objectStoreNames.contains(GPS_V2_SUMMARIES))db.createObjectStore(GPS_V2_SUMMARIES,{keyPath:'id'});
     if(!db.objectStoreNames.contains(GPS_V2_DETAILS))db.createObjectStore(GPS_V2_DETAILS,{keyPath:'id'});
+     if(!db.objectStoreNames.contains(GPS_V2_REFLECTION_CONTENT)){
+      const notes=db.createObjectStore(GPS_V2_REFLECTION_CONTENT,{keyPath:'noteId'});
+      notes.createIndex('byRecordId','recordRef.recordId',{unique:false});
+     }
+     if(!db.objectStoreNames.contains(GPS_V2_REFLECTION_EVENTS)){
+      const events=db.createObjectStore(GPS_V2_REFLECTION_EVENTS,{keyPath:'eventId'});
+      events.createIndex('byRecordId','recordRef.recordId',{unique:false});
+      events.createIndex('byNoteRevision',['noteId','revision'],{unique:true});
+      events.createIndex('byRequestId','requestId',{unique:true});
+     }
    }catch(e){fail(e);}
   };
   request.onerror=()=>fail(request.error||Error('OPEN'));
@@ -245,11 +260,28 @@ export async function saveGpsV2Run(session,options={}){
   return {ok:true,summary:candidate.summary,duplicate:false};
  }catch{return {ok:false,code:'WRITE_UNKNOWN',reason:FAIL};}
 }
+// Hard-erasure of dependent GPS reflection text and event metadata in the SAME
+// transaction as the parent deletion. Reject absent indexes/blocked writes.
+// G4-B1 has no note writer, no UI and no backup inclusion.
+async function purgeGpsReflectionsInTransaction(tx,recordId){
+ const notes=tx.objectStore(GPS_V2_REFLECTION_CONTENT);
+ const events=tx.objectStore(GPS_V2_REFLECTION_EVENTS);
+ const [noteKeys,eventKeys]=await Promise.all([
+  result(notes.index('byRecordId').getAllKeys(recordId)),
+  result(events.index('byRecordId').getAllKeys(recordId))
+ ]);
+ if(!Array.isArray(noteKeys)||!Array.isArray(eventKeys))throw Error('REFLECTION_INDEX_UNREADABLE');
+ for(const key of noteKeys)notes.delete(key);
+ for(const key of eventKeys)events.delete(key);
+}
 export async function deleteGpsV2Run(id){
  try{
-  const db=await database(),tx=db.transaction([GPS_V2_SUMMARIES,GPS_V2_DETAILS],'readwrite'),done=completion(tx);
+  const db=await database(),tx=db.transaction([
+   GPS_V2_SUMMARIES,GPS_V2_DETAILS,GPS_V2_REFLECTION_CONTENT,GPS_V2_REFLECTION_EVENTS
+  ],'readwrite'),done=completion(tx);
   const found=await result(tx.objectStore(GPS_V2_SUMMARIES).get(id));
   if(!validGpsV2Summary(found)){tx.abort();await done.catch(()=>{});return {ok:false,reason:'記録がありません'};}
+  await purgeGpsReflectionsInTransaction(tx,id);
   tx.objectStore(GPS_V2_SUMMARIES).delete(id);
   tx.objectStore(GPS_V2_DETAILS).delete(id);
   await done;return {ok:true};
@@ -321,9 +353,13 @@ export function gpsV2DetailToFeature(summary,detail){
 
 export async function clearGpsV2Runs(){
  try{
-  const db=await database(),tx=db.transaction([GPS_V2_SUMMARIES,GPS_V2_DETAILS],'readwrite'),done=completion(tx);
+  const db=await database(),tx=db.transaction([
+   GPS_V2_SUMMARIES,GPS_V2_DETAILS,GPS_V2_REFLECTION_CONTENT,GPS_V2_REFLECTION_EVENTS
+  ],'readwrite'),done=completion(tx);
   tx.objectStore(GPS_V2_SUMMARIES).clear();
   tx.objectStore(GPS_V2_DETAILS).clear();
+  tx.objectStore(GPS_V2_REFLECTION_CONTENT).clear();
+  tx.objectStore(GPS_V2_REFLECTION_EVENTS).clear();
   await done;
   return {ok:true};
  }catch{return {ok:false,reason:'GPS結果の削除に失敗しました'};}
