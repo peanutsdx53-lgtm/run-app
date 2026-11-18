@@ -1,6 +1,15 @@
 /* English backup/restore/deletion UI; no change to data mutation, schema,
  * GPS route allowlists or backup privacy guarantees. */
 export const ENGLISH_FINAL_BACKUP=Object.freeze({
+"GPS走行後の自由記述も含める（初期OFF・別途明示選択）": "Include Post-Run GPS Reflections (Off by Default; Separate Opt-In)",
+"現在の本文と本文を含まない改訂履歴を未暗号化v3形式で保存します。第三者と共有しないでください。": "Current reflection text and revision history without text are saved in an unencrypted v3 file. Do not share it with others.",
+"GPS記録と本人の自由記述の復元を別途確認しました。": "I separately confirm restoring GPS records and private reflections.",
+"この走行の記述を開く": "Open Reflections for This Run",
+"走行後の振り返り（任意）": "Post-Run Reflection (Optional)",
+"新しい気づきを書く": "Write a New Reflection",
+"本文を削除": "Delete Current Text",
+"変更を保存": "Save Changes",
+"記述を保存": "Save Reflection",
  "運動記録・体調・メモ・設定などをJSONファイルに保存します。外部へ自動送信されません。": "Save activity records, conditions, notes and settings as a JSON file. Nothing is sent automatically.",
  "個人情報を含み、暗号化されません。": "Contains personal information and is not encrypted.",
  "第三者と共有せず、安全な場所に保管してください。": "Do not share this file with others. Store it securely.",
