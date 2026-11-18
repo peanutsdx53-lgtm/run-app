@@ -58,7 +58,7 @@ export function renderGpsNotes(ui){
  else if(!loaded.ok)body='<p role="alert">'+escapeHtml(loaded.reason)+'</p>'+button('data-gps-n-open','再読み取り');
  else{
   body='<p>現在の記述：'+loaded.notes.length+'件／削除済み：'+loaded.deletedCount+'件（本文なし）</p>';
-  for(const n of loaded.notes)body+='<div class="gps-n-row"><span>'+escapeHtml(n.text.slice(0,80))+'</span>'+button('data-gps-n-select="'+escapeHtml(n.noteId)+'"','編集')+'</div>';
+  for(const n of loaded.notes)body+='<div class="gps-n-row"><span data-user-authored>'+escapeHtml(n.text.slice(0,80))+'</span>'+button('data-gps-n-select="'+escapeHtml(n.noteId)+'"','編集')+'</div>';
   body+=button('data-gps-n-new','新しい気づきを書く')+
    '<label for="gps-private-note-text">気づきや次回の問い（1〜500文字）</label>'+
    '<textarea id="gps-private-note-text" data-gps-n-text maxlength="500"'+(busy?' disabled':'')+'>'+escapeHtml(ui.draft??selected?.text??'')+'</textarea>'+

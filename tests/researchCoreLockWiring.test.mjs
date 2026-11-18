@@ -6,9 +6,11 @@ const lock=readFileSync(new URL('../ui/manualRunLock.js',import.meta.url),'utf8'
 test('manual run, correction, export, restore and deletion all use one exclusion lock',()=>{
  for(const snippet of [
   'withManualRunWriteLock(()=>canonical.mutate(s=>manualRunStore.saveManualRun',
-  'withManualRunWriteLock(()=>canonical.snapshotTask(nativeStorage,s=>dataManagement.exportPortableBackup',
+  'withManualRunWriteLock(()=>canonical.snapshotTask(nativeStorage,s=>',
   'manualRunStore.classifySavedManualRun(s,record.id,gait)'
  ])assert.ok(app.replace(/\s+/g,'').includes(snippet.replace(/\s+/g,'')),'missing serialized operation: '+snippet);
+ for(const s of ['dataManagement.exportPortableBackup(s,{includeGps:dataUi.includeGps})','gpsPrivatePortableFlow.exportPrivatePortableV3(s)'])
+  assert.ok(app.includes(s),'both backup writers remain inside the canonical lock: '+s);
  for(const snippet of [
   'withManualRunWriteLock(async()=>{const saved=await canonical.portableMutation(nativeStorage,s=>dataManagement.restorePortableBase',
   'return saved.ok?dataManagement.restorePortableAnnotations(dataUi.pendingText,saved):saved',

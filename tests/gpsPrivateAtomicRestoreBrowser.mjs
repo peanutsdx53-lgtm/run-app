@@ -227,7 +227,8 @@ try{
  console.log('G4-D '+engine+' PASS explicit-open/edit/confirmed-delete/navigate-closed');
  // G4-C5 real settings: opt-in v3 private export, validated restore, tombstones.
  await page.goto('http://127.0.0.1:'+server.address().port+'/#/settings');
- await page.locator('[data-dm-include-gps]').waitFor();
+ await page.locator('details.s2-item').filter({has:page.locator('summary strong:text-is("バックアップ・復元")')}).locator('summary').click();
+ await page.locator('[data-dm-include-gps]').waitFor({state:'visible'});
  assert.equal(await page.locator('[data-dm-include-private]').isDisabled(),true);
  await page.locator('[data-dm-include-gps]').evaluate(el=>el.click());
  assert.equal(await page.locator('[data-dm-include-private]').isDisabled(),false);
