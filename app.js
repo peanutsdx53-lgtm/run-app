@@ -376,6 +376,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   const dataUi=dataManagementUi.makeDataUi();
   const gpsNotesUi={recordId:null,loaded:null,selectedId:null,draft:null,busy:false,notice:""};
   const gpsNoteScreen=await import("./ui/gpsReflectionScreen.js");
+  const gpsPrivatePortableFlow=await import("./ui/gpsPrivatePortableUiFlow.js");
   const confirmedDeleteWord=()=>dataUi.deleteWord===(settingsUi.display.language==='en'?'DELETE':'削除');
   settingsExperience.applyDisplay(settingsUi.display,document.documentElement);
   const englishUi=startEnglishUi(document,{language:settingsUi.display.language});
@@ -917,12 +918,14 @@ function recordExtras(){
     }
     const portable=event.target.closest('[data-dm-file]');
     if(portable){
-      const file=portable.files?.[0];dataUi.pendingText="";dataUi.preview=null;dataUi.safetyCopy=false;dataUi.orphanBlocked=false;dataUi.orphanConsent=false;
+      const file=portable.files?.[0];dataUi.pendingText="";dataUi.preview=null;dataUi.safetyCopy=false;dataUi.orphanBlocked=false;dataUi.orphanConsent=false;dataUi.privateRestoreAgree=false;
       if(file){
         if(file.size>dataManagement.PORTABLE_MAX_BYTES){dataUi.notice="80MB以内のJSONファイルを選択してください。";}
         else{
           try{
-            const text=await file.text(),plan=await dataManagement.preflightPortableRestore(onboardStorage,text);
+            const text=await file.text(),plan=gpsPrivatePortableFlow.isPrivateV3(text)?
+              await gpsPrivatePortableFlow.preflightPrivatePortableRestore(onboardStorage,text):
+              await dataManagement.preflightPortableRestore(onboardStorage,text);
             if(plan.ok){dataUi.pendingText=text;dataUi.preview=plan;dataUi.notice="ファイルを検証しました。対象の内容を確認してください。";}
             else{dataUi.notice=plan.reason;if(plan.code==='ORPHANED'){dataUi.pendingText=text;dataUi.orphanBlocked=true;}}
           }catch{dataUi.notice="バックアップファイルを安全に確認できませんでした。";}
@@ -930,7 +933,9 @@ function recordExtras(){
       }
       refreshDataSettings();return;
     }
-    if(event.target.matches('[data-dm-include-gps]')){dataUi.includeGps=event.target.checked;return;}
+    if(event.target.matches('[data-dm-include-gps]')){dataUi.includeGps=event.target.checked;if(!dataUi.includeGps)dataUi.includeGpsReflections=false;refreshDataSettings();return;}
+     if(event.target.matches('[data-dm-include-private]')){dataUi.includeGpsReflections=dataUi.includeGps&&event.target.checked;refreshDataSettings();return;}
+     if(event.target.matches('[data-dm-private-restore-agree]')){dataUi.privateRestoreAgree=event.target.checked;refreshDataSettings();return;}
     if(event.target.matches('[data-dm-orphan-consent]')){
        dataUi.orphanConsent=event.target.checked;
        const button=app.querySelector('[data-dm-isolate]');
@@ -940,7 +945,7 @@ function recordExtras(){
      if(event.target.matches('[data-dm-safety]')){
       dataUi.safetyCopy=event.target.checked;
       const button=app.querySelector('[data-dm-restore]');
-      if(button)button.disabled=!(dataUi.preview?.ok&&(!dataUi.preview.hasExisting||dataUi.safetyCopy));
+      if(button)button.disabled=!(dataUi.preview?.ok&&(!dataUi.preview.hasExisting||dataUi.safetyCopy)&&(!dataUi.preview.privateV3||dataUi.privateRestoreAgree));
       return;
     }
     if(event.target.matches('[data-dm-delete-agree]')){
@@ -1431,7 +1436,9 @@ function recordExtras(){
       dataUi.busy=true;
       try{
         if(dataAction.hasAttribute('data-dm-export')){
-          const result=await manualRunLock.withManualRunWriteLock(()=>canonical.snapshotTask(nativeStorage,s=>dataManagement.exportPortableBackup(s,{includeGps:dataUi.includeGps})));
+          const result=await manualRunLock.withManualRunWriteLock(()=>canonical.snapshotTask(nativeStorage,s=>
+            dataUi.includeGpsReflections&&dataUi.includeGps?gpsPrivatePortableFlow.exportPrivatePortableV3(s):
+            dataManagement.exportPortableBackup(s,{includeGps:dataUi.includeGps})));
           if(!result.ok)dataUi.notice=result.reason;
           else{
             try{downloadDataFile(result.text);dataUi.notice="ファイルの保存を開始しました。端末のダウンロード先を確認してください。";}
@@ -1449,8 +1456,18 @@ function recordExtras(){
             catch{dataUi.notice='隔離ファイルを保存できませんでした。元の情報は変更していません。';}
            }
          }else if(dataAction.hasAttribute('data-dm-restore')){
-          if(!dataUi.preview?.ok||!dataUi.pendingText||(dataUi.preview.hasExisting&&!dataUi.safetyCopy))return;
-          const restored=await manualRunLock.withManualRunWriteLock(async()=>{const saved=await canonical.portableMutation(nativeStorage,s=>dataManagement.restorePortableBase(s,dataUi.pendingText));return saved.ok?dataManagement.restorePortableAnnotations(dataUi.pendingText,saved):saved;});
+          if(!dataUi.preview?.ok||!dataUi.pendingText||(dataUi.preview.hasExisting&&!dataUi.safetyCopy)||
+              (dataUi.preview.privateV3&&!dataUi.privateRestoreAgree))return;
+          const restored=await manualRunLock.withManualRunWriteLock(async()=>{
+            if(dataUi.preview.privateV3)return gpsPrivatePortableFlow.restorePrivatePortableV3(onboardStorage,dataUi.pendingText,{
+             confirmed:dataUi.privateRestoreAgree,restoreOthers:async(v2Text)=>{
+              const saved=await canonical.portableMutation(nativeStorage,s=>dataManagement.restorePortableBase(s,v2Text));
+              return saved.ok?dataManagement.restorePortableAnnotations(v2Text,saved):saved;
+             }
+            });
+            const saved=await canonical.portableMutation(nativeStorage,s=>dataManagement.restorePortableBase(s,dataUi.pendingText));
+            return saved.ok?dataManagement.restorePortableAnnotations(dataUi.pendingText,saved):saved;
+           });
           if(restored.ok){location.reload();return;}
           dataUi.notice=restored.reason;
           if(restored.partial){dataUi.preview=null;dataUi.pendingText="";}
