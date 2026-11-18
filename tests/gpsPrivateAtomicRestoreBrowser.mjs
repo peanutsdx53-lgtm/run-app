@@ -225,5 +225,55 @@ try{
  assert.equal(await page.locator('[data-gps-n-text]').count(),0,'Navigation does not automatically reopen note');
  assert.deepEqual(errors,[],'No unhandled UI errors');
  console.log('G4-D '+engine+' PASS explicit-open/edit/confirmed-delete/navigate-closed');
+ // G4-C5 real settings: opt-in v3 private export, validated restore, tombstones.
+ await page.goto('http://127.0.0.1:'+server.address().port+'/#/settings');
+ await page.locator('[data-dm-include-gps]').waitFor();
+ assert.equal(await page.locator('[data-dm-include-private]').isDisabled(),true);
+ await page.locator('[data-dm-include-gps]').evaluate(el=>el.click());
+ assert.equal(await page.locator('[data-dm-include-private]').isDisabled(),false);
+ await page.locator('[data-dm-include-private]').evaluate(el=>el.click());
+ await page.evaluate(()=>{
+  const original=URL.createObjectURL;
+  URL.createObjectURL=function(blob){window.__g4c5Blob=blob;return original.call(URL,blob);};
+ });
+ await page.locator('[data-dm-export]').evaluate(el=>el.click());
+ await page.waitForFunction(()=>window.__g4c5Blob instanceof Blob);
+ const privateJson=await page.evaluate(()=>window.__g4c5Blob.text());
+ const privateBackup=JSON.parse(privateJson);
+ assert.equal(privateBackup.version,3,'Exported file must be strict v3');
+ assert.equal(privateBackup.gps.summaries.length,1);
+ assert.equal(privateBackup.gpsReflections.contents.length,0,'Deleted note text cannot export');
+ assert.ok(privateBackup.gpsReflections.events.length>=3);
+ assert.ok(!privateJson.includes('G4-D voluntary note edit from GPS result'));
+ const cleared=await page.evaluate(async()=>{
+  const gps=await import('/ui/gpsReplayIndexedDbStore.js');
+  return gps.clearGpsV2Runs();
+ });
+ assert.equal(cleared.ok,true,JSON.stringify(cleared));
+ await page.locator('[data-dm-file]').setInputFiles({
+  name:'gps-private-v3.json',mimeType:'application/json',buffer:Buffer.from(privateJson,'utf8')
+ });
+ await page.locator('[data-dm-private-restore-agree]').waitFor();
+ assert.equal(await page.locator('[data-dm-restore]').isDisabled(),true,
+  'Private restore cannot proceed without separate consent');
+ await page.locator('[data-dm-private-restore-agree]').evaluate(el=>el.click());
+ if(await page.locator('[data-dm-safety]').count())
+  await page.locator('[data-dm-safety]').evaluate(el=>el.click());
+ assert.equal(await page.locator('[data-dm-restore]').isDisabled(),false);
+ await page.locator('[data-dm-restore]').evaluate(el=>el.click());
+ await page.waitForFunction(async id=>{
+  const gps=await import('/ui/gpsReplayIndexedDbStore.js');
+  const current=await gps.readGpsV2Summaries();
+  return current.ok&&current.records.some(x=>x.id===id);
+ },gpsId,{timeout:20000});
+ const reread=await page.evaluate(async id=>{
+  const {readPrivateGpsRunNotes}=await import('/ui/gpsReflectionScreen.js');
+  return readPrivateGpsRunNotes(id);
+ },gpsId);
+ assert.equal(reread.ok,true,JSON.stringify(reread));
+ assert.equal(reread.notes.length,0,'Private DELETE must not restore mutable text');
+ assert.ok(reread.deletedCount>=2,'Deleted metadata retained');
+ assert.deepEqual(errors,[],'No unhandled browser errors in v3 UI');
+ console.log('G4-C5 '+engine+' PASS explicit opt-in private export/restore with text erasure');
  await context.close();
 }finally{await browser.close();await new Promise(done=>server.close(done));}
