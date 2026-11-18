@@ -178,6 +178,7 @@ try{
   if(!final.ok||final.text.includes(a.text)||final.text.includes('ABORT_PRIVATE_C4'))
    throw Error('GPS-only backup format leaked private reflection');
 
+  window.__g4dParentId=first.summary.id;
   return {separateConsentNoDbAccess:true,allFourStoresAtomic:true,
    latestTextOnly:true,metadataOnlyHistory:true,exactRepeatZeroWrites:true,
    parentConflictNoPartial:true,tombstoneNoResurrection:true,
@@ -187,5 +188,42 @@ try{
  assert.deepEqual(errors,[],'No unhandled browser errors');
  for(const [key,v] of Object.entries(tests))assert.equal(v,true,key);
  console.log('G4-C4 '+engine+' PASS '+JSON.stringify(tests));
+ // G4-D: same-origin full app; private text is not rendered without opening.
+ const gpsId=await page.evaluate(()=>window.__g4dParentId);
+ assert.ok(gpsId&&gpsId.startsWith('gps-v2-'));
+ const appUrl='http://127.0.0.1:'+server.address().port+'/#/result?gps='+encodeURIComponent(gpsId);
+ await page.goto(appUrl);
+ await page.locator('[data-gps-reflect-id]').waitFor();
+ assert.equal(await page.locator('[data-gps-n-text]').count(),0,'No private text before opening');
+ await page.locator('[data-gps-n-open]').evaluate(el=>el.click());
+ await page.locator('[data-gps-n-text]').waitFor();
+ assert.ok(await page.locator('[data-gps-n-select]').count()>=1,'Existing note is available after user opens');
+ await page.locator('[data-gps-n-select]').first().evaluate(el=>el.click());
+ await page.locator('[data-gps-n-text]').evaluate(el=>{el.value='G4-D voluntary note edit from GPS result';});
+ await page.locator('[data-gps-n-save]').evaluate(el=>el.click());
+ await page.waitForFunction(()=>document.querySelector('[data-gps-reflect-id] [role=status]')?.textContent.includes('保存しました'));
+ const latest=await page.evaluate(async id=>{
+  const {readPrivateGpsRunNotes}=await import('/ui/gpsReflectionScreen.js');
+  return readPrivateGpsRunNotes(id);
+ },gpsId);
+ assert.equal(latest.ok,true,JSON.stringify(latest));
+ assert.ok(latest.notes.some(n=>n.text==='G4-D voluntary note edit from GPS result'));
+ await page.evaluate(()=>{window.__gpsDeleteConfirms=0;window.confirm=()=>{window.__gpsDeleteConfirms++;return true;};});
+ await page.locator('[data-gps-n-delete]').evaluate(el=>el.click());
+ await page.waitForFunction(()=>document.querySelector('[data-gps-reflect-id] [role=status]')?.textContent.includes('削除しました'));
+ const after=await page.evaluate(async id=>{
+  const {readPrivateGpsRunNotes}=await import('/ui/gpsReflectionScreen.js');
+  return {data:await readPrivateGpsRunNotes(id),confirmations:window.__gpsDeleteConfirms};
+ },gpsId);
+ assert.equal(after.confirmations,1,'Deletion requires explicit user confirmation');
+ assert.equal(after.data.ok,true);
+ assert.ok(!after.data.notes.some(n=>n.text.includes('G4-D voluntary note edit')));
+ await page.locator('[data-gps-n-close]').evaluate(el=>el.click());
+ assert.equal(await page.locator('[data-gps-n-text]').count(),0,'Close discards shown private text');
+ await page.goto(appUrl);
+ await page.locator('[data-gps-n-open]').waitFor();
+ assert.equal(await page.locator('[data-gps-n-text]').count(),0,'Navigation does not automatically reopen note');
+ assert.deepEqual(errors,[],'No unhandled UI errors');
+ console.log('G4-D '+engine+' PASS explicit-open/edit/confirmed-delete/navigate-closed');
  await context.close();
 }finally{await browser.close();await new Promise(done=>server.close(done));}
