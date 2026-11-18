@@ -202,6 +202,12 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  // rendering contexts. Do not process textarea/input values or user-entered
  // course names, notes, dates, region annotations, or saved record bodies.
  const inView=selector=>!!element?.closest?.(selector);
+ // Only system-generated, source-bound GPS private counts and restore warnings.
+ // User-authored note spans carry data-user-authored and are excluded upstream.
+ if(inView('[data-gps-reflect-id]')&&(m=s.match(/^現在の記述：(\d+)件／削除済み：(\d+)件（本文なし）$/)))
+  return 'Current reflections: '+m[1]+' / Deleted: '+m[2]+' (text erased)';
+ if(inView('[data-dm-ui]')&&(m=s.match(/^GPS自由記述：現在本文(\d+)件、改訂履歴(\d+)件。別の保存領域は一括復元ではなく、途中で失敗すると部分復元の可能性があります。$/)))
+  return 'GPS private reflections: '+m[1]+' current texts, '+m[2]+' revision events. Other storage areas are not restored atomically; partial restore is possible if a step fails.';
  const is=selector=>!!element?.matches?.(selector);
  if(inView('.rv-course')){
   // Generated course conditions and focus messages, never user-authored names.

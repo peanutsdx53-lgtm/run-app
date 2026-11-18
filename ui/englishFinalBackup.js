@@ -1,6 +1,16 @@
 /* English backup/restore/deletion UI; no change to data mutation, schema,
  * GPS route allowlists or backup privacy guarantees. */
 export const ENGLISH_FINAL_BACKUP=Object.freeze({
+"記録と自分の感覚を照らし合わせ、気づきや疑問を残せます。医学的診断ではありません。入力は任意です。": "Relate your running records to your own sensations and note insights or questions. This is not a medical diagnosis; writing is optional.",
+"気づきや次回の問い（1〜500文字）": "Insights or Questions for Next Time (1–500 Characters)",
+"記述を読み込みました。": "Reflections Loaded.",
+"本文を削除しました。": "Current Reflection Text Deleted.",
+"自由記述を保存しました。": "Reflection Saved.",
+"読み取り中です。": "Reading Saved Reflections…",
+"保存中です。": "Saving…",
+"安全な操作IDを生成できません": "Could Not Generate a Safe Operation ID",
+"現在の本文を完全に削除します。取り消せません。削除しますか？": "Permanently delete current text? This cannot be undone. Delete?",
+"現在の本文を完全に削除します。元には戻せません。削除しますか？": "Permanently delete the current text? This cannot be undone. Delete?",
 "GPS走行後の自由記述も含める（初期OFF・別途明示選択）": "Include Post-Run GPS Reflections (Off by Default; Separate Opt-In)",
 "現在の本文と本文を含まない改訂履歴を未暗号化v3形式で保存します。第三者と共有しないでください。": "Current reflection text and revision history without text are saved in an unencrypted v3 file. Do not share it with others.",
 "GPS記録と本人の自由記述の復元を別途確認しました。": "I separately confirm restoring GPS records and private reflections.",
