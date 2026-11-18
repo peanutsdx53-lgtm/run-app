@@ -80,7 +80,7 @@ export async function restoreGpsPrivateV3Atomic(v3Text,choice={}){
  const permission=inspectGpsPrivateBackupChoice(selection);
  if(!permission.ok)return permission;
  if(!permission.value.includeGps||!permission.value.includeGpsReflections||
-    confirmPrivateRestore!==true)
+    !Object.hasOwn(choice,'confirmPrivateRestore')||confirmPrivateRestore!==true)
   return fail('CONSENT_REQUIRED','GPSと任意記述の復元を個別に明示選択してください');
 
  const checked=inspectPortableV3Backup(v3Text);
