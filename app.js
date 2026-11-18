@@ -668,6 +668,9 @@ function recordExtras(){
       const openedRecordSections=app.querySelectorAll(".record-extra-section[open]");
       if(openedRecordSections.length||app.querySelector(".record-extra-section"))state.recordOpenSections=[...openedRecordSections].map(el=>el.dataset.recordSection);
  const page=currentPage();if(page!=="exploration-tree")lastExploreRoute=null;
+  // Never retain an opened GPS private text panel after leaving that exact run.
+  if(page!=='result'||!location.hash.includes('?gps=')||new URLSearchParams(location.hash.split('?')[1]||'').get('gps')!==gpsNotesUi.recordId)
+   Object.assign(gpsNotesUi,{recordId:null,loaded:null,selectedId:null,draft:null,busy:false,notice:''});
  const content={home,condition,record,"record-review":recordReview,result:()=>'<section id="runload-result-v4" aria-label="走行結果"></section>',"dynamic-result":()=>'<section data-gps-dynamic aria-label="GPS動的結果"><p class="gd-empty">動的結果を読み込んでいます…</p></section>',annotation:()=>'<section id="runload-annotation-editor" aria-label="保存済み走行の後日補完"></section>',history,"exploration-tree":explore,learning:()=>'<section id="runload-learning" class="lr-root" aria-label="学習"></section>',settings,"record-start":recordStart,"record-course":recordCourse,course:()=>recordCourse(true),"record-rof":recordRof,"record-more":recordMore,"record-compare":recordCompare,"record-reflection":recordReflection,"record-environment":recordEnvironment}[page]?.()||secondary(page);
  const navPage=page==="condition"?"home":page==="result"||page==="dynamic-result"?"result":["measurement","gps-review"].includes(page)?"record":["record-review","record-course","record-rof","record-more","record-compare","record-reflection","record-environment","gps-rof"].includes(page)?"record":page;
  // Return links to the common confirmation when a detail was opened from that screen.
@@ -1252,7 +1255,7 @@ function recordExtras(){
      const params=new URLSearchParams(location.hash.split('?')[1]||'');
      if(!panel||currentPage()!=='result'||params.get('gps')!==id||
         !gpsV2Cache.ok||!gpsV2Cache.records.some(x=>x.id===id)||gpsNotesUi.busy)return;
-     const refresh=()=>{if(panel.isConnected)panel.outerHTML=gpsNoteScreen.renderGpsNotes(gpsNotesUi);};
+     const refresh=()=>{const active=app.querySelector('[data-gps-reflect-id]');if(active?.dataset.gpsReflectId===id)active.outerHTML=gpsNoteScreen.renderGpsNotes(gpsNotesUi);};
      if(noteAction.matches('[data-gps-n-close]')){
       Object.assign(gpsNotesUi,{loaded:null,selectedId:null,draft:null,notice:''});refresh();return;
      }
