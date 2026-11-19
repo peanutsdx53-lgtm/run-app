@@ -70,6 +70,17 @@ export async function restorePrivatePortableV3(storage,text,{confirmed=false,res
   reason:'GPS・自由記述の復元後、別保存領域の復元結果が不明になりました。再読込して照合してください'};}
  if(other?.ok!==true)return {ok:false,partial:true,code:other?.code||'OTHER_FAILED',
   reason:'GPSと本人の自由記述の復元は完了しましたが、その他の記録は未完了の可能性があります：'+(other?.reason||'保存状態を確認してください')};
+ // A successful notification is permitted only after a fresh, complete
+ // four-store read confirms the requested GPS parents, notes and tombstones.
+ // This does not claim cross-storage atomicity with the manual/annotation stage.
+ const verified=await readGpsPrivateBackupSnapshot(choice);
+ if(!verified.ok)return {ok:false,partial:true,code:'POST_RESTORE_UNREADABLE',
+  reason:'GPS・自由記述の復元後検証に失敗しました。記録を再読み込みして確認してください'};
+ const verifiedPlan=planPrivateGpsRestore(text,verified);
+ if(!verifiedPlan.ok||verifiedPlan.plan.gpsParentsToAdd!==0||
+    verifiedPlan.plan.privateNotesToAdd!==0||verifiedPlan.plan.privateEventsToAdd!==0)
+  return {ok:false,partial:true,code:'POST_RESTORE_MISMATCH',
+   reason:'復元後のGPS・自由記述とバックアップの一致を確認できません。記録を再読み込みして照合してください'};
  return {...other,privateGpsRestored:true,privateNotesAdded:gps.privateNotesAdded,
   privateEventsAdded:gps.eventsAdded,gpsParentsAdded:gps.gpsAdded,partial:false};
 }

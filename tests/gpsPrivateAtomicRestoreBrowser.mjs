@@ -261,12 +261,26 @@ try{
  if(await page.locator('[data-dm-safety]').count())
   await page.locator('[data-dm-safety]').evaluate(el=>el.click());
  assert.equal(await page.locator('[data-dm-restore]').isDisabled(),false);
+ // A GPS summary becomes visible before the remaining portable-v2 stages
+ // necessarily finish. Only evaluate the final restored generation AFTER the
+ // settings handler confirms success through its reload.
+ const restoreFinished=page.waitForEvent('load',{timeout:60000});
  await page.locator('[data-dm-restore]').evaluate(el=>el.click());
- await page.waitForFunction(async id=>{
+ try{await restoreFinished;}
+ catch(error){
+  const notices=await page.locator('[data-dm-ui] [role="status"]').allTextContents().catch(()=>[]);
+  throw Error('Settings v3 restore did not complete/reload: '+JSON.stringify(notices)+'; '+error.message);
+ }
+ const restoredParent=await page.evaluate(async id=>{
   const gps=await import('/ui/gpsReplayIndexedDbStore.js');
-  const current=await gps.readGpsV2Summaries();
-  return current.ok&&current.records.some(x=>x.id===id);
- },gpsId,{timeout:20000});
+  const row=await gps.readGpsV2RunById(id);
+  return {ok:row.ok,found:row.found===true,code:row.code??null,
+   detailSaved:row.summary?.detailSaved??null,
+   fullPairValid:row.ok===true&&row.found===true&&
+    row.summary.detailSaved===true&&gps.validGpsV2Pair(row.summary,row.detail)};
+ },gpsId);
+ assert.equal(restoredParent.fullPairValid,true,
+  'A completed restore must contain the original GPS summary AND matching route: '+JSON.stringify(restoredParent));
  const reread=await page.evaluate(async id=>{
   const {readPrivateGpsRunNotes}=await import('/ui/gpsReflectionScreen.js');
   return readPrivateGpsRunNotes(id);

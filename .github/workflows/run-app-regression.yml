@@ -7,6 +7,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Keep a single active attempt for each PR; main push and manual runs are retained.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
