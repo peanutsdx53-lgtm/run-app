@@ -374,6 +374,9 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   const settingsUi={profile:settingsExperience.loadProfile(onboardStorage,introStored||{}),display:settingsExperience.loadDisplay(onboardStorage),notice:"",
    profileSnapshot:readSettingsSnapshot(settingsExperience.PROFILE_KEY),displaySnapshot:readSettingsSnapshot(settingsExperience.DISPLAY_KEY)};
   const dataUi=dataManagementUi.makeDataUi();
+  const gpsNotesUi={recordId:null,loaded:null,selectedId:null,draft:null,busy:false,notice:""};
+  const gpsNoteScreen=await import("./ui/gpsReflectionScreen.js");
+  const gpsPrivatePortableFlow=await import("./ui/gpsPrivatePortableUiFlow.js");
   const confirmedDeleteWord=()=>dataUi.deleteWord===(settingsUi.display.language==='en'?'DELETE':'削除');
   settingsExperience.applyDisplay(settingsUi.display,document.documentElement);
   const englishUi=startEnglishUi(document,{language:settingsUi.display.language});
@@ -666,6 +669,9 @@ function recordExtras(){
       const openedRecordSections=app.querySelectorAll(".record-extra-section[open]");
       if(openedRecordSections.length||app.querySelector(".record-extra-section"))state.recordOpenSections=[...openedRecordSections].map(el=>el.dataset.recordSection);
  const page=currentPage();if(page!=="exploration-tree")lastExploreRoute=null;
+  // Never retain an opened GPS private text panel after leaving that exact run.
+  if(page!=='result'||!location.hash.includes('?gps=')||new URLSearchParams(location.hash.split('?')[1]||'').get('gps')!==gpsNotesUi.recordId)
+   Object.assign(gpsNotesUi,{recordId:null,loaded:null,selectedId:null,draft:null,busy:false,notice:''});
  const content={home,condition,record,"record-review":recordReview,result:()=>'<section id="runload-result-v4" aria-label="走行結果"></section>',"dynamic-result":()=>'<section data-gps-dynamic aria-label="GPS動的結果"><p class="gd-empty">動的結果を読み込んでいます…</p></section>',annotation:()=>'<section id="runload-annotation-editor" aria-label="保存済み走行の後日補完"></section>',history,"exploration-tree":explore,learning:()=>'<section id="runload-learning" class="lr-root" aria-label="学習"></section>',settings,"record-start":recordStart,"record-course":recordCourse,course:()=>recordCourse(true),"record-rof":recordRof,"record-more":recordMore,"record-compare":recordCompare,"record-reflection":recordReflection,"record-environment":recordEnvironment}[page]?.()||secondary(page);
  const navPage=page==="condition"?"home":page==="result"||page==="dynamic-result"?"result":["measurement","gps-review"].includes(page)?"record":["record-review","record-course","record-rof","record-more","record-compare","record-reflection","record-environment","gps-rof"].includes(page)?"record":page;
  // Return links to the common confirmation when a detail was opened from that screen.
@@ -691,7 +697,11 @@ function recordExtras(){
     const v2id=params.get('gps');
     const saved=gpsV2Cache.ok?gpsV2Cache.records.find(r=>r.id===v2id):null;
     const host=app.querySelector('#runload-result-v4');
-    if(saved)resultExperience.mountResult(host,{}, {gpsSummary:saved,annotationLink:annotationEditor.editorLink({sourceType:'GPS_V2',recordId:saved.id}),showFatigue:params.get('view')==='fatigue',...resultMentalOptions({sourceType:'GPS_V2',recordId:saved.id},host),...resultPostHocOptions({sourceType:'GPS_V2',recordId:saved.id},host)});
+    if(saved){
+     resultExperience.mountResult(host,{}, {gpsSummary:saved,annotationLink:annotationEditor.editorLink({sourceType:'GPS_V2',recordId:saved.id}),showFatigue:params.get('view')==='fatigue',...resultMentalOptions({sourceType:'GPS_V2',recordId:saved.id},host),...resultPostHocOptions({sourceType:'GPS_V2',recordId:saved.id},host)});
+     if(gpsNotesUi.recordId!==saved.id)Object.assign(gpsNotesUi,{recordId:saved.id,loaded:null,selectedId:null,draft:null,busy:false,notice:''});
+     host.insertAdjacentHTML('afterend',gpsNoteScreen.renderGpsNotes(gpsNotesUi));
+    }
     else host.innerHTML='<div class="gd-empty">指定されたGPS記録がありません。</div>';
    }else{
    const stored=manualRunStore.readManualRuns(onboardStorage);
@@ -908,12 +918,14 @@ function recordExtras(){
     }
     const portable=event.target.closest('[data-dm-file]');
     if(portable){
-      const file=portable.files?.[0];dataUi.pendingText="";dataUi.preview=null;dataUi.safetyCopy=false;dataUi.orphanBlocked=false;dataUi.orphanConsent=false;
+      const file=portable.files?.[0];dataUi.pendingText="";dataUi.preview=null;dataUi.safetyCopy=false;dataUi.orphanBlocked=false;dataUi.orphanConsent=false;dataUi.privateRestoreAgree=false;
       if(file){
         if(file.size>dataManagement.PORTABLE_MAX_BYTES){dataUi.notice="80MB以内のJSONファイルを選択してください。";}
         else{
           try{
-            const text=await file.text(),plan=await dataManagement.preflightPortableRestore(onboardStorage,text);
+            const text=await file.text(),plan=gpsPrivatePortableFlow.isPrivateV3(text)?
+              await gpsPrivatePortableFlow.preflightPrivatePortableRestore(onboardStorage,text):
+              await dataManagement.preflightPortableRestore(onboardStorage,text);
             if(plan.ok){dataUi.pendingText=text;dataUi.preview=plan;dataUi.notice="ファイルを検証しました。対象の内容を確認してください。";}
             else{dataUi.notice=plan.reason;if(plan.code==='ORPHANED'){dataUi.pendingText=text;dataUi.orphanBlocked=true;}}
           }catch{dataUi.notice="バックアップファイルを安全に確認できませんでした。";}
@@ -921,7 +933,9 @@ function recordExtras(){
       }
       refreshDataSettings();return;
     }
-    if(event.target.matches('[data-dm-include-gps]')){dataUi.includeGps=event.target.checked;return;}
+    if(event.target.matches('[data-dm-include-gps]')){dataUi.includeGps=event.target.checked;if(!dataUi.includeGps)dataUi.includeGpsReflections=false;refreshDataSettings();return;}
+     if(event.target.matches('[data-dm-include-private]')){dataUi.includeGpsReflections=dataUi.includeGps&&event.target.checked;refreshDataSettings();return;}
+     if(event.target.matches('[data-dm-private-restore-agree]')){dataUi.privateRestoreAgree=event.target.checked;refreshDataSettings();return;}
     if(event.target.matches('[data-dm-orphan-consent]')){
        dataUi.orphanConsent=event.target.checked;
        const button=app.querySelector('[data-dm-isolate]');
@@ -931,7 +945,7 @@ function recordExtras(){
      if(event.target.matches('[data-dm-safety]')){
       dataUi.safetyCopy=event.target.checked;
       const button=app.querySelector('[data-dm-restore]');
-      if(button)button.disabled=!(dataUi.preview?.ok&&(!dataUi.preview.hasExisting||dataUi.safetyCopy));
+      if(button)button.disabled=!(dataUi.preview?.ok&&(!dataUi.preview.hasExisting||dataUi.safetyCopy)&&(!dataUi.preview.privateV3||dataUi.privateRestoreAgree));
       return;
     }
     if(event.target.matches('[data-dm-delete-agree]')){
@@ -1240,6 +1254,58 @@ function recordExtras(){
     render();app.querySelector("[data-condition-open]")?.focus({preventScroll:true});
   });
   app.addEventListener("click",async(event)=>{
+    const noteAction=event.target.closest('[data-gps-n-open],[data-gps-n-select],[data-gps-n-new],[data-gps-n-save],[data-gps-n-delete],[data-gps-n-close]');
+    if(noteAction){
+     const panel=noteAction.closest('[data-gps-reflect-id]'),id=panel?.dataset.gpsReflectId;
+     const params=new URLSearchParams(location.hash.split('?')[1]||'');
+     if(!panel||currentPage()!=='result'||params.get('gps')!==id||
+        !gpsV2Cache.ok||!gpsV2Cache.records.some(x=>x.id===id)||gpsNotesUi.busy)return;
+     const refresh=()=>{const active=app.querySelector('[data-gps-reflect-id]');if(active?.dataset.gpsReflectId===id)active.outerHTML=gpsNoteScreen.renderGpsNotes(gpsNotesUi);};
+     if(noteAction.matches('[data-gps-n-close]')){
+      Object.assign(gpsNotesUi,{loaded:null,selectedId:null,draft:null,notice:''});refresh();return;
+     }
+     if(noteAction.matches('[data-gps-n-new]')){
+      Object.assign(gpsNotesUi,{selectedId:null,draft:'',notice:''});refresh();return;
+     }
+     if(noteAction.matches('[data-gps-n-select]')){
+      const note=gpsNotesUi.loaded?.notes?.find(n=>n.noteId===noteAction.dataset.gpsNSelect);
+      if(!note)return;
+      Object.assign(gpsNotesUi,{selectedId:note.noteId,draft:note.text,notice:''});refresh();return;
+     }
+     if(noteAction.matches('[data-gps-n-open]')){
+      gpsNotesUi.busy=true;gpsNotesUi.notice='読み取り中です。';refresh();
+      const loaded=await gpsNoteScreen.readPrivateGpsRunNotes(id);
+      if(gpsNotesUi.recordId!==id||currentPage()!=='result')return;
+      Object.assign(gpsNotesUi,{loaded,busy:false,selectedId:null,draft:null,notice:loaded.ok?'記述を読み込みました。':loaded.reason});
+      refresh();return;
+     }
+     if(!gpsNotesUi.loaded?.ok)return;
+     const chosen=gpsNotesUi.loaded.notes.find(n=>n.noteId===gpsNotesUi.selectedId);
+     const remove=noteAction.matches('[data-gps-n-delete]');
+     if(remove&&!chosen)return;
+     if(remove&&!window.confirm('現在の本文を完全に削除します。取り消せません。削除しますか？'))return;
+     const guid=globalThis.crypto?.randomUUID?.();
+     if(!guid){gpsNotesUi.notice='安全な操作IDを生成できません';refresh();return;}
+     const draft=panel.querySelector('[data-gps-n-text]')?.value??'';
+     const action=remove?'DELETE':chosen?'EDIT':'CREATE';
+     const noteId=chosen?.noteId||'gps-refnote-'+guid;
+     gpsNotesUi.busy=true;gpsNotesUi.draft=draft;gpsNotesUi.notice='保存中です。';refresh();
+     const result=await gpsV2.commitGpsV2ReflectionChange({
+      action,recordRef:{sourceType:'GPS_V2',recordId:id},noteId,
+      requestId:'gps-refrequest-'+globalThis.crypto.randomUUID(),
+      expectedRevision:chosen?.revision??0,
+      expectedLastEventId:chosen?.lastEventId??null,
+      ...(remove?{}:{text:draft})
+     });
+     if(gpsNotesUi.recordId!==id||currentPage()!=='result')return;
+     if(result.ok){
+      const loaded=await gpsNoteScreen.readPrivateGpsRunNotes(id);
+      Object.assign(gpsNotesUi,{loaded,busy:false,selectedId:remove?null:noteId,draft:null,
+       notice:loaded.ok?(remove?'本文を削除しました。':'自由記述を保存しました。'):loaded.reason});
+     }else Object.assign(gpsNotesUi,{busy:false,notice:'保存できません：'+(result.reason||result.code)});
+     refresh();return;
+    }
+
     const dismissEntry=event.target.closest('[data-ex-entry-dismiss]');
     if(dismissEntry){dismissEntry.closest('[data-ex-learning-entry]')?.remove();return;}
     // E6: the user chooses both the source type and one exact saved date.
@@ -1370,7 +1436,9 @@ function recordExtras(){
       dataUi.busy=true;
       try{
         if(dataAction.hasAttribute('data-dm-export')){
-          const result=await manualRunLock.withManualRunWriteLock(()=>canonical.snapshotTask(nativeStorage,s=>dataManagement.exportPortableBackup(s,{includeGps:dataUi.includeGps})));
+          const result=await manualRunLock.withManualRunWriteLock(()=>canonical.snapshotTask(nativeStorage,s=>
+            dataUi.includeGpsReflections&&dataUi.includeGps?gpsPrivatePortableFlow.exportPrivatePortableV3(s):
+            dataManagement.exportPortableBackup(s,{includeGps:dataUi.includeGps})));
           if(!result.ok)dataUi.notice=result.reason;
           else{
             try{downloadDataFile(result.text);dataUi.notice="ファイルの保存を開始しました。端末のダウンロード先を確認してください。";}
@@ -1388,8 +1456,18 @@ function recordExtras(){
             catch{dataUi.notice='隔離ファイルを保存できませんでした。元の情報は変更していません。';}
            }
          }else if(dataAction.hasAttribute('data-dm-restore')){
-          if(!dataUi.preview?.ok||!dataUi.pendingText||(dataUi.preview.hasExisting&&!dataUi.safetyCopy))return;
-          const restored=await manualRunLock.withManualRunWriteLock(async()=>{const saved=await canonical.portableMutation(nativeStorage,s=>dataManagement.restorePortableBase(s,dataUi.pendingText));return saved.ok?dataManagement.restorePortableAnnotations(dataUi.pendingText,saved):saved;});
+          if(!dataUi.preview?.ok||!dataUi.pendingText||(dataUi.preview.hasExisting&&!dataUi.safetyCopy)||
+              (dataUi.preview.privateV3&&!dataUi.privateRestoreAgree))return;
+          const restored=await manualRunLock.withManualRunWriteLock(async()=>{
+            if(dataUi.preview.privateV3)return gpsPrivatePortableFlow.restorePrivatePortableV3(onboardStorage,dataUi.pendingText,{
+             confirmed:dataUi.privateRestoreAgree,restoreOthers:async(v2Text)=>{
+              const saved=await canonical.portableMutation(nativeStorage,s=>dataManagement.restorePortableBase(s,v2Text));
+              return saved.ok?dataManagement.restorePortableAnnotations(v2Text,saved):saved;
+             }
+            });
+            const saved=await canonical.portableMutation(nativeStorage,s=>dataManagement.restorePortableBase(s,dataUi.pendingText));
+            return saved.ok?dataManagement.restorePortableAnnotations(dataUi.pendingText,saved):saved;
+           });
           if(restored.ok){location.reload();return;}
           dataUi.notice=restored.reason;
           if(restored.partial){dataUi.preview=null;dataUi.pendingText="";}

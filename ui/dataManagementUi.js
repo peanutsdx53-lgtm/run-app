@@ -14,7 +14,7 @@ export const fieldTitles=Object.freeze({
  [DATA_KEYS[8]]:"プロフィール",
  [DATA_KEYS[9]]:"表示設定"
 });
-export function makeDataUi(){return {includeGps:false,pendingText:"",preview:null,safetyCopy:false,deleteWord:"",deleteAgreed:false,notice:"",busy:false,orphanBlocked:false,orphanConsent:false};}
+export function makeDataUi(){return {includeGps:false,includeGpsReflections:false,privateRestoreAgree:false,pendingText:"",preview:null,safetyCopy:false,deleteWord:"",deleteAgreed:false,notice:"",busy:false,orphanBlocked:false,orphanConsent:false};}
 function summary(counts,gpsCount,annotationCount=0){
  const pieces=DATA_KEYS.map(k=>({name:fieldTitles[k],count:counts?.[k]||0})).filter(x=>x.count>0);
  if(gpsCount>0)pieces.push({name:"GPS記録・結果",count:gpsCount});
@@ -26,13 +26,15 @@ export function renderDataBackup(ui){
  const count=ui.preview?.parsed?.counts,gps=ui.preview?.parsed?.gpsCount||0,annotations=ui.preview?.annotationCount||0;
  const ready=!!ui.preview?.ok;
  const present=!!ui.preview?.hasExisting;
- const canRestore=ready&&(!present||ui.safetyCopy);
+ const canRestore=ready&&(!present||ui.safetyCopy)&&(!ui.preview?.privateV3||ui.privateRestoreAgree);
  return '<div class="dm-stack" data-dm-ui>'
   +'<div class="dm-section"><h3>バックアップを作成</h3>'
   +'<p class="dm-lead">運動記録などをJSONファイルに保存します。外部へ自動送信されません。</p>'
   +'<p class="dm-warning dm-critical"><strong>個人情報を含み、暗号化されません。</strong> 第三者と共有せず、安全な場所に保管してください。</p>'
   +'<label class="dm-choice"><input type="checkbox" data-dm-include-gps '+(ui.includeGps?'checked':'')+'><span>GPS記録・走行経路も含める</span></label>'
   +'<p class="dm-gps-notice">GPSを含めると自宅周辺の経路などの位置情報も保存されます。</p>'
+  +'<label class="dm-choice"><input type="checkbox" data-dm-include-private '+(ui.includeGpsReflections?'checked ':'')+(ui.includeGps?'':'disabled ')+'><span>GPS走行後の自由記述も含める（初期OFF・別途明示選択）</span></label>'
+  +'<p class="dm-gps-notice">現在の本文と本文を含まない改訂履歴を未暗号化v3形式で保存します。第三者と共有しないでください。</p>'
   +'<button class="dm-btn dm-primary" type="button" data-dm-export '+(ui.busy?'disabled':'')+'>バックアップファイルを保存</button>'
   +'<details class="dm-details"><summary>保存対象・対象外</summary><div class="dm-details-body">'
   +'<p>保存対象：運動記録、体調、保存コース、メモ、プロフィール、表示設定、任意回答・後日追記。</p>'
@@ -55,6 +57,7 @@ export function renderDataBackup(ui){
   +'<label class="dm-file"><strong>ファイルを選択</strong><input type="file" data-dm-file accept=".json,application/json" '+(ui.busy?'disabled':'')+'></label>'
   +(ui.preview?.ok?'<div class="dm-preview"><strong>読み込む内容</strong>'+summary(count,gps,annotations)
     +(present?'<label class="dm-choice"><input type="checkbox" data-dm-safety '+(ui.safetyCopy?'checked':'')+'><span>現在のデータを別のファイルに保存し、保存先を確認しました。</span></label>':'')
+    +(ui.preview.privateV3?'<p class="dm-warning">GPS自由記述：現在本文'+esc(ui.preview.privateNoteCount)+'件、改訂履歴'+esc(ui.preview.privateEventCount)+'件。別の保存領域は一括復元ではなく、途中で失敗すると部分復元の可能性があります。</p><label class="dm-choice"><input type="checkbox" data-dm-private-restore-agree '+(ui.privateRestoreAgree?'checked':'')+'><span>GPS記録と本人の自由記述の復元を別途確認しました。</span></label>':'')
     +'<button class="dm-btn dm-primary" type="button" data-dm-restore '+(canRestore&&!ui.busy?'':'disabled')+'>内容を確認して復元する</button></div>':'')
   +'</div>'
   
