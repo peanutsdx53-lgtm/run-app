@@ -96,6 +96,22 @@ export function mountResult(host,inputDraft={},options={}){
   hours:Math.floor(gpsSeconds/3600),minutes:Math.floor(gpsSeconds%3600/60),seconds:gpsSeconds%60}:inputDraft;
  const fromGps=!!gps,fromSaved=options.saved===true&&typeof options.recordId==="string"&&options.recordId.length>0;
  const root=host.shadowRoot||host.attachShadow({mode:'open'});
+ // I02: keep only same-mount disclosure and unsaved form state across local redraws.
+ // Explicitly bounded to known controls: never persist drafts or mix different runs.
+ const disclosureSelectors=Object.freeze([
+  '.rv4-export-menu','.rv4-header-help','.rv4-hero-sources',
+  '.rv4-region-evidence','.rv4-fatigue-method','.rv4-rof-audit details',
+  '.rv4-mental-details','.rv4-region-compare-method','.rv4-comparison-caution',
+  '.rv4-gps-compare-method','.rv4-question-continuation',
+  '.rv4-details:not(.rv4-region-evidence)','.rv4-method-disclosure'
+ ]);
+ const draftSelectors=Object.freeze([
+  '[data-rof-correct-phase]','[data-rof-correct-score]',
+  '[data-rof-correct-basis]','[data-rof-correct-assessed]',
+  '[data-rof-correct-reason]','[data-run-question-source]',
+  '[data-run-question-text]'
+ ]);
+ let rendered=false;
  let exportDate=false,exportRof=false;
  const origin=sourceProvenance({gps:fromGps,saved:fromSaved});
  let chosen='BA-DISP-019',view='front',tab=options.showMentalPending||options.showFatigue?'fatigue':options.showCompare?'radar':'body',picker=false,showBodyNumbers=false;
@@ -310,7 +326,35 @@ export function mountResult(host,inputDraft={},options={}){
  '<p><strong>疲労感</strong><span data-source-rof-detail>出所：'+clean(origin.rof)+'</span></p></div></details>';
  const hero=()=>!hasInput?'':'<section class="rv4-hero"><div class="rv4-hero-glow"></div><div class="rv4-hero-left"><small class="rv4-date">'+titleDate+'　<span>'+clean(ACTIVITY_LABELS[fromGps?gps.activity:fromSaved?gaitOf(options.record):draft.activityGait]||'活動種別未設定')+'</span></small><div class="rv4-measures"><div class="rv4-distance"><small>距離</small><strong>'+format(distance,2)+'</strong><span>km</span></div><div class="rv4-secondary"><div><small>時間</small><strong>'+(duration>0?format(duration,0)+' 分':'—')+'</strong></div><div><small>平均ペース</small><strong>'+pace+' <em>/km</em></strong></div></div></div></div><div class="rv4-hero-report"><span>疲労感（本人回答）</span><div class="rv4-today-chips"><span>運動前 <b>'+(before??'—')+'</b></span><span>運動後 <b>'+(after??'—')+'</b></span></div></div>'+resultNotice()+sourceDetails()+'</section>';
  function draw(){
-  root.querySelector('.rv4-app').innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1></div>'+resultActions()+reflectionPath()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+mentalCard()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+extras()+reflectionInvite()+referenceHelp()+'</div>';
+  const app=root.querySelector('.rv4-app');
+  const openState=new Map(),draftState=new Map();
+  let focusedDisclosure=null;
+  if(rendered){
+   for(const selector of disclosureSelectors){
+    const el=app.querySelector(selector);
+    if(!el)continue;
+    openState.set(selector,el.open);
+    if(el.querySelector(':scope > summary')===root.activeElement)focusedDisclosure=selector;
+   }
+   for(const selector of draftSelectors){
+    const control=app.querySelector(selector);
+    if(control)draftState.set(selector,control.value);
+   }
+  }
+  app.innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1></div>'+resultActions()+reflectionPath()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+mentalCard()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+extras()+reflectionInvite()+referenceHelp()+'</div>';
+  for(const [selector,open] of openState){
+   const el=app.querySelector(selector);
+   if(el)el.open=open;
+  }
+  for(const [selector,value] of draftState){
+   const el=app.querySelector(selector);
+   if(!el)continue;
+   // If the available choices changed, do not manufacture a selection.
+   if(el.tagName==='SELECT'&&![...el.options].some(opt=>opt.value===value))continue;
+   el.value=value;
+  }
+  if(focusedDisclosure)app.querySelector(focusedDisclosure)?.querySelector(':scope > summary')?.focus({preventScroll:true});
+  rendered=true;
   root.querySelector('.rv4-app').dataset.printRof=exportRof?'true':'false';
   root.querySelector('[data-export-date]')?.addEventListener('change',e=>{exportDate=e.target.checked});
   root.querySelector('[data-export-rof]')?.addEventListener('change',e=>{
@@ -407,6 +451,7 @@ export function mountResult(host,inputDraft={},options={}){
       chosen=id;
       view=BODY_REGION_VIEWS.find(v=>v.paths.some(([bodyId])=>bodyId===chosen))?.key||view;
       draw();
+      root.querySelector('[data-reference-compare-region]')?.focus({preventScroll:true});
     }
   });
   root.querySelector('[data-mental-result]')?.addEventListener('click',e=>{if(e.target.closest('[data-mental-retry]'))options.onRetryMental?.()});

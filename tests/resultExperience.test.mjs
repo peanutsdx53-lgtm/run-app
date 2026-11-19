@@ -187,6 +187,24 @@ test('S09: 44px number-toggle target and meaningful focus after redraw',()=>{
  }
 });
 
+test('I02: transient result disclosures and unsaved corrections survive local redraw only',()=>{
+ const js=read('ui/resultExperience.js');
+ for(const selector of ['.rv4-hero-sources','.rv4-region-evidence','.rv4-fatigue-method',
+  '.rv4-mental-details','.rv4-question-continuation','.rv4-method-disclosure'])
+  assert.ok(js.includes("'"+selector+"'"),'must whitelist user-opened explanation '+selector);
+ for(const field of ['[data-rof-correct-score]','[data-rof-correct-reason]',
+  '[data-run-question-source]','[data-run-question-text]'])
+  assert.ok(js.includes("'"+field+"'"),'retain only in-progress form draft '+field);
+ assert.match(js,/if\(rendered\)\{/,'initial mount never restores another record’s UI state');
+ assert.match(js,/openState\.set\(selector,el\.open\)/);
+ assert.match(js,/draftState\.set\(selector,control\.value\)/);
+ assert.match(js,/el\.open=open/);
+ assert.match(js,/el\.value=value/);
+ assert.match(js,/root\.activeElement/);
+ assert.match(js,/\[data-reference-compare-region\]'\)\?\.focus\(\{preventScroll:true\}\)/);
+ assert.doesNotMatch(js,/localStorage\.setItem\([^\n]*draftState/,'private drafts never become persistent data');
+});
+
 test('legacy result markup is retired; standalone body detail never displays mock numbers (001,004)',()=>{
  const app=read('app.js');
  assert.doesNotMatch(app,/function result\(\)\{/,'the retired full result renderer must not be reachable');
