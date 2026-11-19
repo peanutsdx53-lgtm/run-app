@@ -172,15 +172,18 @@ try{
 
       const reference=result.locator('.rv4-method-disclosure');
       const heading=reference.locator('summary');
-      const label=(await heading.textContent()).replace(/⌄/g,'').trim();
+      const textLabel=heading.locator('.rv4-method-label');
+      const label=(await textLabel.textContent()).trim();
       if(language==='en')assert.equal(label,'Reference Scope & Limits','T06: concise English header');
       else assert.equal(label,'文献参考値の条件と限界','T06: Japanese meaning preserved');
       const layout=await heading.evaluate(el=>{
-       const r=el.getBoundingClientRect(),node=[...el.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
-       const range=document.createRange();range.selectNodeContents(node);
+       const r=el.getBoundingClientRect(),visibleText=el.querySelector('.rv4-method-label');
+       if(!visibleText)throw Error('T06: accessible heading text is missing');
+       const range=document.createRange();range.selectNodeContents(visibleText);
        const textRects=[...range.getClientRects()].filter(r=>r.width>.5);
-       return {height:r.height,fontPx:parseFloat(getComputedStyle(el).fontSize),
-        inline:el.getAttribute('style'),priority:el.style.getPropertyPriority('font-size'),
+       return {height:r.height,fontPx:parseFloat(getComputedStyle(visibleText).fontSize),
+        summaryFont:parseFloat(getComputedStyle(el).fontSize),
+        textStyle:visibleText.getAttribute('style'),priority:visibleText.style.getPropertyPriority('font-size'),
         rootFont:getComputedStyle(document.documentElement).fontSize,
         escapes:textRects.filter(x=>x.left<r.left-2||x.right>r.right+2).length};
       });
