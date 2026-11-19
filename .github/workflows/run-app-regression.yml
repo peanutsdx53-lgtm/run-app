@@ -35,6 +35,11 @@ jobs:
   browser:
     name: ${{ matrix.engine }} UI and record continuity
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     timeout-minutes: 35
     strategy:
       fail-fast: false
@@ -49,8 +54,6 @@ jobs:
           node-version: '22'
       - name: Install supported browser test tool
         run: npm install --no-save playwright@1.56.1
-      - name: Install browser with OS dependencies
-        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Capture bilingual onboarding layout and reject clipped controls
         run: node tests/onboardingBilingualLayoutBrowser.mjs
       - name: Preserve onboarding screenshots for visual review
@@ -213,6 +216,11 @@ jobs:
   screen-help-unified:
     name: S17 ${{ matrix.engine }} screen help location and design
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     # WebKit OS dependency setup can exceed 18 minutes on loaded CI runners.
     # Preserve all original Chromium/WebKit tests and assertions.
     timeout-minutes: 40
@@ -229,8 +237,6 @@ jobs:
           node-version: '22'
       - name: Install supported browser test tool
         run: npm install --no-save playwright@1.56.1
-      - name: Install browser with OS dependencies
-        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Verify help at the upper-right in every active screen family
         run: node tests/screenHelpUnifiedBrowser.mjs
       - name: Preserve S17 cross-screen help geometry and screenshots
@@ -245,6 +251,11 @@ jobs:
   result-reflection-entry:
     name: G2 ${{ matrix.engine }} saved-result reflection round trip
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     # WebKit OS dependency setup can exceed 18 minutes on loaded CI runners.
     # Preserve all original Chromium/WebKit tests and assertions.
     timeout-minutes: 40
@@ -261,8 +272,6 @@ jobs:
           node-version: '22'
       - name: Install browser test tool
         run: npm install --no-save playwright@1.56.1
-      - name: Install browser and OS dependencies
-        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Verify results to linked optional note and back
         run: node tests/resultReflectionEntryBrowser.mjs
       - name: Preserve G2 browser evidence
@@ -277,6 +286,11 @@ jobs:
   reflection-g3-review:
     name: G3 ${{ matrix.engine }} exact-run notes, history and corrections
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     # WebKit OS dependency setup can exceed 18 minutes on loaded CI runners.
     # Preserve all original Chromium/WebKit tests and assertions.
     timeout-minutes: 40
@@ -293,8 +307,6 @@ jobs:
           node-version: '22'
       - name: Install browser tests
         run: npm install --no-save playwright@1.56.1
-      - name: Install browser and OS dependencies
-        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Verify selected run notes, edit and History round-trip
         run: node tests/reflectionG3Browser.mjs
       - name: Preserve G3 screenshots and counterexample evidence
@@ -309,6 +321,11 @@ jobs:
   gps-reflection-g4b1:
     name: G4-B1 ${{ matrix.engine }} V1 upgrade and atomic dependent-data erasure
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     # WebKit OS dependency setup can exceed 18 minutes on loaded CI runners.
     # Preserve all original Chromium/WebKit tests and assertions.
     timeout-minutes: 40
@@ -325,14 +342,17 @@ jobs:
           node-version: '22'
       - name: Install supported browser test tool
         run: npm install --no-save playwright@1.56.1
-      - name: Install browser with OS dependencies
-        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Reject GPS parent/child atomic deletion and migration regressions
         run: node tests/gpsReflectionSchemaUpgradeBrowser.mjs
 
   gps-reflection-g4b2:
     name: G4-B2 ${{ matrix.engine }} atomic GPS note revision and erasure
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     # OS dependency installation for WebKit can take ~20 min on loaded runners.
     # This is an execution limit change only; every browser test remains required.
     timeout-minutes: 40
@@ -349,14 +369,17 @@ jobs:
           node-version: '22'
       - name: Install supported browser test tool
         run: npm install --no-save playwright@1.56.1
-      - name: Install browser with OS dependencies
-        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Audit exact GPS V2 parent, revision CAS, erasure and backup exclusion
         run: node tests/gpsReflectionAtomicWriterBrowser.mjs
 
   gps-reflection-g4c2:
     name: G4-C2 ${{ matrix.engine }} atomic GPS and private backup snapshot
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     # WebKit OS dependencies can exceed 20 minutes under concurrent CI load.
     # Keep mandatory browser acceptance unchanged; only extend the deadline.
     timeout-minutes: 40
@@ -373,14 +396,17 @@ jobs:
           node-version: '22'
       - name: Install browser test tool
         run: npm install --no-save playwright@1.56.1
-      - name: Install browser with OS dependencies
-        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Verify read-only single transaction, opt-out and corrupt parent rejection
         run: node tests/gpsReflectionAtomicSnapshotBrowser.mjs
 
   gps-reflection-g4c4:
     name: G4-C4 ${{ matrix.engine }} four-store atomic GPS and private restore
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     # WebKit system dependencies may take >20 minutes under concurrent load.
     # Do not skip or weaken GPS rollback/retention browser evidence.
     timeout-minutes: 40
@@ -397,14 +423,17 @@ jobs:
           node-version: '22'
       - name: Install browser test tool
         run: npm install --no-save playwright@1.56.1
-      - name: Install browser with OS dependencies
-        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Reject partial GPS and private restore, conflicts, and body resurrection
         run: node tests/gpsPrivateAtomicRestoreBrowser.mjs
 
   offline:
     name: Installed PWA offline storage and bilingual flow
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
@@ -413,8 +442,6 @@ jobs:
           node-version: '22'
       - name: Install supported browser test tool
         run: npm install --no-save playwright@1.56.1
-      - name: Install Chromium with OS dependencies
-        run: npx playwright install --with-deps chromium
       - name: Verify offline record, result, consultation, exploration and English
         run: node tests/offlineShellBrowserSmoke.mjs
 
@@ -422,6 +449,11 @@ jobs:
     name: Optional deployed Pages byte and live browser check
     if: ${{ vars.RUNLOAD_PAGES_URL != '' }}
     runs-on: ubuntu-24.04
+    # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
+    # Avoid repeated network installations that have exhausted the WebKit job timeout.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     timeout-minutes: 25
     env:
       RUNLOAD_PAGES_URL: ${{ vars.RUNLOAD_PAGES_URL }}
@@ -432,7 +464,5 @@ jobs:
           node-version: '22'
       - name: Install Chromium test runner
         run: npm install --no-save playwright@1.56.1
-      - name: Install compatible browser
-        run: npx playwright install --with-deps chromium
       - name: Verify matching deployed files and startup
         run: node tests/livePagesSmoke.mjs
