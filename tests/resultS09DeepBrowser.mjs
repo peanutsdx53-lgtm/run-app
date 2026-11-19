@@ -180,6 +180,8 @@ try{
        const range=document.createRange();range.selectNodeContents(node);
        const textRects=[...range.getClientRects()].filter(r=>r.width>.5);
        return {height:r.height,fontPx:parseFloat(getComputedStyle(el).fontSize),
+        inline:el.getAttribute('style'),priority:el.style.getPropertyPriority('font-size'),
+        rootFont:getComputedStyle(document.documentElement).fontSize,
         escapes:textRects.filter(x=>x.left<r.left-2||x.right>r.right+2).length};
       });
       assert.ok(layout.height>=43.5,'T06: reference disclosure remains a 44px minimum touch target');
