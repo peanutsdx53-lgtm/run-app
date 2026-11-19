@@ -7,7 +7,7 @@ import {fatigueMarkup} from '../ui/learningFatigueLesson.js';
 import {mountLearning} from '../ui/learningExperience.js';
 import {shortcutsCard} from '../ui/homeExperience.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261118-g4b2-atomic-writer-v1';
+const cacheVersion='20261119-s09-focus-controls-v1';
 function visibleText(markup){
  return markup.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ')
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ')
@@ -41,7 +41,7 @@ test('P11: the extra three functions remain in Home quick access, never Settings
 });
 test('P11: the last stylesheet and offline version are really new',()=>{
  const index=read('index.html'),sw=read('sw.js'),css=read('ui/unifiedLearningShell.css');
- const version='20261117-reflection-g3-v1',presentationVersion='20261111-home-autosave-v1';
+ const version='20261119-s09-focus-controls-v1',presentationVersion='20261111-home-autosave-v1';
  assert.ok(index.includes('unifiedLearningShell.css?v=20261116-gps-stage7-v3'));
  assert.match(index,new RegExp('app\\.js\\?v='+version));
  assert.match(sw,new RegExp('runload-ui-next-shell-'+cacheVersion));

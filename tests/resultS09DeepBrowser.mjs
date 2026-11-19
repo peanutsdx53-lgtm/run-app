@@ -28,7 +28,7 @@ async function capture(page,meta){
   const rect=e=>{if(!e)return null;const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
   const one=s=>shadow?.querySelector(s),doc=document.documentElement;
   const nav=document.querySelector('.mobile-nav');
-  const controls=[...(shadow?.querySelectorAll('.rv4-mobile-tabs button,.rv4-view-tabs button,.rv4-figure-actions button,.rv4-export-menu>summary')||[])].map(x=>({text:x.textContent.trim(),rect:rect(x),anatomy:!!x.closest('.rv4-view-tabs')}));
+  const controls=[...(shadow?.querySelectorAll('.rv4-mobile-tabs button,.rv4-view-tabs button,.rv4-figure-actions button,.rv4-export-menu>summary')||[])].map(x=>({text:x.textContent.trim(),rect:rect(x),anatomy:!!x.closest('.rv4-view-tabs'),toggle:x.matches('[data-label-toggle]')}));
   const leaks=[];
   for(const x of shadow?.querySelectorAll('.rv4-reading h3,.rv4-reading small,.rv4-view-tabs button,.rv4-mobile-tabs button,.rv4-figure-actions button')||[]){
    if(!x.getClientRects().length)continue;
@@ -61,6 +61,8 @@ async function capture(page,meta){
   const views=m.controls.filter(x=>x.anatomy);
   assert.equal(views.length,3,'all anatomy views stay reachable');
   for(const v of views)assert.ok(v.rect.height>=43,'anatomy view target too small: '+v.text+' '+meta.width);
+  const toggle=m.controls.find(x=>x.toggle);
+  assert.ok(toggle&&toggle.rect.height>=43.5,'S09 number toggle needs 44px hit area: '+meta.width+' '+meta.zoom);
  }
  report.push({meta,metrics:m});
  if(meta.tab==='body'&&meta.view==='front'&&[320,375,390,414].includes(meta.width)){
@@ -128,6 +130,26 @@ try{
    for(const tab of ['body','fatigue','radar']){
     if(width<=800)await result.locator('[data-tab="'+tab+'"]').click();
     await capture(page,{language,width,zoom,tab,view:'front'});
+    if(tab==='body'){
+     // A redraw must preserve the exact keyboard target, at normal and 200% text.
+     const toggle=result.locator('[data-label-toggle]');
+     await toggle.focus();await toggle.press('Enter');
+     assert.equal(await toggle.evaluate(el=>el.getRootNode().activeElement===el),true,'number toggle should remain focused after redraw');
+     await toggle.press('Enter');
+     assert.equal(await toggle.evaluate(el=>el.getRootNode().activeElement===el),true,'number toggle focus after hide');
+     const path=result.locator('.rv4-body-svg [data-region]').first();
+     const regionId=await path.getAttribute('data-region');
+     await path.focus();await path.press('Enter');
+     assert.equal(await result.locator('.rv4-body-svg [data-region="'+regionId+'"]').evaluate(el=>el.getRootNode().activeElement===el),true,
+       'selected anatomy path should stay keyboard-focused');
+     await result.locator('[data-picker-toggle]').click();
+     const choice=result.locator('.rv4-choices [data-region]').first();
+     const choiceId=await choice.getAttribute('data-region');
+     await choice.focus();await choice.press('Enter');
+     assert.equal(await result.locator('.rv4-choices [data-region="'+choiceId+'"]').evaluate(el=>el.getRootNode().activeElement===el),true,
+       'region picker choice should stay focused');
+     await result.locator('[data-picker-toggle]').click();
+    }
     if(tab==='fatigue'&&width===390&&zoom===200){
      const optional=result.locator('.rv4-mental-details');
      if(await optional.count()){

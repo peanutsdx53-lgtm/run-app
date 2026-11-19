@@ -27,6 +27,8 @@ test('P5 source gates: learning, nav and scientific provenance preserved',()=>{
  assert.match(app,/fromLearning&&saved\.ok===true\?\{ok:true,records:\[\]\}/);
  assert.match(read('ui/resultExperience.js'),/data-compare-date/,'new main date wrap correction retained');
  assert.match(read('ui/resultInlineStyles.js'),/\.rv4-region-compare-date/);
- assert.match(read('sw.js'),/resultExperience\.js\?v=20261117-reflection-g3-v1/);
+ const activeResultImport=app.match(/import\("(\.\/ui\/resultExperience\.js\?v=[\w.-]+)"\)/)?.[1];
+ assert.ok(activeResultImport,'active result module revision must be specified in app.js');
+ assert.ok(read('sw.js').includes('"'+activeResultImport+'"'),'PWA must precache the exact current result module URL');
  assert.match(read('sw.js'),/ui\/learningExperience\.js/);
 });

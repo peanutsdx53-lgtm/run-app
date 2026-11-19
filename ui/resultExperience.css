@@ -163,7 +163,7 @@
 .rv4-body .rv4-region-selection .rv4-picker{margin:0;max-width:325px;min-height:43px;padding:10px 14px;align-items:center;gap:12px;line-height:1.4;background:linear-gradient(130deg,#104354,#0c3042);border-color:#428c99}
 .rv4-body .rv4-region-selection .rv4-picker span:last-child{margin-left:auto;font-size:15px;line-height:1}
 .rv4-body .rv4-figure-actions{gap:4px;min-height:0}
-.rv4-body .rv4-figure-actions button,.rv4-body .rv4-figure-actions button[aria-pressed=true]{background:transparent;border:1px solid transparent;border-radius:8px;box-shadow:none;color:#a1cdd5;font-size:11px;font-weight:600;line-height:1.4;padding:4px 8px;min-height:28px;min-width:0;max-width:max-content}
+.rv4-body .rv4-figure-actions button,.rv4-body .rv4-figure-actions button[aria-pressed=true]{background:transparent;border:1px solid transparent;border-radius:8px;box-shadow:none;color:#a1cdd5;font-size:12px;font-weight:650;line-height:1.4;padding:10px 12px;min-height:44px;min-width:0;max-width:100%}
 .rv4-body .rv4-figure-actions button[aria-pressed=true]{color:#c4f1e8}
 .rv4-body .rv4-figure-actions button:hover,.rv4-body .rv4-figure-actions button:focus-visible{border-color:#478996;background:#143d4b}
 .rv4-body .rv4-figure-actions span{font-size:10px}
@@ -172,12 +172,12 @@
 .rv4-export-menu>summary{min-width:104px;min-height:39px;padding:8px 12px;gap:9px;font-size:12px}
 .rv4-body .rv4-region-selection{margin-top:12px;padding-top:12px;justify-content:stretch}
 .rv4-body .rv4-region-selection .rv4-picker{width:100%;max-width:none;min-height:44px;padding:10px 13px;margin:0;justify-content:space-between}
-.rv4-body .rv4-figure-actions button,.rv4-body .rv4-figure-actions button[aria-pressed=true]{width:auto!important;max-width:100%;min-height:28px;padding:4px 6px;font-size:10px}
+.rv4-body .rv4-figure-actions button,.rv4-body .rv4-figure-actions button[aria-pressed=true]{width:auto!important;max-width:100%;min-height:44px;padding:10px 9px;font-size:12px}
 .rv4-body .rv4-figure-actions{width:100%;align-items:center;gap:2px}
 }
 @media(max-width:375px){
 .rv4-export-menu>summary{min-width:100px;padding:8px 10px;gap:7px}
-.rv4-body .rv4-figure-actions button{font-size:10px}
+.rv4-body .rv4-figure-actions button{font-size:12px}
 }
 @media print{.rv4-region-selection,.rv4-figure-actions button{display:none!important}}
 
