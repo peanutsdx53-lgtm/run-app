@@ -131,12 +131,29 @@ try{
     if(width<=800)await result.locator('[data-tab="'+tab+'"]').click();
     await capture(page,{language,width,zoom,tab,view:'front'});
     if(tab==='body'){
+     const sources=result.locator('.rv4-hero-sources');
+     await sources.locator('summary').click();
+     assert.equal(await sources.evaluate(e=>e.open),true,'provenance explanation opens only by user action');
+     const evidence=result.locator('.rv4-region-evidence');
+     await evidence.locator('summary').click();
+     assert.equal(await evidence.evaluate(e=>e.open),true,'selected-region evidence opens by user choice');
      // A redraw must preserve the exact keyboard target, at normal and 200% text.
      const toggle=result.locator('[data-label-toggle]');
      await toggle.focus();await toggle.press('Enter');
      assert.equal(await toggle.evaluate(el=>el.getRootNode().activeElement===el),true,'number toggle should remain focused after redraw');
      await toggle.press('Enter');
      assert.equal(await toggle.evaluate(el=>el.getRootNode().activeElement===el),true,'number toggle focus after hide');
+     assert.equal(await sources.evaluate(e=>e.open),true,'provenance disclosure remains open on redraw');
+     assert.equal(await evidence.evaluate(e=>e.open),true,'evidence disclosure remains open on redraw');
+     const rofDraft=result.locator('[data-rof-correct-score]');
+     if(await rofDraft.count()){
+      const method=result.locator('.rv4-fatigue-method');
+      await method.evaluate(el=>el.open=true);
+      await rofDraft.evaluate(el=>el.value='4');
+      await toggle.press('Enter');
+      assert.equal(await rofDraft.inputValue(),'4','unsaved ROF-J correction is not discarded by a body redraw');
+      assert.equal(await method.evaluate(el=>el.open),true,'ROF-J explanation remains open without submitting a correction');
+     }
      const path=result.locator('.rv4-body-svg [data-region]').first();
      const regionId=await path.getAttribute('data-region');
      await path.focus();await path.press('Enter');
@@ -149,6 +166,8 @@ try{
      assert.equal(await result.locator('.rv4-choices [data-region="'+choiceId+'"]').evaluate(el=>el.getRootNode().activeElement===el),true,
        'region picker choice should stay focused');
      await result.locator('[data-picker-toggle]').click();
+     assert.equal(await sources.evaluate(el=>el.open),true,'source disclosure survives region picker');
+     assert.equal(await evidence.evaluate(el=>el.open),true,'region evidence remains visible after changing region');
     }
     if(tab==='fatigue'&&width===390&&zoom===200){
      const optional=result.locator('.rv4-mental-details');
@@ -164,6 +183,23 @@ try{
      await result.locator('[data-view="'+view+'"]').click();
      await capture(page,{language,width,zoom,tab,view});
     }
+   }
+   if(language==='ja'&&width===390&&zoom===200){
+    // A separate saved run is a new mount: never carry an unsaved correction or
+    // an expanded disclosure into a different record.
+    const nextId=await page.evaluate(async()=>{
+     const c=await import('/ui/manualRunCanonical.js'),m=await import('/ui/manualRunStore.js');
+     const res=await c.mutate(state=>m.saveManualRun(state,{date:'2026-11-16',distance:'3',hours:'',minutes:'18',seconds:'',activityGait:'RUNNING',runningFormat:'UNKNOWN',rofBefore:2,rofAfter:null,stepsProvenance:'UNKNOWN'}));
+     if(!res.ok)throw Error(res.reason);
+     return res.record.id;
+    });
+    await page.goto(base+'result?record='+encodeURIComponent(nextId),{waitUntil:'networkidle'});
+    await result.locator('.rv4-hero-sources').waitFor({state:'attached'});
+    assert.equal(await result.locator('.rv4-hero-sources').evaluate(el=>el.open),false,
+      'disclosure state must not leak to another saved record');
+    const newCorrection=result.locator('[data-rof-correct-score]');
+    if(await newCorrection.count())assert.equal(await newCorrection.inputValue(),'',
+      'unsaved ROF-J draft must not leak to another saved record');
    }
    assert.deepEqual(errors,[]);
   }catch(error){failures.push({language,width,zoom,error:String(error)});}
