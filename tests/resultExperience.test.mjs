@@ -195,6 +195,9 @@ test('T01: interpretation-supporting copy scales with 200 percent root text with
 
 
 test('S09 T02/T06: source facts are disclosure-only and summary is readable at root 200%',()=>{
+ const html=read('ui/resultExperience.js');
+ assert.ok(html.includes('<summary style="font-size:clamp(12px,0.8125rem,18px);line-height:1.6;overflow-wrap:anywhere">文献参考値の条件と限界'),
+  'WebKit 320px/200% summary must have a local author-style fallback');
  const js=read('ui/resultExperience.js'),tr=read('ui/englishResultCopy.js');
  assert.match(js,/<details class="rv4-hero-sources"><summary>記録の出所を確認<\/summary>/);
  for(const id of ['data-source-distance','data-source-duration','data-source-pace','data-source-rof-detail'])

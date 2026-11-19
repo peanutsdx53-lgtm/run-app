@@ -350,7 +350,7 @@ export function mountResult(host,inputDraft={},options={}){
   if(!hasInput)return '';
   const reason=reference?.reason==='MIXED_GAIT_NOT_QUANTIFIED'?'走歩混在は単一活動として数値化しません。':reference?.reason==='GAIT_NOT_SELECTED'?'活動種別が未選択のため部位別値は表示しません。':'この速度条件で算出可能な部位別文献参考値はありません。';
   const detail=reference?.count?'活動種別：'+clean(ACTIVITY_LABELS[reference.activity]||'未設定')+'。平均速度：'+format(reference.speedMps,2)+' m/s。文献条件に合う'+reference.count+'/12部位のみ算出。路面・勾配は数値補正していません。':reason;
-  return '<details class="rv4-method-disclosure"><summary>文献参考値の条件と限界 <span class="rv4-disclosure-chevron" aria-hidden="true">⌄</span></summary><p>'+detail+' この色は各部位自身の文献基準100との差を示し、危険度や部位間の順位ではありません。個人の身体負荷を直接測定した値ではありません。</p></details>';
+  return '<details class="rv4-method-disclosure"><summary style="font-size:clamp(12px,0.8125rem,18px);line-height:1.6;overflow-wrap:anywhere">文献参考値の条件と限界 <span class="rv4-disclosure-chevron" aria-hidden="true">⌄</span></summary><p>'+detail+' この色は各部位自身の文献基準100との差を示し、危険度や部位間の順位ではありません。個人の身体負荷を直接測定した値ではありません。</p></details>';
  };
  const resultActions=()=>!hasInput&&!options.annotationLink?'':'<div class="rv4-actions"><details class="rv4-export-menu"><summary><span>操作</span><span class="rv4-export-chevron" aria-hidden="true"></span></summary><div class="rv4-export-options">'+
    (options.annotationLink?'<a class="rv4-posthoc-entry" data-posthoc-entry href="'+clean(options.annotationLink)+'">記録に情報を追加（任意）</a>':'')+
