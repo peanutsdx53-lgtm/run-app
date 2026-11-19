@@ -183,7 +183,7 @@ try{
         escapes:textRects.filter(x=>x.left<r.left-2||x.right>r.right+2).length};
       });
       assert.ok(layout.height>=43.5,'T06: reference disclosure remains a 44px minimum touch target');
-      assert.ok(layout.fontPx>=17.5,'T06: reference heading scales with 200% text');
+      assert.ok(layout.fontPx>=17.5,'T06: reference heading scales with 200% text: '+JSON.stringify({language,width,zoom,layout}));
       assert.equal(layout.escapes,0,'T06: reference heading fits without text overflow');
       assert.equal(await reference.evaluate(el=>el.open),false,'reference evidence is optional until opened');
       await heading.click();
