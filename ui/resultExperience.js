@@ -1,6 +1,6 @@
 import {BODY_REGION_VIEWS} from '../assets/bodyRegionVisuals.js';
 import {bodyReferenceRow,bodyReferenceEngineId,bodyReferenceColor,bodyReferenceScale,BODY_REFERENCE_GRADIENT,renderBodyReferenceLabels,referenceReliefDefs,referenceReliefOverlays,bodyReferenceSilhouetteClipDef} from './bodyReferencePresentation.js';
-import {RESULT_STYLES,RESULT_GAIT_STYLES,RESULT_VISUAL_STYLES,RESULT_BODY_LAYOUT_STYLES,RESULT_ANATOMY_RELIEF_STYLES,RESULT_GPS_GATE_STYLES,RESULT_REFLECTION_STYLES,RESULT_ROF_AUDIT_STYLES,RESULT_QUESTION_STYLES,RESULT_UI_CLEAN_STYLES,RESULT_P6B_STYLES} from './resultInlineStyles.js?v=20261117-s16-settings-v1';
+import {RESULT_STYLES,RESULT_GAIT_STYLES,RESULT_VISUAL_STYLES,RESULT_BODY_LAYOUT_STYLES,RESULT_ANATOMY_RELIEF_STYLES,RESULT_GPS_GATE_STYLES,RESULT_REFLECTION_STYLES,RESULT_ROF_AUDIT_STYLES,RESULT_QUESTION_STYLES,RESULT_UI_CLEAN_STYLES,RESULT_P6B_STYLES} from './resultInlineStyles.js?v=20261119-s09-focus-controls-v1';
 import {REGIONS} from './bodyContextExperience.js';
 import {comparableRunChoices,compareSavedRuns,gaitOf} from './runReflection.js';
 import {compareBodyReferenceRows} from './regionReferenceComparison.js';
@@ -329,9 +329,15 @@ export function mountResult(host,inputDraft={},options={}){
    const reason=root.querySelector('[data-rof-correct-reason]')?.value||'';
    options.onCorrectRof?.(phase,raw===''?null:Number(raw),{timeBasis,assessedAt,reason});
   });
-  root.querySelector('[data-label-toggle]')?.addEventListener('click',()=>{showBodyNumbers=!showBodyNumbers;draw()});
+  root.querySelector('[data-label-toggle]')?.addEventListener('click',()=>{showBodyNumbers=!showBodyNumbers;draw();root.querySelector('[data-label-toggle]')?.focus({preventScroll:true})});
    root.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.view;const v=selectedView();if(!v.paths.some(x=>x[0]===chosen))chosen=v.paths[0][0];picker=false;draw();root.querySelector('[data-view="'+view+'"]')?.focus({preventScroll:true})}));
-  root.querySelectorAll('[data-region]').forEach(b=>{const select=()=>{chosen=b.dataset.region;draw()};b.addEventListener('click',select);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select()}})});
+  root.querySelectorAll('[data-region]').forEach(b=>{const select=()=>{
+   const id=b.dataset.region,fromSvg=!!b.closest('svg');
+   chosen=id;draw();
+   // Redraw replaces the focused node. Restore its equivalent, not the page body.
+   const selector=fromSvg?'.rv4-body-svg [data-region="'+id+'"]':'.rv4-choices [data-region="'+id+'"]';
+   root.querySelector(selector)?.focus({preventScroll:true});
+  };b.addEventListener('click',select);b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select()}})});
   // Accept taps on the SVG itself when a thin/nonconvex region is hit but the
   // browser targets the SVG container instead of its path.
   root.querySelector('.rv4-body-svg')?.addEventListener('click',e=>{
@@ -353,7 +359,7 @@ export function mountResult(host,inputDraft={},options={}){
       const ranked=parts.map(path=>({path,d:distance(path)})).sort((a,b)=>a.d-b.d);
       if(ranked[0]?.d<=12)hit=ranked[0].path;
     }
-    if(hit){chosen=hit.dataset.region;draw()}
+    if(hit){chosen=hit.dataset.region;draw();root.querySelector('.rv4-body-svg [data-region="'+chosen+'"]')?.focus({preventScroll:true})}
   });
   // Invisible accessible tap targets supplement narrow multi-contour official paths;
   // no official region geometry or scientific data is modified.
@@ -376,7 +382,7 @@ export function mountResult(host,inputDraft={},options={}){
     dot.setAttribute('data-tap-region',path.dataset.region);
     dot.setAttribute('aria-hidden','true');
     dot.style.cursor='pointer';
-    dot.addEventListener('click',e=>{e.stopPropagation();chosen=path.dataset.region;draw()});
+    dot.addEventListener('click',e=>{e.stopPropagation();chosen=path.dataset.region;draw();root.querySelector('.rv4-body-svg [data-region="'+chosen+'"]')?.focus({preventScroll:true})});
     liveSvg.append(dot);
   });
   root.querySelector('[data-run-question-save]')?.addEventListener('click',()=>{

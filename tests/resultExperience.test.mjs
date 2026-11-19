@@ -173,6 +173,20 @@ test('UIUX batch03 S09: tab/view redraw restores keyboard focus without changing
  assert.match(js,/compareBodyReferenceRows/);
 });
 
+test('S09: 44px number-toggle target and meaningful focus after redraw',()=>{
+ const js=read('ui/resultExperience.js');
+ const inline=read('ui/resultInlineStyles.js');
+ const css=read('ui/resultExperience.css');
+ assert.ok(js.includes("root.querySelector('[data-label-toggle]')?.focus({preventScroll:true})"));
+ assert.match(js,/fromSvg=!!b\.closest\('svg'\)/);
+ assert.ok(js.includes(".rv4-choices [data-region="));
+ assert.ok(js.includes(".rv4-body-svg [data-region="));
+ for(const source of [inline,css]){
+  assert.ok(source.includes('max-width:100%;min-height:44px;padding:10px 9px;font-size:12px'));
+  assert.doesNotMatch(source,/\.rv4-figure-actions button\[aria-pressed=true\][^}]*min-height:28px/);
+ }
+});
+
 test('legacy result markup is retired; standalone body detail never displays mock numbers (001,004)',()=>{
  const app=read('app.js');
  assert.doesNotMatch(app,/function result\(\)\{/,'the retired full result renderer must not be reachable');
