@@ -1,5 +1,5 @@
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261117-reflection-g3-v1';
-import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261117-reflection-g3-v1';
+import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261119-s09-t02t06-provenance-v1';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261111-exploration-inquiry-v1';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261117-s16-settings-v1';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js';

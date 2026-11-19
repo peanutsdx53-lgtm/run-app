@@ -193,6 +193,22 @@ test('T01: interpretation-supporting copy scales with 200 percent root text with
   'the approved three tabs are intact');
 });
 
+
+test('S09 T02/T06: source facts are disclosure-only and summary is readable at root 200%',()=>{
+ const js=read('ui/resultExperience.js'),tr=read('ui/englishResultCopy.js');
+ assert.match(js,/<details class="rv4-hero-sources"><summary>記録の出所を確認<\/summary>/);
+ for(const id of ['data-source-distance','data-source-duration','data-source-pace','data-source-rof-detail'])
+  assert.ok(js.includes(id),'four different provenance fields preserved: '+id);
+ assert.match(js,/sourceProvenance\(\{gps:fromGps,saved:fromSaved\}\)/);
+ assert.match(js,/\.rv4-app \.rv4-hero-source-grid p,/);
+ assert.match(js,/\.rv4-app \.rv4-hero-source-grid strong,/);
+ assert.match(js,/\.rv4-app \.rv4-method-disclosure>summary,/);
+ assert.ok(tr.includes('"Reference Scope & Limits"'));
+ assert.match(js,/font-size:clamp\(12px,0\.8125rem,18px\)/);
+ assert.match(js,/文献参考値の条件と限界/);
+ assert.match(js,/危険度や部位間の順位ではありません/);
+});
+
 test('S09: 44px number-toggle target and meaningful focus after redraw',()=>{
  const js=read('ui/resultExperience.js');
  const inline=read('ui/resultInlineStyles.js');

@@ -111,6 +111,10 @@ const RESULT_T01_READABILITY_STYLES=String.raw`
 .rv4-app .rv4-comparison-caution,
 .rv4-app .rv4-comparison-empty,
 .rv4-app .rv4-comparison-memos small,
+/* T02/T06: disclosure-only sources and scope must remain readable at root 200%. */
+.rv4-app .rv4-hero-source-grid p,
+.rv4-app .rv4-hero-source-grid strong,
+.rv4-app .rv4-method-disclosure>summary,
 .rv4-app .rv4-method-disclosure p{
  font-size:clamp(12px,0.8125rem,18px);
  line-height:1.6;
