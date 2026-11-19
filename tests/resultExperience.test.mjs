@@ -173,6 +173,26 @@ test('UIUX batch03 S09: tab/view redraw restores keyboard focus without changing
  assert.match(js,/compareBodyReferenceRows/);
 });
 
+test('T01: interpretation-supporting copy scales with 200 percent root text without altering reference calculations',()=>{
+ const js=read('ui/resultExperience.js');
+ assert.ok(js.includes('const RESULT_T01_READABILITY_STYLES=String.raw'));
+ assert.ok(js.includes("RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES+'</style>"),
+  'responsive typography must be injected last after prior layout overrides');
+ for(const selector of ['.rv4-card-heading p','.rv4-hero-report>span',
+  '.rv4-reading>small','.rv4-body .rv4-figure-actions span',
+  '.rv4-fatigue-caption','.rv4-body .rv4-value-diff',
+  '.rv4-comparison-caution','.rv4-method-disclosure p']){
+  assert.ok(js.includes(selector),'supporting evidence text must be readable: '+selector);
+ }
+ assert.match(js,/font-size:clamp\(12px,0\.8125rem,18px\)/,
+  'normal-size floor and root-relative zoom need explicit bounds');
+ assert.match(js,/overflow-wrap:anywhere/);
+ assert.match(js,/BODY_REFERENCE_GRADIENT/,'official reference colors are preserved');
+ assert.match(js,/compareBodyReferenceRows/,'scientific comparison still uses authorized calculation');
+ assert.match(js,/\['body','身体'\],\['fatigue','疲労感'\],\['radar','過去と比較'\]/,
+  'the approved three tabs are intact');
+});
+
 test('S09: 44px number-toggle target and meaningful focus after redraw',()=>{
  const js=read('ui/resultExperience.js');
  const inline=read('ui/resultInlineStyles.js');

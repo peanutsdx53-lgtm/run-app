@@ -86,6 +86,39 @@ const RESULT_HELP_RIGHT_STYLES=String.raw`
 @media(max-width:380px){.rv4-header{gap:6px}.rv4-actions{min-width:0}}
 @media print{.rv4-header-help{display:none!important}}
 `;
+
+// T01: legible interpretation-supporting copy that scales with root text size.
+// Keep anatomy geometry and numeric reference values unchanged; the upper cap
+// prevents narrow 320–414px comparisons from becoming unreadable through overflow.
+const RESULT_T01_READABILITY_STYLES=String.raw`
+.rv4-app .rv4-card-heading p,
+.rv4-app .rv4-date,
+.rv4-app .rv4-hero-report>span,
+.rv4-app .rv4-reading>small,
+.rv4-app .rv4-body .rv4-figure-actions span,
+.rv4-app .rv4-body .rv4-value-diff,
+.rv4-app .rv4-body .rv4-score-caption,
+.rv4-app .rv4-body .rv4-scale-labels,
+.rv4-app .rv4-body .rv4-scale-note,
+.rv4-app .rv4-fatigue-caption,
+.rv4-app .rv4-details summary small,
+.rv4-app .rv4-extra-grid small,
+.rv4-app .rv4-note small,
+.rv4-app .rv4-activity-missing small,
+.rv4-app .rv4-compare-summary small,
+.rv4-app .rv4-compare-summary span,
+.rv4-app .rv4-region-compare-heading span,
+.rv4-app .rv4-comparison-caution,
+.rv4-app .rv4-comparison-empty,
+.rv4-app .rv4-comparison-memos small,
+.rv4-app .rv4-method-disclosure p{
+ font-size:clamp(12px,0.8125rem,18px);
+ line-height:1.6;
+ overflow-wrap:anywhere;
+ min-width:0;
+}
+`;
+
 export function mountResult(host,inputDraft={},options={}){
  // GPS summaries reuse the same result experience; never convert GPS
  // reference values into an invented manual record.
@@ -512,6 +545,6 @@ export function mountResult(host,inputDraft={},options={}){
    },'image/png');
   }catch{exportNotice(failText,true);}
  }
- if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_REFLECTION_ENTRY_STYLES+RESULT_HELP_RIGHT_STYLES+'</style><div class="rv4-app"></div>';
+ if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_REFLECTION_ENTRY_STYLES+RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES+'</style><div class="rv4-app"></div>';
  draw();
 }

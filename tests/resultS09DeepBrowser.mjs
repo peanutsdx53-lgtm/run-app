@@ -35,6 +35,14 @@ async function capture(page,meta){
    const b=x.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(x);
    for(const r of range.getClientRects())if(r.width>.5&&(r.left<b.left-2||r.right>b.right+2))leaks.push({text:x.textContent.trim().slice(0,50),element:rect(x),textRect:rect({getBoundingClientRect:()=>r})});
   }
+  // T01: measure actual computed type, not only CSS declarations or screenshots.
+  const typography=['.rv4-card-heading p','.rv4-hero-report>span',
+   '.rv4-reading>small','.rv4-body .rv4-figure-actions span',
+   '.rv4-fatigue-caption'].map(selector=>{
+    const e=one(selector);
+    return {selector,exists:!!e,fontPx:e?parseFloat(getComputedStyle(e).fontSize):null,
+     lineHeight:e?getComputedStyle(e).lineHeight:null};
+   });
   const svg=one('.rv4-body-svg');
   const regions=svg?[...svg.querySelectorAll('[data-region]')].map(x=>{const b=x.getBBox();return {id:x.dataset.region,selected:x.classList.contains('selected'),x:b.x,y:b.y,w:b.width,h:b.height}}):[];
   const parts=['.rv4-hero','.rv4-notice','.rv4-body-figure','.rv4-body-svg','.rv4-reading','.rv4-reference-scale-section','.rv4-fatigue','.rv4-history','.rv4-method-disclosure'].map(s=>({selector:s,rect:rect(one(s))}));
@@ -43,7 +51,7 @@ async function capture(page,meta){
     navComputed:nav?{height:getComputedStyle(nav).height,grid:getComputedStyle(nav).gridTemplateColumns,
       resultSelectorMatches:!!document.querySelector('.app-shell:has(#runload-result-v4) .mobile-nav'),
       firstLinkStyle:(()=>{const item=nav.querySelector('.mobile-link');return item?{fontSize:getComputedStyle(item).fontSize,display:getComputedStyle(item).display,whiteSpace:getComputedStyle(item).whiteSpace,rect:rect(item),html:item.outerHTML.slice(0,350)}:null;})()}:null,
-    parts,controls,leaks,regions};
+    parts,controls,leaks,regions,typography};
  });
  const filename=[engine,meta.language,meta.width,meta.zoom,meta.tab,meta.view].join('-');
  await page.screenshot({path:resolve(out,filename+'-full.png'),animations:'disabled',fullPage:true,timeout:25000});
@@ -58,6 +66,12 @@ async function capture(page,meta){
   assert.equal(m.navComputed.grid.trim().split(/\s+/).length,5,'keep five labeled navigation destinations');
  }
  if(meta.tab==='body'){
+  // The same labels must grow with document root zoom without disappearing.
+  for(const item of m.typography){
+   assert.ok(item.exists,'T01 supporting text absent: '+item.selector);
+   const floor=meta.zoom===200?17.5:12.5;
+   assert.ok(item.fontPx>=floor,'T01 supporting text stayed too small: '+JSON.stringify({meta,item,floor}));
+  }
   const views=m.controls.filter(x=>x.anatomy);
   assert.equal(views.length,3,'all anatomy views stay reachable');
   for(const v of views)assert.ok(v.rect.height>=43,'anatomy view target too small: '+v.text+' '+meta.width);
