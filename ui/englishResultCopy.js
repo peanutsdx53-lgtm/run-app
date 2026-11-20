@@ -21,7 +21,7 @@ export const ENGLISH_RESULT_COPY=Object.freeze({
  "GPS比較の条件と限界": "GPS Comparison Conditions & Limits",
  "保存方法・活動条件・計算基準を確認できない参考値は同列に並べません。": "Reference values are not directly compared unless the recording method, activity conditions and calculation basis are verified.",
  "出所：ROF-J／本人回答。前後差や原因は判定しません。": "Source: ROF-J self-report. Differences or causes are not determined.",
- "文献参考値の条件と限界": "Study Reference Conditions & Limits",
+ "文献参考値の条件と限界": "Reference Scope & Limits",
  "各部位自身の文献基準を100とした参考値": "Reference Values Normalized to 100 Within Each Region's Own Source Study",
  "文献が扱う速度範囲外のため算出できません": "Unavailable: Outside the Source Study's Speed Range",
  "走歩混在を一つの値に換算しません": "Mixed Running and Walking Cannot Be Converted to One Reference Value",

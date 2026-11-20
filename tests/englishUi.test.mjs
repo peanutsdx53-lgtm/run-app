@@ -24,6 +24,15 @@ test('translation never guesses the meaning of variable data, times, IDs, or nov
  assert.equal(translateUiText(''),'');
 });
 
+
+test('S09 T06: brief English reference heading preserves both applicability and limits',()=>{
+ const label=translateUiText('文献参考値の条件と限界');
+ assert.equal(label,'Reference Scope & Limits');
+ const html=readFileSync(new URL('../ui/englishResultCopy.js',import.meta.url),'utf8');
+ assert.ok(html.includes('"文献参考値の条件と限界": "Reference Scope & Limits"'));
+ assert.match(translateUiText('この色は各部位自身の文献基準100との差を示し、危険度や部位間の順位ではありません。個人の身体負荷を直接測定した値ではありません。'),/not directly measure/);
+});
+
 test('language selection does not mutate canonical model or legal document source',()=>{
  const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
  const ui=read('ui/englishUi.js'),app=read('app.js'),settings=read('ui/settingsExperience.js');

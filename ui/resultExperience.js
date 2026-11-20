@@ -111,6 +111,10 @@ const RESULT_T01_READABILITY_STYLES=String.raw`
 .rv4-app .rv4-comparison-caution,
 .rv4-app .rv4-comparison-empty,
 .rv4-app .rv4-comparison-memos small,
+/* T02/T06: disclosure-only sources and scope must remain readable at root 200%. */
+.rv4-app .rv4-hero-source-grid p,
+.rv4-app .rv4-hero-source-grid strong,
+.rv4-app .rv4-method-disclosure>summary,
 .rv4-app .rv4-method-disclosure p{
  font-size:clamp(12px,0.8125rem,18px);
  line-height:1.6;
@@ -346,7 +350,7 @@ export function mountResult(host,inputDraft={},options={}){
   if(!hasInput)return '';
   const reason=reference?.reason==='MIXED_GAIT_NOT_QUANTIFIED'?'走歩混在は単一活動として数値化しません。':reference?.reason==='GAIT_NOT_SELECTED'?'活動種別が未選択のため部位別値は表示しません。':'この速度条件で算出可能な部位別文献参考値はありません。';
   const detail=reference?.count?'活動種別：'+clean(ACTIVITY_LABELS[reference.activity]||'未設定')+'。平均速度：'+format(reference.speedMps,2)+' m/s。文献条件に合う'+reference.count+'/12部位のみ算出。路面・勾配は数値補正していません。':reason;
-  return '<details class="rv4-method-disclosure"><summary>文献参考値の条件と限界 <span class="rv4-disclosure-chevron" aria-hidden="true">⌄</span></summary><p>'+detail+' この色は各部位自身の文献基準100との差を示し、危険度や部位間の順位ではありません。個人の身体負荷を直接測定した値ではありません。</p></details>';
+  return '<details class="rv4-method-disclosure"><summary style="font-size:clamp(12px,0.8125rem,18px)!important;line-height:1.6;overflow-wrap:anywhere"><span class="rv4-method-label" style="font-size:clamp(12px,0.8125rem,18px)!important;line-height:1.6;min-width:0;overflow-wrap:anywhere">文献参考値の条件と限界</span> <span class="rv4-disclosure-chevron" aria-hidden="true">⌄</span></summary><p>'+detail+' この色は各部位自身の文献基準100との差を示し、危険度や部位間の順位ではありません。個人の身体負荷を直接測定した値ではありません。</p></details>';
  };
  const resultActions=()=>!hasInput&&!options.annotationLink?'':'<div class="rv4-actions"><details class="rv4-export-menu"><summary><span>操作</span><span class="rv4-export-chevron" aria-hidden="true"></span></summary><div class="rv4-export-options">'+
    (options.annotationLink?'<a class="rv4-posthoc-entry" data-posthoc-entry href="'+clean(options.annotationLink)+'">記録に情報を追加（任意）</a>':'')+
@@ -358,6 +362,16 @@ export function mountResult(host,inputDraft={},options={}){
  '<p><strong>平均ペース</strong><span data-source-pace>出所：'+clean(origin.pace)+'</span></p>'+
  '<p><strong>疲労感</strong><span data-source-rof-detail>出所：'+clean(origin.rof)+'</span></p></div></details>';
  const hero=()=>!hasInput?'':'<section class="rv4-hero"><div class="rv4-hero-glow"></div><div class="rv4-hero-left"><small class="rv4-date">'+titleDate+'　<span>'+clean(ACTIVITY_LABELS[fromGps?gps.activity:fromSaved?gaitOf(options.record):draft.activityGait]||'活動種別未設定')+'</span></small><div class="rv4-measures"><div class="rv4-distance"><small>距離</small><strong>'+format(distance,2)+'</strong><span>km</span></div><div class="rv4-secondary"><div><small>時間</small><strong>'+(duration>0?format(duration,0)+' 分':'—')+'</strong></div><div><small>平均ペース</small><strong>'+pace+' <em>/km</em></strong></div></div></div></div><div class="rv4-hero-report"><span>疲労感（本人回答）</span><div class="rv4-today-chips"><span>運動前 <b>'+(before??'—')+'</b></span><span>運動後 <b>'+(after??'—')+'</b></span></div></div>'+resultNotice()+sourceDetails()+'</section>';
+ // WebKit can keep a native <summary> at 13px even when its rem-based
+ // style is important. Match the *visible* text to the actual document root.
+ // This does not measure or change any running/scientific reference values.
+ const syncReferenceLabelFont=()=>{
+  const label=root.querySelector('.rv4-method-label');
+  if(!label)return;
+  const rootPx=parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const size=Math.min(18,Math.max(12,(Number.isFinite(rootPx)?rootPx:16)*0.8125));
+  label.style.setProperty('font-size',size+'px','important');
+ };
  function draw(){
   const app=root.querySelector('.rv4-app');
   const openState=new Map(),draftState=new Map();
@@ -388,6 +402,7 @@ export function mountResult(host,inputDraft={},options={}){
   }
   if(focusedDisclosure)app.querySelector(focusedDisclosure)?.querySelector(':scope > summary')?.focus({preventScroll:true});
   rendered=true;
+  syncReferenceLabelFont();
   root.querySelector('.rv4-app').dataset.printRof=exportRof?'true':'false';
   root.querySelector('[data-export-date]')?.addEventListener('change',e=>{exportDate=e.target.checked});
   root.querySelector('[data-export-rof]')?.addEventListener('change',e=>{
@@ -546,5 +561,14 @@ export function mountResult(host,inputDraft={},options={}){
   }catch{exportNotice(failText,true);}
  }
  if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_REFLECTION_ENTRY_STYLES+RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES+'</style><div class="rv4-app"></div>';
+ // Keep the visible label in sync when the user changes document font scale
+ // while the result is open. Disconnect a previous observer on remount.
+ host._runloadResultFontObserver?.disconnect();
+ const rootFontObserver=new MutationObserver(()=>{
+  if(!host.isConnected){rootFontObserver.disconnect();return;}
+  syncReferenceLabelFont();
+ });
+ rootFontObserver.observe(document.documentElement,{attributes:true,attributeFilter:['style','class']});
+ host._runloadResultFontObserver=rootFontObserver;
  draw();
 }

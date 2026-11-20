@@ -12,6 +12,10 @@ permissions:
 jobs:
   screenshots:
     runs-on: ubuntu-24.04
+    # Reuse the official Playwright image to avoid duplicate browser/OS downloads.
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
     timeout-minutes: 35
     strategy:
       fail-fast: false
@@ -25,7 +29,6 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-save playwright@1.56.1
-      - run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: Audit seven widths, bilingual, zoom, three tabs and all anatomy views
         run: node tests/resultS09DeepBrowser.mjs
       - if: always()

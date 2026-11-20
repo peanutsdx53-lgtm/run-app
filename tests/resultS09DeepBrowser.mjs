@@ -146,8 +146,58 @@ try{
     await capture(page,{language,width,zoom,tab,view:'front'});
     if(tab==='body'){
      const sources=result.locator('.rv4-hero-sources');
+     if(width===320&&zoom===200)assert.equal(await sources.evaluate(e=>e.open),false,
+       'T02: long source descriptions must not be permanently exposed on a narrow screen');
      await sources.locator('summary').click();
      assert.equal(await sources.evaluate(e=>e.open),true,'provenance explanation opens only by user action');
+     if(width===320&&zoom===200){
+      const audit=await result.evaluate(el=>{
+       const root=el.shadowRoot,grid=root.querySelector('.rv4-hero-source-grid');
+       const fields=['distance','duration','pace','rof-detail'].map(k=>root.querySelector('[data-source-'+k+']'));
+       const textOverflows=fields.flatMap(e=>{
+        if(!e)return ['missing source'];
+        const box=e.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(e);
+        return [...range.getClientRects()].filter(r=>r.width>.5&&(r.left<box.left-2||r.right>box.right+2))
+         .map(r=>({value:e.textContent,left:r.left,right:r.right,containerLeft:box.left,containerRight:box.right}));
+       });
+       return {values:fields.map(e=>e?.textContent.trim()||''),fontPx:fields.map(e=>e?parseFloat(getComputedStyle(e).fontSize):0),
+        columns:getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).length,overflows:textOverflows};
+      });
+      assert.equal(audit.values.length,4,'T02: source rows must remain distinct for distance/duration/pace/ROF-J');
+      assert.ok(audit.values.every(v=>v.length>5),'T02: every source meaning must remain available after expansion');
+      assert.notEqual(audit.values[0],audit.values[2],'T02: manually entered distance and calculated pace are not the same source');
+      assert.equal(audit.columns,1,'T02: expanded sources use one readable column at 320px');
+      assert.deepEqual(audit.overflows,[],'T02: long source labels wrap inside their own rows');
+      assert.ok(audit.fontPx.every(v=>v>=17.5),'T02: detailed source copy follows 200% root text size');
+
+      const reference=result.locator('.rv4-method-disclosure');
+      const heading=reference.locator('summary');
+      const textLabel=heading.locator('.rv4-method-label');
+      const label=(await textLabel.textContent()).trim();
+      if(language==='en')assert.equal(label,'Reference Scope & Limits','T06: concise English header');
+      else assert.equal(label,'文献参考値の条件と限界','T06: Japanese meaning preserved');
+      const layout=await heading.evaluate(el=>{
+       const r=el.getBoundingClientRect(),visibleText=el.querySelector('.rv4-method-label');
+       if(!visibleText)throw Error('T06: accessible heading text is missing');
+       const range=document.createRange();range.selectNodeContents(visibleText);
+       const textRects=[...range.getClientRects()].filter(r=>r.width>.5);
+       return {height:r.height,fontPx:parseFloat(getComputedStyle(visibleText).fontSize),
+        summaryFont:parseFloat(getComputedStyle(el).fontSize),
+        textStyle:visibleText.getAttribute('style'),priority:visibleText.style.getPropertyPriority('font-size'),
+        rootFont:getComputedStyle(document.documentElement).fontSize,
+        escapes:textRects.filter(x=>x.left<r.left-2||x.right>r.right+2).length};
+      });
+      assert.ok(layout.height>=43.5,'T06: reference disclosure remains a 44px minimum touch target');
+      assert.ok(layout.fontPx>=17.5,'T06: visible reference heading scales with 200% root text: '+JSON.stringify({language,width,zoom,layout}));
+      assert.equal(layout.escapes,0,'T06: reference heading fits without text overflow');
+      assert.equal(await reference.evaluate(el=>el.open),false,'reference evidence is optional until opened');
+      await heading.click();
+      const evidenceText=await reference.locator('p').textContent();
+      assert.match(evidenceText,/100/,'reference basis is unchanged');
+      assert.ok(evidenceText.length>60,'T06: the full applicability and risk-limitation details remain available');
+      await heading.click();
+      assert.equal(await reference.evaluate(el=>el.open),false,'T06: detail remains dismissible');
+     }
      const evidence=result.locator('.rv4-region-evidence');
      await evidence.locator('summary').click();
      assert.equal(await evidence.evaluate(e=>e.open),true,'selected-region evidence opens by user choice');
