@@ -110,7 +110,7 @@ test("English reference legal text never replaces the Japanese original or conse
   const original=renderLegalDocumentModal(kind);
   const translated=renderLegalDocumentModal(kind,{showEnglishReference:true});
   assert.doesNotMatch(original,/data-legal-english-reference/);
-  assert.match(translated,/Unofficial English reference translation/);
+  assert.doesNotMatch(translated,/Unofficial English reference translation|legal review pending|authoritative version|this English translation does not replace/i);
   assert.match(translated,/data-legal-english-reference/);
   assert.match(translated,/fu-doc-dialog/);
   assert.match(translated,/lang="ja"/);
@@ -118,4 +118,43 @@ test("English reference legal text never replaces the Japanese original or conse
  }
  assert.equal(m.ENGLISH_TERMS.sections.length,18);
  assert.equal(m.ENGLISH_PRIVACY.sections.length,17);
+});
+
+test("English and Japanese legal modals localize their frame while preserving both source and consent",()=>{
+ const terms=renderLegalDocumentModal("terms",{showEnglishReference:true});
+ const policy=renderLegalDocumentModal("privacy",{showEnglishReference:true});
+ const jaTerms=renderLegalDocumentModal("terms");
+ const jaPolicy=renderLegalDocumentModal("privacy");
+ for(const en of [terms,policy]){
+  assert.match(en,/<section lang="en" class="fu-doc-dialog"/);
+  assert.match(en,/<div lang="ja" data-legal-japanese-original>/);
+  assert.match(en,/aria-label="Close" title="Close"/);
+  assert.match(en,/>Effective Date: 2026-11-10</);
+  assert.match(en,/>Back<\/button>/);
+  assert.doesNotMatch(en,/fu-legal-translation-status|legal review pending|authoritative version/);
+ }
+ assert.match(terms,/<strong id="fu-doc-heading">Terms of Use<\/strong>/);
+ assert.match(policy,/<strong id="fu-doc-heading">Privacy Policy<\/strong>/);
+ assert.match(terms,/運営者の責任/);
+ assert.match(policy,/個人情報に関する請求/);
+ for(const ja of [jaTerms,jaPolicy]){
+  assert.match(ja,/<section lang="ja" class="fu-doc-dialog"/);
+  assert.match(ja,/aria-label="閉じる" title="閉じる"/);
+  assert.match(ja,/>制定日：2026-11-10</);
+  assert.match(ja,/>戻る<\/button>/);
+  assert.doesNotMatch(ja,/data-legal-english-reference/);
+ }
+ assert.match(jaTerms,/<strong id="fu-doc-heading">利用規約<\/strong>/);
+ assert.match(jaPolicy,/<strong id="fu-doc-heading">プライバシーポリシー<\/strong>/);
+ for(const kind of ['terms','privacy']){
+  const inEnglish=renderFirstUse(state(1,{language:'en',documentOpen:kind}));
+  const inJapanese=renderFirstUse(state(1,{language:'ja',documentOpen:kind}));
+  assert.match(inEnglish,/<section lang="en" class="fu-doc-dialog"/);
+  assert.match(inJapanese,/<section lang="ja" class="fu-doc-dialog"/);
+  for(const text of [inEnglish,inJapanese]){
+   assert.match(text,/data-onboard-terms/);
+   assert.match(text,/data-onboard-privacy/);
+   assert.match(text,/data-onboard-next disabled/);
+  }
+ }
 });

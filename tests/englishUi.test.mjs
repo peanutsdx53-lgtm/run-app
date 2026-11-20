@@ -41,7 +41,7 @@ test('language selection does not mutate canonical model or legal document sourc
  assert.match(settings,/data-settings-language="en"/);
  assert.match(settings,/data-settings-language="en"[^>]*>English<\/button>/);
  assert.doesNotMatch(ui,/fetch\(|XMLHttpRequest|localStorage\.setItem|indexedDB\.open/);
- assert.match(read('ui/firstUseExperience.js'),/lang="ja" class="fu-doc-dialog"/,'legal modal remains Japanese');
+ assert.match(read('ui/firstUseExperience.js'),/data-legal-japanese-original/,'the Japanese original has its own language-marked block');
 });
 
 test('extended English copy preserves scientific and consent limits across four UI areas',()=>{
@@ -116,7 +116,7 @@ test('unreviewed English legal translation retains all Japanese articles and use
  const m=await import('../ui/englishLegalDocuments.js');
  assert.equal(m.ENGLISH_LEGAL_REVIEW_STATUS,'DRAFT_UNREVIEWED');
  assert.equal(m.englishLegalParity(),true);
- assert.match(m.englishLegalDocumentMarkup('terms'),/authoritative version/);
+ assert.doesNotMatch(m.englishLegalDocumentMarkup('terms'),/authoritative version|Unofficial English reference translation|legal review pending/);
  assert.match(m.englishLegalDocumentMarkup('privacy'),/Article 17 \(Inquiries\)/);
 });
 
