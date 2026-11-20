@@ -226,3 +226,26 @@ test('an unavailable Learning route has useful Japanese and English guidance',()
   ['学習の一覧へ戻る','Back to Learning']
  ])assert.equal(translateUiText(ja),en);
 });
+
+test('S09 comparison retains English labels and translates only activity-type display composites',()=>{
+ for(const [ja,en] of [
+  ['比較相手','Comparison Record'],['選択中','Current Record'],
+  ['参考値の差','Reference Value Difference'],['ポイント','points'],
+  ['ランニング','Running'],['ジョギング','Jogging'],['ウォーキング','Walking']
+ ]) assert.equal(translateUiText(ja),en,ja);
+ const option={closest:selector=>selector==='.rv4-history'?{}:null,
+  matches:selector=>selector==='select[data-compare-select] option'};
+ const summary={closest:selector=>selector==='.rv4-history'?{}:null,
+  matches:selector=>selector==='.rv4-compare-summary span'};
+ assert.equal(translateUiText('2026-11-20 ・ 5.00 km ・ ランニング',{element:option}),
+  '2026-11-20 · 5.00 km · Running');
+ assert.equal(translateUiText('2026-11-20 ・ 5.00 km ・ ジョギング ・ 同条件2/3（活動種別が異なる）',{element:option}),
+  '2026-11-20 · 5.00 km · Jogging · Same-Condition Record 2/3 (Different Activity Type)');
+ assert.equal(translateUiText('5.00 km ・ ウォーキング',{element:summary}),'5.00 km · Walking');
+ // Composite translation is tightly scoped to comparison UI elements.
+ assert.equal(translateUiText('5.00 km ・ ランニング'),'5.00 km ・ ランニング');
+ const userText={closest:selector=>selector==='[data-user-authored]'?{}:null,
+  matches:selector=>selector==='.rv4-compare-summary span'};
+ assert.equal(translateUiText('5.00 km ・ ランニング',{element:userText}),
+  '5.00 km ・ ランニング','user-authored text must be immutable');
+});

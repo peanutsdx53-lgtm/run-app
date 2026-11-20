@@ -1,5 +1,5 @@
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261117-reflection-g3-v1';
-import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261119-s09-t02t06-provenance-v1';
+import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261120-s09-comparison-english-v1';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261111-exploration-inquiry-v1';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261117-s16-settings-v1';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js';
@@ -19,7 +19,7 @@ import {ENGLISH_FINAL_GPS} from './englishFinalGps.js';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261117-s16-settings-v1';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261120-s09-comparison-english-v1';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.

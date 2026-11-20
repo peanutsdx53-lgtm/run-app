@@ -248,6 +248,52 @@ try{
      await capture(page,{language,width,zoom,tab,view});
     }
    }
+
+   if(width===320&&zoom===200){
+    // User-reported case: exercise names inside composite choices/cards and
+    // fixed same-region labels must be bilingual without translating user data.
+    const secondId=await page.evaluate(async()=>{
+     const c=await import('/ui/manualRunCanonical.js'),m=await import('/ui/manualRunStore.js');
+     const v=await c.mutate(state=>m.saveManualRun(state,{date:'2026-11-16',
+      distance:'5',hours:'',minutes:'28',seconds:'',activityGait:'RUNNING',
+      runningFormat:'UNKNOWN',rofBefore:0,rofAfter:null,stepsProvenance:'UNKNOWN'}));
+     if(!v.ok)throw Error(v.reason);return v.record.id;
+    });
+    await page.goto(base+'result?record='+encodeURIComponent(secondId),{waitUntil:'networkidle'});
+    await result.locator('[data-tab="radar"]').click();
+    await result.locator('[data-compare-select]').selectOption(id);
+    await result.locator('.rv4-region-compare-stats').waitFor({state:'attached'});
+    await page.waitForTimeout(250);
+    const languageAudit=await result.evaluate(host=>{
+     const root=host.shadowRoot;
+     const read=selector=>[...root.querySelectorAll(selector)].map(e=>e.textContent.trim());
+     return {choice:read('[data-compare-select] option:checked'),
+      source:read('.rv4-compare-summary span'),
+      labels:read('.rv4-region-compare-stats>div>small'),
+      unit:read('.rv4-region-compare-change em'),
+      currentDate:read('.rv4-region-compare-stats time')};
+    });
+    assert.equal(languageAudit.choice.length,1,'comparison record stays selected');
+    assert.equal(languageAudit.source.length,2,'both saved-record sources remain');
+    assert.equal(languageAudit.labels.length,3,'two reference values and a difference remain');
+    assert.equal(languageAudit.unit.length,1,'difference unit remains visible');
+    if(language==='en'){
+     assert.match(languageAudit.choice[0],/Running/,'option activity is English');
+     for(const s of [...languageAudit.choice,...languageAudit.source,
+       ...languageAudit.labels,...languageAudit.unit])
+      assert.doesNotMatch(s,/[ぁ-ゟァ-ヿ一-龯]/,'English comparison contains Japanese UI copy: '+s);
+     assert.deepEqual(languageAudit.labels,['Comparison Record','Current Record','Reference Value Difference']);
+     assert.deepEqual(languageAudit.unit,['points']);
+    }else{
+     assert.match(languageAudit.choice[0],/ランニング/,'Japanese option stays Japanese');
+     assert.deepEqual(languageAudit.labels,['比較相手','選択中','参考値の差']);
+     assert.deepEqual(languageAudit.unit,['ポイント']);
+    }
+    assert.deepEqual(languageAudit.currentDate,['2026-11-15','2026-11-16'],
+     'comparison dates are never translated or reordered');
+    await page.screenshot({path:resolve(out,engine+'-'+language+'-320-200-comparison-language.png'),
+     animations:'disabled',fullPage:false});
+   }
    if(language==='ja'&&width===390&&zoom===200){
     // A separate saved run is a new mount: never carry an unsaved correction or
     // an expanded disclosure into a different record.

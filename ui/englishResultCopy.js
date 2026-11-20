@@ -2,6 +2,14 @@
  * Caveats preserve per-region baseline=100, source applicability, self-report
  * timing uncertainty, and the difference between unanswered and score zero. */
 export const ENGLISH_RESULT_COPY=Object.freeze({
+ // S09 same-region comparison: system labels only, never personal notes.
+ "比較相手": "Comparison Record",
+ "選択中": "Current Record",
+ "参考値の差": "Reference Value Difference",
+ "ポイント": "points",
+ "ランニング": "Running",
+ "ジョギング": "Jogging",
+ "ウォーキング": "Walking",
  "保存した気づき": "Saved Reflections",
  "この走行のメモを確認・修正": "Review or Edit Notes for This Activity",
  "この走行のメモはまだありません。": "No Notes Saved for This Activity Yet.",
