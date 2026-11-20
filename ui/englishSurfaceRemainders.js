@@ -221,6 +221,27 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
   }
  }
 
+
+ // S09 comparison table: generated headers, durations and same-region limits.
+ // This is deliberately scoped to system-generated cells, never saved notes.
+ if(inView('.rv4-history')){
+  if(element?.matches?.('.rv4-comparison-table th')){
+   const h=s.match(/^(比較相手|選択中) (\d{4}-\d{2}-\d{2})$/);
+   if(h)return (h[1]==='比較相手'?'Comparison Record ':'Current Record ')+h[2];
+  }
+  if(element?.matches?.('.rv4-comparison-table td,.rv4-compare-card span')){
+   const n=s.match(/^([+-]?(?:[\d,]+(?:\.\d+)?|\d+:\d{2})) (分\/km|分|点)$/);
+   if(n)return n[1]+' '+({'分/km':'min/km','分':'min','点':'points'}[n[2]]);
+  }
+  if(element?.matches?.('.rv4-question-continuation > p')){
+   const q=s.match(/^(\d{4}-\d{2}-\d{2})の記録に残した問いです。自動では転記しません。$/);
+   if(q)return 'This question was saved with the '+q[1]+' record. It is not copied automatically.';
+  }
+  if(element?.matches?.('.rv4-region-compare-method p')){
+   if(s==="保存した走行情報を現在の同一モデルで再計算した参考値です。記録当時の結果を再現したものではありません。"+"同一部位・同一科学的指標の文献参考値の差（ポイント）です。個人の身体負荷・傷害リスク・変化の原因は示しません。")return "Reference values are recalculated from saved activity data using the same current model. They do not reproduce the results originally shown when those activities were recorded. This difference (in points) is between research reference values for the same region and scientific measure. It does not establish the person's physical load, injury risk, or causes of change.";
+  }
+ }
+
  // Only system-generated, source-bound GPS private counts and restore warnings.
  // User-authored note spans carry data-user-authored and are excluded upstream.
  if(inView('[data-gps-reflect-id]')&&(m=s.match(/^現在の記述：(\d+)件／削除済み：(\d+)件（本文なし）$/)))

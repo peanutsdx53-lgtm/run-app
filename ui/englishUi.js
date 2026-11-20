@@ -261,7 +261,7 @@ export function translateLessonComposite(text){
  }
  return raw;
 }
-const SKIP='script,style,textarea,input,code,pre,[contenteditable], [data-legal-backdrop], .fu-doc-scroll, [data-user-authored], .ex-note-preview, .ex-saved, .rv4-comparison-memos, .rv4-note p, .focus-fact strong, .entry-caption:not([data-history-system-caption]), [data-ax-editor] [data-ax-notice], [data-report-purpose], [data-report-observation], [data-report-question], .cp-condition strong, #cp-target, .cp-report-mode-usertext';
+const SKIP='script,style,textarea,input,code,pre,[contenteditable], [data-legal-backdrop], .fu-doc-scroll, [data-user-authored], .ex-note-preview, .ex-saved, .rv4-note p, .focus-fact strong, .entry-caption:not([data-history-system-caption]), [data-ax-editor] [data-ax-notice], [data-report-purpose], [data-report-observation], [data-report-question], .cp-condition strong, #cp-target, .cp-report-mode-usertext';
 export function startEnglishUi(doc,{language='ja'}={}){
  let selected=language==='en'?'en':'ja',queued=false;
  const seen=new WeakSet();

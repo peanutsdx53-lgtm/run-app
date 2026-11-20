@@ -289,6 +289,23 @@ try{
      assert.deepEqual(languageAudit.labels,['比較相手','選択中','参考値の差']);
      assert.deepEqual(languageAudit.unit,['ポイント']);
     }
+
+    const extended=await result.evaluate(host=>{
+     const root=host.shadowRoot;
+     const read=selector=>[...root.querySelectorAll(selector)].map(e=>e.textContent.trim());
+     return {table:read('.rv4-comparison-table th,.rv4-comparison-table td'),
+      method:read('.rv4-region-compare-method p'),caution:read('.rv4-comparison-caution p'),
+      memoLabels:read('.rv4-comparison-memos small'),memos:read('.rv4-comparison-memos p')};
+    });
+    if(language==='en'){
+     for(const text of Object.values(extended).flat())
+      assert.doesNotMatch(text,/[ぁ-ゟァ-ヿ一-龯]/,'untranslated comparison UI: '+text);
+     assert.deepEqual(extended.memos,['No Notes','No Notes']);
+     assert.ok(extended.method.some(x=>x.includes('reference values')));
+    }else{
+     assert.deepEqual(extended.memos,['メモなし','メモなし']);
+     assert.ok(extended.table.some(x=>x.includes('比較相手 2026-11-15')));
+    }
     assert.deepEqual(languageAudit.currentDate,['2026-11-15','2026-11-16'],
      'comparison dates are never translated or reordered');
     await page.screenshot({path:resolve(out,engine+'-'+language+'-320-200-comparison-language.png'),
