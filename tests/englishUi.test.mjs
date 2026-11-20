@@ -226,3 +226,51 @@ test('an unavailable Learning route has useful Japanese and English guidance',()
   ['学習の一覧へ戻る','Back to Learning']
  ])assert.equal(translateUiText(ja),en);
 });
+
+test('S09 comparison retains English labels and translates only activity-type display composites',()=>{
+ for(const [ja,en] of [
+  ['比較相手','Comparison Record'],['選択中','Current Record'],
+  ['参考値の差','Reference Value Difference'],['ポイント','points'],
+  ['ランニング','Running'],['ジョギング','Jogging'],['ウォーキング','Walking']
+ ]) assert.equal(translateUiText(ja),en,ja);
+ const option={closest:selector=>selector==='.rv4-history'?{}:null,
+  matches:selector=>selector==='select[data-compare-select] option'};
+ const summary={closest:selector=>selector==='.rv4-history'?{}:null,
+  matches:selector=>selector==='.rv4-compare-summary span'};
+ assert.equal(translateUiText('2026-11-20 ・ 5.00 km ・ ランニング',{element:option}),
+  '2026-11-20 · 5.00 km · Running');
+ assert.equal(translateUiText('2026-11-20 ・ 5.00 km ・ ジョギング ・ 同条件2/3（活動種別が異なる）',{element:option}),
+  '2026-11-20 · 5.00 km · Jogging · Same-Condition Record 2/3 (Different Activity Type)');
+ assert.equal(translateUiText('5.00 km ・ ウォーキング',{element:summary}),'5.00 km · Walking');
+ // Composite translation is tightly scoped to comparison UI elements.
+ assert.equal(translateUiText('5.00 km ・ ランニング'),'5.00 km ・ ランニング');
+ const userText={closest:selector=>selector==='[data-user-authored]'?{}:null,
+  matches:selector=>selector==='.rv4-compare-summary span'};
+ assert.equal(translateUiText('5.00 km ・ ランニング',{element:userText}),
+  '5.00 km ・ ランニング','user-authored text must be immutable');
+});
+
+test('S09 English comparison covers numeric cells, dated headers, note fallbacks and scientific limitations',()=>{
+ const context=selector=>({element:{matches:pattern=>pattern===selector,
+  closest:query=>query==='.rv4-history'?{}:null}});
+ const th=context('.rv4-comparison-table th'),td=context('.rv4-comparison-table td,.rv4-compare-card span');
+ const method=context('.rv4-region-compare-method p'),question=context('.rv4-question-continuation > p');
+ assert.equal(translateUiText('比較相手 2026-11-20',th),'Comparison Record 2026-11-20');
+ assert.equal(translateUiText('選択中 2026-11-21',th),'Current Record 2026-11-21');
+ for(const [input,expected] of [['28.0 分','28.0 min'],['5:36 分/km','5:36 min/km'],['+7.4 点','+7.4 points']])
+  assert.equal(translateUiText(input,td),expected);
+ assert.equal(translateUiText('2026-11-20の記録に残した問いです。自動では転記しません。',question),
+  'This question was saved with the 2026-11-20 record. It is not copied automatically.');
+ const source=readFileSync(new URL('../ui/runReflection.js',import.meta.url),'utf8');
+ const region=readFileSync(new URL('../ui/regionReferenceComparison.js',import.meta.url),'utf8');
+ const caution=source.match(/uncertainty:'([^']+)'/)[1],note=region.match(/note:'([^']+)'/)[1];
+ assert.match(translateUiText(caution),/does not infer within-record/);
+ const intro='保存した走行情報を現在の同一モデルで再計算した参考値です。記録当時の結果を再現したものではありません。';
+ assert.match(translateUiText(intro+note,method),/injury risk/);
+ assert.equal(translateUiText('メモなし'),'No Notes');
+ const ui=readFileSync(new URL('../ui/englishUi.js',import.meta.url),'utf8');
+ const result=readFileSync(new URL('../ui/resultExperience.js',import.meta.url),'utf8');
+ assert.ok(!ui.includes('.rv4-comparison-memos, .rv4-note p'));
+ assert.match(result,/comparison\.other\.memo\?' data-user-authored'/);
+ assert.match(result,/comparison\.current\.memo\?' data-user-authored'/);
+});
