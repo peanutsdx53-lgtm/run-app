@@ -17,7 +17,6 @@ export function englishLegalDocumentMarkup(kind){
  const doc=kind==='privacy'?ENGLISH_PRIVACY:ENGLISH_TERMS;
  const e=escapeLegalHtml;
  return '<section lang="en" class="fu-english-legal-reference" data-legal-english-reference>'
-  +'<p class="fu-legal-translation-status"><strong>Unofficial English reference translation — legal review pending.</strong> The Japanese document below is the authoritative version; this English translation does not replace the consent required for the Japanese text.</p>'
   +'<div class="fu-document-body"><h2>'+e(doc.title)+'</h2>'
   +doc.sections.map(([title,paragraphs])=>'<section class="fu-document-section"><h3>'+e(title)+'</h3>'+paragraphs.map(p=>'<p>'+e(p)+'</p>').join('')+'</section>').join('')
   +'<p class="fu-document-contact">Contact channel: not currently provided within the app. Do not post personal information in public comment areas.</p></div></section>';

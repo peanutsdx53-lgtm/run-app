@@ -1,7 +1,7 @@
 // First-use experience. Public copy intentionally avoids a provisional product name.
 import {BODY_REGION_VIEWS} from "../assets/bodyRegionVisuals.js";
 import {LEGAL_VERSION,legalDocumentMarkup,escapeLegalHtml} from "./legalDocuments.js";
-import {englishLegalDocumentMarkup,englishLegalParity} from "./englishLegalDocuments.js";
+import {englishLegalDocumentMarkup,englishLegalParity} from "./englishLegalDocuments.js?v=20261120-legal-modal-bilingual-v1";
 
 export const FIRST_USE_STEPS=Object.freeze(["表示言語","利用規約・プライバシー","記録と振り返り","記録する","結果を確認する","履歴と体調","情報を調べる・共有する","プロフィール"]);
 const h=escapeLegalHtml;
@@ -95,16 +95,23 @@ export function renderFirstUse(state){
     +(!state.replay&&step>=2&&step<=6?'<button class="fu-button fu-secondary" type="button" data-onboard-skip-guide>ガイドを後で見る</button>':'')
     +(final?'<button class="fu-button fu-secondary" type="button" data-onboard-skip-profile>設定せずに始める</button>':'')
     +'<button class="fu-button fu-primary" type="button" data-onboard-next '+(canAdvance?'':'disabled')+'>'+(final?'保存して始める':step===1?'同意して次へ':'次へ')+'</button></div></footer>';
-  const doc=state.documentOpen?renderLegalDocumentModal(state.documentOpen):'';
+  const doc=state.documentOpen?renderLegalDocumentModal(state.documentOpen,{showEnglishReference:state.language==='en'}):'';
   return '<div class="onboard-overlay fu-overlay" data-onboard-overlay><section class="onboard-dialog fu-shell" '+(step===1?'data-onboard-legal-step lang="'+(state.language==='en'?'en':'ja')+'" ':'')+'role="dialog" aria-modal="true" aria-labelledby="onboard-title"><div class="fu-layout">'
     +sidebar+'<div class="fu-workspace"><div class="fu-topbar"><div class="fu-topbrand">走行記録</div>'+(labels?'<span>'+h(labels)+'</span>':'')+(state.replay?'<button type="button" data-onboard-close aria-label="ガイドを閉じる">閉じる ×</button>':'')+'</div>'
     +progress+'<main class="fu-content">'+current+'</main>'+footer+'</div></div></section></div>'+doc;
 }
 export function renderLegalDocumentModal(kind,{showEnglishReference=false}={}){
-  const title=kind==="privacy"?"プライバシーポリシー":"利用規約";
-  const translation=showEnglishReference&&englishLegalParity()?englishLegalDocumentMarkup(kind):'';
-  return '<div class="fu-doc-backdrop" data-legal-backdrop><section lang="ja" class="fu-doc-dialog" role="dialog" aria-modal="true" aria-labelledby="fu-doc-heading">'
-    +'<header><strong id="fu-doc-heading">'+title+'</strong><button type="button" class="fu-doc-close" data-legal-dismiss aria-label="閉じる" title="閉じる"><span aria-hidden="true">×</span></button></header>'
-    +'<div class="fu-doc-scroll" tabindex="0" aria-label="'+title+'の本文">'+translation+legalDocumentMarkup(kind)+'</div>'
-    +'<footer><span>制定日：'+LEGAL_VERSION+'</span><button type="button" data-legal-dismiss>戻る</button></footer></section></div>';
+  // Language affects visible chrome, never the Japanese source or consent.
+  const en=showEnglishReference&&englishLegalParity();
+  const title=kind==="privacy"?(en?"Privacy Policy":"プライバシーポリシー"):(en?"Terms of Use":"利用規約");
+  const close=en?"Close":"閉じる";
+  const back=en?"Back":"戻る";
+  const dateLabel=en?"Effective Date":"制定日";
+  const translation=en?englishLegalDocumentMarkup(kind):"";
+  const original=en?'<div lang="ja" data-legal-japanese-original>'+legalDocumentMarkup(kind)+'</div>':legalDocumentMarkup(kind);
+  const scrollLabel=en?title+" and Japanese original":title+"の本文";
+  return '<div class="fu-doc-backdrop" data-legal-backdrop><section lang="'+(en?'en':'ja')+'" class="fu-doc-dialog" role="dialog" aria-modal="true" aria-labelledby="fu-doc-heading">'
+    +'<header><strong id="fu-doc-heading">'+title+'</strong><button type="button" class="fu-doc-close" data-legal-dismiss aria-label="'+close+'" title="'+close+'"><span aria-hidden="true">×</span></button></header>'
+    +'<div class="fu-doc-scroll" tabindex="0" aria-label="'+scrollLabel+'">'+translation+original+'</div>'
+    +'<footer><span>'+dateLabel+': '+LEGAL_VERSION+'</span><button type="button" data-legal-dismiss>'+back+'</button></footer></section></div>';
 }
