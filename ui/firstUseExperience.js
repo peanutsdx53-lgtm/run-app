@@ -106,12 +106,12 @@ export function renderLegalDocumentModal(kind,{showEnglishReference=false}={}){
   const title=kind==="privacy"?(en?"Privacy Policy":"プライバシーポリシー"):(en?"Terms of Use":"利用規約");
   const close=en?"Close":"閉じる";
   const back=en?"Back":"戻る";
-  const dateLabel=en?"Effective Date":"制定日";
+  const dateLabel=en?"Effective Date: ":"制定日：";
   const translation=en?englishLegalDocumentMarkup(kind):"";
   const original=en?'<div lang="ja" data-legal-japanese-original>'+legalDocumentMarkup(kind)+'</div>':legalDocumentMarkup(kind);
   const scrollLabel=en?title+" and Japanese original":title+"の本文";
   return '<div class="fu-doc-backdrop" data-legal-backdrop><section lang="'+(en?'en':'ja')+'" class="fu-doc-dialog" role="dialog" aria-modal="true" aria-labelledby="fu-doc-heading">'
     +'<header><strong id="fu-doc-heading">'+title+'</strong><button type="button" class="fu-doc-close" data-legal-dismiss aria-label="'+close+'" title="'+close+'"><span aria-hidden="true">×</span></button></header>'
     +'<div class="fu-doc-scroll" tabindex="0" aria-label="'+scrollLabel+'">'+translation+original+'</div>'
-    +'<footer><span>'+dateLabel+': '+LEGAL_VERSION+'</span><button type="button" data-legal-dismiss>'+back+'</button></footer></section></div>';
+    +'<footer><span>'+dateLabel+LEGAL_VERSION+'</span><button type="button" data-legal-dismiss>'+back+'</button></footer></section></div>';
 }
