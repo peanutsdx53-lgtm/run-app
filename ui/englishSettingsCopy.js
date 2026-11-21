@@ -16,7 +16,7 @@ export const ENGLISH_SETTINGS_COPY=Object.freeze({
  "日本語・English (preview)": "Japanese · English (preview)",
  "ダークモードを標準で使用": "Dark Theme Is the Default",
  "ライトモードは人体図・グラフまで対応した後に公開します。": "Light mode will be available only after body diagrams and graphs are adapted.",
- "身長・体重・目的などの任意情報": "Optional Height, Weight, and Running Goals",
+ "身長・体重・走る目的など": "Height, Weight, Goals, and More",
  "GPS測定時の権限・位置情報": "Permissions and Location Data for GPS Measurement",
  "位置情報へのアクセスはGPS測定を利用する際に端末が確認します。権限は端末・ブラウザ側で変更できます。この設定画面では位置情報の許可を変更できません。": "Your device requests location permission when you use GPS measurement. You can change permission in device or browser settings, but not on this page.",
  "記録と設定をファイルで管理": "Manage Records and Settings Through Backup Files",
