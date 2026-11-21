@@ -13,7 +13,11 @@ const escape = v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const filled = v=>v!==undefined&&v!==null&&String(v).trim()!=='';
 const value = (x,unit='')=>filled(x)?escape(x)+unit:'—';
 const choose=(items,current)=>items.map(([id,label])=>`<option value="${escape(id)}" ${current===id?'selected':''}>${escape(label)}</option>`).join('');
-const optionGroup=(attr,choices,selected)=>`<div class="rv-choice-row ${choices.length===4?'rv-four':''}">${choices.map(([key,label])=>`<button type="button" ${attr}="${escape(key)}" aria-pressed="${selected===key}" class="rv-choice ${selected===key?'is-selected':''}">${escape(label)}</button>`).join('')}</div>`;
+const courseModeA11y=Object.freeze({
+ 'data-rv-grade':{'SUMMARY':'上り・下りの距離割合を設定','SECTIONS':'区間ごとの坂道を設定'},
+ 'data-rv-surface-mode':{'SINGLE':'路面を1種類選択','MIXED':'複数路面の距離割合を設定'}
+});
+const optionGroup=(attr,choices,selected)=>`<div class="rv-choice-row ${choices.length===4?'rv-four':''}">${choices.map(([key,label])=>`<button type="button" ${attr}="${escape(key)}" ${courseModeA11y[attr]?.[key]?`aria-label="${escape(courseModeA11y[attr][key])}" `:''}aria-pressed="${selected===key}" class="rv-choice ${selected===key?'is-selected':''}">${escape(label)}</button>`).join('')}</div>`;
 export function derivedFlat(d){
  if(!filled(d.upPercent)||!filled(d.downPercent))return null;
  const up=Number(d.upPercent),down=Number(d.downPercent);
