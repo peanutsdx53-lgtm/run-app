@@ -132,6 +132,8 @@
 .ex-header-memo span{display:grid;place-items:center;min-width:25px;height:25px;padding:0 5px;border-radius:100px;background:#207181;color:#f7ffff;font-size:.77rem}
 .ex-switch{display:grid;grid-template-columns:1fr 1fr;width:100%;max-width:550px;border-radius:16px;margin:0 0 19px;gap:5px}
 .ex-switch button{font-size:.87rem;padding:13px 9px;border-radius:12px}
+/* Both Explore modes use the centre of their equal-width switch cell. */
+.ex-page .ex-switch button{display:grid;place-items:center;text-align:center;min-width:0;min-height:68px;line-height:1.35;white-space:normal}
 .ex-workspace{grid-template-columns:minmax(0,.96fr) minmax(0,1.04fr);gap:18px}
 .ex-map-card,.ex-focus,.ex-catalog{overflow:hidden;border-radius:25px}
 .ex-map-card{background:radial-gradient(ellipse at 100% 0%,#287c844d,transparent 47%),linear-gradient(142deg,#143e4c,#0c2839 67%,#0a2636);padding-bottom:9px}

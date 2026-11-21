@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi} from './ui/englishUi.js?v=20261121-s09-t10-selected-region-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261121-s09-t10-selected-region-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -443,7 +443,19 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   const visible=current.visible.includes(id);
   if(!w||(!visible&&!editing))return "";
   const idx=current.order.indexOf(id);
-  const editingControls=editing?`<div class="dashboard-widget-controls" role="group" aria-label="${esc(w.title)}の編集"><div class="widget-drag-title"><button type="button" class="widget-drag-handle" data-home-drag-handle aria-label="${esc(w.title)}を長押しして並べ替える" title="長押しして移動">⠿</button><span class="widget-edit-label">${esc(w.title)} ${!visible?"（非表示）":""}</span></div><div class="widget-edit-actions"><button type="button" data-widget-action="up" data-widget-id="${id}" ${idx===0?"disabled":""} aria-label="${esc(w.title)}を上へ">↑</button><button type="button" data-widget-action="down" data-widget-id="${id}" ${idx===current.order.length-1?"disabled":""} aria-label="${esc(w.title)}を下へ">↓</button><button type="button" data-widget-action="size" data-widget-id="${id}" aria-label="${esc(w.title)}のサイズ変更">${current.sizes[id]==="full"?"小さく":"横幅いっぱい"}</button><button type="button" data-widget-action="toggle" data-widget-id="${id}" aria-label="${esc(w.title)}を${visible?"隠す":"表示"}">${visible?"非表示":"追加"}</button></div></div>`:"";
+  const editorIsEnglish=settingsUi.display.language==="en";
+  const englishWidgetNames={latest:"Latest Activity",condition:"Condition",topics:"Milestones",shortcuts:"Quick Access",trend:"Changes in Activity Records",discovery:"Continue Exploring"};
+  const widgetEditName=editorIsEnglish?(englishWidgetNames[id]||translateUiText(w.title)):w.title;
+  const hiddenLabel=visible?"":(editorIsEnglish?" (Hidden)":" （非表示）");
+  const editingControls=editing?`<div class="dashboard-widget-controls" role="group" aria-label="${esc(widgetEditName)}${editorIsEnglish?" editing controls":"の編集"}">
+   <div class="widget-drag-title"><button type="button" class="widget-drag-handle" data-home-drag-handle aria-label="${esc(widgetEditName)}${editorIsEnglish?" — hold to reorder":"を長押しして並べ替える"}" title="${editorIsEnglish?"Hold to move":"長押しして移動"}">⠿</button>
+   <span class="widget-edit-label">${esc(widgetEditName)}${hiddenLabel}</span></div>
+   <div class="widget-edit-actions">
+    <button type="button" data-widget-action="up" data-widget-id="${id}" ${idx===0?"disabled":""} aria-label="${esc(widgetEditName)}${editorIsEnglish?" — move up":"を上へ"}">↑</button>
+    <button type="button" data-widget-action="down" data-widget-id="${id}" ${idx===current.order.length-1?"disabled":""} aria-label="${esc(widgetEditName)}${editorIsEnglish?" — move down":"を下へ"}">↓</button>
+    <button type="button" data-widget-action="size" data-widget-id="${id}" aria-label="${esc(widgetEditName)}${editorIsEnglish?" — change width":"のサイズ変更"}">${editorIsEnglish?(current.sizes[id]==="full"?"Compact":"Full Width"):(current.sizes[id]==="full"?"小さく":"横幅いっぱい")}</button>
+    <button type="button" data-widget-action="toggle" data-widget-id="${id}" aria-label="${esc(widgetEditName)}${editorIsEnglish?(visible?" — hide":" — show"):(visible?"を隠す":"を表示")}">${editorIsEnglish?(visible?"Hide":"Show"):(visible?"非表示":"追加")}</button>
+   </div></div>`:"";
   return `<div data-home-dashboard-id="${id}" class="dashboard-widget ${current.sizes[id]==="full"?"dashboard-widget--wide":"dashboard-widget--half"} ${!visible?"dashboard-widget--hidden":""}" ${editing?`data-home-editable="true"`:""}>${editingControls}<div class="dashboard-widget-content">${cards[id]||""}</div></div>`;
  }).join("");
  const controls=editing?`<section class="dashboard-edit-toolbar" role="group" aria-label="ホームの表示を編集"><div><strong>ホームの表示を編集</strong><p>ハンドルを長押しして移動できます。上下ボタン・表示・サイズ変更も使えます。操作するとすぐに保存されます。</p></div><div class="dashboard-edit-buttons"><button type="button" class="btn" data-home-reset>初期配置に戻す</button></div></section>`:"";
