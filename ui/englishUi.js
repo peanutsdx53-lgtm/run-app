@@ -227,6 +227,17 @@ export function translateUiText(text,context={}){
  if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
  // Only on Course editor: preserve long wording elsewhere and full surface aria-labels.
  const e=context.element;
+ if(context.attribute==='placeholder'&&trimmed==='未入力'&&
+    e?.matches?.('.rv-course [data-rv-slope-number],.rv-course [data-rv-surface-value]'))
+  return raw.replace(trimmed,'—');
+ if(e?.matches?.('.rv-course .rv-fine-top > strong')&&trimmed.endsWith('を調整')){
+  const base=trimmed.slice(0,-3);
+  const labels={'上り':'Uphill','下り':'Downhill','舗装路':'Paved Road',
+   '陸上トラック':'Athletics Track','トレッドミル':'Treadmill',
+   '締まった土道':'Compacted Dirt','不整地トレイル':'Uneven Trail',
+   '天然芝':'Natural Grass','人工芝':'Artificial Turf','砂地':'Sand'};
+  if(Object.hasOwn(labels,base))return raw.replace(trimmed,'Adjust '+labels[base]);
+ }
  if(e?.matches?.('.rv-course [data-rv-grade]')&&trimmed==='割合')return raw.replace(trimmed,'By %');
  if(e?.matches?.('.rv-course [data-rv-surface-mode]')){
   const aliases={'1種類':'Single','複数・割合':'Mixed %'};
