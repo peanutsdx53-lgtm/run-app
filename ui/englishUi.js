@@ -227,6 +227,13 @@ export function translateUiText(text,context={}){
  if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
  // Only on Course editor: preserve long wording elsewhere and full surface aria-labels.
  const e=context.element;
+ if(context.attribute==='aria-label'&&e?.matches?.('.rv-course [data-rv-grade],.rv-course [data-rv-surface-mode]')){
+  const full={'上り・下りの距離割合を設定':'Set Uphill and Downhill Distance Shares',
+   '区間ごとの坂道を設定':'Set Gradients by Segments',
+   '路面を1種類選択':'Select a Single Surface',
+   '複数路面の距離割合を設定':'Set Distance Shares for Multiple Surfaces'};
+  if(Object.hasOwn(full,trimmed))return raw.replace(trimmed,full[trimmed]);
+ }
  if(context.attribute==='placeholder'&&trimmed==='未入力'&&
     e?.matches?.('.rv-course [data-rv-slope-number],.rv-course [data-rv-surface-value]'))
   return raw.replace(trimmed,'—');
