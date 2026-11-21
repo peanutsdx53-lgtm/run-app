@@ -99,7 +99,7 @@ test('S17 all main-screen help controls share the same 44px visual contract',()=
  assert.match(css,/--rl-help-size:44px/);
  assert.match(css,/--rl-help-border:#579eab/);
  assert.match(css,/right:0!important;left:auto!important/);
- assert.match(index,/screenHelpUnified\.css\?v=20261121-profile-optional-right-v1/);
+ assert.match(index,/screenHelpUnified\.css\?v=20261117-s17-help-v1/);
  const review=readFileSync(new URL('../ui/recordReviewExperience.js',import.meta.url),'utf8');
  assert.match(review,/class="rr-top-tag"[^>]*>[\s\S]*?<details class="rr-screen-help"/);
  const result=readFileSync(new URL('../ui/resultExperience.js',import.meta.url),'utf8');
