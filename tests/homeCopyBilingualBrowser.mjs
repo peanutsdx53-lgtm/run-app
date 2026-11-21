@@ -100,6 +100,15 @@ try{
    assert.equal(await page.locator('#home-screen-guide').isHidden(),true);
    // Hidden widgets and available actions must be correctly localized.
    await page.locator('[data-home-edit]').click();
+   const editTitles=language==='en'?{
+    latest:'Latest Activity',condition:'Condition',topics:'Milestones',
+    shortcuts:'Quick Access',trend:'Changes in Activity Records',discovery:'Continue Exploring'
+   }:null;
+   if(editTitles)for(const [id,title] of Object.entries(editTitles)){
+    const label=(await page.locator('[data-home-dashboard-id="'+id+'"] .widget-edit-label').innerText()).trim();
+    assert.equal(label,title+(['trend','discovery'].includes(id)?' (Hidden)':''),
+      'English editor title and hidden state: '+id);
+   }
    const hiddenName=page.locator('[data-home-dashboard-id="trend"] .widget-edit-label');
    assert.match((await hiddenName.innerText()).trim(),language==='en'?/\(Hidden\)$/:/（非表示）$/);
    const showWidget=page.locator('[data-widget-id="trend"][data-widget-action="toggle"]');
