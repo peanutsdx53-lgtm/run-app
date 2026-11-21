@@ -106,3 +106,19 @@ test('S17 all main-screen help controls share the same 44px visual contract',()=
  assert.match(result,/resultActions\(\)\+reflectionPath\(\)\+'<\/header>'/);
  assert.match(result,/RESULT_BODY_LAYOUT_STYLES\+RESULT_REFLECTION_ENTRY_STYLES\+RESULT_HELP_RIGHT_STYLES/);
 });
+
+
+test('Profile optionality is marked once in its heading without redundant field badges',()=>{
+ const html=renderSettings({profile:loadProfile(null),display:loadDisplay(null)});
+ const mint=html.slice(html.indexOf('data-settings-tone="mint"'));
+ const block=mint.slice(mint.indexOf('<details class="s2-item"'),mint.indexOf('</details>')+10);
+ assert.ok(block.includes('<strong>プロフィール</strong><small>身長・体重・走る目的など</small>'));
+ assert.ok(block.includes('<em class="s2-indicator">任意</em><span class="s2-chevron"'));
+ assert.equal((block.match(/任意/g)||[]).length,1);
+ assert.doesNotMatch(block,/s3-optional-mark|すべて任意|一つ選択・任意|<small>任意<\/small>/);
+ for(const label of ['表示名','走る目的','身長','体重','年齢帯'])assert.ok(block.includes('>'+label+'</label>'),label);
+ for(const name of ['nickname','purpose','heightCm','weightKg','ageBand'])assert.ok(block.includes('name="'+name+'"'),name);
+ const css=readFileSync(new URL('../ui/settingsExperience.css',import.meta.url),'utf8');
+ assert.ok(css.includes('.s2-panel[data-settings-tone="mint"] .s2-item:has(.s3-profile-form)>summary .s2-indicator'));
+ assert.ok(!css.includes('.s3-optional-mark{'));
+});
