@@ -134,3 +134,31 @@ test('Find Records local help is collapsed and controls preserve scope/source/ty
  assert.ok(styles.includes('hx-scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))'));
  assert.ok(styles.includes('min-height:52px;height:100%'));
 });
+
+
+test('Find Records prioritizes keyword and period; advanced source/type stay folded without clearing filters',()=>{
+ const ui=createHistoryUi();ui.month='2026-10';
+ assert.equal(ui.advancedOpen,false,'detail controls start closed');
+ let html=renderHistory(ui,fixtures,{connected:true});
+ const search=html.indexOf('id="hx-search"'),period=html.indexOf('class="hx-filter-label">検索期間'),more=html.indexOf('data-history-advanced');
+ assert.ok(search>0&&search<period&&period<more,'search, period, then optional filters');
+ assert.match(html,/data-history-advanced aria-expanded="false" aria-controls="hx-advanced-panel"/);
+ assert.match(html,/id="hx-advanced-panel" hidden/);
+ assert.equal((html.match(/data-history-advanced/g)||[]).length,1);
+ assert.ok(html.indexOf('class="hx-find-help"')>html.indexOf('class="list-head"'));
+ assert.ok(html.indexOf('class="hx-find-help"')<search,'help detail is an independent block before filters');
+ ui.source='GPS_V2';ui.type='run';ui.advancedOpen=false;
+ html=renderHistory(ui,fixtures,{connected:true});
+ assert.match(html,/class="hx-filter-count" aria-label="有効な絞り込み">2</);
+ assert.match(html,/data-record-source="GPS_V2" aria-pressed="true"/);
+ assert.match(html,/data-record-kind="run" type="button" class="active"/);
+ assert.equal(filterRecords(normalizeRecords(fixtures),ui).length,0,'source restriction remains effective even when collapsed');
+ ui.advancedOpen=true;
+ html=renderHistory(ui,fixtures,{connected:true});
+ assert.match(html,/data-history-advanced aria-expanded="true"/);
+ assert.match(html,/id="hx-advanced-panel" >/);
+ const style=read('ui/historyInlineStyles.js');
+ assert.ok(style.includes('.hx-advanced-body[hidden]{display:none!important}'));
+ assert.ok(style.includes('.hx-find-help-body{position:static;top:auto;right:auto'), 'help takes normal space and cannot sit behind period');
+ assert.ok(style.includes('hx-advanced-body .hx-source-controls{background:#071e2e;border:1px'), 'method matches boxed filter styling');
+});

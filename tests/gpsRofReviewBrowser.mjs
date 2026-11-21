@@ -277,6 +277,7 @@ try{
    await page.reload({waitUntil:'networkidle'});
    const history=page.locator('#runload-history-v2');await history.waitFor();
    await history.locator('[data-history-scope="all"]').click();
+   await history.locator('[data-history-advanced]').click();
    await history.locator('[data-record-source="GPS_V2"]').click();
    const oldItem=history.locator('[data-select-id="gps-v2-legacy-20261027-mixed-01"]');
    await oldItem.waitFor();

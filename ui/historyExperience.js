@@ -1,4 +1,4 @@
-import {HISTORY_STYLES} from "./historyInlineStyles.js?v=20261121-history-find-help-v1";
+import {HISTORY_STYLES} from "./historyInlineStyles.js?v=20261121-history-more-filters-v2";
 import {linkedReflectionNotes} from "./noteRunLink.js";
 /* RunLoad v2 / History Ver.2 (approved visual contract)
  * Presentation only: receives saved records explicitly from an authorised source.
@@ -44,7 +44,7 @@ export function normalizeRecords(rows){
  }).sort((a,b)=>b.date.localeCompare(a.date)||b.time.localeCompare(a.time)||a.id.localeCompare(b.id));
 }
 export const lookupRecord=(records,id)=>records.find(r=>r.id===id)??null;
-export function createHistoryUi(){return {month:todayMonth(),day:null,type:'all',source:'all',query:'',allMonths:false,selectedId:null};}
+export function createHistoryUi(){return {month:todayMonth(),day:null,type:'all',source:'all',query:'',allMonths:false,selectedId:null,advancedOpen:false};}
 export function filterRecords(records,ui){return records.filter(r=>(ui.allMonths===true||r.date.startsWith(ui.month))&&(ui.day===null||Number(r.date.slice(-2))===ui.day)&&(ui.type==='all'||r.type===ui.type)&&(ui.source==='all'||!ui.source||r.sourceType===ui.source)&&(!ui.query||[r.courseName,r.memo,r.shoeName,r.date].some(s=>s.toLocaleLowerCase('ja').includes(ui.query.toLocaleLowerCase('ja')))));}
 function hero(ui,records,connected){const month=records.filter(r=>r.date.startsWith(ui.month)),runs=month.filter(r=>r.type==='run');const distance=runs.reduce((a,r)=>a+(r.distanceKm??0),0),seconds=runs.reduce((a,r)=>a+(r.durationSeconds??0),0);const monthTitle=`${Number(ui.month.slice(0,4))}年${Number(ui.month.slice(5,7))}月の記録`;
  return `<section class="surface hero" aria-label="月間実績"><svg class="ridge" viewBox="0 0 600 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path fill="#1f7391" opacity=".22" d="M0 135L89 75 153 128 247 42 314 126 405 51 467 114 525 57 600 125V180H0Z"/><path fill="#2e91a1" opacity=".23" d="M0 175L105 119 181 153 285 93 361 147 449 115 528 138 600 99V180H0Z"/></svg><div class="hero-main"><div class="hero-row"><div class="hero-title"><strong>${monthTitle}</strong></div></div><div class="stats"><div class="stat"><div class="stat-label">${ico('run')} 運動回数</div><strong>${connected?runs.length:'—'}${connected?'<em>回</em>':''}</strong><div class="stat-sub">${connected?`休養 ${month.length-runs.length}日`:'保存履歴を確認できません'}</div></div><div class="stat"><div class="stat-label">${ico('route')} 運動距離</div><strong>${connected?distance.toFixed(1):'—'}${connected?'<em>km</em>':''}</strong><div class="stat-sub">${connected?'この月の合計':'保存履歴を確認できません'}</div></div><div class="stat"><div class="stat-label">${ico('clock')} 運動時間</div><strong>${connected?formattedSeconds(seconds):'—'}</strong><div class="stat-sub">${connected?'この月の合計':'保存履歴を確認できません'}</div></div></div></div></section>`;
@@ -75,10 +75,16 @@ function list(ui,records,connected,canOpen,canAnnotate=false,canDeleteGps=false)
   if(!allMonths&&anotherMonth)emptyText+='<button type="button" class="hx-empty-action" data-history-scope="all">全期間の記録を見る</button>';
  }
  const hint=allMonths?'全期間で検索中（月間集計は表示月のみ）':'この月の記録を検索中';
- return `<section class="surface list-panel"><div class="list-head"><div><h2>記録を探す</h2></div><details class="hx-find-help"><summary aria-label="検索条件の説明">？</summary><div class="hx-find-help-body"><p class="hx-scope-hint">${hint}</p><p>全期間を選んでも、月間集計は表示中の月のみです。</p></div></details></div>
- <div class="hx-filter-group"><span class="hx-filter-label">検索期間</span><div class="hx-scope" role="group" aria-label="履歴の検索範囲"><button type="button" data-history-scope="month" aria-pressed="${!allMonths}" class="${!allMonths?'active':''}">この月</button><button type="button" data-history-scope="all" aria-pressed="${allMonths}" class="${allMonths?'active':''}">全期間</button></div></div>
- <div class="hx-filter-group"><span class="hx-filter-label">記録方法</span><div class="hx-source-controls" role="group" aria-label="記録方法">${[['all','すべて'],['MANUAL','手入力'],['GPS_V2','GPS']].map(([id,label])=>`<button type="button" data-record-source="${id}" aria-pressed="${(ui.source||'all')===id}" class="${(ui.source||'all')===id?'active':''}">${label}</button>`).join('')}</div></div>
- <div class="hx-filter-group"><span class="hx-filter-label">記録の種類</span><div class="controls"><div class="segmented" role="group" aria-label="記録の種類">${[['all','すべて'],['run','走行'],['rest','休養']].map(([id,label])=>`<button data-record-kind="${id}" type="button" class="${ui.type===id?'active':''}" aria-pressed="${ui.type===id}">${label}</button>`).join('')}</div></div></div><label class="search" aria-label="記録を検索">${ico('search')}<input id="hx-search" placeholder="コース・メモで検索" autocomplete="off" value="${escapeHtml(ui.query)}"/></label>
+ const advancedCount=Number((ui.source||'all')!=='all')+Number(ui.type!=='all');
+ return `<section class="surface list-panel"><div class="list-head"><div><h2>記録を探す</h2></div></div>
+ <details class="hx-find-help"><summary aria-label="検索条件の説明">？</summary><div class="hx-find-help-body"><p class="hx-scope-hint">${hint}</p><p>全期間を選んでも、月間集計は表示中の月のみです。</p></div></details>
+ <label class="search" aria-label="記録を検索">${ico('search')}<input id="hx-search" placeholder="コース・メモで検索" autocomplete="off" value="${escapeHtml(ui.query)}"/></label>
+  <div class="hx-filter-group"><span class="hx-filter-label">検索期間</span><div class="hx-scope" role="group" aria-label="履歴の検索範囲"><button type="button" data-history-scope="month" aria-pressed="${!allMonths}" class="${!allMonths?'active':''}">この月</button><button type="button" data-history-scope="all" aria-pressed="${allMonths}" class="${allMonths?'active':''}">全期間</button></div></div>
+ <div class="hx-advanced-filters"><button type="button" class="hx-advanced-toggle" data-history-advanced aria-expanded="${ui.advancedOpen===true}" aria-controls="hx-advanced-panel"><span class="hx-advanced-icon" aria-hidden="true">${ico('info')}</span><span class="hx-advanced-text">詳細な絞り込み</span>${advancedCount?`<span class="hx-filter-count" aria-label="有効な絞り込み">${advancedCount}</span>`:''}<span class="hx-advanced-chevron" aria-hidden="true">⌄</span></button>
+ <div class="hx-advanced-body" id="hx-advanced-panel" ${ui.advancedOpen===true?'':'hidden'}>
+  <div class="hx-filter-group"><span class="hx-filter-label">記録方法</span><div class="hx-source-controls" role="group" aria-label="記録方法">${[['all','すべて'],['MANUAL','手入力'],['GPS_V2','GPS']].map(([id,label])=>`<button type="button" data-record-source="${id}" aria-pressed="${(ui.source||'all')===id}" class="${(ui.source||'all')===id?'active':''}">${label}</button>`).join('')}</div></div>
+  <div class="hx-filter-group"><span class="hx-filter-label">記録の種類</span><div class="controls"><div class="segmented" role="group" aria-label="記録の種類">${[['all','すべて'],['run','走行'],['rest','休養']].map(([id,label])=>`<button data-record-kind="${id}" type="button" class="${ui.type===id?'active':''}" aria-pressed="${ui.type===id}">${label}</button>`).join('')}</div></div></div>
+ </div></div>
  <div class="results-counter"><span><strong>${allMonths?'全期間の記録':ui.day?`${ui.day}日の記録`:'この月の記録'}</strong></span><span>${connected?rows.length+'件':'確認不可'}</span></div>
  <div class="timeline">${rows.length?rows.map(r=>row(r,ui.selectedId,allMonths)).join(''):`<div class="empty" data-history-unconnected="${!connected}"><div class="empty-symbol">${ico(connected?'search':'history')}</div>${emptyText}</div>`}</div>
  ${selected?`<div class="selected-footer${selected.type==='run'&&canAnnotate?' with-annotation':''}"><div><span class="kicker">選択した記録</span><strong>${humanDate(selected.date)}　${selected.type==='run'?escapeHtml(activityName(selected)):'休養'}</strong></div>${selected.type==='rest'?'<span class="pill">休養日：走行結果・参考値なし</span>':canOpen?'<button class="primary" type="button" data-open-record>結果を開く　›</button>':'<span class="pill">結果を開けません</span>'}${selected.type==='run'&&canAnnotate?'<button type="button" data-annotate-record class="primary">この記録を補う（任意）</button>':''}${selected.sourceType==='GPS_V2'&&canDeleteGps?'<button type="button" class="hx-gps-delete" data-delete-gps-record>GPS記録を削除</button>':''}</div>`:''}</section>`;
@@ -97,7 +103,8 @@ export function mountHistory(host,{records=[],connected=false,gpsReadFailed=fals
   if('month'in d){ui.month=d.month==='0'?todayMonth():monthShift(ui.month,Number(d.month));ui.day=null;ui.allMonths=false;ui.selectedId=null;}
   else if('day'in d){const day=Number(d.day);ui.day=ui.day===day?null:day;ui.allMonths=false;ui.selectedId=null;}
   else if('clearDay'in d){ui.day=null;ui.selectedId=null;}
-  else if('recordKind'in d){ui.type=d.recordKind;ui.selectedId=null;}
+  else if('historyAdvanced'in d){ui.advancedOpen=ui.advancedOpen!==true;}
+   else if('recordKind'in d){ui.type=d.recordKind;ui.selectedId=null;}
   else if('recordSource'in d){if(!['all','MANUAL','GPS_V2'].includes(d.recordSource))return;ui.source=d.recordSource;ui.selectedId=null;}
   else if('resetFilters'in d){ui.day=null;ui.type='all';ui.source='all';ui.query='';ui.selectedId=null;}
   else if('historyScope'in d){ui.allMonths=d.historyScope==='all';ui.day=null;ui.selectedId=null;}

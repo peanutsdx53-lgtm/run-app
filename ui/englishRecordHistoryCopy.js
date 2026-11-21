@@ -135,6 +135,8 @@ export const ENGLISH_RECORD_HISTORY_COPY=Object.freeze({
  "履歴の検索範囲": "History Search Scope",
  "検索範囲": "Search Scope",
  "検索期間": "Search Period",
+ "詳細な絞り込み": "More Filters",
+ "有効な絞り込み": "Active Filters",
  "検索条件の説明": "Search Filter Help",
  "全期間を選んでも、月間集計は表示中の月のみです。": "Even with All Time selected, the monthly summary covers only the displayed month.",
  "記録の種類": "Record Type",

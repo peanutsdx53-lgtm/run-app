@@ -132,6 +132,7 @@ try{
   await restPage.locator('[data-rest-day-save]').click();
   const restHistory=restPage.locator('#runload-history-v2');await restHistory.waitFor();
   await restHistory.locator('.hx-scope [data-history-scope="all"]').click();
+  await restHistory.locator('[data-history-advanced]').click();
   await restHistory.locator('[data-record-kind="rest"]').click();
   const restItem=restHistory.locator('[data-select-id^="rest-v1-"]');
   assert.equal(await restItem.count(),1,'rest-only profile has one rest record');

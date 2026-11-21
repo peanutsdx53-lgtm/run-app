@@ -299,3 +299,11 @@ test('History search help is bilingual and Manual abbreviation is limited to its
  assert.equal(translateUiText('手入力',{element}),'Manual');
  assert.equal(translateUiText('手入力'),'Manual Entry');
 });
+
+
+test('History advanced disclosure labels are translated without altering user data',()=>{
+ assert.equal(translateUiText('詳細な絞り込み'),'More Filters');
+ assert.equal(translateUiText('有効な絞り込み'),'Active Filters');
+ assert.equal(translateUiText('検索期間'),'Search Period');
+ assert.equal(translateUiText('手入力'),'Manual Entry');
+});
