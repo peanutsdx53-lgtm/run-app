@@ -98,6 +98,40 @@ try{
    await page.screenshot({path:resolve(output,'guide-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    await guide.locator('[data-home-guide-close]').click();
    assert.equal(await page.locator('#home-screen-guide').isHidden(),true);
+   // Hidden widgets and available actions must be correctly localized.
+   await page.locator('[data-home-edit]').click();
+   const hiddenName=page.locator('[data-home-dashboard-id="trend"] .widget-edit-label');
+   assert.match((await hiddenName.innerText()).trim(),language==='en'?/\(Hidden\)$/:/（非表示）$/);
+   const showWidget=page.locator('[data-widget-id="trend"][data-widget-action="toggle"]');
+   assert.equal((await showWidget.innerText()).trim(),language==='en'?'Show':'追加');
+   assert.match(await showWidget.getAttribute('aria-label'),language==='en'?/show$/i:/を表示$/);
+   await showWidget.click();
+   assert.doesNotMatch(await page.locator('[data-home-dashboard-id="trend"] .widget-edit-label').innerText(),/\(Hidden\)|（非表示）/);
+   const hideWidget=page.locator('[data-widget-id="trend"][data-widget-action="toggle"]');
+   assert.equal((await hideWidget.innerText()).trim(),language==='en'?'Hide':'非表示');
+   assert.match(await hideWidget.getAttribute('aria-label'),language==='en'?/hide$/i:/を隠す$/);
+   await hideWidget.click();
+   assert.match((await hiddenName.innerText()).trim(),language==='en'?/\(Hidden\)$/:/（非表示）$/);
+   await page.locator('[data-home-edit]').click();
+   // Explore modes must be centered and topic-count badges must be absent.
+   await page.goto(url.replace('#/home','#/exploration-tree'),{waitUntil:'networkidle'});
+   await page.locator('.ex-switch [data-ex-tab="field"]').waitFor();
+   const metrics=await page.locator('.ex-switch button').evaluateAll(buttons=>buttons.map(button=>{
+    const r=button.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(button);
+    const t=range.getBoundingClientRect(),style=getComputedStyle(button);
+    return {display:style.display,offset:Math.abs((r.left+r.right-t.left-t.right)/2),right:r.right};
+   }));
+   assert.equal(metrics.length,2);
+   for(const m of metrics){
+    assert.equal(m.display,'grid','Explore switch uses grid centering');
+    assert.ok(m.offset<=3,'Explore switch label is off-centre '+JSON.stringify({width,language,m}));
+    assert.ok(m.right<=width+2,'Explore switch exceeds viewport '+JSON.stringify({width,language,m}));
+   }
+   await page.screenshot({path:resolve(output,'explore-field-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
+   await page.locator('[data-ex-tab="catalog"]').click();
+   assert.equal(await page.locator('.ex-count,.ex-catalog-group-head small').count(),0);
+   assert.equal(await page.locator('[data-ex-pick-topic]').count(),28,'all topics remain accessible');
+   await page.screenshot({path:resolve(output,'explore-catalog-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    assert.deepEqual(errors,[],'browser errors '+language+' '+width);
    measurements.push({engine,width,language,pass:true,home:boxed,guide:boxes});
    console.log('PASS HOME-COPY',engine,width,language,'cards and help');
