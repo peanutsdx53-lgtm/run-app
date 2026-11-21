@@ -274,3 +274,18 @@ test('S09 English comparison covers numeric cells, dated headers, note fallbacks
  assert.match(result,/comparison\.other\.memo\?' data-user-authored'/);
  assert.match(result,/comparison\.current\.memo\?' data-user-authored'/);
 });
+
+test('S09 T10: selected reference region is singular in English, without changing plural conditions or saved notes',()=>{
+ const selected={matches:selector=>selector==='.rv4-reading > small',
+  closest:selector=>selector==='.rv4-body'?{}:null};
+ assert.equal(translateUiText('選択中の部位',{element:selected}),'Selected Region');
+ assert.equal(translateUiText('  選択中の部位  ',{element:selected}),'  Selected Region  ');
+ assert.equal(translateUiText('選択中の部位'),'Selected Regions',
+  'the multi-region conditions label must keep its plural dictionary entry');
+ const other={matches:()=>false,closest:()=>null};
+ assert.equal(translateUiText('選択中の部位',{element:other}),'Selected Regions');
+ const authored={matches:selector=>selector==='.rv4-reading > small',
+  closest:selector=>selector==='[data-user-authored]'||selector==='.rv4-body'?{}:null};
+ assert.equal(translateUiText('選択中の部位',{element:authored}),'選択中の部位',
+  'a personally written note may contain the same words without being translated');
+});
