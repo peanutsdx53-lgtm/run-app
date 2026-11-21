@@ -444,7 +444,8 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   if(!w||(!visible&&!editing))return "";
   const idx=current.order.indexOf(id);
   const editorIsEnglish=settingsUi.display.language==="en";
-  const widgetEditName=editorIsEnglish?translateUiText(w.title):w.title;
+  const englishWidgetNames={latest:"Latest Activity",condition:"Condition",topics:"Milestones",shortcuts:"Quick Access",trend:"Changes in Activity Records",discovery:"Continue Exploring"};
+  const widgetEditName=editorIsEnglish?(englishWidgetNames[id]||translateUiText(w.title)):w.title;
   const hiddenLabel=visible?"":(editorIsEnglish?" (Hidden)":" （非表示）");
   const editingControls=editing?`<div class="dashboard-widget-controls" role="group" aria-label="${esc(widgetEditName)}${editorIsEnglish?" editing controls":"の編集"}">
    <div class="widget-drag-title"><button type="button" class="widget-drag-handle" data-home-drag-handle aria-label="${esc(widgetEditName)}${editorIsEnglish?" — hold to reorder":"を長押しして並べ替える"}" title="${editorIsEnglish?"Hold to move":"長押しして移動"}">⠿</button>
