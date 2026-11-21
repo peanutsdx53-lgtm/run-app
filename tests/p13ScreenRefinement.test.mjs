@@ -53,14 +53,14 @@ test('P13 version and mobile style are cached with the active application',()=>{
  assert.ok(index.includes('ui/screenCoherenceP14.css?v='+presentationVersion));
  assert.ok(sw.includes('runload-ui-next-shell-'+cacheVersion));
  assert.ok(sw.includes('app.js?v='+version));
- assert.ok(sw.includes('ui/historyExperience.js?v=20261121-profile-optional-right-v1'));assert.ok(sw.includes('ui/screenCoherenceP14.css?v='+presentationVersion));
+ assert.ok(sw.includes('ui/historyExperience.js?v=20261121-history-more-filters-v2'));assert.ok(sw.includes('ui/screenCoherenceP14.css?v='+presentationVersion));
  assert.ok(sw.includes('ui/learningExperience.js?v=20261111-explore-controls-v1'));
  assert.ok(sw.includes('ui/explorationExperience.js?v=20261117-reflection-g3-v1'));
- assert.ok(sw.includes('ui/recordReviewExperience.js?v=20261121-profile-optional-right-v1'));
+ assert.ok(sw.includes('ui/recordReviewExperience.js?v=20261117-s17-help-v1'));
  assert.ok(sw.includes('ui/screenRefinementP13.css?v='+previous));
- assert.ok(app.includes('ui/historyExperience.js?v=20261121-profile-optional-right-v1'));
+ assert.ok(app.includes('ui/historyExperience.js?v=20261121-history-more-filters-v2'));
  assert.ok(app.includes('ui/learningExperience.js?v=20261111-explore-controls-v1'));
  assert.ok(app.includes('ui/explorationExperience.js?v=20261117-reflection-g3-v1'));
- assert.ok(app.includes('ui/recordReviewExperience.js?v=20261121-profile-optional-right-v1'));
+ assert.ok(app.includes('ui/recordReviewExperience.js?v=20261117-s17-help-v1'));
  for(const token of ['.gps-history-disclosure','.gps-history-tools','.lr-inquiry-actions','.ex-learning-entry-hint'])assert.ok(css.includes(token));
 });
