@@ -21,7 +21,7 @@ test('saved manual trend translates 1 and 2-record captions without changing num
  }
  const unrelated=generated('.unrelated');
  assert.equal(translateUiText('保存済み手入力走行の直近2件。過去から今回の順に並べています。',unrelated),
-  '保存済み手入力走行の直近2件。過去から今回の順に並べています.');
+  '保存済み手入力走行の直近2件。過去から今回の順に並べています。');
 });
 test('discovery header and generated date translate while the user-authored note is protected',()=>{
  const html=discoveryCard([{createdAt:'2026-11-21T18:00:00+09:00',text:'本人が自由に書いた日本語の気づき'}]);
