@@ -61,7 +61,7 @@ test('offline entry points and dynamic Shadow DOM stylesheet are preserved',()=>
   './ui/resultInlineStyles.js?v=20261119-s09-focus-controls-v1',
   './ui/gpsReplayIndexedDbStore.js?v=20261118-g4b2-atomic-writer-v1',
   './ui/annotationEditor.css?v=20261111-posthoc-design-v2',
-  './ui/historyInlineStyles.js?v=20261121-profile-optional-right-v1',
+  './ui/historyInlineStyles.js?v=20261121-history-more-filters-v2',
   './ui/englishUi.js?v=20261121-profile-optional-right-v1',
   './manifest.en.webmanifest'
  ])assert.ok(cached.has(url),'necessary offline resource missing: '+url);
