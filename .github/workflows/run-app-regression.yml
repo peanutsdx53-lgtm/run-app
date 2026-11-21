@@ -84,6 +84,16 @@ jobs:
           path: audit-output/focus-ui-${{ matrix.engine }}/
           if-no-files-found: warn
           retention-days: 7
+      - name: Inventory button contrast and capture dark-mode screens
+        run: node tests/buttonContrastAuditBrowser.mjs
+      - name: Preserve button contrast screenshots and computed style inventory
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: button-contrast-${{ matrix.engine }}
+          path: audit-output/button-contrast-${{ matrix.engine }}/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Confirm retired what-if URL, Learning shortcut and actual result export
         run: node tests/uiux06TargetBrowser.mjs
       - name: Verify GPS stage 2 fixed controls, native finish confirmation and stage 1 saved-record integrity
