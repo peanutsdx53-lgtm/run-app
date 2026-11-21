@@ -71,8 +71,8 @@ test('P14: app, worker, and style versions are aligned without deleting local hi
  assert.ok(index.includes('ui/screenCoherenceP14.css?v='+v),'HTML missing screenCoherenceP14.css');
  assert.ok(sw.includes('ui/screenCoherenceP14.css?v='+v),'SW missing screenCoherenceP14.css');
  assert.ok(sw.includes('runload-ui-next-shell-'+cacheVersion));
- assert.ok(sw.includes('ui/historyExperience.js?v=20261121-profile-optional-right-v1'),'SW missing current History view');
- assert.match(sw,/ui\/historyInlineStyles\.js\?v=20261121-profile-optional-right-v1/,'SW must cache the exact History shadow-style import');
- assert.ok(app.includes('ui/historyExperience.js?v=20261121-profile-optional-right-v1'));
+ assert.ok(sw.includes('ui/historyExperience.js?v=20261121-history-more-filters-v2'),'SW missing current History view');
+ assert.match(sw,/ui\/historyInlineStyles\.js\?v=20261121-history-more-filters-v2/,'SW must cache the exact History shadow-style import');
+ assert.ok(app.includes('ui/historyExperience.js?v=20261121-history-more-filters-v2'));
  assert.doesNotMatch(app,/localStorage\.clear\(\)/);
 });
