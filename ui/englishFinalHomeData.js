@@ -16,6 +16,8 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "保存済みの手入力走行はまだありません。新たな走行を記録すると確認できます。": "No manual runs have been saved. Record a run to view milestones.",
  "気になるテーマを自由に調べられます。メモは任意です。": "Explore topics freely. Notes are optional.",
  "探究を開く ›": "Open Explore ›",
+ "探究の続き": "Continue Exploring",
+ "保存済み手入力走行の距離（活動1件ごと）": "Saved Manual Running Distances (Per Activity)",
  "選択してください（未回答）": "Select an Option (Unanswered)",
  "睡眠の記録はまだありません": "No Sleep Records Yet",
  "任意の生活記録": "Optional Daily Records",

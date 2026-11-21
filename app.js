@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261121-s09-t10-selected-region-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261121-home-core-i18n-v2';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -56,7 +56,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   ]=await Promise.all([
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
-    import("./ui/homeExperience.js?v=20261115-retire-whatif-v1"),
+    import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2"),
     import("./ui/rofJScale.js"),
     import("./ui/rofExperience.js?v=20261116-record-stage1-v1"),
     import("./ui/recordDraftReview.js"),

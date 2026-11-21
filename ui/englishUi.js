@@ -13,13 +13,13 @@ import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js';
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js';
 import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js';
 import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js';
-import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js';
+import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261121-home-core-i18n-v2';
 import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261111-settings-dialog-v1';
 import {ENGLISH_FINAL_GPS} from './englishFinalGps.js';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261120-s09-comparison-english-v1';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261121-home-core-i18n-v2';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
@@ -267,7 +267,7 @@ export function translateLessonComposite(text){
  }
  return raw;
 }
-const SKIP='script,style,textarea,input,code,pre,[contenteditable], [data-legal-backdrop], .fu-doc-scroll, [data-user-authored], .ex-note-preview, .ex-saved, .rv4-note p, .focus-fact strong, .entry-caption:not([data-history-system-caption]), [data-ax-editor] [data-ax-notice], [data-report-purpose], [data-report-observation], [data-report-question], .cp-condition strong, #cp-target, .cp-report-mode-usertext';
+const SKIP='script,style,textarea,input,code,pre,[contenteditable], [data-legal-backdrop], .fu-doc-scroll, [data-user-authored], .ex-note-preview, .ex-saved, .hx-discovery-note, .rv4-note p, .focus-fact strong, .entry-caption:not([data-history-system-caption]), [data-ax-editor] [data-ax-notice], [data-report-purpose], [data-report-observation], [data-report-question], .cp-condition strong, #cp-target, .cp-report-mode-usertext';
 export function startEnglishUi(doc,{language='ja'}={}){
  let selected=language==='en'?'en':'ja',queued=false;
  const seen=new WeakSet();
