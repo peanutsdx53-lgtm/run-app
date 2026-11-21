@@ -225,6 +225,17 @@ export function translateUiText(text,context={}){
  // uses the same Japanese words for a multiple-region picker, so its plural
  // English dictionary entry must remain untouched.
  if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
+ // Only on Course editor: preserve long wording elsewhere and full surface aria-labels.
+ const e=context.element;
+ if(e?.matches?.('.rv-course [data-rv-grade]')&&trimmed==='割合')return raw.replace(trimmed,'By %');
+ if(e?.matches?.('.rv-course [data-rv-surface-mode]')){
+  const aliases={'1種類':'Single','複数・割合':'Mixed %'};
+  if(Object.hasOwn(aliases,trimmed))return raw.replace(trimmed,aliases[trimmed]);
+ }
+ if(e?.matches?.('.rv-course .rv-surface-tile span:first-child')){
+  const aliases={'陸上トラック':'Running Track','締まった土道':'Packed Dirt'};
+  if(Object.hasOwn(aliases,trimmed))return raw.replace(trimmed,aliases[trimmed]);
+ }
  if(trimmed==='選択中の部位'&&
     context.element?.matches?.('.rv4-reading > small')&&
     context.element?.closest?.('.rv4-body'))return raw.replace(trimmed,'Selected Region');
