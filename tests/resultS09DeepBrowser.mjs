@@ -118,6 +118,137 @@ async function capture(page,meta){
   }
  }
 }
+
+/* C1 evidence gate: all official SVG selections, labels and saved-state cases.
+ * A grayscale screenshot supports review; it cannot prove user comprehension. */
+async function auditC1Body(page,result,language,width,zoom){
+ if(width<=800)await result.locator('[data-tab="body"]').click();
+ const seen=[];
+ for(const view of ['front','back','sole']){
+  await result.locator('[data-view="'+view+'"]').click();
+  const toggle=result.locator('[data-label-toggle]');
+  if(await toggle.getAttribute('aria-pressed')!=='true')await toggle.click();
+  const metrics=await result.evaluate(host=>{
+   const svg=host.shadowRoot.querySelector('.rv4-body-svg');
+   const r=e=>{const b=e.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom}};
+   const paths=[...svg.querySelectorAll('.rv4-region[data-region]')];
+   return {ids:paths.map(p=>p.dataset.region),available:paths.filter(p=>p.dataset.referenceState==='available').length,
+    accessibility:paths.map(p=>({name:p.getAttribute('aria-label'),clipped:!!p.closest('g[clip-path]')})),
+    clip:svg.querySelector('clipPath path')?.getAttribute('d'),
+    outline:svg.querySelector('.rv4-silhouette-outline')?.getAttribute('d'),svg:r(svg),
+    badges:[...svg.querySelectorAll('[data-body-reference-label]')].map(g=>({
+     id:g.dataset.bodyReferenceLabel,value:g.dataset.bodyReferenceValue,
+     box:r(g.querySelector('rect')),text:r(g.querySelector('text'))}))};
+  });
+  assert.equal(metrics.outline,metrics.clip,'B02: clip and original silhouette must coincide');
+  assert.ok(metrics.accessibility.every(x=>x.name?.length>4&&x.clipped),
+   'B02/B12: selectable path keeps a meaningful accessible label and silhouette clipping');
+  assert.equal(metrics.badges.length,metrics.available,'B09: number display matches authorized values');
+  for(const x of metrics.badges){
+   assert.ok(metrics.ids.includes(x.id),'B09: badge refers to an actual region');
+   assert.match(x.value,/^-?\d+\.\d$/,'B09: badge contains a finite one-decimal reading');
+   const b=x.box,t=x.text,s=metrics.svg;
+   assert.ok(b.left>=s.left-2&&b.right<=s.right+2&&b.top>=s.top-2&&b.bottom<=s.bottom+2,
+    'B09: badge outside SVG viewport '+x.id);
+   assert.ok(t.left>=b.left-2&&t.right<=b.right+2&&t.top>=b.top-2&&t.bottom<=b.bottom+2,
+    'B09: text outside badge '+x.id);
+  }
+  for(let i=0;i<metrics.badges.length;i++)for(let j=i+1;j<metrics.badges.length;j++){
+   const a=metrics.badges[i].box,b=metrics.badges[j].box;
+   assert.ok(a.right<=b.left+1||b.right<=a.left+1||a.bottom<=b.top+1||b.bottom<=a.top+1,
+    'B09: adjacent number badges overlap');
+  }
+  for(const id of metrics.ids){
+   const path=result.locator('.rv4-body-svg .rv4-region[data-region="'+id+'"]');
+   await path.focus();await path.press('Enter');
+   const state=await result.evaluate(host=>{
+    const root=host.shadowRoot,selected=[...root.querySelectorAll('.rv4-body-svg .rv4-region.selected')],p=selected[0];
+    return {count:selected.length,id:p?.dataset.region,pressed:p?.getAttribute('aria-pressed'),
+     focused:root.activeElement===p,referenceId:root.querySelector('.rv4-big-score')?.dataset.referenceRegion,
+     aria:p?.getAttribute('aria-label')||'',value:root.querySelector('.rv4-big-score')?.textContent?.trim(),
+     availability:p?.dataset.referenceState};
+   });
+   assert.deepEqual([state.count,state.id,state.pressed,state.focused,state.referenceId],
+    [1,id,'true',true,id],'B02: every selected outline, keyboard focus and card agree');
+   assert.ok(state.aria.length>4,'B12: region name exists independently of color');
+   if(state.availability==='available')
+    assert.ok(state.aria.includes(state.value),'B12: accessible name includes the numerical reading');
+   else assert.equal(state.value,'—','I11: unavailable regions never show fabricated numbers');
+   seen.push(id);
+   if(language==='ja'&&width===390&&zoom===100)
+    await page.screenshot({path:resolve(out,engine+'-c1-select-'+id+'.png'),animations:'disabled',fullPage:true});
+  }
+  if(language==='en'&&width===1440&&zoom===200){
+   await result.evaluate(host=>{host.shadowRoot.querySelector('.rv4-body').style.filter='grayscale(1)'});
+   await page.screenshot({path:resolve(out,engine+'-c1-grayscale-'+view+'.png'),animations:'disabled',fullPage:true});
+   await result.evaluate(host=>{host.shadowRoot.querySelector('.rv4-body').style.filter=''});
+  }
+ }
+ assert.equal(seen.length,12,'B02: all twelve anatomical regions are covered');
+ assert.equal(new Set(seen).size,12,'B02: no duplicate anatomical region ID');
+}
+async function auditC1SavedStates(page,result,language){
+ const cases=[
+  {key:'nine',expected:9,gait:'RUNNING',format:'UNKNOWN',distance:'6',hours:'0',minutes:'38',seconds:'28'},
+  {key:'twelve',expected:12,gait:'WALK',format:'UNKNOWN',distance:'3',hours:'0',minutes:'33',seconds:'20'},
+  {key:'unknown',expected:0,reason:'GAIT_NOT_SELECTED',gait:'UNKNOWN',format:'UNKNOWN',distance:'6',hours:'0',minutes:'33',seconds:'0'},
+  {key:'mixed',expected:0,reason:'MIXED_GAIT_NOT_QUANTIFIED',gait:'RUNNING',format:'RUN_WALK',distance:'6',hours:'0',minutes:'33',seconds:'0'},
+  {key:'outside',expected:0,gait:'RUNNING',format:'UNKNOWN',distance:'1',hours:'2',minutes:'0',seconds:'0'}
+ ];
+ for(const t of cases){
+  const stored=await page.evaluate(async v=>{
+   const c=await import('/ui/manualRunCanonical.js'),m=await import('/ui/manualRunStore.js');
+   const a=await import('/core/activity/activityReference.js');
+   const saved=await c.mutate(s=>m.saveManualRun(s,{date:'2026-11-17',distance:v.distance,
+    hours:v.hours,minutes:v.minutes,seconds:v.seconds,
+    activityGait:v.gait==='UNKNOWN'?'RUNNING':v.gait,
+    runningFormat:v.format,
+    runWalkRunningDistanceKm:v.format==='RUN_WALK'?'4':'',
+    runWalkRunningDurationMinutes:v.format==='RUN_WALK'?'20':'',
+    rofBefore:0,rofAfter:null,stepsProvenance:'UNKNOWN'}));
+   if(!saved.ok)throw Error(saved.reason);
+   // New saves require a selected gait. UNKNOWN is a historically valid
+   // stored state; create it only via a validated IDB test fixture.
+   let record=saved.record;
+   if(v.gait==='UNKNOWN'){
+    const changed=await c.mutate(storage=>{
+     const envelope=JSON.parse(storage.getItem(m.MANUAL_RUN_KEY));
+     const item=envelope.records.find(x=>x.id===saved.record.id);
+     if(!item)return {ok:false,reason:'missing fixture'};
+     item.draft.activityGait='UNKNOWN';
+     envelope.revision++;
+     storage.setItem(m.MANUAL_RUN_KEY,JSON.stringify(envelope));
+     return {ok:true,record:item};
+    });
+    if(!changed.ok)throw Error(changed.reason);
+    record=changed.record;
+   }
+   const reference=a.calculateActivityReference(record);
+   return {id:record.id,count:reference.count,reason:reference.reason||null};
+  },t);
+  assert.equal(stored.count,t.expected,'I11: calculated 0/9/12 scientific applicability '+t.key);
+  if(t.reason)assert.equal(stored.reason,t.reason,'I11: exclusion reason '+t.key);
+  await page.goto(base+'result?record='+encodeURIComponent(stored.id),{waitUntil:'networkidle'});
+  await result.locator('.rv4-body-svg').waitFor({state:'attached'});
+  let count=0;
+  for(const view of ['front','back','sole']){
+   await result.locator('[data-view="'+view+'"]').click();
+   const state=await result.evaluate(host=>{
+    const root=host.shadowRoot,paths=[...root.querySelectorAll('.rv4-body-svg .rv4-region')];
+    return {count:paths.filter(p=>p.dataset.referenceState==='available').length,
+     value:root.querySelector('.rv4-big-score')?.textContent?.trim(),
+     labels:paths.map(p=>p.getAttribute('aria-label'))};
+   });
+   count+=state.count;
+   assert.ok(state.labels.every(Boolean),'I11: saved-region labels are never blank');
+   if(t.expected===0)assert.equal(state.value,'—','I11: no calculated reference means a dash, not zero');
+  }
+  assert.equal(count,t.expected,'I11: save/reload visual has matching '+t.key+' count');
+  await writeFile(resolve(out,engine+'-c1-I11-'+language+'-'+t.key+'.json'),
+   JSON.stringify({case:t.key,expected:count,reason:stored.reason},null,2));
+ }
+}
+
 try{
  for(const language of ['ja','en'])for(const width of [320,375,390,414,768,1024,1440])for(const zoom of [100,200]){
   const context=await browser.newContext({viewport:{width,height:width>=1024?900:850},locale:language==='en'?'en-US':'ja-JP',reducedMotion:'reduce',serviceWorkers:'block'});
@@ -251,6 +382,11 @@ try{
      await result.locator('[data-view="'+view+'"]').click();
      await capture(page,{language,width,zoom,tab,view});
     }
+   }
+
+   if((width===390&&zoom===100)||(width===1440&&zoom===200)){
+    await auditC1Body(page,result,language,width,zoom);
+    if(width===390&&zoom===100)await auditC1SavedStates(page,result,language);
    }
 
    if(width===320&&zoom===200){
