@@ -24,16 +24,16 @@ test('Bright action text uses dark ink with normal text contrast >= 4.5:1',()=>{
 test('Result shadow root has matching semantic button colors and no unrelated scientific changes',()=>{
  const result=read('ui/resultExperience.js');
  assert.ok(result.includes('RESULT_BUTTON_CONTRAST_STYLES'));
- assert.ok(result.includes("RESULT_T01_READABILITY_STYLES+RESULT_BUTTON_CONTRAST_STYLES"));
+ assert.ok(result.includes("RESULT_BUTTON_CONTRAST_STYLES+RESULT_T01_READABILITY_STYLES"));
  for(const term of ['.rv4-view-tabs button.active','.rv4-mobile-tabs button.active',
   '.rv4-actions [data-download]','.rv4-question-continuation button'])
  assert.ok(result.includes(term),'missing result-side button '+term);
 });
-test('PWA loads the new semantic button stylesheet LAST and caches its exact URL',()=>{
+test('PWA loads the new semantic button stylesheet before iOS input safeguards and caches its exact URL',()=>{
  const html=read('index.html'),sw=read('sw.js');
  const a='ui/buttonContrastSystem.css?v=20261121-button-contrast-v1';
  assert.ok(html.includes(a));
- assert.ok(html.indexOf(a)>html.indexOf('mobileInputFocus.css'),'applies after legacy screen CSS');
+ assert.ok(html.indexOf(a)<html.indexOf('mobileInputFocus.css'),'preserve iOS input CSS last');
  assert.ok(sw.includes(a)&&sw.includes('ui/buttonContrastSystem.css'));
  assert.ok(sw.includes('runload-ui-next-shell-20261121-button-contrast-v1'));
  assert.ok(html.includes('app.js?v=20261121-button-contrast-v1'));
