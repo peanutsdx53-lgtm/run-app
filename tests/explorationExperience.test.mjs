@@ -74,7 +74,7 @@ test('exploration versioned assets agree across HTML, app and service worker',()
 test('theme catalog expansion is data-driven without fixed 28-topic cap',()=>{
  const ui=makeUi(memory());ui.tab='catalog';const extended=categories.map(c=>({...c,topics:[...c.topics]}));
  extended[2].topics.push('コース選び','地形と路面');const r=render(ui,{categories:extended,draft:{},conditions:{entries:[]}});
- assert.match(r,/9 テーマ/);assert.match(r,/コース選び/);
+ assert.equal((r.match(/data-ex-pick-topic=/g)||[]).length,30);assert.doesNotMatch(r,/class="ex-count"|<small>[0-9]+ テーマ<\/small>/);assert.match(r,/コース選び/);
 });
 test('notes are opt-in, persisted only to isolated key, deletion works',()=>{
  const storage=memory(),ui=makeUi(storage);ui.selected='03';
