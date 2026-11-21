@@ -68,12 +68,12 @@ export function renderSettings({profile,display,notice='',dataUi}){
  const motionOptions=`<div class="s2-choice-row" role="group" aria-label="画面の動き"><button type="button" data-settings-motion="system" aria-pressed="${d.motion==='system'}">端末に合わせる</button><button type="button" data-settings-motion="reduce" aria-pressed="${d.motion==='reduce'}">動きを抑える</button></div>`;
  const languageOptions=`<div class="s2-choice-row" role="group" aria-label="表示言語 / Display language"><button type="button" data-settings-language="ja" aria-pressed="${d.language!=='en'}">日本語</button><button type="button" data-settings-language="en" aria-pressed="${d.language==='en'}">English</button></div>`;
  const purposeChoices=choice('purpose',purposeOptions,p.purpose);
- const profileForm=`<div class="s3-profile-intro"><span class="s3-optional-mark">すべて任意</span><p>必要な項目だけ入力できます。情報はこの端末に保存し、自動送信しません。</p></div>
+ const profileForm=`<div class="s3-profile-intro"><p>必要な項目だけ入力できます。情報はこの端末に保存し、自動送信しません。</p></div>
  <form data-settings-profile-form class="s3-profile-form">
- <div class="s3-field s3-full"><label for="s3-nickname">表示名 <small>任意</small></label><input id="s3-nickname" name="nickname" maxlength="40" autocomplete="nickname" value="${escape(p.nickname)}" placeholder="例：ランナー / 未入力でもOK"></div>
- <div class="s3-field s3-full s4-purpose-field"><label for="s4-purpose">走る目的 <small>一つ選択・任意</small></label><div class="s4-purpose-select"><span class="s4-purpose-icon" aria-hidden="true">↗</span><select id="s4-purpose" name="purpose">${purposeChoices}</select><span class="s4-purpose-chevron" aria-hidden="true"></span></div><p class="s4-purpose-help">選択肢は必要なときだけ表示します。</p></div>
- <div class="s3-profile-metrics"><div class="s3-field"><label for="s3-height">身長 <small>任意</small></label><div class="s3-measure"><input id="s3-height" name="heightCm" type="number" inputmode="decimal" min="80" max="250" step="0.1" value="${p.heightCm??''}" placeholder="未入力"><span aria-hidden="true">cm</span></div></div><div class="s3-field"><label for="s3-weight">体重 <small>任意</small></label><div class="s3-measure"><input id="s3-weight" name="weightKg" type="number" inputmode="decimal" min="15" max="400" step="0.1" value="${p.weightKg??''}" placeholder="未入力"><span aria-hidden="true">kg</span></div></div></div>
- <div class="s3-field s3-full"><label for="s3-age">年齢帯 <small>任意</small></label><select id="s3-age" name="ageBand">${choice('ageBand',ageOptions,p.ageBand)}</select></div>
+ <div class="s3-field s3-full"><label for="s3-nickname">表示名</label><input id="s3-nickname" name="nickname" maxlength="40" autocomplete="nickname" value="${escape(p.nickname)}" placeholder="例：ランナー / 未入力でもOK"></div>
+ <div class="s3-field s3-full s4-purpose-field"><label for="s4-purpose">走る目的</label><div class="s4-purpose-select"><span class="s4-purpose-icon" aria-hidden="true">↗</span><select id="s4-purpose" name="purpose">${purposeChoices}</select><span class="s4-purpose-chevron" aria-hidden="true"></span></div><p class="s4-purpose-help">選択肢は必要なときだけ表示します。</p></div>
+ <div class="s3-profile-metrics"><div class="s3-field"><label for="s3-height">身長</label><div class="s3-measure"><input id="s3-height" name="heightCm" type="number" inputmode="decimal" min="80" max="250" step="0.1" value="${p.heightCm??''}" placeholder="未入力"><span aria-hidden="true">cm</span></div></div><div class="s3-field"><label for="s3-weight">体重</label><div class="s3-measure"><input id="s3-weight" name="weightKg" type="number" inputmode="decimal" min="15" max="400" step="0.1" value="${p.weightKg??''}" placeholder="未入力"><span aria-hidden="true">kg</span></div></div></div>
+ <div class="s3-field s3-full"><label for="s3-age">年齢帯</label><select id="s3-age" name="ageBand">${choice('ageBand',ageOptions,p.ageBand)}</select></div>
  <div class="s3-profile-action"><button class="s2-save s3-save-primary" type="submit"><span aria-hidden="true">✓</span> プロフィールを保存</button><p>登録した情報は、後から設定画面で変更できます。</p></div>
  </form>`;
  const groups=[
@@ -84,7 +84,7 @@ export function renderSettings({profile,display,notice='',dataUi}){
    item('☾','外観','ダークモードを標準で使用',`<div class="s2-theme-preview"><span class="s2-theme-mini s2-dark-mini">☾ <b>ダーク</b> <small>使用中</small></span><span class="s2-theme-mini s2-light-mini">☀ <b>ライト</b> <small>対応予定</small></span></div><p>ライトモードは人体図・グラフまで対応した後に公開します。</p>`,{hint:'ダーク'})
   ]),
   group('♧','利用者情報',[
-   item('♙','プロフィール','身長・体重・目的などの任意情報',profileForm,{hint:'編集できます'})
+   item('♙','プロフィール','身長・体重・走る目的など',profileForm,{hint:'任意'})
   ]),
   group('◉','記録と測定',[
    item('◎','位置情報','GPS測定時の権限・位置情報',`<p>位置情報へのアクセスはGPS測定を利用する際に端末が確認します。権限は端末・ブラウザ側で変更できます。この設定画面では位置情報の許可を変更できません。</p>`,{hint:'案内'})
