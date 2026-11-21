@@ -243,10 +243,10 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  }
 
  // Home optional cards: system-generated captions only, not user-authored notes.
- if(is('.hx-run-trend-source')&&(m=s.match(/^保存済み手入力走行の直近([1-7])件。過去から今回の順に並べています。$/)))
+ if(element?.matches?.('.hx-run-trend-source')&&(m=s.match(/^保存済み手入力走行の直近([1-7])件。過去から今回の順に並べています。$/)))
   return Number(m[1])===1?'The most recent saved manual run.':
    'The '+m[1]+' most recent saved manual runs, shown oldest to newest.';
- if(is('.hx-discovery-date')&&(m=s.match(/^(\d{4}-\d{2}-\d{2})に自分で残した気づき$/)))
+ if(element?.matches?.('.hx-discovery-date')&&(m=s.match(/^(\d{4}-\d{2}-\d{2})に自分で残した気づき$/)))
   return 'Observation you saved on '+m[1]+'.';
 
  // Only system-generated, source-bound GPS private counts and restore warnings.
