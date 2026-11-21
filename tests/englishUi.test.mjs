@@ -289,3 +289,13 @@ test('S09 T10: selected reference region is singular in English, without changin
  assert.equal(translateUiText('選択中の部位',{element:authored}),'選択中の部位',
   'a personally written note may contain the same words without being translated');
 });
+
+
+test('History search help is bilingual and Manual abbreviation is limited to its filter',()=>{
+ assert.equal(translateUiText('検索期間'),'Search Period');
+ assert.equal(translateUiText('検索条件の説明'),'Search Filter Help');
+ assert.match(translateUiText('全期間を選んでも、月間集計は表示中の月のみです。'),/monthly summary/);
+ const element={matches:selector=>selector==='.hx-source-controls button[data-record-source="MANUAL"]'};
+ assert.equal(translateUiText('手入力',{element}),'Manual');
+ assert.equal(translateUiText('手入力'),'Manual Entry');
+});

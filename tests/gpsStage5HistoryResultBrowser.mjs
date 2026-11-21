@@ -30,10 +30,12 @@ async function capture(page,width,language,stage){
   const panel=document.querySelector('#runload-result-v4')?.shadowRoot;
   const measure=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width}};
   const controls=[...(h?.querySelectorAll('.hx-source-controls button')||[])];
+  const filterGroups=['[data-history-scope]','[data-record-source]','[data-record-kind]'].map(selector=>[...(h?.querySelectorAll(selector)||[])].map(measure));
+  const searchHelp=h?.querySelector('.hx-find-help');
   const source=[...(h?.querySelectorAll('.hx-record-source')||[])];
   const tabs=[...(panel?.querySelectorAll('[data-tab]')||[])];
   return {viewport:innerWidth,scroll:document.documentElement.scrollWidth,body:document.body.scrollWidth,
-   sources:source.length,sourceButtons:controls.map(measure),tabs:tabs.map(measure),
+   sources:source.length,sourceButtons:controls.map(measure),filterGroups,searchHelpClosed:!!searchHelp&&!searchHelp.open,tabs:tabs.map(measure),
    stage:measure(document.querySelector('#runload-history-v2')||document.querySelector('#runload-result-v4')||document.body),
    selected:measure(h?.querySelector('.selected-footer')||document.body),
    bottomNav:document.querySelector('.mobile-nav')?.offsetParent?measure(document.querySelector('.mobile-nav')):null
@@ -43,6 +45,16 @@ async function capture(page,width,language,stage){
   'no horizontal overflow '+engine+' '+language+' '+width+' '+stage+' '+JSON.stringify(metrics));
  assert.ok(metrics.sourceButtons.every(b=>b.left>=-2&&b.right<=metrics.viewport+2&&b.bottom-b.top>=43.5),
   'source filter targets fit view '+JSON.stringify(metrics));
+ if(stage==='01-history-combined'){
+  assert.equal(metrics.searchHelpClosed,true,'History filter help stays collapsed by default');
+  assert.deepEqual(metrics.filterGroups.map(group=>group.length),[2,3,3],'all filter groups retain their choices');
+  for(const group of metrics.filterGroups){
+   const widths=group.map(b=>b.width),heights=group.map(b=>b.bottom-b.top);
+   assert.ok(Math.max(...widths)-Math.min(...widths)<=2,'equal filter widths '+JSON.stringify(group));
+   assert.ok(Math.max(...heights)-Math.min(...heights)<=2,'equal filter heights '+JSON.stringify(group));
+   assert.ok(group.every(b=>b.left>=-2&&b.right<=metrics.viewport+2&&b.bottom-b.top>=44),'filter target bounds '+JSON.stringify(group));
+  }
+ }
  assert.ok(metrics.tabs.every(b=>b.left>=-2&&b.right<=metrics.viewport+2),
   'three-tab controls fit view '+JSON.stringify(metrics));
  const filename=engine+'-'+language+'-'+width+'-'+sanitize(stage)+'.png';
@@ -103,6 +115,13 @@ try{
    assert.equal(await page.locator('.gps-history-item').count(),0,'old duplicate GPS list retired');
    assert.match(await page.locator('[data-gps-history-disclosure]').innerText(),language==='en'?/GPS Data Management/:/GPS記録のデータ管理/);
    await capture(page,width,language,'01-history-combined');
+   const findHelp=history.locator('.hx-find-help');
+   await findHelp.locator('summary').click();
+   assert.equal(await findHelp.evaluate(el=>el.open),true,'local help opens on demand');
+   assert.match(await findHelp.locator('.hx-scope-hint').innerText(),language==='en'?/Searching This Month/:/この月の記録を検索中/);
+   await findHelp.locator('summary').click();
+   assert.equal(await findHelp.evaluate(el=>el.open),false,'local help can be closed');
+   if(language==='en')assert.equal((await history.locator('[data-record-source="MANUAL"]').innerText()).trim(),'Manual');
    await history.locator('[data-record-source="GPS_V2"]').click();
    assert.equal(await rows.count(),1,'GPS filter returns one record');
    const gpsItem=history.locator('[data-select-id="'+saved.gpsId+'"]');

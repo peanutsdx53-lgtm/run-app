@@ -1,4 +1,4 @@
-import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261117-reflection-g3-v1';
+import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261121-history-find-help-v1';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261120-s09-comparison-english-v1';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261111-exploration-inquiry-v1';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261117-s16-settings-v1';
@@ -224,6 +224,7 @@ export function translateUiText(text,context={}){
  // S09 T10: this card describes one selected region. The conditions screen
  // uses the same Japanese words for a multiple-region picker, so its plural
  // English dictionary entry must remain untouched.
+ if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
  if(trimmed==='選択中の部位'&&
     context.element?.matches?.('.rv4-reading > small')&&
     context.element?.closest?.('.rv4-body'))return raw.replace(trimmed,'Selected Region');

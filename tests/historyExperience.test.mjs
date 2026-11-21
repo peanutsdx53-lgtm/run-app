@@ -115,3 +115,22 @@ test('P6-C S10: internal ID stays in selection logic and must never be visible a
  ui.selectedId='missing';
  assert.doesNotMatch(renderHistory(ui,records,{connected:true,onOpen(){}}),/<summary>記録IDを確認<\/summary>/);
 });
+
+
+test('Find Records local help is collapsed and controls preserve scope/source/type/search IDs',()=>{
+ const ui=createHistoryUi();ui.month='2026-10';
+ let html=renderHistory(ui,fixtures,{connected:true});
+ assert.ok(html.includes('<details class="hx-find-help"><summary aria-label="検索条件の説明">？</summary>'));
+ for(const label of ['検索期間','記録方法','記録の種類'])
+  assert.ok(html.includes('class="hx-filter-label">'+label));
+ for(const id of ['data-history-scope="month"','data-history-scope="all"','data-record-source="MANUAL"','data-record-source="GPS_V2"','data-record-kind="rest"','id="hx-search"'])
+  assert.ok(html.includes(id));
+ assert.ok(!html.includes('<p class="hx-scope-hint" role="status">'));
+ ui.allMonths=true;html=renderHistory(ui,fixtures,{connected:true});
+ assert.ok(html.includes('全期間で検索中（月間集計は表示月のみ）'));
+ assert.equal(filterRecords(normalizeRecords(fixtures),ui).length,3);
+ const styles=read('ui/historyInlineStyles.js');
+ assert.ok(styles.includes('hx-source-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))'));
+ assert.ok(styles.includes('hx-scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))'));
+ assert.ok(styles.includes('min-height:52px;height:100%'));
+});
