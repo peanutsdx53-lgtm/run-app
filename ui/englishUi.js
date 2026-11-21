@@ -225,6 +225,35 @@ export function translateUiText(text,context={}){
  // uses the same Japanese words for a multiple-region picker, so its plural
  // English dictionary entry must remain untouched.
  if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
+ // Only on Course editor: preserve long wording elsewhere and full surface aria-labels.
+ const e=context.element;
+ if(context.attribute==='aria-label'&&e?.matches?.('.rv-course [data-rv-grade],.rv-course [data-rv-surface-mode]')){
+  const full={'上り・下りの距離割合を設定':'Set Uphill and Downhill Distance Shares',
+   '区間ごとの坂道を設定':'Set Gradients by Segments',
+   '路面を1種類選択':'Select a Single Surface',
+   '複数路面の距離割合を設定':'Set Distance Shares for Multiple Surfaces'};
+  if(Object.hasOwn(full,trimmed))return raw.replace(trimmed,full[trimmed]);
+ }
+ if(context.attribute==='placeholder'&&trimmed==='未入力'&&
+    e?.matches?.('.rv-course [data-rv-slope-number],.rv-course [data-rv-surface-value]'))
+  return raw.replace(trimmed,'—');
+ if(e?.matches?.('.rv-course .rv-fine-top > strong')&&trimmed.endsWith('を調整')){
+  const base=trimmed.slice(0,-3);
+  const labels={'上り':'Uphill','下り':'Downhill','舗装路':'Paved Road',
+   '陸上トラック':'Athletics Track','トレッドミル':'Treadmill',
+   '締まった土道':'Compacted Dirt','不整地トレイル':'Uneven Trail',
+   '天然芝':'Natural Grass','人工芝':'Artificial Turf','砂地':'Sand'};
+  if(Object.hasOwn(labels,base))return raw.replace(trimmed,'Adjust '+labels[base]);
+ }
+ if(e?.matches?.('.rv-course [data-rv-grade]')&&trimmed==='割合')return raw.replace(trimmed,'By %');
+ if(e?.matches?.('.rv-course [data-rv-surface-mode]')){
+  const aliases={'1種類':'Single','複数・割合':'Mixed %'};
+  if(Object.hasOwn(aliases,trimmed))return raw.replace(trimmed,aliases[trimmed]);
+ }
+ if(e?.matches?.('.rv-course .rv-surface-tile span:first-child')){
+  const aliases={'陸上トラック':'Running Track','締まった土道':'Packed Dirt'};
+  if(Object.hasOwn(aliases,trimmed))return raw.replace(trimmed,aliases[trimmed]);
+ }
  if(trimmed==='選択中の部位'&&
     context.element?.matches?.('.rv4-reading > small')&&
     context.element?.closest?.('.rv4-body'))return raw.replace(trimmed,'Selected Region');

@@ -13,7 +13,11 @@ const escape = v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','
 const filled = v=>v!==undefined&&v!==null&&String(v).trim()!=='';
 const value = (x,unit='')=>filled(x)?escape(x)+unit:'—';
 const choose=(items,current)=>items.map(([id,label])=>`<option value="${escape(id)}" ${current===id?'selected':''}>${escape(label)}</option>`).join('');
-const optionGroup=(attr,choices,selected)=>`<div class="rv-choice-row ${choices.length===4?'rv-four':''}">${choices.map(([key,label])=>`<button type="button" ${attr}="${escape(key)}" aria-pressed="${selected===key}" class="rv-choice ${selected===key?'is-selected':''}">${escape(label)}</button>`).join('')}</div>`;
+const courseModeA11y=Object.freeze({
+ 'data-rv-grade':{'SUMMARY':'上り・下りの距離割合を設定','SECTIONS':'区間ごとの坂道を設定'},
+ 'data-rv-surface-mode':{'SINGLE':'路面を1種類選択','MIXED':'複数路面の距離割合を設定'}
+});
+const optionGroup=(attr,choices,selected)=>`<div class="rv-choice-row ${choices.length===4?'rv-four':''}">${choices.map(([key,label])=>`<button type="button" ${attr}="${escape(key)}" ${courseModeA11y[attr]?.[key]?`aria-label="${escape(courseModeA11y[attr][key])}" `:''}aria-pressed="${selected===key}" class="rv-choice ${selected===key?'is-selected':''}">${escape(label)}</button>`).join('')}</div>`;
 export function derivedFlat(d){
  if(!filled(d.upPercent)||!filled(d.downPercent))return null;
  const up=Number(d.upPercent),down=Number(d.downPercent);
@@ -119,7 +123,7 @@ function surfaceSection(d,ui){
  const selected=mode==='SINGLE'?(d.primarySurface?[d.primarySurface]:[]):ui.surfaceSelected;
  const state=surfaceShareState(d,ui),active=state.active,chosen=active?state.share(active):null;
  const tiles=mode==='UNKNOWN'?'<p class="rv-hint">不明のままにしても問題ありません。</p>':
- `<div class="rv-surfaces">${SURFACES.map(([k,label])=>`<button type="button" data-rv-surface="${k}" aria-pressed="${selected.includes(k)}" class="rv-surface-tile ${selected.includes(k)?'is-selected':''}"><span>${label}</span>${mode==='MIXED'&&selected.includes(k)?`<b data-rv-surface-tile-value="${k}">${state.share(k)===null?'—':escape(state.share(k))+'%'}</b>`:`<span aria-hidden="true">${selected.includes(k)?'●':'○'}</span>`}</button>`).join('')}</div>`;
+ `<div class="rv-surfaces">${SURFACES.map(([k,label])=>`<button type="button" data-rv-surface="${k}" aria-label="${escape(label)}" aria-pressed="${selected.includes(k)}" class="rv-surface-tile ${selected.includes(k)?'is-selected':''}"><span>${label}</span>${mode==='MIXED'&&selected.includes(k)?`<b data-rv-surface-tile-value="${k}">${state.share(k)===null?'—':escape(state.share(k))+'%'}</b>`:`<span aria-hidden="true">${selected.includes(k)?'●':'○'}</span>`}</button>`).join('')}</div>`;
  const mix=mode==='MIXED'&&selected.length?`<div class="rv-surface-head"><h3>路面の割合</h3><strong class="${state.valid?'rv-ok':'rv-invalid'}" data-rv-surface-total>合計 ${state.total}% / 100%</strong></div>
  <div class="rv-surface-mix" role="img" aria-label="入力済み路面割合">${state.selected.map((k,i)=>`<span class="rv-surface-mix-part" data-rv-surface-bar="${k}" style="width:${Math.max(0,Math.min(100,state.share(k)??0))}%;--surface-color:var(--surface-color-${i%4})"></span>`).join('')}</div>
  <div class="rv-surface-pick" role="group" aria-label="割合を調整する路面を選択">${selected.map(k=>`<button type="button" data-rv-surface-focus="${k}" aria-pressed="${active===k}">${names[k]} <b data-rv-surface-pick-value="${k}">${state.share(k)===null?'—':escape(state.share(k))+'%'}</b></button>`).join('')}</div>

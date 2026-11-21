@@ -313,3 +313,30 @@ test('Profile Optional heading and description are bilingual and concise',()=>{
  assert.equal(translateUiText('任意'),'Optional');
  assert.equal(translateUiText('身長・体重・走る目的など'),'Height, Weight, Goals, and More');
 });
+
+test('Course-only short labels do not change research or accessible full terms',()=>{
+ const grade={matches:s=>s==='.rv-course [data-rv-grade]'};
+ const mode={matches:s=>s==='.rv-course [data-rv-surface-mode]'};
+ const tile={matches:s=>s==='.rv-course .rv-surface-tile span:first-child'};
+ assert.equal(translateUiText('割合',{element:grade}),'By %');
+ assert.equal(translateUiText('1種類',{element:mode}),'Single');
+ assert.equal(translateUiText('複数・割合',{element:mode}),'Mixed %');
+ assert.equal(translateUiText('陸上トラック',{element:tile}),'Running Track');
+ assert.equal(translateUiText('締まった土道',{element:tile}),'Packed Dirt');
+ assert.equal(translateUiText('割合'),'Percentage');
+ assert.equal(translateUiText('複数・割合'),'Multiple Surfaces by Proportion');
+ assert.equal(translateUiText('締まった土道'),'Compacted Dirt');
+});
+
+
+test('Course shortened text has descriptive aria labels and English percentage editor copy',()=>{
+ const a={matches:sel=>sel==='.rv-course [data-rv-grade],.rv-course [data-rv-surface-mode]'};
+ const n={matches:sel=>sel==='.rv-course [data-rv-slope-number],.rv-course [data-rv-surface-value]'};
+ const strong={matches:sel=>sel==='.rv-course .rv-fine-top > strong'};
+ assert.equal(translateUiText('上り・下りの距離割合を設定',{element:a,attribute:'aria-label'}),'Set Uphill and Downhill Distance Shares');
+ assert.equal(translateUiText('複数路面の距離割合を設定',{element:a,attribute:'aria-label'}),'Set Distance Shares for Multiple Surfaces');
+ assert.equal(translateUiText('未入力',{element:n,attribute:'placeholder'}),'—');
+ assert.equal(translateUiText('未入力'),'Not Entered');
+ assert.equal(translateUiText('上りを調整',{element:strong}),'Adjust Uphill');
+ assert.equal(translateUiText('締まった土道を調整',{element:strong}),'Adjust Compacted Dirt');
+});
