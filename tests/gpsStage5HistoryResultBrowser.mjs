@@ -32,10 +32,11 @@ async function capture(page,width,language,stage){
   const controls=[...(h?.querySelectorAll('.hx-source-controls button')||[])];
   const filterGroups=['[data-history-scope]','[data-record-source]','[data-record-kind]'].map(selector=>[...(h?.querySelectorAll(selector)||[])].map(measure));
   const searchHelp=h?.querySelector('.hx-find-help');
+  const advanced=h?.querySelector('[data-history-advanced]');
   const source=[...(h?.querySelectorAll('.hx-record-source')||[])];
   const tabs=[...(panel?.querySelectorAll('[data-tab]')||[])];
   return {viewport:innerWidth,scroll:document.documentElement.scrollWidth,body:document.body.scrollWidth,
-   sources:source.length,sourceButtons:controls.map(measure),filterGroups,searchHelpClosed:!!searchHelp&&!searchHelp.open,tabs:tabs.map(measure),
+   sources:source.length,sourceButtons:controls.map(measure),filterGroups,searchHelpClosed:!!searchHelp&&!searchHelp.open,advancedOpen:advanced?.getAttribute('aria-expanded')==='true',tabs:tabs.map(measure),
    stage:measure(document.querySelector('#runload-history-v2')||document.querySelector('#runload-result-v4')||document.body),
    selected:measure(h?.querySelector('.selected-footer')||document.body),
    bottomNav:document.querySelector('.mobile-nav')?.offsetParent?measure(document.querySelector('.mobile-nav')):null
@@ -43,16 +44,28 @@ async function capture(page,width,language,stage){
  });
  assert.ok(metrics.scroll<=metrics.viewport+2&&metrics.body<=metrics.viewport+2,
   'no horizontal overflow '+engine+' '+language+' '+width+' '+stage+' '+JSON.stringify(metrics));
- assert.ok(metrics.sourceButtons.every(b=>b.left>=-2&&b.right<=metrics.viewport+2&&b.bottom-b.top>=43.5),
+ assert.ok(metrics.sourceButtons.filter(b=>b.width>0).every(b=>b.left>=-2&&b.right<=metrics.viewport+2&&b.bottom-b.top>=43.5),
   'source filter targets fit view '+JSON.stringify(metrics));
  if(stage==='01-history-combined'){
   assert.equal(metrics.searchHelpClosed,true,'History filter help stays collapsed by default');
-  assert.deepEqual(metrics.filterGroups.map(group=>group.length),[2,3,3],'all filter groups retain their choices');
-  for(const group of metrics.filterGroups){
+  assert.equal(metrics.advancedOpen,false,'advanced filters start hidden');
+  assert.deepEqual(metrics.filterGroups.map(group=>group.length),[2,3,3],'all filter options still exist in the DOM');
+  assert.ok(metrics.filterGroups[1].every(b=>b.width===0),'source choices hidden initially');
+  assert.ok(metrics.filterGroups[2].every(b=>b.width===0),'type choices hidden initially');
+  for(const group of [metrics.filterGroups[0]]){
    const widths=group.map(b=>b.width),heights=group.map(b=>b.bottom-b.top);
    assert.ok(Math.max(...widths)-Math.min(...widths)<=2,'equal filter widths '+JSON.stringify(group));
    assert.ok(Math.max(...heights)-Math.min(...heights)<=2,'equal filter heights '+JSON.stringify(group));
    assert.ok(group.every(b=>b.left>=-2&&b.right<=metrics.viewport+2&&b.bottom-b.top>=44),'filter target bounds '+JSON.stringify(group));
+  }
+ }
+ if(stage==='01a-history-expanded'){
+  assert.equal(metrics.advancedOpen,true,'advanced controls expanded');
+  for(const group of metrics.filterGroups){
+   const widths=group.map(b=>b.width),heights=group.map(b=>b.bottom-b.top);
+   assert.ok(Math.max(...widths)-Math.min(...widths)<=2,'equal column widths '+JSON.stringify(group));
+   assert.ok(Math.max(...heights)-Math.min(...heights)<=2,'equal option heights '+JSON.stringify(group));
+   assert.ok(group.every(b=>b.left>=-2&&b.right<=metrics.viewport+2&&b.bottom-b.top>=44),'advanced options visible in viewport '+JSON.stringify(group));
   }
  }
  assert.ok(metrics.tabs.every(b=>b.left>=-2&&b.right<=metrics.viewport+2),
@@ -119,11 +132,31 @@ try{
    await findHelp.locator('summary').click();
    assert.equal(await findHelp.evaluate(el=>el.open),true,'local help opens on demand');
    assert.match(await findHelp.locator('.hx-scope-hint').innerText(),language==='en'?/Searching This Month/:/この月の記録を検索中/);
+   const helpLayout=await history.evaluate(host=>{
+    const root=host.shadowRoot,help=root.querySelector('.hx-find-help-body').getBoundingClientRect(),search=root.querySelector('.search').getBoundingClientRect(),period=root.querySelector('.hx-scope').getBoundingClientRect();
+    return {helpBottom:help.bottom,searchTop:search.top,searchBottom:search.bottom,periodTop:period.top};
+   });
+   assert.ok(helpLayout.helpBottom<=helpLayout.searchTop-1,'help must push search and period down rather than hide behind them '+JSON.stringify(helpLayout));
+   assert.ok(helpLayout.searchBottom<=helpLayout.periodTop,'search precedes period '+JSON.stringify(helpLayout));
+   await capture(page,width,language,'01b-history-help-open');
    await findHelp.locator('summary').click();
    assert.equal(await findHelp.evaluate(el=>el.open),false,'local help can be closed');
+   const advanced=history.locator('[data-history-advanced]');
+   assert.equal(await advanced.getAttribute('aria-expanded'),'false');
+   if(language==='en')assert.match(await advanced.innerText(),/More Filters/);
+   await advanced.click();
+   assert.equal(await advanced.getAttribute('aria-expanded'),'true','advanced controls open');
+   assert.equal(await history.locator('[data-record-source="MANUAL"]').isVisible(),true);
    if(language==='en')assert.equal((await history.locator('[data-record-source="MANUAL"]').innerText()).trim(),'Manual');
+   await capture(page,width,language,'01a-history-expanded');
    await history.locator('[data-record-source="GPS_V2"]').click();
    assert.equal(await rows.count(),1,'GPS filter returns one record');
+   assert.equal(await advanced.getAttribute('aria-expanded'),'true','expanded view persists after selecting a filter');
+   await advanced.click();
+   assert.equal(await advanced.getAttribute('aria-expanded'),'false','advanced controls collapse without resetting filter');
+   assert.equal((await advanced.locator('.hx-filter-count').innerText()).trim(),'1','active-filter count stays visible');
+   assert.equal(await rows.count(),1,'collapsed filter stays applied');
+   await advanced.click();
    const gpsItem=history.locator('[data-select-id="'+saved.gpsId+'"]');
    await gpsItem.click();
    if(language==='en'){
