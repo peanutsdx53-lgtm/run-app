@@ -35,7 +35,7 @@ async function capture(page,name,lang,width){
  });
  assert.ok(info.document<=width+2&&info.body<=width+2,name+' horizontal overflow '+JSON.stringify(info));
  for(const e of info.elements)if(e.width>0&&e.height>0)assert.ok(e.left>=-2&&e.right<=width+2,name+' visible control overflow '+JSON.stringify(e));
- await page.screenshot({path:resolve(output,name+'-'+lang+'-'+width+'.png'),fullPage:['course','learning','learning-lesson'].includes(name),animations:'disabled'});
+ await page.screenshot({path:resolve(output,name+'-'+lang+'-'+width+'.png'),fullPage:name.startsWith('course')||['learning','learning-lesson'].includes(name),animations:'disabled'});
  findings.push({engine,width,lang,name,...info});
  console.log('PASS FOCUSED',engine,width,lang,name);
 }
@@ -99,6 +99,44 @@ try{
    if(lang==='en'){
     const bounds=await course.locator('.rv-condition-pair .rv-choice').evaluateAll(nodes=>nodes.map(e=>({text:e.innerText,scroll:e.scrollWidth,client:e.clientWidth})));
     for(const b of bounds)assert.ok(b.scroll<=b.client+2,'English choice label clipped: '+JSON.stringify(b));
+   }
+   if(lang==='en'&&width<=390){
+    const grade=course.locator('.rv-step-slope .rv-choice-row.rv-four .rv-choice');
+    const mode=course.locator('.rv-step-surface .rv-choice-row .rv-choice');
+    assert.deepEqual(await grade.allInnerTexts(),['Unknown','Flat','By %','Segments']);
+    assert.deepEqual(await mode.allInnerTexts(),['Unknown','Single','Mixed %']);
+    const rects=async sel=>course.locator(sel).evaluateAll(els=>els.map(el=>{
+     const r=el.getBoundingClientRect();
+     return {x:r.x,y:r.y,width:r.width,height:r.height,scroll:el.scrollWidth,client:el.clientWidth};
+    }));
+    const four=await rects('.rv-step-slope .rv-choice-row.rv-four .rv-choice');
+    const three=await rects('.rv-step-surface .rv-choice-row .rv-choice');
+    assert.ok(Math.max(...four.map(x=>x.y))-Math.min(...four.map(x=>x.y))<2,
+     'normal English grade should fit one row '+JSON.stringify(four));
+    assert.ok(Math.max(...three.map(x=>x.y))-Math.min(...three.map(x=>x.y))<2,
+     'normal English surface mode should fit one row '+JSON.stringify(three));
+    await course.locator('[data-rv-surface-mode="MIXED"]').click();
+    const tiles=await rects('.rv-step-surface .rv-surface-tile');
+    assert.equal(tiles.length,8,'surface options remain eight');
+    assert.ok(Math.abs(tiles[0].y-tiles[1].y)<2,
+     'surface tiles use two columns at normal text '+JSON.stringify(tiles));
+    assert.ok(tiles.every(x=>x.scroll<=x.client+2),'surface tile text is not cut');
+    assert.equal(await course.locator('[data-rv-surface="soil"]').getAttribute('aria-label'),'Compacted Dirt Road',
+     'full surface name is available to assistive technology');
+    await capture(page,'course-mixed',lang,width);
+    await course.locator('[data-rv-surface-mode="UNKNOWN"]').click();
+    await course.locator('[data-rv-grade="SUMMARY"]').click();
+    const selectedStyle=await course.locator('[data-rv-grade="SUMMARY"]').evaluate(el=>{
+     const x=getComputedStyle(el);return {fg:x.color,bg:x.backgroundColor,pressed:el.getAttribute('aria-pressed')};
+    });
+    assert.deepEqual(selectedStyle,{fg:'rgb(5, 41, 57)',bg:'rgb(57, 207, 208)',pressed:'true'});
+    await capture(page,'course-selected',lang,width);
+    await page.evaluate(()=>document.documentElement.style.fontSize='200%');
+    const zoom=await rects('.rv-step-slope .rv-choice-row.rv-four .rv-choice');
+    assert.ok(zoom.every(x=>x.scroll<=x.client+2),'font200 labels fit '+JSON.stringify(zoom));
+    await capture(page,'course-font200',lang,width);
+    await page.evaluate(()=>document.documentElement.style.fontSize='');
+    await course.locator('[data-rv-grade="UNKNOWN"]').click();
    }
    await capture(page,'course',lang,width);
    if(width===390){
