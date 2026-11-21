@@ -200,11 +200,31 @@ async function auditC1SavedStates(page,result,language){
    const c=await import('/ui/manualRunCanonical.js'),m=await import('/ui/manualRunStore.js');
    const a=await import('/core/activity/activityReference.js');
    const saved=await c.mutate(s=>m.saveManualRun(s,{date:'2026-11-17',distance:v.distance,
-    hours:v.hours,minutes:v.minutes,seconds:v.seconds,activityGait:v.gait,
-    runningFormat:v.format,rofBefore:0,rofAfter:null,stepsProvenance:'UNKNOWN'}));
+    hours:v.hours,minutes:v.minutes,seconds:v.seconds,
+    activityGait:v.gait==='UNKNOWN'?'RUNNING':v.gait,
+    runningFormat:v.format,
+    runWalkRunningDistanceKm:v.format==='RUN_WALK'?'4':'',
+    runWalkRunningDurationMinutes:v.format==='RUN_WALK'?'20':'',
+    rofBefore:0,rofAfter:null,stepsProvenance:'UNKNOWN'}));
    if(!saved.ok)throw Error(saved.reason);
-   const reference=a.calculateActivityReference(saved.record);
-   return {id:saved.record.id,count:reference.count,reason:reference.reason||null};
+   // New saves require a selected gait. UNKNOWN is a historically valid
+   // stored state; create it only via a validated IDB test fixture.
+   let record=saved.record;
+   if(v.gait==='UNKNOWN'){
+    const changed=await c.mutate(storage=>{
+     const envelope=JSON.parse(storage.getItem(m.MANUAL_RUN_KEY));
+     const item=envelope.records.find(x=>x.id===saved.record.id);
+     if(!item)return {ok:false,reason:'missing fixture'};
+     item.draft.activityGait='UNKNOWN';
+     envelope.revision++;
+     storage.setItem(m.MANUAL_RUN_KEY,JSON.stringify(envelope));
+     return {ok:true,record:item};
+    });
+    if(!changed.ok)throw Error(changed.reason);
+    record=changed.record;
+   }
+   const reference=a.calculateActivityReference(record);
+   return {id:record.id,count:reference.count,reason:reference.reason||null};
   },t);
   assert.equal(stored.count,t.expected,'I11: calculated 0/9/12 scientific applicability '+t.key);
   if(t.reason)assert.equal(stored.reason,t.reason,'I11: exclusion reason '+t.key);
