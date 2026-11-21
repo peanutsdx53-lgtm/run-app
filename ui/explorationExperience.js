@@ -305,12 +305,11 @@ export function catalogCards(categories,search=""){
  return categories.map(c=>{
   const list=rows.filter(x=>x.category.id===c.id);if(!list.length)return '';
   const p=meta[c.id]||{accent:'#72dbd7',glyph:'○'};
-  return '<section class="ex-catalog-group" style="--ex-accent:'+p.accent+'"><div class="ex-catalog-group-head"><span class="ex-catalog-group-icon" aria-hidden="true">'+p.glyph+'</span><h3>'+esc(c.name)+'</h3><small>'+list.length+' テーマ</small></div><div class="ex-catalog-items">'+list.map(t=>'<button type="button" data-ex-category="'+esc(c.id)+'" data-ex-pick-topic="'+esc(t.title)+'"><strong>'+esc(t.title)+'</strong><span aria-hidden="true">›</span></button>').join('')+'</div></section>';
+  return '<section class="ex-catalog-group" style="--ex-accent:'+p.accent+'"><div class="ex-catalog-group-head"><span class="ex-catalog-group-icon" aria-hidden="true">'+p.glyph+'</span><h3>'+esc(c.name)+'</h3></div><div class="ex-catalog-items">'+list.map(t=>'<button type="button" data-ex-category="'+esc(c.id)+'" data-ex-pick-topic="'+esc(t.title)+'"><strong>'+esc(t.title)+'</strong><span aria-hidden="true">›</span></button>').join('')+'</div></section>';
  }).join('');
 }
 function catalog(ui,ctx){
- const all=ctx.categories.reduce((n,c)=>n+c.topics.length,0);
- return '<section class="ex-catalog"><div class="ex-catalog-head"><div><span class="ex-eyebrow">知りたいことを探す</span><h2>テーマから探す</h2><p>言葉で探したり、分野ごとに眺めたりできます。</p></div><span class="ex-count">'+all+' テーマ</span></div><label class="ex-search-label"><span class="sr-only">テーマを検索</span><input type="search" data-ex-search placeholder="例：睡眠、上り坂、ペース" value="'+esc(ui.search)+'" autocomplete="off"/></label><div class="ex-catalog-grid">'+catalogCards(ctx.categories,ui.search)+'</div></section>';
+ return '<section class="ex-catalog"><div class="ex-catalog-head"><div><span class="ex-eyebrow">知りたいことを探す</span><h2>テーマから探す</h2><p>言葉で探したり、分野ごとに眺めたりできます。</p></div></div><label class="ex-search-label"><span class="sr-only">テーマを検索</span><input type="search" data-ex-search placeholder="例：睡眠、上り坂、ペース" value="'+esc(ui.search)+'" autocomplete="off"/></label><div class="ex-catalog-grid">'+catalogCards(ctx.categories,ui.search)+'</div></section>';
 }
 export function render(ui,ctx){
  return '<section class="ex-page" data-experience-v3><header class="ex-heading"><h1>探究</h1><div class="ex-heading-actions"><button type="button" class="ex-top-help" data-ex-action="field-help" aria-label="探究の使い方と表示の説明" title="探究の使い方">？</button></div></header>'+
