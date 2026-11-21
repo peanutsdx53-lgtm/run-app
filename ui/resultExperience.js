@@ -90,6 +90,30 @@ const RESULT_HELP_RIGHT_STYLES=String.raw`
 // T01: legible interpretation-supporting copy that scales with root text size.
 // Keep anatomy geometry and numeric reference values unchanged; the upper cap
 // prevents narrow 320–414px comparisons from becoming unreadable through overflow.
+/* Result is a shadow root. Global button-role CSS does not cross it. */
+const RESULT_BUTTON_CONTRAST_STYLES=String.raw`
+.rv4-app :is(
+ .rv4-view-tabs button.active,
+ .rv4-mobile-tabs button.active,
+ .rv4-choices button.active,
+ .rv4-actions [data-download],
+ .rv4-rof-correct-form button,
+ .rv4-question-continuation button
+){
+ background:var(--rl-button-bright,#39cfd0)!important;
+ color:var(--rl-button-bright-text,#052939)!important;
+ border-color:var(--rl-button-bright-border,#7bf5eb)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text,#052939);
+}
+.rv4-app :is(
+ .rv4-view-tabs button.active,
+ .rv4-mobile-tabs button.active,
+ .rv4-actions [data-download]
+) :is(span,small,strong,b){
+ color:inherit!important;
+ -webkit-text-fill-color:inherit;
+}
+`;
 const RESULT_T01_READABILITY_STYLES=String.raw`
 .rv4-app .rv4-card-heading p,
 .rv4-app .rv4-date,
@@ -560,7 +584,7 @@ export function mountResult(host,inputDraft={},options={}){
    },'image/png');
   }catch{exportNotice(failText,true);}
  }
- if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_REFLECTION_ENTRY_STYLES+RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES+'</style><div class="rv4-app"></div>';
+ if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_REFLECTION_ENTRY_STYLES+RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES+RESULT_BUTTON_CONTRAST_STYLES+'</style><div class="rv4-app"></div>';
  // Keep the visible label in sync when the user changes document font scale
  // while the result is open. Disconnect a previous observer on remount.
  host._runloadResultFontObserver?.disconnect();
