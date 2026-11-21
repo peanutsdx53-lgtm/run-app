@@ -1,0 +1,80 @@
+/*
+ * RunLoad button color roles (dark mode), 2026-11-21.
+ *
+ * Bright action / selected: light cyan + deep navy letters.
+ * Dark neutral / secondary: retain existing dark panels + pale letters.
+ * Destructive, explanatory and specially themed purple surfaces keep their
+ * distinct semantic colors; never make all button labels black.
+ *
+ * These named components were audited in 28 CSS files and real browser
+ * screenshots. Avoid a global "button {color:...}" override.
+ */
+:root{
+ --rl-button-bright:#39cfd0;
+ --rl-button-bright-text:#052939;
+ --rl-button-bright-border:#7bf5eb;
+ --rl-button-focus:#a4faf1;
+ --rl-button-dark-text:#e5f7fa;
+}
+:is(
+ .record-v3 .rv-choice.is-selected,
+ .record-v3 .rv-gait-options button[aria-pressed="true"],
+ .gait-v4 .g4-choice button[aria-pressed="true"],
+ .rv4-tabs button[aria-selected="true"],
+ .gps-v2-tabs>button[aria-pressed="true"],
+ .gd-tabs button[aria-pressed="true"],
+ .rr-demo-buttons button[aria-pressed="true"],
+ .s2-choice-row button[aria-pressed="true"],
+ .ex-switch button[aria-pressed="true"],
+ .cp-mode-button.active,
+ .home-v3 .dashboard-edit-toolbar .btn.primary,
+ .record-v3 .rv-main-button,
+ .gps-v2-primary,
+ .rr-page .rr-foot-actions .rr-save:not(:disabled),
+ .cp-button.primary
+){
+ background:var(--rl-button-bright)!important;
+ color:var(--rl-button-bright-text)!important;
+ border-color:var(--rl-button-bright-border)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+/* Segment captions/indicators must not retain old white/cyan text on new cyan
+   fills. Scope descendants to the same named components only. */
+:is(
+ .rv4-tabs button[aria-selected="true"],
+ .cp-mode-button.active,
+ .rr-demo-buttons button[aria-pressed="true"]
+) :is(span,small,strong,b,em){
+ color:inherit!important;
+ -webkit-text-fill-color:inherit;
+}
+/* Selected topic uses a dark teal card, not a bright action; keep its fill
+   while ensuring its small index and arrow are readable on that background. */
+.ex-topic.is-picked :is(span,strong,b){
+ color:#eaffff!important;
+}
+/* Focus remains visible even on a bright cyan surface. */
+:is(
+ .record-v3 .rv-choice,
+ .record-v3 .rv-main-button,
+ .rr-page .rr-foot-actions .rr-save,
+ .cp-button,
+ .gps-v2-tabs>button,
+ .rv4-tabs button,
+ .ex-topic
+):focus-visible{
+ outline:3px solid var(--rl-button-focus);
+ outline-offset:3px;
+}
+/* Disabled controls must not masquerade as confirmed actions; preserve
+   legibility without forcing black labels onto dark disabled backgrounds. */
+.rr-page .rr-foot-actions .rr-save:disabled{
+ opacity:1!important;
+ background:#204657!important;
+ color:#d7e9ee!important;
+ border-color:#608493!important;
+ -webkit-text-fill-color:#d7e9ee;
+}
+@media(prefers-reduced-motion:reduce){
+ :is(.record-v3 .rv-main-button,.rr-page .rr-foot-actions .rr-save){transition:none}
+}
