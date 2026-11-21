@@ -36,7 +36,7 @@ const paths=[
  ['condition','condition','#condition-journey'],
  ['consultation','consultation','#runload-consultation'],
  ['learning','learning','.lr-root'],
- ['measurement','measurement','body']
+ ['measurement','measurement','[data-measurement-v2]']
 ];
 const findings=[],failures=[];
 async function scan(page,screen,language,width,phase){
@@ -82,6 +82,7 @@ async function scan(page,screen,language,width,phase){
     const threshold=size>=24||(size>=18.66&&bold)?3:4.5;
     const label=btn.className?.baseVal??btn.className??'';
     all.push({screen,language,width,phase,selector:btn.tagName.toLowerCase()+'#'+btn.id+'.'+String(label).replace(/\s+/g,'.').slice(0,90),
+     context:String(btn.closest('.rv4-view-tabs,.rv4-mobile-tabs,.rv4-actions,.rr-foot-actions,.rv4-rof-correct-form,.rv4-question-continuation,.gps-v2-tabs,.rv4-tabs,.record-v3,.ex-topic-set,.s2-choice-row,.cp-mode-button')?.className||'').slice(0,100),
      text,foreground:low.fg,background:font.backgroundColor,gradient:font.backgroundImage.slice(0,160),
      minRatio:+low.min.toFixed(2),threshold,pressed:btn.getAttribute('aria-pressed')||btn.getAttribute('aria-selected')||'',
      disabled:btn.disabled||false,node:low.node,widthPx:+r.width.toFixed(1),heightPx:+r.height.toFixed(1)});
@@ -100,13 +101,27 @@ async function snap(page,screen,language,width,phase){
 }
 try{
  for(const [language,width] of [['en',390],['ja',390],['en',320]]){
-  const context=await browser.newContext({viewport:{width,height:844},reducedMotion:'reduce',serviceWorkers:'block'});
+  const ua=engine==='webkit'?
+   'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1':
+   'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36';
+  const context=await browser.newContext({viewport:{width,height:844},reducedMotion:'reduce',serviceWorkers:'block',userAgent:ua});
   await context.addInitScript(lang=>{
    localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:lang}));
    localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({textSize:'standard',motion:'system',language:lang}));
   },language);
   const page=await context.newPage();
-  for(const [name,path,selector] of paths){
+  await page.goto(base+'#/home',{waitUntil:'networkidle'});
+  const savedId=await page.evaluate(async()=>{
+   const [c,m]=await Promise.all([import('/ui/manualRunCanonical.js'),import('/ui/manualRunStore.js')]);
+   const base=await c.refresh();if(!base.ok)throw Error('canonical init: '+base.reason);
+   const x=await c.mutate(st=>m.saveManualRun(st,{date:'2026-11-20',distance:'5',
+     hours:'',minutes:'35',seconds:'',activityGait:'RUNNING',runningFormat:'UNKNOWN',
+     rofBefore:0,rofAfter:null,steps:'',stepsProvenance:'UNKNOWN',
+     courseName:'Audit-only course',memo:''}));
+   if(!x.ok)throw Error('audit record: '+x.reason);
+   return x.record.id;
+  });
+  for(const [name,path,selector] of [...paths,['result','result?record='+encodeURIComponent(savedId),'#runload-result-v4']]){
    try{
     await page.goto(base+'#/'+path,{waitUntil:'networkidle'});
     await page.locator(selector).first().waitFor({timeout:13000});
@@ -121,12 +136,29 @@ try{
     }else if(name==='settings'){
      const profile=page.locator('.s2-panel[data-settings-tone="mint"] details.s2-item').first();
      if(await profile.count()){await profile.locator('summary').click();await snap(page,name,language,width,'expanded');}
+    }else if(name==='home'&&width===390){
+     const edit=page.locator('.dashboard-edit-trigger').first();
+     if(await edit.count()){await edit.click();await snap(page,name,language,width,'editing');}
     }else if(name==='history'){
      const first=page.locator('[data-select-id]').first();
      if(await first.count()){await first.click();await snap(page,name,language,width,'selected');}
     }
+    if(name==='result'){
+     const tabs=page.locator('#runload-result-v4 [data-tab]');
+     if(await tabs.count()===3){await tabs.nth(1).click();await snap(page,name,language,width,'fatigue');}
+    }
     console.log('CONTRAST AUDIT '+name+' '+language+' '+width+': '+entries.length+' visible actions');
    }catch(err){failures.push({screen:name,language,width,error:String(err).slice(0,280)});console.log('WARN CONTRAST SCREEN '+name+' '+String(err).slice(0,180));}
+  }
+  if(width===390){
+   try{
+    await page.goto(base+'#/record',{waitUntil:'networkidle'});
+    await page.locator('[data-draft="distance"]').fill('5');
+    await page.locator('[data-draft="minutes"]').fill('30');
+    await page.locator('[data-demo-save]').click();
+    await page.locator('[data-record-review]').waitFor({timeout:12000});
+    await snap(page,'review',language,width,'ready-to-save');
+   }catch(err){failures.push({screen:'review',language,width,error:String(err).slice(0,280)});}
   }
   await context.close();
  }
