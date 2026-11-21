@@ -307,3 +307,9 @@ test('History advanced disclosure labels are translated without altering user da
  assert.equal(translateUiText('検索期間'),'Search Period');
  assert.equal(translateUiText('手入力'),'Manual Entry');
 });
+
+
+test('Profile Optional heading and description are bilingual and concise',()=>{
+ assert.equal(translateUiText('任意'),'Optional');
+ assert.equal(translateUiText('身長・体重・走る目的など'),'Height, Weight, Goals, and More');
+});
