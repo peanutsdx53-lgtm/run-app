@@ -313,3 +313,17 @@ test('Profile Optional heading and description are bilingual and concise',()=>{
  assert.equal(translateUiText('任意'),'Optional');
  assert.equal(translateUiText('身長・体重・走る目的など'),'Height, Weight, Goals, and More');
 });
+
+test('Course-only short labels do not change research or accessible full terms',()=>{
+ const grade={matches:s=>s==='.rv-course [data-rv-grade]'};
+ const mode={matches:s=>s==='.rv-course [data-rv-surface-mode]'};
+ const tile={matches:s=>s==='.rv-course .rv-surface-tile span:first-child'};
+ assert.equal(translateUiText('割合',{element:grade}),'By %');
+ assert.equal(translateUiText('1種類',{element:mode}),'Single');
+ assert.equal(translateUiText('複数・割合',{element:mode}),'Mixed %');
+ assert.equal(translateUiText('陸上トラック',{element:tile}),'Running Track');
+ assert.equal(translateUiText('締まった土道',{element:tile}),'Packed Dirt');
+ assert.equal(translateUiText('割合'),'Percentage');
+ assert.equal(translateUiText('複数・割合'),'Multiple Surfaces by Proportion');
+ assert.equal(translateUiText('締まった土道'),'Compacted Dirt Road');
+});
