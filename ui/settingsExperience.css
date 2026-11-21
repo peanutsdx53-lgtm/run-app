@@ -37,9 +37,8 @@ html.rl-text-large{font-size:112.5%}html.rl-reduce-motion *,html.rl-reduce-motio
 .s2-panel[data-settings-tone] .s2-item[open]>.s2-item-content{padding-top:17px}
 .s2-panel[data-settings-tone] .s2-item[open] .s2-item-icon{border-color:color-mix(in srgb,var(--tone) 48%,#285872);color:var(--tone)}
 .s2-panel[data-settings-tone] .s2-item[open]>.s2-item-content>.s3-profile-intro{margin:0 0 21px}
-.s3-profile-intro{display:flex;gap:13px;align-items:flex-start}
-.s3-optional-mark{font-size:11px;line-height:1.35;letter-spacing:.02em;white-space:nowrap;color:#b4fff0;background:#0b494d;border:1px solid #288e85;border-radius:999px;padding:7px 10px;font-weight:700}
-.s3-profile-intro p{margin:0!important;line-height:1.65!important;color:#adccd5;flex:1;font-size:12px}
+.s3-profile-intro{display:block}
+.s3-profile-intro p{margin:0!important;line-height:1.65!important;color:#adccd5;font-size:12px}
 .s3-profile-form{display:grid;gap:22px;min-width:0}
 .s3-field{display:flex;flex-direction:column;gap:10px;min-width:0}
 .s3-field>label,.s3-purpose-field>legend{font-size:14px;color:#e7f9fc;font-weight:760;line-height:1.4}
@@ -67,7 +66,7 @@ html.rl-text-large{font-size:112.5%}html.rl-reduce-motion *,html.rl-reduce-motio
 .s3-profile-action>p{font-size:11px!important;color:#83aaba;text-align:center;line-height:1.6!important;margin:0!important}
 .s2-item-content:has(.s3-profile-form){padding-bottom:26px!important}
 .s2-panel:has(.s3-profile-form) .s2-indicator{color:#84d5c4}
-@media(max-width:480px){.s3-profile-intro{flex-direction:column;gap:7px}.s3-field>label,.s3-purpose-field>legend{font-size:14px}.s3-purpose-option>span{font-size:12px}.s3-profile-form{gap:21px}.s2-panel[data-settings-tone] .s2-item[open]>.s2-item-content{padding-top:18px}.s2-item-content:has(.s3-profile-form){padding-left:2px!important;padding-right:2px!important}}
+@media(max-width:480px){.s3-field>label,.s3-purpose-field>legend{font-size:14px}.s3-purpose-option>span{font-size:12px}.s3-profile-form{gap:21px}.s2-panel[data-settings-tone] .s2-item[open]>.s2-item-content{padding-top:18px}.s2-item-content:has(.s3-profile-form){padding-left:2px!important;padding-right:2px!important}}
 @media(max-width:340px){.s3-profile-metrics{grid-template-columns:1fr}}
 /* A slightly brighter group identity, without competing with interactive states. */
 .s2-panel[data-settings-tone] .s2-panel-head{border-radius:11px;padding:8px 9px 10px;margin:-7px -8px 8px;background:linear-gradient(90deg,color-mix(in srgb,var(--tone) 9%,transparent),transparent 75%)}
@@ -140,3 +139,6 @@ html.rl-text-large{font-size:112.5%}html.rl-reduce-motion *,html.rl-reduce-motio
 .s2-page .s2-heading>.rl-screen-help{margin-left:auto;flex:0 0 44px;position:relative;z-index:52}
 .s2-page .s2-heading>.rl-screen-help>p{right:0;left:auto;width:min(320px,calc(100vw - 32px));max-width:calc(100vw - 32px)}
 @media(max-width:800px){.s2-page .s2-heading{flex-wrap:nowrap;gap:9px}}
+
+/* Profile optionality is expressed once at the accordion heading, like Record's section label. */
+.s2-panel[data-settings-tone="mint"] .s2-item:has(.s3-profile-form)>summary .s2-indicator{color:#adcbd8;font-size:clamp(11px,2.7vw,12px);font-weight:650;white-space:nowrap;flex:0 0 auto}
