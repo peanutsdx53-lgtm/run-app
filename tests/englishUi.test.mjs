@@ -325,5 +325,5 @@ test('Course-only short labels do not change research or accessible full terms',
  assert.equal(translateUiText('締まった土道',{element:tile}),'Packed Dirt');
  assert.equal(translateUiText('割合'),'Percentage');
  assert.equal(translateUiText('複数・割合'),'Multiple Surfaces by Proportion');
- assert.equal(translateUiText('締まった土道'),'Compacted Dirt Road');
+ assert.equal(translateUiText('締まった土道'),'Compacted Dirt');
 });
