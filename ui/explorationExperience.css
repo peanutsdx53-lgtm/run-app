@@ -250,6 +250,11 @@
  background:radial-gradient(circle at 32% 18%,#168997,#0b4457 66%,#08283d);
  box-shadow:0 0 0 9px #55e5d00d,0 0 0 23px #47eccc07,0 0 60px #40ddce4a
 }
+/* Centre bilingual core text without moving the constellation orb. */
+.ex-page .ex-constellation .ex-core > span{
+ display:block;width:100%;min-width:0;padding-inline:4px;
+ text-align:center;line-height:1.35;overflow-wrap:anywhere
+}
 .ex-page .ex-constellation .ex-node{
  position:absolute!important;left:var(--ex-x)!important;top:var(--ex-y)!important;
  transform:translate(-50%,-50%)!important;

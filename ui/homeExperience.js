@@ -255,7 +255,7 @@ export function trendCard(savedRuns={ok:true,records:[]}){
 export function discoveryCard(notes=[]){
  const latest=Array.isArray(notes)?notes.filter(x=>x&&typeof x.text==='string'&&x.text.trim()&&typeof x.createdAt==='string').slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt))[0]:null;
  return '<section class="hx-card hx-optional">'+head('探究の続き','leaf')
-  +(latest?'<p class="hx-discovery-note">'+escape(latest.text.slice(0,140))+'</p><p class="hx-discovery-date">'+escape(latest.createdAt.slice(0,10))+'に自分で残した気づき</p>':'<p>気になるテーマを自由に調べられます。メモは任意です。</p>')
+  +(latest?'<p class="hx-discovery-note" data-user-authored>'+escape(latest.text.slice(0,140))+'</p><p class="hx-discovery-date">'+escape(latest.createdAt.slice(0,10))+'に自分で残した気づき</p>':'<p>気になるテーマを自由に調べられます。メモは任意です。</p>')
   +'<a class="hx-condition-explore" href="#/exploration-tree">探究を開く ›</a></section>';
 }
 export function conditionPanel(storage,selectedDate=todayLocal(),deletePendingDate=null){
