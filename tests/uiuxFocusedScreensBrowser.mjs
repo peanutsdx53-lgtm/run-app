@@ -121,7 +121,7 @@ try{
     assert.ok(Math.abs(tiles[0].y-tiles[1].y)<2,
      'surface tiles use two columns at normal text '+JSON.stringify(tiles));
     assert.ok(tiles.every(x=>x.scroll<=x.client+2),'surface tile text is not cut');
-    assert.equal(await course.locator('[data-rv-surface="soil"]').getAttribute('aria-label'),'Compacted Dirt Road',
+    assert.equal(await course.locator('[data-rv-surface="soil"]').getAttribute('aria-label'),'Compacted Dirt',
      'full surface name is available to assistive technology');
     await capture(page,'course-mixed',lang,width);
     await course.locator('[data-rv-surface-mode="UNKNOWN"]').click();
