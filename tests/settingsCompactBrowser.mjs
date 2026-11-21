@@ -76,6 +76,22 @@ try{
    if([320,390,414].includes(width)&&([320,390].includes(width)||font===100)){
     await page.screenshot({path:resolve(out,snap+'-overview.png'),fullPage:true,animations:'disabled'});
    }
+   const profile=rootNode.locator('.s2-panel[data-settings-tone="mint"] details.s2-item').first();
+   const profileHeader=profile.locator('summary'),profileStatus=profileHeader.locator('.s2-indicator');
+   await profileHeader.click();
+   await page.waitForFunction(lang=>{
+    const section=document.querySelector('.s2-panel[data-settings-tone="mint"] details.s2-item');
+    return section?.open&&section.querySelector('summary .s2-indicator')?.textContent?.trim()===(lang==='en'?'Optional':'任意');
+   },language,{timeout:9000});
+   assert.equal(await profile.locator('.s3-optional-mark').count(),0,'All Optional badge is absent');
+   assert.equal(await profile.locator('.s3-field label small').count(),0,'no repeated per-field Optional');
+   const statusBounds=await profileStatus.boundingBox(),chevronBounds=await profileHeader.locator('.s2-chevron').boundingBox();
+   assert.ok(statusBounds&&chevronBounds&&statusBounds.x>=-1&&
+    statusBounds.x+statusBounds.width<=chevronBounds.x+2&&chevronBounds.x+chevronBounds.width<=width+2,
+    'single Optional sits at Profile right without clipping '+JSON.stringify({width,language,font,statusBounds,chevronBounds}));
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),'expanded profile must not overflow');
+   if(width===390&&font===200)await page.screenshot({path:resolve(out,snap+'-profile.png'),fullPage:true,animations:'disabled'});
+   await profileHeader.click();
    const backup=rootNode.locator('details.s2-item').filter({has:page.locator('[data-dm-export]')});
    await backup.locator('summary').first().click();
    assert.equal(await backup.locator('details.dm-details').count(),2);
