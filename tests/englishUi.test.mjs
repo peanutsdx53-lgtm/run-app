@@ -327,3 +327,16 @@ test('Course-only short labels do not change research or accessible full terms',
  assert.equal(translateUiText('複数・割合'),'Multiple Surfaces by Proportion');
  assert.equal(translateUiText('締まった土道'),'Compacted Dirt');
 });
+
+
+test('Course shortened text has descriptive aria labels and English percentage editor copy',()=>{
+ const a={matches:sel=>sel==='.rv-course [data-rv-grade],.rv-course [data-rv-surface-mode]'};
+ const n={matches:sel=>sel==='.rv-course [data-rv-slope-number],.rv-course [data-rv-surface-value]'};
+ const strong={matches:sel=>sel==='.rv-course .rv-fine-top > strong'};
+ assert.equal(translateUiText('上り・下りの距離割合を設定',{element:a,attribute:'aria-label'}),'Set Uphill and Downhill Distance Shares');
+ assert.equal(translateUiText('複数路面の距離割合を設定',{element:a,attribute:'aria-label'}),'Set Distance Shares for Multiple Surfaces');
+ assert.equal(translateUiText('未入力',{element:n,attribute:'placeholder'}),'—');
+ assert.equal(translateUiText('未入力'),'Not Entered');
+ assert.equal(translateUiText('上りを調整',{element:strong}),'Adjust Uphill');
+ assert.equal(translateUiText('締まった土道を調整',{element:strong}),'Adjust Compacted Dirt');
+});
