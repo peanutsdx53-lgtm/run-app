@@ -104,6 +104,8 @@ try{
     const grade=course.locator('.rv-step-slope .rv-choice-row.rv-four .rv-choice');
     const mode=course.locator('.rv-step-surface .rv-choice-row .rv-choice');
     assert.deepEqual(await grade.allInnerTexts(),['Unknown','Flat','By %','Segments']);
+    await page.waitForFunction(()=>document.querySelector('[data-rv-grade="SUMMARY"]')?.getAttribute('aria-label')==='Set Uphill and Downhill Distance Shares',null,{timeout:9000});
+    assert.equal(await course.locator('[data-rv-surface-mode="MIXED"]').getAttribute('aria-label'),'Set Distance Shares for Multiple Surfaces');
     assert.deepEqual(await mode.allInnerTexts(),['Unknown','Single','Mixed %']);
     const rects=async sel=>course.locator(sel).evaluateAll(els=>els.map(el=>{
      const r=el.getBoundingClientRect();
@@ -130,6 +132,9 @@ try{
      const x=getComputedStyle(el);return {fg:x.color,bg:x.backgroundColor,pressed:el.getAttribute('aria-pressed')};
     });
     assert.deepEqual(selectedStyle,{fg:'rgb(5, 41, 57)',bg:'rgb(57, 207, 208)',pressed:'true'});
+    await page.waitForFunction(()=>document.querySelector('.rv-step-slope .rv-fine-top>strong')?.textContent==='Adjust Uphill',null,{timeout:9000});
+    assert.equal(await course.locator('[data-rv-slope-number]').getAttribute('placeholder'),'—',
+     'zoomed numeric blank placeholder must fit without implying zero');
     await capture(page,'course-selected',lang,width);
     await page.evaluate(()=>document.documentElement.style.fontSize='200%');
     const zoom=await rects('.rv-step-slope .rv-choice-row.rv-four .rv-choice');
