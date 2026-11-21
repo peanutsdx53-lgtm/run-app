@@ -109,6 +109,11 @@ try{
     assert.equal(label,title+(['trend','discovery'].includes(id)?' (Hidden)':''),
       'English editor title and hidden state: '+id);
    }
+   if(language==='en'){
+    const discovery=page.locator('[data-home-dashboard-id="discovery"]');
+    assert.equal((await discovery.locator('.hx-head h2').innerText()).trim(),'Continue Exploring');
+    assert.equal((await discovery.locator('.hx-card > p').first().innerText()).trim(),'Explore topics freely. Notes are optional.');
+   }
    const hiddenName=page.locator('[data-home-dashboard-id="trend"] .widget-edit-label');
    assert.match((await hiddenName.innerText()).trim(),language==='en'?/\(Hidden\)$/:/（非表示）$/);
    const showWidget=page.locator('[data-widget-id="trend"][data-widget-action="toggle"]');
@@ -136,6 +141,15 @@ try{
     assert.ok(m.offset<=3,'Explore switch label is off-centre '+JSON.stringify({width,language,m}));
     assert.ok(m.right<=width+2,'Explore switch exceeds viewport '+JSON.stringify({width,language,m}));
    }
+   const core=await page.locator('.ex-core').evaluate(el=>{
+    const label=el.querySelector('span'),a=el.getBoundingClientRect(),b=label.getBoundingClientRect();
+    return {align:getComputedStyle(label).textAlign,
+      centre:Math.abs((a.left+a.right-b.left-b.right)/2),
+      overflow:label.scrollWidth-label.clientWidth};
+   });
+   assert.equal(core.align,'center','all words above Explore must be centered');
+   assert.ok(core.centre<=1.5,'Explore sphere caption off-center '+JSON.stringify({width,language,core}));
+   assert.ok(core.overflow<=2,'Explore sphere caption is clipped '+JSON.stringify({width,language,core}));
    await page.screenshot({path:resolve(output,'explore-field-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    await page.locator('[data-ex-tab="catalog"]').click();
    assert.equal(await page.locator('.ex-count,.ex-catalog-group-head small').count(),0);
