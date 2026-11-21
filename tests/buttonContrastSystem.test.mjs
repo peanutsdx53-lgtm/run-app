@@ -24,7 +24,7 @@ test('Bright action text uses dark ink with normal text contrast >= 4.5:1',()=>{
 test('Result shadow root has matching semantic button colors and no unrelated scientific changes',()=>{
  const result=read('ui/resultExperience.js');
  assert.ok(result.includes('RESULT_BUTTON_CONTRAST_STYLES'));
- assert.ok(result.includes("RESULT_BUTTON_CONTRAST_STYLES+RESULT_T01_READABILITY_STYLES"));
+ assert.ok(result.includes("RESULT_BUTTON_CONTRAST_STYLES+RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES"));
  for(const term of ['.rv4-view-tabs button.active','.rv4-mobile-tabs button.active',
   '.rv4-actions [data-download]','.rv4-question-continuation button'])
  assert.ok(result.includes(term),'missing result-side button '+term);
