@@ -24,6 +24,10 @@ const out=resolve(root,'audit-output','stage5-history-result');
 await mkdir(out,{recursive:true});
 const report=[];
 const sanitize=(x)=>x.replaceAll(/[^a-z0-9-]/ig,'-');
+async function revealAdvancedFilters(history){
+ const btn=history.locator('[data-history-advanced]');
+ if(await btn.getAttribute('aria-expanded')!=='true')await btn.click();
+}
 async function capture(page,width,language,stage){
  const metrics=await page.evaluate(()=>{
   const h=document.querySelector('#runload-history-v2')?.shadowRoot;
@@ -185,6 +189,7 @@ try{
    await capture(page,width,language,'03-result-gps-compare-unavailable');
    await result.locator('.rv4-history-back').click();
    await history.waitFor();
+   await revealAdvancedFilters(history);
    await history.locator('[data-record-source="MANUAL"]').click();
    assert.equal(await rows.count(),2,'manual filter retains run and rest');
    await history.locator('[data-select-id="'+saved.manualId+'"]').click();
@@ -206,6 +211,7 @@ try{
    await capture(page,width,language,'06-unknown-gps-fail-closed');
    if(width===390){
     await page.goto(base+'history',{waitUntil:'networkidle'});
+    await revealAdvancedFilters(history);
     await history.locator('[data-record-source="GPS_V2"]').click();
     await history.locator('[data-select-id="'+saved.gpsId+'"]').click();
     page.once('dialog',async d=>d.accept());
@@ -213,6 +219,7 @@ try{
     await page.waitForFunction(id=>!document.querySelector('#runload-history-v2')?.shadowRoot?.querySelector('[data-select-id="'+id+'"]'),saved.gpsId);
     await page.reload({waitUntil:'networkidle'});
     assert.equal(await history.locator('[data-select-id="'+saved.gpsId+'"]').count(),0,'deletion persisted');
+    await revealAdvancedFilters(history);
     await history.locator('[data-record-source="MANUAL"]').click();
     assert.equal(await history.locator('[data-select-id="'+saved.manualId+'"]').count(),1,'manual run preserved after GPS delete');
     await capture(page,width,language,'07-deleted-gps-manual-survives');
