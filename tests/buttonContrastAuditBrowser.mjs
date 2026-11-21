@@ -163,6 +163,15 @@ try{
   await context.close();
  }
  const ranked=findings.filter(x=>!x.disabled&&x.minRatio<x.threshold).sort((a,b)=>a.minRatio-b.minRatio);
+ const critical=[['record','rv-main-button'],['record','rv-choice.is-selected'],
+  ['rof','rof-v4-before-tab'],['consultation','cp-mode-button.active'],
+  ['course','rv-choice.is-selected']];
+ for(const [screen,identity] of critical){
+  const matches=findings.filter(row=>row.screen===screen&&row.selector.includes(identity));
+  assert.ok(matches.length>=2,'must observe '+screen+' '+identity);
+  assert.ok(matches.every(row=>row.minRatio>=4.5),
+   'primary or selected button below normal text contrast: '+JSON.stringify(matches.filter(row=>row.minRatio<4.5)));
+ }
  const grouped={};for(const issue of ranked){const key=issue.screen;grouped[key]=(grouped[key]||0)+1;}
  const report={engine,scanned:findings.length,belowThreshold:ranked.length,issuesByScreen:grouped,
   visibleButtonRecords:findings,suspectedLowContrast:ranked,routeErrors:failures,
@@ -170,5 +179,7 @@ try{
  await writeFile(resolve(out,'contrast-audit.json'),JSON.stringify(report,null,2));
  console.log('CONTRAST SUMMARY '+JSON.stringify({engine,scanned:findings.length,belowThreshold:ranked.length,byScreen:grouped,errors:failures}).slice(0,2600));
  console.log('LOW CONTRAST EXAMPLES '+JSON.stringify(ranked.slice(0,70)).slice(0,14500));
+ assert.ok(findings.length>140,'auditor must observe active real screens');
+ assert.deepEqual(failures,[],'all real routes including result and review must load');
  assert.ok(findings.length>40,'button audit must observe actual rendered actions');
 }finally{await browser.close();await new Promise(ok=>server.close(ok));}
