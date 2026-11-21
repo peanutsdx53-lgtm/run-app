@@ -60,3 +60,16 @@ test('source help and original research content are still available on knowledge
  assert.match(html,/data-ex-action="share"/);
  assert.doesNotMatch(html,/class="ex-learning-lead"/);
 });
+
+test('Browse Topics omits numeric badges but retains all topics and search filtering',()=>{
+ const ui=makeUi(storage);ui.tab='catalog';
+ const html=render(ui,ctx);
+ assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,7);
+ assert.equal((html.match(/data-ex-pick-topic=/g)||[]).length,28);
+ assert.doesNotMatch(html,/class="ex-count"|<small>\d+ テーマ<\/small>/);
+ ui.search='睡眠';
+ const filtered=render(ui,ctx);
+ assert.ok(filtered.includes('data-ex-pick-topic="睡眠"'));
+ assert.equal((filtered.match(/data-ex-pick-topic=/g)||[]).length,1);
+ assert.doesNotMatch(filtered,/class="ex-count"|<small>\d+ テーマ<\/small>/);
+});
