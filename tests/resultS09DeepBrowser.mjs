@@ -145,6 +145,10 @@ try{
     if(width<=800)await result.locator('[data-tab="'+tab+'"]').click();
     await capture(page,{language,width,zoom,tab,view:'front'});
     if(tab==='body'){
+     const caption=await result.locator('.rv4-reading > small').innerText();
+     assert.equal(caption,language==='en'?'Selected Region':'選択中の部位',
+      'T10: result reference card represents one region in either language');
+
      const sources=result.locator('.rv4-hero-sources');
      if(width===320&&zoom===200)assert.equal(await sources.evaluate(e=>e.open),false,
        'T02: long source descriptions must not be permanently exposed on a narrow screen');

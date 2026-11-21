@@ -221,6 +221,12 @@ export const ENGLISH_UI_TEXT=Object.freeze({
 export function translateUiText(text,context={}){
  const raw=String(text??'');const trimmed=raw.trim();
  if(context.element?.closest?.('[data-user-authored]'))return raw;
+ // S09 T10: this card describes one selected region. The conditions screen
+ // uses the same Japanese words for a multiple-region picker, so its plural
+ // English dictionary entry must remain untouched.
+ if(trimmed==='選択中の部位'&&
+    context.element?.matches?.('.rv4-reading > small')&&
+    context.element?.closest?.('.rv4-body'))return raw.replace(trimmed,'Selected Region');
  const exact=Object.prototype.hasOwnProperty.call(ENGLISH_UI_TEXT,trimmed)?ENGLISH_UI_TEXT[trimmed]:null;
  const translated=exact??translateResidualDynamic(trimmed,context);
  return translated===null?raw:raw.replace(trimmed,translated);
