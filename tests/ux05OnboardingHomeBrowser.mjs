@@ -97,6 +97,25 @@ try{
   assert.equal((await edit.innerText()).trim(),lang==='en'?'Edit':'編集');
   for(const route of ['course','learning','consultation'])
    assert.equal(await page.locator('.hx-shortcuts a[href="#/'+route+'"]').count(),1,'original Home shortcut '+route);
+  if(width<=390&&zoom===200){
+   // Check actual rendered text line boxes, not just document overflow.
+   const headings=await page.evaluate(()=>{
+    const read=selector=>{
+     const el=document.querySelector(selector);
+     const range=document.createRange();range.selectNodeContents(el);
+     const r=el.getBoundingClientRect();
+     return {lines:range.getClientRects().length,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,right:r.right};
+    };
+    const controls=[...document.querySelectorAll('.home-heading-actions button')].map(el=>el.getBoundingClientRect().right);
+    return {home:read('.home-head h1'),condition:read('.hx-condition .hx-head h2'),
+      controlsRight:controls};
+   });
+   assert.equal(headings.home.lines,1,'Home title must not split into individual characters '+JSON.stringify({lang,width,headings}));
+   assert.equal(headings.condition.lines,1,'Condition title must not break midword '+JSON.stringify({lang,width,headings}));
+   for(const key of ['home','condition'])
+    assert.ok(headings[key].scrollWidth<=headings[key].clientWidth+2,'full heading must fit without horizontal clipping '+JSON.stringify({key,lang,width,headings}));
+   assert.ok(headings.controlsRight.every(x=>x<=width+2),'Home edit/help controls may not leave screen');
+  }
   assert.match(await page.locator('.hx-condition-empty').innerText(),lang==='en'?/Missing Days Are Not Treated as Zero Hours/:/未記録日は0時間として扱いません/);
   if(zoom===200&&(width===320||width===390||width===1440))
    await page.screenshot({path:resolve(out,engine+'-'+lang+'-'+width+'-home.png'),animations:'disabled',fullPage:false});
