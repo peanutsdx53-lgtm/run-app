@@ -31,11 +31,11 @@ test('Result shadow root has matching semantic button colors and no unrelated sc
 });
 test('PWA loads the new semantic button stylesheet before iOS input safeguards and caches its exact URL',()=>{
  const html=read('index.html'),sw=read('sw.js');
- const a='ui/buttonContrastSystem.css?v=20261122-mobile-controls-v1';
+ const a='ui/buttonContrastSystem.css?v=20261122-gait-learning-type-v1';
  assert.ok(html.includes(a));
  assert.ok(html.indexOf(a)<html.indexOf('mobileInputFocus.css'),'preserve iOS input CSS last');
  assert.ok(sw.includes(a)&&sw.includes('ui/buttonContrastSystem.css'));
- assert.ok(sw.includes('runload-ui-next-shell-20261122-mobile-controls-v1'));
- assert.ok(html.includes('app.js?v=20261122-mobile-controls-v1'));
+ assert.ok(sw.includes('runload-ui-next-shell-20261122-gait-learning-type-v1'));
+ assert.ok(html.includes('app.js?v=20261122-gait-learning-type-v1'));
  assert.ok(sw.includes('resultExperience.js?v=20261121-button-contrast-v1'));
 });
