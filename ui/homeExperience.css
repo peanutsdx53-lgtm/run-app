@@ -839,3 +839,17 @@ html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
   flex:0 0 auto;margin-left:auto;
  }
 }
+
+
+/* UX05 second visual counterexample: even after headings were repaired,
+ * Japanese 320px / 200% labels for Sleep, Waking Condition and Days Logged
+ * collided across the narrow three-column condition metric row. Use the
+ * same two-column/last-row pattern already present for English, and allow
+ * full-size text to wrap. No zero or missing-value treatment is changed. */
+@media(max-width:390px){
+ #app .home-v3 .hx-condition-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #app .home-v3 .hx-condition-stats > div:last-child{grid-column:1/-1}
+ #app .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
+  white-space:normal;overflow-wrap:anywhere;line-height:1.4;
+ }
+}
