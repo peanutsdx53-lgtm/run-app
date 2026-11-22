@@ -20,6 +20,8 @@ test('both Gait choice groups render two actionable options followed by Unknown'
  const css=read('ui/buttonContrastSystem.css');
  assert.match(css,/\.gait-v4 \.g4-choice button:last-child\{\s*grid-column:1\/-1/);
  assert.match(css,/\.gait-v4 \.g4-choice\{\s*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/);
+ assert.match(css,/::-webkit-inner-spin-button/);
+ assert.match(markup,/data-draft="steps" type="number"/);
 });
 
 test('changing option visual order does not affect running/walking input validity',()=>{
