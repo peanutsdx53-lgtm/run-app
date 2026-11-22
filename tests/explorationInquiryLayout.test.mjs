@@ -35,22 +35,26 @@ test('all 28 themes share one question and a three-section inquiry flow, with En
   if(!LEARNING_TOPICS[key])assert.ok(EXPLORATION_DRAFT_GUIDES[key],key+' must keep observation scope');
  }
 });
-test('dedicated source inquiry appears in the selected topic only, never above the discovery selector',()=>{
+test('specialist inquiry stays out of general themes and appears only with explicitly selected run',()=>{
  for(const [category,topic,selector] of important){
   const ui=makeUi(storage);ui.selected=category;ui.topic=topic;
-  const html=render(ui,ctx);
-  const discovery=html.indexOf('class="ex-switch"'),focus=html.indexOf('class="ex-focus"');
-  const pos=html.indexOf(selector);
-  assert.ok(discovery>=0&&focus>discovery&&pos>focus,category+'|'+topic+' inquiry should be inside focus card');
-  assert.equal((html.match(new RegExp(selector,'g'))||[]).length,1,category+'|'+topic);
-  assert.ok(html.includes('class="ex-inline-inquiry"'),category+'|'+topic);
-  assert.doesNotMatch(html,/class="ex-e-kicker"|class="ex-e-prompt"|id="ex-e-t0[2-8]-title"/,
-   'embedded specialists must not repeat a second visible question');
+  const general=render(ui,ctx);
+  assert.doesNotMatch(general,new RegExp(selector),'general topic must not show a no-run notice '+topic);
+  assert.doesNotMatch(general,/class="ex-inline-inquiry"/);
+  const explicit={...ctx,focusRunId:'run-v2-audit',focusRun:{id:'run-v2-audit',source:'manual',type:'run',schema:2,date:'2026-11-20',distanceKm:5,durationSeconds:2100,draft:{}}};
+  const selected=render(ui,explicit);
+  const discovery=selected.indexOf('class="ex-switch"'),focus=selected.indexOf('class="ex-focus"');
+  const pos=selected.indexOf(selector);
+  assert.ok(discovery>=0&&focus>discovery&&pos>focus,category+'|'+topic+' inquiry must stay inside focus card');
+  assert.equal((selected.match(new RegExp(selector,'g'))||[]).length,1,category+'|'+topic);
+  assert.ok(selected.includes('class="ex-inline-inquiry"'),category+'|'+topic);
+  assert.doesNotMatch(selected,/class="ex-e-kicker"|class="ex-e-prompt"|id="ex-e-t0[2-8]-title"/,
+   'embedded inquiry must not repeat a second question');
+  assert.match(selected,/class="ex-e-boundary-disclosure"/,'science caveat remains accessible');
  }
  const ui=makeUi(storage);ui.selected='03';ui.topic='気温・天候';
  const html=render(ui,ctx);
- assert.ok(html.includes('data-e-state="NO_RECORD"'),'weather topic must not invent a linked record');
- assert.equal((html.match(/data-e-condition-reveal/g)||[]).length,0,'private data must not be revealed by default');
+ assert.doesNotMatch(html,/data-e-condition-reveal|data-e-condition-inquiry/,'no private read on general topic');
 });
 test('source help and original research content are still available on knowledge themes',()=>{
  const ui=makeUi(storage);ui.selected='01';ui.topic='距離・時間・ペース';
