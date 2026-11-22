@@ -1,0 +1,200 @@
+/* Optional record screens: one role, shape, alignment and responsive flow.
+ * Body & Equipment is the visual reference. Do not recolor other secondary,
+ * selected, disabled or destructive actions. 2026-11-22 */
+.rl-record-footer{
+ display:flex;
+ width:100%;
+ min-width:0;
+ box-sizing:border-box;
+ align-items:stretch;
+ justify-content:flex-end;
+ gap:12px;
+ margin:16px 0 0;
+ padding:0;
+}
+:is(.record-v3,.cx-page) .rl-record-footer .rl-record-return,
+.record-v3.rv-course .rl-record-footer .rl-record-return{
+ box-sizing:border-box;
+ display:inline-flex!important;
+ flex:0 1 320px;
+ align-items:center;
+ justify-content:center;
+ gap:10px;
+ width:min(100%,320px)!important;
+ max-width:100%!important;
+ height:auto!important;
+ min-height:52px!important;
+ min-width:0!important;
+ padding:12px 16px!important;
+ border-radius:13px!important;
+ border:1px solid #7bf5eb!important;
+ background:linear-gradient(100deg,#27b2d6,#11c6b5)!important;
+ color:#052939!important;
+ -webkit-text-fill-color:#052939!important;
+ box-shadow:0 8px 21px #001a2770,inset 0 1px #e3ffff51!important;
+ font-family:inherit!important;
+ font-size:clamp(14px,2.8vw,16px)!important;
+ font-weight:800!important;
+ line-height:1.4!important;
+ letter-spacing:0!important;
+ text-align:center;
+ text-decoration:none!important;
+ white-space:normal!important;
+ overflow-wrap:anywhere;
+ cursor:pointer;
+ transition:filter .15s ease,box-shadow .15s ease;
+}
+.rl-record-footer .rl-record-return span[aria-hidden]{
+ color:inherit;
+ -webkit-text-fill-color:inherit;
+ flex:0 0 auto;
+ font-weight:800;
+ font-size:1.08em;
+}
+.rl-record-footer .rl-record-return:focus-visible{
+ outline:3px solid #e2fffc!important;
+ outline-offset:3px!important;
+}
+.rl-record-footer .rl-record-return:not(:disabled):not([aria-disabled="true"]):hover{
+ filter:brightness(1.05);
+}
+.rl-record-footer .rl-record-return:disabled,
+.rl-record-footer .rl-record-return[aria-disabled="true"]{
+ opacity:1!important;
+ background:#214555!important;
+ border-color:#668e9b!important;
+ box-shadow:none!important;
+ color:#d5e6eb!important;
+ -webkit-text-fill-color:#d5e6eb!important;
+ cursor:not-allowed!important;
+}
+/* These are all footer actions. A button is never nested in a separate
+ * content column; the full-width action lives at the content's lower edge. */
+.record-v3.rv-course .rv-course-return{align-self:stretch}
+.record-v3.rv-course .rv-summary-actions{
+ display:block!important;
+ grid-template-columns:none!important;
+}
+.record-v3.rv-course .rv-summary-actions .rv-commit-group--save{
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ gap:10px;
+}
+.record-v3.rv-course .rv-summary-actions .rv-course-save-actions{
+ display:flex!important;
+ justify-content:flex-end;
+ max-width:100%;
+}
+.record-v3.rv-course .rv-summary-actions .rv-course-save-actions button{
+ box-sizing:border-box;
+ flex:0 1 320px;
+ min-width:0;
+ width:min(100%,320px);
+ max-width:100%;
+ min-height:48px;
+ background:#174d60!important;
+ color:#e8f8fc!important;
+ -webkit-text-fill-color:#e8f8fc;
+ border-color:#6daebd!important;
+ box-shadow:none!important;
+ white-space:normal;
+ overflow-wrap:anywhere;
+}
+.record-v3.rv4-page .rv4-next-actions.rl-record-footer{
+ display:flex!important;
+ grid-template-columns:none!important;
+}
+.gait-v4 .g4-footer.rl-record-footer{
+ display:flex!important;
+ justify-content:flex-end!important;
+}
+.cx-page .cx-footer.rl-record-footer{
+ display:flex!important;
+ justify-content:flex-end!important;
+}
+.environment-v4 .e4-bottom.rl-record-footer{
+ display:flex!important;
+ flex-direction:column;
+ align-items:flex-end!important;
+ gap:12px;
+}
+.environment-v4 .e4-leave-warning[hidden]{display:none!important}
+.environment-v4 .e4-leave-warning{
+ box-sizing:border-box;
+ display:grid;
+ gap:12px;
+ width:100%;
+ min-width:0;
+ padding:14px;
+ border:1px solid #e6bc77;
+ border-radius:13px;
+ background:#332e28;
+ color:#f8e8ce;
+}
+.environment-v4 .e4-leave-warning p{
+ padding:0;
+ margin:0;
+ font-size:clamp(13px,2.7vw,15px);
+ font-weight:650;
+ line-height:1.65;
+ overflow-wrap:anywhere;
+}
+.environment-v4 .e4-leave-choices{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;
+}
+.environment-v4 .e4-leave-choices :is(button,a){
+ box-sizing:border-box;
+ min-width:0;
+ min-height:48px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ border:1px solid #8aaab6;
+ border-radius:11px;
+ padding:11px 12px;
+ font:inherit;
+ font-weight:750;
+ font-size:clamp(13px,2.7vw,15px);
+ line-height:1.45;
+ text-decoration:none;
+ white-space:normal;
+ overflow-wrap:anywhere;
+ cursor:pointer;
+ background:#174555;
+ color:#eafaff;
+}
+.environment-v4 .e4-leave-choices [data-e4-apply-return]{
+ background:linear-gradient(100deg,#27b2d6,#11c6b5);
+ border-color:#7bf5eb;
+ color:#052939;
+}
+.environment-v4 .e4-leave-choices :is(button,a):focus-visible{
+ outline:3px solid #f8f2bd;
+ outline-offset:2px;
+}
+@media(max-width:800px){
+ .rl-record-footer{
+  width:100%;
+  margin-top:16px;
+  margin-bottom:16px;
+ }
+ :is(.record-v3,.cx-page) .rl-record-footer .rl-record-return,
+ .record-v3.rv-course .rl-record-footer .rl-record-return{
+  flex:1 1 100%;
+  width:100%!important;
+  max-width:100%!important;
+ }
+ .record-v3.rv-course .rv-summary-actions .rv-course-save-actions button{
+  width:100%;
+  flex:1 1 100%;
+ }
+}
+@media(max-width:520px){
+ .environment-v4 .e4-leave-choices{grid-template-columns:minmax(0,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+ .rl-record-footer .rl-record-return{transition:none}
+}
