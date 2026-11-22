@@ -159,7 +159,7 @@ try{
     }
     const entries=await scan(page,name,language,width,'default');
     findings.push(...entries);
-    if(width===390)await page.screenshot({path:resolve(out,name+'-default-'+language+'-'+width+'.png'),animations:'disabled',fullPage:name==='course'||name==='settings'});
+    if(width===390||width===1024&&['course','rof','gait','environment','body'].includes(name))await page.screenshot({path:resolve(out,name+'-default-'+language+'-'+width+'.png'),animations:'disabled',fullPage:['course','rof','gait','environment','body','settings'].includes(name)});
     if(name==='consultation'&&language==='en'){
      const target=page.locator('#cp-target');
      const options=await target.locator('option').allTextContents();
@@ -211,6 +211,27 @@ try{
      await page.locator('[data-e4-weather="SUN"]').click();
      await page.locator('[data-e4-flag="WIND"]').click();
      await snap(page,name,language,width,'selected');
+     await page.locator('[data-e4-done]').click();
+     await page.locator('[data-e4-leave-warning]').waitFor({state:'visible'});
+     assert.ok(page.url().includes('#/record-environment'),'pending temporary weather must prevent navigation');
+     if(language==='en'){
+      assert.match(await page.locator('[data-e4-leave-warning]').innerText(),
+       /Selected weather and conditions have not been added/i);
+     }
+     await snap(page,name,language,width,'pending-return');
+     await page.locator('[data-e4-apply-return]').click();
+     await page.waitForURL('**/#/record',{timeout:8000});
+     await page.goto(base+'#/record-environment',{waitUntil:'networkidle'});
+     const original=await page.locator('[data-draft="environmentNote"]').inputValue();
+     assert.match(original,/【本人申告の環境選択】天候：晴れ、風が強い/,'only explicit apply records weather');
+     await page.locator('[data-e4-weather="RAIN"]').click();
+     await page.locator('[data-e4-done]').click();
+     await page.locator('[data-e4-leave-warning]').waitFor({state:'visible'});
+     await page.locator('[data-e4-discard-return]').click();
+     await page.waitForURL('**/#/record',{timeout:8000});
+     await page.goto(base+'#/record-environment',{waitUntil:'networkidle'});
+     assert.equal(await page.locator('[data-draft="environmentNote"]').inputValue(),original,
+      'Return Without Applying preserves note and discards transient new weather');
     }else if(name==='body'){
      const selectedTab=page.locator('.cx-tab[aria-pressed="true"]').first();
      await selectedTab.waitFor({state:'visible'});
