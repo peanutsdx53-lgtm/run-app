@@ -121,7 +121,9 @@ try{
       await page.locator('.ex-dialog [data-ex-action="close"]').click();
      }
      if(await page.locator('[data-ex-action="learn-help"]').count()){
-      await page.locator('[data-ex-action="learn-help"]').first().click();
+      const sourceButton=page.locator('[data-ex-action="learn-help"]').first();
+      await sourceButton.evaluate(el=>{const parent=el.closest('details');if(parent)parent.open=true});
+      await sourceButton.click();
       await page.locator('.ex-dialog').waitFor({state:'visible'});
       await scan(page,mode,cat.id,topic,'learn-help');
       await page.locator('.ex-dialog [data-ex-action="close"]').click();
