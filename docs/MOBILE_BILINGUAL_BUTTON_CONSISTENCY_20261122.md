@@ -17,15 +17,15 @@ The user's evidence comes from the smartphone English interface; removal of redu
 - Environment: preserve the distinction between a temporary selection and applying it to the optional note; leave inactive or disabled controls visually distinct.
 - History: keep 2 period choices, source/type controls, saved records, and Shadow DOM. Brighten selected filter colors within the Shadow DOM rather than applying global document CSS.
 - GPS backup: keep the real input and its import handler. Use the app-translated wrapper label as the visible selection control instead of duplicating OS-native picker text, which follows the device locale.
-- Consultation and Learning: preserve their mode-selection behavior and readable neutral/white lesson panels. The role system changes bright actions, not text on every white/dark surface.
-- Body and Equipment: its layout/color treatment is left intact.
+- Consultation and Learning: preserve their mode-selection behavior and readable neutral/white lesson panels. The role system changes bright actions, not text on every white/dark surface. Visual inspection found a system-generated Consultation saved-run option still in Japanese; localize only the generated date/activity/source label, never user notes or IDs.
+- Body and Equipment: retain its layout and turquoise-blue gradient aesthetic; brighten only the gradient's darker stop so the primary action can use readable dark ink.
 - No changes to scientific reference model, calculation, original research, archived records, data schema, privacy guarantees, or three Result tabs.
 
 ## Screen-design rationale
 
 **Bright/selected/primary** uses dark ink `#052939` on light cyan `#39cfd0`. **Dark-neutral/unselected** retains pale ink on its dark surface. **Disabled** uses visibly distinct legible dark treatment; destructive, purple/accented, and light lesson surfaces retain their semantic design. A single universal black-text rule would be an accessibility regression.
 
-Gait labels are allowed to wrap, have sufficient height, and use two columns on narrow English phones. Course surface percentages and Environment chips can wrap rather than clip. A consistent ink/background role is preferred over identical colors regardless of contrast.
+Fatigue's Back to Recording action and the Consultation mobile mode switch now follow the bright primary/selected role. Gait labels are allowed to wrap, have sufficient height, and use two columns on narrow English phones. Course surface percentages and Environment chips can wrap rather than clip. A consistent ink/background role is preferred over identical colors regardless of contrast.
 
 ## Verification and limitations
 
