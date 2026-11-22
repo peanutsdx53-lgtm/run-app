@@ -85,7 +85,7 @@ async function scan(page,screen,language,width,phase){
     const threshold=size>=24||(size>=18.66&&bold)?3:4.5;
     const label=btn.className?.baseVal??btn.className??'';
     all.push({screen,language,width,phase,selector:btn.tagName.toLowerCase()+'#'+btn.id+'.'+String(label).replace(/\s+/g,'.').slice(0,90),
-     context:String(btn.closest('.rv4-view-tabs,.rv4-mobile-tabs,.rv4-actions,.rr-foot-actions,.rv4-rof-correct-form,.rv4-question-continuation,.gps-v2-tabs,.rv4-tabs,.record-v3,.ex-topic-set,.s2-choice-row,.cp-mode-button')?.className||'').slice(0,100),
+     context:String(btn.closest('.rv4-view-tabs,.rv4-mobile-tabs,.rv4-actions,.rr-foot-actions,.rv4-rof-correct-form,.rv4-question-continuation,.gps-v2-tabs,.rv4-tabs,.record-v3,.ex-topic-set,.s2-choice-row,.cp-mode-button,.g4-choice,.e4-weather,.e4-flags')?.className||'').slice(0,100),
      text,foreground:low.fg,background:font.backgroundColor,gradient:font.backgroundImage.slice(0,160),
      minRatio:+low.min.toFixed(2),threshold,pressed:btn.getAttribute('aria-pressed')||btn.getAttribute('aria-selected')||'',
      disabled:btn.disabled||false,node:low.node,widthPx:+r.width.toFixed(1),heightPx:+r.height.toFixed(1)});
@@ -100,7 +100,7 @@ async function snap(page,screen,language,width,phase){
  if(width!==390)return;
  const name=screen+'-'+phase+'-'+language+'-'+width;
  findings.push(...await scan(page,screen,language,width,phase));
- await page.screenshot({path:resolve(out,name+'.png'),animations:'disabled',fullPage:screen==='course'||screen==='settings'});
+ await page.screenshot({path:resolve(out,name+'.png'),animations:'disabled',fullPage:['course','settings','gait','environment'].includes(screen)});
 }
 try{
  for(const [language,width] of [['en',390],['ja',390],['en',320]]){
@@ -193,7 +193,7 @@ try{
   ['course','rv-choice.is-selected'],
   ['gait','g4-choice'],['environment','e4-chip']];
  for(const [screen,identity] of critical){
-  const matches=findings.filter(row=>row.screen===screen&&row.selector.includes(identity));
+  const matches=findings.filter(row=>row.screen===screen&&row.selector.includes(identity)||row.context.includes(identity));
   assert.ok(matches.length>=2,'must observe '+screen+' '+identity);
   assert.ok(matches.every(row=>row.minRatio>=4.5),
    'primary or selected button below normal text contrast: '+JSON.stringify(matches.filter(row=>row.minRatio<4.5)));
