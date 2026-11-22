@@ -104,3 +104,24 @@ body > .fu-doc-backdrop .fu-doc-scroll{min-height:0;overflow-y:auto;overscroll-b
 .fu-profile-form input[type="number"]{-moz-appearance:textfield;appearance:textfield}
 .fu-profile-form input[type="number"]::-webkit-inner-spin-button,
 .fu-profile-form input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+
+
+/* UX05: eight-stage setup status must remain visible when the side rail is
+ * hidden on mobile. Preserve the separate five-chapter optional guide and
+ * keep legal consent in step 2 as an explicit gate. Text is allowed to wrap,
+ * rather than shrinking a 200%-zoom label or occluding a footer action. */
+.fu-topbar .fu-step-indicator{
+ margin-left:auto;display:flex;flex-wrap:wrap;align-items:baseline;
+ justify-content:flex-end;gap:3px 10px;min-width:0;
+ max-width:72%;text-align:right;line-height:1.45;
+ font-size:max(12px,.67rem);color:#e0f3f5;
+}
+.fu-topbar .fu-step-name{min-width:0;overflow-wrap:anywhere}
+.fu-topbar .fu-step-count{white-space:nowrap;font-variant-numeric:tabular-nums;color:#89e5df;font-weight:800}
+@media(max-width:900px){
+ .fu-topbar{height:auto;min-height:59px;box-sizing:border-box;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+}
+@media(max-width:520px){
+ .fu-topbar{min-height:55px}
+ .fu-topbar .fu-step-indicator{max-width:min(72%,240px);font-size:max(11px,.65rem);gap:2px 8px}
+}

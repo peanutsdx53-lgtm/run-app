@@ -90,7 +90,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1"),
     import("./ui/annotationEditor.js?v=20261108-professor-m5-v1"),
     import("./ui/dataManagementUi.js?v=20261117-s16-settings-v1"),
-    import("./ui/firstUseExperience.js?v=20261120-legal-modal-bilingual-v1"),
+    import("./ui/firstUseExperience.js?v=20261122-ux05-firstuse-home-v1"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
     import("./ui/consultationExperience.js?v=20261122-mobile-controls-v1"),
     import("./ui/explorationExperience.js?v=20261122-explore-clean-v1"),
@@ -460,7 +460,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
  }).join("");
  const controls=editing?`<section class="dashboard-edit-toolbar" role="group" aria-label="ホームの表示を編集"><div><strong>ホームの表示を編集</strong><p>ハンドルを長押しして移動できます。上下ボタン・表示・サイズ変更も使えます。操作するとすぐに保存されます。</p></div><div class="dashboard-edit-buttons"><button type="button" class="btn" data-home-reset>初期配置に戻す</button></div></section>`:"";
  return `<div class="home-v3"><section class="home-head"><h1>ホーム</h1><div class="home-heading-actions">
- <button type="button" class="btn dashboard-edit-trigger" data-home-edit aria-pressed="${editing}" ${!homePreferenceState.canSave?"disabled":""}>${editing?"編集を終了":"編集"}</button>
+ <button type="button" class="btn dashboard-edit-trigger" data-home-edit aria-pressed="${editing}" aria-label="${editing?'編集を終了':'ホームの表示を編集'}" ${!homePreferenceState.canSave?"disabled":""}>${editing?"編集を終了":"編集"}</button>
  <button type="button" class="hx-help-toggle" data-home-guide-toggle aria-expanded="${homeUi.guideOpen}" aria-controls="home-screen-guide" aria-label="ホーム画面の使い方" title="ホーム画面の使い方">？</button>
  </div></section>
  ${homeEditState.notice?`<div class="dashboard-edit-notice" role="status">${esc(homeEditState.notice)}</div>`:""}

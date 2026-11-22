@@ -87,6 +87,10 @@ export function renderFirstUse(state){
   const canAdvance=step!==1 || (state.termsAccepted===true && state.privacyConfirmed===true);
   const final=step===7;
   const labels=step<=1?"":step===7?"プロフィール":("ガイド "+(step-1)+" / 5");
+  // Eight setup screens are distinct from the five skippable guide chapters.
+  // The desktop rail gives this context; mobile hides that rail. Keep a
+  // readable current step and total visible without changing any gate.
+  const currentStep='<span class="fu-step-indicator" data-onboard-step-indicator><span class="fu-step-name">'+h(FIRST_USE_STEPS[step])+'</span><span class="fu-step-count">'+(step+1)+' / '+FIRST_USE_STEPS.length+'</span></span>';
   const progress='<div class="fu-progress" role="progressbar" aria-label="初回利用の進行状況" aria-valuenow="'+(step+1)+'" aria-valuemin="1" aria-valuemax="8">'+Array.from({length:8},function(_,i){return '<span class="'+(i<=step?'is-done':'')+'"></span>';}).join('')+'</div>';
   const sidebar='<aside class="fu-rail"><span class="fu-rail-mark" aria-hidden="true">◈</span><strong>走行記録</strong><ol>'
     +FIRST_USE_STEPS.map(function(label,i){return '<li class="'+(i===step?'is-current':i<step?'is-done':'')+'"><span>'+String(i+1).padStart(2,"0")+'</span>'+h(label)+'</li>';}).join('')+'</ol></aside>';
@@ -97,7 +101,7 @@ export function renderFirstUse(state){
     +'<button class="fu-button fu-primary" type="button" data-onboard-next '+(canAdvance?'':'disabled')+'>'+(final?'保存して始める':step===1?'同意して次へ':'次へ')+'</button></div></footer>';
   const doc=state.documentOpen?renderLegalDocumentModal(state.documentOpen,{showEnglishReference:state.language==='en'}):'';
   return '<div class="onboard-overlay fu-overlay" data-onboard-overlay><section class="onboard-dialog fu-shell" '+(step===1?'data-onboard-legal-step lang="'+(state.language==='en'?'en':'ja')+'" ':'')+'role="dialog" aria-modal="true" aria-labelledby="onboard-title"><div class="fu-layout">'
-    +sidebar+'<div class="fu-workspace"><div class="fu-topbar"><div class="fu-topbrand">走行記録</div>'+(labels?'<span>'+h(labels)+'</span>':'')+(state.replay?'<button type="button" data-onboard-close aria-label="ガイドを閉じる">閉じる ×</button>':'')+'</div>'
+    +sidebar+'<div class="fu-workspace"><div class="fu-topbar"><div class="fu-topbrand">走行記録</div>'+currentStep+(state.replay?'<button type="button" data-onboard-close aria-label="ガイドを閉じる">閉じる ×</button>':'')+'</div>'
     +progress+'<main class="fu-content">'+current+'</main>'+footer+'</div></div></section></div>'+doc;
 }
 export function renderLegalDocumentModal(kind,{showEnglishReference=false}={}){
