@@ -206,7 +206,7 @@
 @media(max-width:430px){
  .app-shell .mobile-nav{
   display:grid!important;
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,3.6rem),1fr))!important;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,clamp(60px,3.2rem,112px)),1fr))!important;
   grid-auto-rows:minmax(54px,auto)!important;
   width:100%;box-sizing:border-box;
  }
@@ -219,7 +219,7 @@
   text-align:center;
  }
  .app-shell .main-content{
-  padding-bottom:max(calc(193px + env(safe-area-inset-bottom,0px)),calc(10.5rem + env(safe-area-inset-bottom,0px)))!important;
+  padding-bottom:max(calc(112px + env(safe-area-inset-bottom,0px)),calc(5.8rem + env(safe-area-inset-bottom,0px)))!important;
  }
 }
 
@@ -256,5 +256,23 @@
  .app-shell:has(.lr-root) .lr-root .lr-page-heading h1{
   min-width:0;
   max-width:100%;
+ }
+}
+
+
+/* UX03: a fixed pixel-sized Settings subtitle did not grow at 200% root text.
+ * Use the legacy size as the floor, but allow rem text scaling to expand naturally.
+ * Cards and summary rows can grow vertically; do not hide or abbreviate labels. */
+.s2-page .s2-panel-head h2{font-size:max(16px,.88rem);line-height:1.4}
+.s2-page .s2-item-copy strong{font-size:max(13px,.78rem);line-height:1.4}
+.s2-page .s2-item-copy small{font-size:max(11px,.65rem);line-height:1.45}
+.s2-page .s2-indicator{font-size:max(10px,.58rem);line-height:1.3;white-space:normal;text-align:right;overflow-wrap:break-word}
+.s2-page .s2-item>summary{height:auto;min-height:69px;align-items:center}
+.s2-page .s2-item-copy{overflow-wrap:break-word}
+@media(max-width:430px){
+ /* Focused fields may be scrolled to in a long form. Preserve a clear area
+  * above the fixed nav even at 200% text and after native focus scrolls. */
+ #app .app-shell .main-content :is(a,button,input,select,textarea,summary):focus-visible{
+  scroll-margin-block-end:max(112px,5.8rem)
  }
 }
