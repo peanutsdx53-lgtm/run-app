@@ -132,6 +132,13 @@ try{
     const entries=await scan(page,name,language,width,'default');
     findings.push(...entries);
     if(width===390)await page.screenshot({path:resolve(out,name+'-default-'+language+'-'+width+'.png'),animations:'disabled',fullPage:name==='course'||name==='settings'});
+    if(name==='consultation'&&language==='en'){
+     const target=page.locator('#cp-target');
+     const options=await target.locator('option').allTextContents();
+     assert.ok(options.length>0,'consultation must offer the seeded activity');
+     assert.ok(options.every(x=>!/[\\u3040-\\u30ff\\u3400-\\u9fff]/u.test(x)),
+      'English system record options must not contain Japanese: '+JSON.stringify(options));
+    }
     if(name==='gait'){
      const source=page.locator('[data-g4-source="DEVICE_MEASURED"]');
      const runwalk=page.locator('[data-g4-format="RUN_WALK"]');
