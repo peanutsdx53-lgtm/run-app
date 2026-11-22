@@ -257,6 +257,7 @@ function experience(ui,ctx,cat,topic,inquiry=''){
   '<section class="ex-inquiry-stage"><h4>記録を手がかりにする</h4>'+
   '<div class="ex-tool"><h5>'+toolHeading+'</h5>'+tool+'</div>'+
   (inquiry?'<div class="ex-inline-inquiry">'+embedSelectedInquiry(inquiry)+'</div>':'')+
+  ((specific||reason)&&!ui.sample?'<details class="ex-inquiry-details ex-linked-source"><summary>関連の出所と限界</summary><p>'+h(ctx.focusRunId?specific||'選択した記録との直接の対応はありません':who)+'</p></details>':'')+
   '</section>'+
   '<section class="ex-inquiry-stage"><h4>記録と感覚を照らし合わせる</h4>'+
   '<p>記録の条件と、そのときの感じ方を分けて捉えます。</p>'+
