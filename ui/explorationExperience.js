@@ -156,6 +156,9 @@ function embedSelectedInquiry(markup){
   .replace(/<button[^>]*data-ex-action="note"[^>]*>[\s\S]*?<\/button>/,'');
 }
 function renderSelectedInquiry(ui,ctx,category,topic){
+ // A general theme is not itself a request to disclose or inspect any saved run.
+ // Do not render six redundant "no run selected" notices by default.
+ if(ui.sample||!ctx.focusRunId||!ctx.focusRun)return '';
  const ref=ui.sample?null:ctx.focusRunId?{sourceType:'MANUAL',recordId:ctx.focusRunId}:null;
  const record=ui.sample?null:ctx.focusRun||null;
  const input={ref,record};
@@ -252,7 +255,6 @@ function experience(ui,ctx,cat,topic,inquiry=''){
   '<section class="ex-inquiry-stage"><h4>記録を手がかりにする</h4>'+
   '<div class="ex-tool"><h5>'+toolHeading+'</h5>'+tool+'</div>'+
   (inquiry?'<div class="ex-inline-inquiry">'+embedSelectedInquiry(inquiry)+'</div>':'')+
-  ((specific||reason)&&!ui.sample?'<div class="ex-context"><small>あなたの記録とのつながり</small><p>'+h(ctx.focusRunId?specific||'選択した記録との直接の対応はありません':who)+'</p></div>':'')+
   '</section>'+
   '<section class="ex-inquiry-stage"><h4>記録と感覚を照らし合わせる</h4>'+
   '<p>記録の条件と、そのときの感じ方を分けて捉えます。</p>'+
@@ -288,11 +290,11 @@ function field(ui,ctx){
   :(selected.id==='04'&&currentTopic==='疲れの感じ方'||selected.id==='01'&&currentTopic==='自分が感じた疲れ')?'effort-fatigue-recovery':null;
  const summary=links.sample?'強調表示は説明用の例です。自分の記録ではありません。':linked?linked:'';
  const any=links.linked.size>0;
- return '<section class="ex-workspace ex-orbit-workspace"><div class="ex-map-card ex-constellation"><div class="ex-map-head"><div><span class="ex-eyebrow">記録からも広がる発見</span><h2>気になる分野を選ぶ</h2></div></div>'
+ return '<section class="ex-workspace ex-orbit-workspace"><div class="ex-map-card ex-constellation"><div class="ex-map-head"><div><span class="ex-eyebrow">記録からも広がる発見</span><h2>気になる分野を選ぶ</h2></div><button type="button" class="ex-map-help" data-ex-action="field-help" aria-label="強調表示の意味" title="強調表示の意味">？</button></div>'
  +'<div class="ex-map" role="group" aria-label="7つの分野から探す">'+art(links)+'<div class="ex-core" aria-hidden="true"><span>気になることから</span><strong>探究</strong></div>'+nodes+'</div>'
- +'<div class="ex-legend ex-signal-legend"><span class="ex-legend-glow" aria-hidden="true"></span><span>'+(any?'強調表示は、入力や記録と関連する分野を示します。':'どの分野も自由に選べます。')+'</span></div>'
+ +''
  +'<div class="ex-map-foot">'+(!any&&!links.sample?buttonAction("sample","強調表示の例を見る","quiet"):links.sample?buttonAction("sample","表示例を終了","quiet"):'')+'</div></div>'
- +'<div class="ex-side"><section class="ex-focus" id="ex-topic-content"><div class="ex-focus-label"><span>選んだ分野</span>'+(linked?'<span class="ex-related-label">記録とつながる</span>':'')+'</div><h2>'+esc(selected.name)+'</h2>'+(summary?'<p class="ex-focus-intro">'+esc(summary)+'</p>':'')+'<div class="ex-topic-controls"><strong>テーマを切り替える</strong><div class="ex-topic-stepper" role="group" aria-label="テーマの前後移動"><button type="button" data-ex-topic-step="-1" aria-label="前のテーマ"'+(topicIndex===0?' disabled':'')+'><span aria-hidden="true">‹</span></button><output class="ex-topic-position" aria-live="polite">'+(topicIndex+1)+' / '+selected.topics.length+'</output><button type="button" data-ex-topic-step="1" aria-label="次のテーマ"'+(topicIndex===selected.topics.length-1?' disabled':'')+'><span aria-hidden="true">›</span></button></div></div><p class="ex-topic-instruction">テーマを左右にスワイプするか、矢印を押してください。</p><div class="ex-topic-set" role="group" aria-label="読むテーマ（左右にスワイプして選ぶ）">'+selected.topics.map((name,i)=>'<button type="button" data-ex-topic="'+esc(name)+'" aria-pressed="'+(currentTopic===name)+'" class="ex-topic '+(currentTopic===name?'is-picked':'')+'" title="'+esc(name)+'"><span aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span><strong>'+esc(name)+'</strong><span aria-hidden="true">›</span></button>').join('')+'</div>'
+ +'<div class="ex-side"><section class="ex-focus" id="ex-topic-content"><div class="ex-focus-label"><span>選んだ分野</span><button type="button" class="ex-focus-help" data-ex-action="field-help" aria-label="選んだ分野と強調表示の説明" title="表示の説明">？</button></div><h2>'+esc(selected.name)+'</h2>'+'<div class="ex-topic-controls"><strong>テーマを切り替える</strong><div class="ex-topic-stepper" role="group" aria-label="テーマの前後移動"><button type="button" data-ex-topic-step="-1" aria-label="前のテーマ"'+(topicIndex===0?' disabled':'')+'><span aria-hidden="true">‹</span></button><output class="ex-topic-position" aria-live="polite">'+(topicIndex+1)+' / '+selected.topics.length+'</output><button type="button" data-ex-topic-step="1" aria-label="次のテーマ"'+(topicIndex===selected.topics.length-1?' disabled':'')+'><span aria-hidden="true">›</span></button></div></div><div class="ex-topic-set" role="group" aria-label="読むテーマ（左右にスワイプして選ぶ）">'+selected.topics.map((name,i)=>'<button type="button" data-ex-topic="'+esc(name)+'" aria-pressed="'+(currentTopic===name)+'" class="ex-topic '+(currentTopic===name?'is-picked':'')+'" title="'+esc(name)+'"><span aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span><strong>'+esc(name)+'</strong><span aria-hidden="true">›</span></button>').join('')+'</div>'
  +experience(ui,ctx,selected,currentTopic,renderSelectedInquiry(ui,ctx,selected,currentTopic))+(relatedLesson?'<a class="ex-related-learning" href="#/learning?lesson='+relatedLesson+'">関連する学習を見る <span aria-hidden="true">›</span></a>':'')+'</section>'
  +'</div></section>';
 }
@@ -322,7 +324,7 @@ export function render(ui,ctx){
  '<button type="button" class="ex-header-memo" data-ex-action="memories">ふり返り <span>'+(ui.canSave?(ctx.focusRunId?ui.notes.filter(n=>n.recordId===ctx.focusRunId).length:ui.notes.length):'確認不可')+'</span></button></section>'+modal(ui,ctx)+'</section>';
 }
 function modal(ui,ctx){if(!ui.modal)return "";const category=ctx.categories.find(c=>c.id===ui.selected)||ctx.categories[0],title=ui.topic||category.topics[0]||category.name,links=relevance(ui,ctx);let body="";
- if(ui.modal==="field-help")body='<p>強調表示は、現在入力している情報や保存した走行・生活記録と関連する分野を示します。優先順位や身体への負担の大きさを示すものではありません。</p><p>記録がなくても、どの分野も自由に選べます。</p>';
+ if(ui.modal==="field-help")body='<div class="ex-help-signal"><span class="ex-legend-glow" aria-hidden="true"></span><p>強調表示は、現在入力している情報や保存した走行・生活記録と関連する分野を示します。優先順位や身体への負担の大きさを示すものではありません。</p></div><p>記録がなくても、どの分野も自由に選べます。</p><p>テーマは左右にスワイプするか、矢印で切り替えられます。</p>';
  if(ui.modal==="learn-help"){
   const k=KNOWLEDGE[title];
   body='<p>参考知識は一般的な情報です。本人の経験の原因を自動で判定しません。</p>'
