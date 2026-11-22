@@ -136,7 +136,7 @@ try{
      const target=page.locator('#cp-target');
      const options=await target.locator('option').allTextContents();
      assert.ok(options.length>0,'consultation must offer the seeded activity');
-     assert.ok(options.every(x=>!/[\\u3040-\\u30ff\\u3400-\\u9fff]/u.test(x)),
+     assert.ok(options.every(x=>!/[\u3040-\u30ff\u3400-\u9fff]/u.test(x)),
       'English system record options must not contain Japanese: '+JSON.stringify(options));
     }
     if(name==='gait'){
