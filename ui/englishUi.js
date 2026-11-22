@@ -18,6 +18,8 @@ import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261111-settings-
 import {ENGLISH_FINAL_GPS} from './englishFinalGps.js';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
+import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
+import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261122-explore-clean-v1';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
 import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261122-gait-learning-type-v1';
 
@@ -216,7 +218,8 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  ...ENGLISH_FINAL_ANNOTATION,
  ...ENGLISH_FINAL_INQUIRY,
  ...ENGLISH_FINAL_APP_SHELL,
- ...ENGLISH_SURFACE_REMAINDERS
+ ...ENGLISH_SURFACE_REMAINDERS,
+ ...ENGLISH_EXPLORE_KNOWLEDGE
 });
 export function translateUiText(text,context={}){
  const raw=String(text??'');const trimmed=raw.trim();
@@ -258,7 +261,7 @@ export function translateUiText(text,context={}){
     context.element?.matches?.('.rv4-reading > small')&&
     context.element?.closest?.('.rv4-body'))return raw.replace(trimmed,'Selected Region');
  const exact=Object.prototype.hasOwnProperty.call(ENGLISH_UI_TEXT,trimmed)?ENGLISH_UI_TEXT[trimmed]:null;
- const translated=exact??translateResidualDynamic(trimmed,context);
+ const translated=exact??translateExploreDynamic(trimmed,context)??translateResidualDynamic(trimmed,context);
  return translated===null?raw:raw.replace(trimmed,translated);
 }
 export function translateLessonComposite(text){

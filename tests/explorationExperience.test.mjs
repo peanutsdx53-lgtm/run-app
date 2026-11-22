@@ -14,7 +14,7 @@ const categories=[
 const memory=()=>{const m=new Map();return {getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,v),map:m}};
 test('exploration has no invented saved activity or sample relevance by default',()=>{
  const u=makeUi(memory()),r=render(u,{categories,draft:{date:'2026-10-25'},conditions:{entries:[]}});
- assert.match(r,/どの分野も自由に選べます/);assert.doesNotMatch(r,/記録がなくても自由に選べます/);assert.match(r,/data-ex-action="sample"/);assert.equal((r.match(/is-related/g)||[]).length,0);
+ assert.doesNotMatch(r,/class="ex-legend ex-signal-legend"/);assert.doesNotMatch(r,/記録がなくても自由に選べます/);assert.match(r,/data-ex-action="sample"/);assert.equal((r.match(/is-related/g)||[]).length,0);
  assert.doesNotMatch(r,/10月22日|8\.20 km/);
 });
 test('relevance is linked to explicitly provided draft fields and does not treat zero as missing',()=>{
@@ -35,7 +35,7 @@ test('field terminology names seven fields and makes relevance explicit without 
  const u=makeUi(memory()),ctx={categories,draft:{},conditions:{entries:[]}};
  const plain=render(u,ctx);
  assert.match(plain,/気になる分野を選ぶ/);
- assert.match(plain,/どの分野も自由に選べます/);
+ assert.doesNotMatch(plain,/class="ex-legend ex-signal-legend"/);assert.equal((plain.match(/class="ex-map-help"/g)||[]).length,1);
  assert.match(plain,/aria-label="7つの分野から探す"/);
  assert.match(plain,/強調表示の例を見る/);
  assert.doesNotMatch(plain,/星/);
@@ -44,13 +44,13 @@ test('field terminology names seven fields and makes relevance explicit without 
  assert.match(help,/優先順位や身体への負担の大きさを示すものではありません/);
  assert.doesNotMatch(help,/星/);
  u.modal='';const linked=render(u,{...ctx,draft:{distance:'5'}});
- assert.match(linked,/強調表示は、入力や記録と関連する分野を示します/);
+ assert.doesNotMatch(linked,/強調表示は、入力や記録と関連する分野を示します/);assert.doesNotMatch(linked,/ex-related-label|記録とつながる/);
  assert.doesNotMatch(linked,/星/);
  u.sample=true;const sample=render(u,ctx);
- assert.match(sample,/強調表示は説明用の例です/);
+ assert.match(sample,/表示例/);
  assert.doesNotMatch(sample,/星/);
  u.modal='learn-help';const sourceHelp=render(u,ctx);
- assert.match(sourceHelp,/分野の強調表示は、入力・保存記録との関連を示す目印です/);
+ assert.doesNotMatch(sourceHelp,/分野の強調表示は、入力・保存記録との関連を示す目印です/);assert.match(sourceHelp,/参考知識は一般的な情報です/);
  assert.doesNotMatch(sourceHelp,/星/);
 });
 test('purpose label wraps only between semantic words without changing its accessible name',()=>{
@@ -202,7 +202,7 @@ test('topic layout scales and reflection has one way to review',()=>{
  const html=render(ui,{categories:extra,draft:{},conditions:{entries:[]}});
  assert.equal((html.match(/data-ex-topic=/g)||[]).length,6);
  assert.match(html,/テーマを切り替える/);
- assert.match(html,/テーマを左右にスワイプするか、矢印を押してください/);
+ assert.doesNotMatch(html,/class="ex-topic-instruction"/);
  assert.match(html,/1 \/ 6/);
  assert.equal((html.match(/data-ex-topic-step=/g)||[]).length,2);
  assert.match(html,/data-ex-topic-step="-1" aria-label="前のテーマ" disabled/);

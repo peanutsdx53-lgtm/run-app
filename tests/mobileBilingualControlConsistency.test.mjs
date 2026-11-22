@@ -68,13 +68,13 @@ test('Selected bright controls use dark ink, neutral controls stay pale, and nat
 
 test('The revision is aligned across active shell and PWA; science and English dictionary are unchanged',()=>{
  const html=read('index.html'),app=read('app.js'),sw=read('sw.js');
- const ver='20261122-record-return-v1',prior='20261122-mobile-controls-v1',previous='20261122-gait-learning-type-v1';
+ const ver='20261122-record-return-v1',prior='20261122-mobile-controls-v1',previous='20261122-gait-learning-type-v1',shell='20261122-explore-clean-v1';
  for(const [src,fragment] of [[html,'ui/buttonContrastSystem.css?v='+previous],
   [html,'ui/recordReturnActions.css?v='+ver],
-  [html,'app.js?v='+ver],[app,'recordExperience.js?v='+ver],
+  [html,'app.js?v='+shell],[app,'recordExperience.js?v='+ver],
   [app,'historyExperience.js?v='+prior],[app,'gaitExperience.js?v='+ver],[app,'learningExperience.js?v='+previous],[app,'consultationExperience.js?v='+prior],
   [app,'bodyContextExperience.js?v='+ver],[app,'environmentExperience.js?v='+ver],[app,'rofExperience.js?v='+ver],
-  [sw,'runload-ui-next-shell-'+ver],[sw,'ui/gaitExperience.js?v='+ver],[sw,'ui/recordReturnActions.css?v='+ver]])
+  [sw,'runload-ui-next-shell-'+shell],[sw,'ui/gaitExperience.js?v='+ver],[sw,'ui/recordReturnActions.css?v='+ver]])
   assert.ok(src.includes(fragment),'missing active '+fragment);
  assert.ok(!app.includes('localStorage.clear()'));
  assert.ok(app.includes('resultExperience.js?v=20261121-button-contrast-v1'));

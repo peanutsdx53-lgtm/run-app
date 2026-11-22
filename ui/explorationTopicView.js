@@ -15,8 +15,8 @@ export function renderObservationGuide(ui,ctx,cat,topic,inquiry=''){
   '<header class="ex-inquiry-start"><small>探究の入り口</small><h3>'+text(question)+'</h3></header>'+
   '<section class="ex-inquiry-stage"><h4>記録を手がかりにする</h4>'+
   '<p>'+text(guide?.record||'自分の経験や記録から、気になる点を確認します。')+'</p>'+
-  '<small class="ex-observation-status">観察ガイド · 専門解説は出典審査前</small>'+
-  (run?'<div class="ex-context"><small>選択した走行</small><p>'+text(run.date)+'に保存した走行の情報です。ほかの記録とは自動で結びつけません。</p>'+link+'</div>':'')+
+  ''+
+  (run?'<details class="ex-inquiry-details ex-run-context"><summary>選択した走行</summary><p>'+text(run.date)+'に保存した走行の情報です。ほかの記録とは自動で結びつけません。</p>'+link+'</details>':'')+
   (inquiry?'<div class="ex-inline-inquiry">'+inquiry+'</div>':'')+'</section>'+
   '<section class="ex-inquiry-stage"><h4>記録と感覚を照らし合わせる</h4>'+
   '<p>記録された情報と、そのときの感じ方を区別して考えます。</p>'+

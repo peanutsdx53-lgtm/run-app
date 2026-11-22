@@ -84,7 +84,15 @@ try{
  await ux23Latest.waitFor();
  assert.match(await ux23Latest.locator('.ex-tool-result').innerText(),/最新の保存済み走行（手入力）/);
  assert.match(await ux23Latest.locator('.ex-tool-result').innerText(),/2026-10-21/);
- assert.match(await ux23Latest.locator('.ex-context').innerText(),/2026-10-21 に保存した走行距離と時間に関連/);
+ // Editorial-density redesign: provenance is still verifiable, but no longer permanently visible.
+ const latestSource=ux23Latest.locator('details.ex-linked-source');
+ await latestSource.waitFor();
+ assert.equal(await latestSource.evaluate(el=>el.open),false,'latest-run provenance is collapsed by default');
+ await latestSource.locator('summary').click();
+ assert.equal(await latestSource.evaluate(el=>el.open),true,'latest-run provenance opens on demand');
+ assert.match(await latestSource.innerText(),/2026-10-21 に保存した走行距離と時間に関連/);
+ assert.doesNotMatch(await latestSource.innerText(),/2026-10-19 に保存した走行距離と時間に関連/,
+  'unselected latest-run provenance must not claim the earlier record');
  assert.doesNotMatch(await ux23Latest.innerText(),/関連する入力がなくても/);
  // Preserve the real viewport with fixed navigation before making a clean full-card audit capture.
  await page.screenshot({path:'audit-output/p0-continuity/'+engineName+'-UX023-two-saved-latest-viewport-390.png',fullPage:false});
@@ -98,8 +106,15 @@ try{
  // requested record. Verify the content belongs to the requested ID first.
  await page.waitForFunction(()=>{const e=document.querySelector('[data-ex-learning="distance-time-pace"] .ex-tool-result');return e?.textContent.includes('選択した保存済み走行（手入力）')&&e?.textContent.includes('2026-10-19');},null,{timeout:15000});
  assert.match(await ux23Selected.locator('.ex-tool-result').innerText(),/選択した保存済み走行（手入力）/);
- assert.match(await ux23Selected.locator('.ex-context').innerText(),/2026-10-19 に保存した走行距離と時間に関連/);
- assert.doesNotMatch(await ux23Selected.innerText(),/2026-10-21 に保存した走行距離と時間に関連/);
+ // An explicit first-run ID must retain its own source after the second save.
+ const selectedSource=ux23Selected.locator('details.ex-linked-source');
+ await selectedSource.waitFor();
+ assert.equal(await selectedSource.evaluate(el=>el.open),false,'explicit-run provenance is collapsed by default');
+ await selectedSource.locator('summary').click();
+ assert.equal(await selectedSource.evaluate(el=>el.open),true,'explicit-run provenance opens on demand');
+ assert.match(await selectedSource.innerText(),/2026-10-19 に保存した走行距離と時間に関連/);
+ assert.doesNotMatch(await selectedSource.innerText(),/2026-10-21 に保存した走行距離と時間に関連/,
+  'explicit first-run provenance must not switch to the latest saved run');
  await page.screenshot({path:'audit-output/p0-continuity/'+engineName+'-UX023-two-saved-selected-viewport-390.png',fullPage:false});
  await page.locator('.mobile-nav').evaluate(el=>{el.style.position='static';el.style.bottom='auto';el.style.width='100%'});
  await ux23Selected.screenshot({path:'audit-output/p0-continuity/'+engineName+'-UX023-two-saved-selected-390.png'});

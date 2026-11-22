@@ -84,6 +84,18 @@ jobs:
           path: audit-output/focus-ui-${{ matrix.engine }}/
           if-no-files-found: warn
           retention-days: 7
+      - name: Explore all 28 topics and saved-run English surface copy
+        env:
+          RUNLOAD_EXPLORE_STRICT: '1'
+        run: node tests/exploreFullCopyBrowser.mjs
+      - name: Preserve exhaustive Explore language and layout evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: explore-copy-${{ matrix.engine }}
+          path: audit-output/explore-copy-${{ matrix.engine }}/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Inventory button contrast and capture dark-mode screens
         run: node tests/buttonContrastAuditBrowser.mjs
       - name: Preserve button contrast screenshots and computed style inventory

@@ -81,8 +81,8 @@ export function renderLifeInquiry(input={}){
    detail+'</div><div class="ex-e-boundary"><strong>この並びから判断できないこと</strong>'+
    '<p>日付が同じでも、走行と生活・休養の出来事が同時だったとは限りません。日付や時刻だけで両者を自動結合せず、睡眠・休養が疲労感、回復、走行結果を変えた原因とも判定しません。</p></div>'+
    '<p class="ex-e-prompt">この走行を思い返すとき、選んだ生活・休養の情報から次に確かめたいことは何ですか？</p>';
- }else detail='<p data-e-life-evidence role="status">'+esc(m.reason)+
-  '。同じ日付というだけで生活と走行を結び付けたり、別の記録を自動選択したりしません。</p>';
+ }else detail='<p data-e-life-evidence role="status">'+esc(m.reason)+'</p>'+
+  '<div class="ex-e-boundary"><strong>記録の選択と出所</strong><p>同じ日付というだけで生活と走行を結び付けたり、別の記録を自動選択したりしません。</p></div>';
  const controls=m.current?
   '<div class="ex-e-life-choice"><label for="ex-e-life-date">自分で確認したい生活・休養の日付</label>'+
   '<input id="ex-e-life-date" data-e-life-date type="date" aria-describedby="ex-e-life-date-hint">'+
@@ -96,5 +96,5 @@ export function renderLifeInquiry(input={}){
   detail+controls+
   '<p><a class="ex-e-compare-link" href="#/condition">生活記録の履歴と入力方式を確認する</a>'+
   '<a class="ex-e-compare-link" href="#/history">走行・休養の履歴を確認する</a></p>'+
-  '<small>ここは新しい睡眠・休養入力や比較計算ではありません。学習の採点や自動的な走行処方も行いません。既存テーマの任意メモとは独立した読取専用の問いです。</small></section>';
+  '</section>';
 }
