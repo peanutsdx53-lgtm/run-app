@@ -16,6 +16,12 @@ Based on five iPhone 16e English screenshots and the preceding explicitly approv
 - The Course save action is visibly secondary (dark/outlined). Environment's warning panel uses distinct contrast, with equal-size choices that become one column at <=520px. The transient 'apply weather to note' action inside the form remains separate and is not restyled to look like a page-return action.
 - Only terminal return actions use this gradient. Selection chips, disabled operations, danger actions, research controls and other button roles retain their existing semantics.
 
+## Screenshot-driven corrections
+- Initial Chromium/WebKit audit exposed a pre-existing high-specificity global selected-button rule overriding the new gradient in ROF-J, Gait and Environment. Added a narrow higher-specificity override *only* for the active terminal return roles.
+- On desktop the Environment footer initially grew to 320px tall because a flex-basis sized the height of a column-flex container. Replaced that footer with an actual grid, keeping its primary right-aligned at 320px.
+- When the Environment confirmation is displayed on a phone, hide the ordinary return CTA; otherwise it competes with the two deliberate choices and can sit behind the fixed navigation during a scrolled screenshot.
+- Browser navigation tests must change the SPA hash instead of calling page.goto when verifying unsaved draft continuity. A hard reload is a separate persistence test, not a valid simulation of returning from a detail page.
+
 ## Testing and evidence
 1. Node regression: five footer contracts, two language translations, Course preset preservation, ROF GPS routes, Gait validation, Body draft fields, Environment transient state and explicit copy. Verify PWA cache covers the new CSS and all changed module URLs.
 2. Browser checks: Chromium and WebKit with Japanese/English at 390px, English at 320px, plus 768px and 1024px layout sampling. Compare geometry and computed gradient/ink; exercise Environment's warning and both choices, and screenshot the primary actions. Include keyboard focus, zoom and overflow checks.
