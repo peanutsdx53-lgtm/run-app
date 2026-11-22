@@ -133,7 +133,7 @@ try{
     if(['course','rof','gait','environment','body'].includes(name)){
      const primary=page.locator('.rl-record-footer .rl-record-return').first();
      await primary.waitFor({state:'visible'});
-     const caption=(await primary.innerText()).replace(/[→›]/g,'').trim().replace(/\\s+/g,' ');
+     const caption=(await primary.innerText()).replace(/[→›]/g,'').trim().replace(/\s+/g,' ');
      const expected=language==='en'?(name==='course'?'Apply Conditions & Return':'Back to Recording'):
       (name==='course'?'条件を反映して記録に戻る':'記録に戻る');
      assert.equal(caption,expected,'primary return label for '+name+' '+language);
