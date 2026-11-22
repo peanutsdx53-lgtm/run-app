@@ -70,24 +70,29 @@ async function scan(page,screen,language,width,phase){
     const text=(btn.innerText||btn.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
     if(!text||!/[\p{L}\d]/u.test(text))continue;
     const descendants=[btn,...btn.querySelectorAll('span,b,strong,small,em')].filter(x=>[...x.childNodes].some(n=>n.nodeType===3&&(n.data||'').trim()));
-    const bgs=sampleBgs(btn);
+    const font=getComputedStyle(btn);
     const scores=[];
     for(const item of descendants){
-      const fg=parse(getComputedStyle(item).color);
+      const itemStyle=getComputedStyle(item),fg=parse(itemStyle.color);
       if(!fg)continue;
       const colors=sampleBgs(item);
       const ratios=colors.map(c=>contrast(fg,c));
-      scores.push({fg:getComputedStyle(item).color,min:Math.min(...ratios),max:Math.max(...ratios),node:item===btn?'button':item.tagName.toLowerCase()});
+      // These two visible glyphs are icons, not running-record text. Keep
+      // checking them at the non-text 3:1 threshold rather than hiding them.
+      const role=item.classList?.contains('s2-chevron')||item.classList?.contains('ex-node-icon')?'non-text-icon':'text';
+      const size=parseFloat(itemStyle.fontSize),bold=parseInt(itemStyle.fontWeight,10)>=700;
+      const threshold=role==='non-text-icon'||size>=24||(size>=18.66&&bold)?3:4.5;
+      scores.push({fg:itemStyle.color,min:Math.min(...ratios),max:Math.max(...ratios),threshold,role,
+       node:item===btn?'button':item.tagName.toLowerCase()});
     }
     if(!scores.length)continue;
-    const low=scores.reduce((a,b)=>a.min<b.min?a:b);
-    const font=getComputedStyle(btn),size=parseFloat(font.fontSize),bold=parseInt(font.fontWeight,10)>=700;
-    const threshold=size>=24||(size>=18.66&&bold)?3:4.5;
+    const low=scores.reduce((a,b)=>(a.min-a.threshold)<(b.min-b.threshold)?a:b);
+    const threshold=low.threshold;
     const label=btn.className?.baseVal??btn.className??'';
     all.push({screen,language,width,phase,selector:btn.tagName.toLowerCase()+'#'+btn.id+'.'+String(label).replace(/\s+/g,'.').slice(0,90),
      context:String(btn.closest('.rv4-view-tabs,.rv4-mobile-tabs,.rv4-actions,.rr-foot-actions,.rv4-rof-correct-form,.rv4-question-continuation,.gps-v2-tabs,.rv4-tabs,.record-v3,.ex-topic-set,.s2-choice-row,.cp-mode-button,.g4-choice,.e4-weather,.e4-flags')?.className||'').slice(0,100),
      text,foreground:low.fg,background:font.backgroundColor,gradient:font.backgroundImage.slice(0,160),
-     minRatio:+low.min.toFixed(2),threshold,pressed:btn.getAttribute('aria-pressed')||btn.getAttribute('aria-selected')||'',
+     minRatio:+low.min.toFixed(2),threshold,visualRole:low.role,pressed:btn.getAttribute('aria-pressed')||btn.getAttribute('aria-selected')||'',
      disabled:btn.disabled||false,node:low.node,widthPx:+r.width.toFixed(1),heightPx:+r.height.toFixed(1)});
    }
    for(const child of root.querySelectorAll('*'))if(child.shadowRoot)visit(child.shadowRoot);
@@ -349,7 +354,7 @@ try{
  const grouped={};for(const issue of ranked){const key=issue.screen;grouped[key]=(grouped[key]||0)+1;}
  const report={engine,scanned:findings.length,belowThreshold:ranked.length,issuesByScreen:grouped,
   visibleButtonRecords:findings,suspectedLowContrast:ranked,routeErrors:failures,
-  caveat:'CSS computed gradient stops and ancestor backgrounds approximate actual rendered pixels. Confirm on screenshots.'};
+  caveat:'Per-descendant text/non-text thresholds are distinguished. Gradient stops and ancestor backgrounds approximate rendered pixels; verify against screenshots and the UX02 matrix before final acceptance.'};
  await writeFile(resolve(out,'contrast-audit.json'),JSON.stringify(report,null,2));
  console.log('CONTRAST SUMMARY '+JSON.stringify({engine,scanned:findings.length,belowThreshold:ranked.length,byScreen:grouped,errors:failures}).slice(0,2600));
  console.log('LOW CONTRAST EXAMPLES '+JSON.stringify(ranked.slice(0,70)).slice(0,14500));
