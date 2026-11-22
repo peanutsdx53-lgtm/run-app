@@ -148,6 +148,7 @@ export const ENGLISH_FINAL_RECORDING=Object.freeze({
  "走った部分の距離と時間を記録します。走歩混在では12部位文献参考値を算出せず、入力情報を保存します。": "Enter distance and duration for the running portion. For mixed running/walking, the data are saved without calculating the 12 regional reference values.",
  "全体距離に占める走行部分": "Running Portion of Overall Distance",
  "残り（差分）は歩行の実測距離ではありません。走る区間と歩く区間の詳細はまだ保存できません。": "The difference is not a directly measured walking distance. Detailed alternating segments cannot be stored here.",
+ "例：向かい風が強かった。日陰は涼しかった。": "Example: Strong headwind; the shaded sections felt cooler.",
  "入力内容を反映": "Apply This Entry",
  "活動種別を選び直してください。": "Choose the Activity Type Again.",
  "走歩混在では単一活動の12部位参考値を算出しません。": "Single-activity regional reference values cannot be calculated for mixed running and walking.",
