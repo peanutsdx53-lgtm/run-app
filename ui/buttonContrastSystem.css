@@ -83,6 +83,7 @@
    background determines the ink: selected/primary cyan -> navy, neutral dark
    -> pale. Keep danger/disabled/white lesson panels in their own roles. */
 :is(
+ .record-v3.rv-course .rv-surface-tile.is-selected,
  .record-v3.rv-course .rv-surface-pick button[aria-pressed="true"],
  .gait-v4 .g4-choice button[aria-pressed="true"],
  .gait-v4 .g4-apply:not(:disabled),
@@ -202,4 +203,11 @@
   box-sizing:border-box;
   justify-content:center;
  }
+}
+
+/* Selection of a surface *kind* also has bright fill/dark ink, not just the
+   separate active percentage editor. Applied to both English and Japanese. */
+.record-v3.rv-course .rv-surface-tile.is-selected :is(span,b){
+ color:var(--rl-button-bright-text)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
 }
