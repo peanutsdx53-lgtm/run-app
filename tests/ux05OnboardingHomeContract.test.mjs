@@ -84,6 +84,9 @@ test('UX05: CSS reflows all stage labels while both dynamic JS and CSS stay offl
  assert.ok(!css.includes('.fu-step-name{display:none'));
  assert.ok(homeCss.includes('#app .home-v3 .home-head h1{white-space:nowrap;flex:0 0 auto}'));
  assert.ok(homeCss.includes('.hx-condition .hx-title-button .hx-head{flex-wrap:wrap;row-gap:7px}'));
+ assert.ok(homeCss.includes('#app .home-v3 .hx-condition-stats{grid-template-columns:repeat(2,minmax(0,1fr))}'));
+ assert.ok(homeCss.includes('#app .home-v3 .hx-condition-stats > div:last-child{grid-column:1/-1}'));
+ assert.ok(homeCss.includes('white-space:normal;overflow-wrap:anywhere;line-height:1.4;'));
  const gen='20261122-ux05-firstuse-home-v1';
  for(const [txt,fragment] of [
   [app,'firstUseExperience.js?v='+gen],
