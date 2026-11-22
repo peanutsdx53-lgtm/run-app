@@ -29,6 +29,9 @@ const paths=[
  ['record','record','.record-v3'],
  ['course','record-course','.rv-course'],
  ['rof','record-rof','[data-rof-v4-root]'],
+ ['gait','record-compare','[data-g4-page]'],
+ ['environment','record-environment','[data-e4-page]'],
+ ['body','record-reflection','.cx-page'],
  ['more','record-more','.rv-aux'],
  ['settings','settings','[data-settings-v2]'],
  ['history','history','#runload-history-v2 .stage'],
@@ -129,9 +132,29 @@ try{
     const entries=await scan(page,name,language,width,'default');
     findings.push(...entries);
     if(width===390)await page.screenshot({path:resolve(out,name+'-default-'+language+'-'+width+'.png'),animations:'disabled',fullPage:name==='course'||name==='settings'});
-    if(name==='course'){
+    if(name==='gait'){
+     const source=page.locator('[data-g4-source="DEVICE_MEASURED"]');
+     const runwalk=page.locator('[data-g4-format="RUN_WALK"]');
+     await source.click();await runwalk.click();
+     await page.waitForTimeout(90);
+     const controls=await page.locator('[data-g4-source],[data-g4-format]').evaluateAll(buttons=>
+      buttons.map(b=>({text:b.innerText,client:b.clientWidth,scroll:b.scrollWidth,
+       height:b.clientHeight,scrollHeight:b.scrollHeight})));
+     assert.ok(controls.length>=5,'gait options must be rendered');
+     assert.ok(controls.every(x=>x.scroll<=x.client+2&&x.scrollHeight<=x.height+2),
+      'gait labels must fit inside their buttons: '+JSON.stringify(controls));
+     if(language==='en')assert.ok(controls.every(x=>!/[\u3040-\u30ff\u3400-\u9fff]/u.test(x.text)),
+      'English gait choices must not contain Japanese labels: '+JSON.stringify(controls));
+     await snap(page,name,language,width,'selected');
+    }else if(name==='environment'){
+     await page.locator('[data-e4-weather="SUN"]').click();
+     await page.locator('[data-e4-flag="WIND"]').click();
+     await snap(page,name,language,width,'selected');
+    }else if(name==='course'){
      await page.locator('[data-rv-grade="SUMMARY"]').click();
      await page.locator('[data-rv-surface-mode="MIXED"]').click();
+     await page.locator('[data-rv-surface="paved"]').click();
+     await page.locator('[data-rv-surface="track"]').click();
      await snap(page,name,language,width,'selected');
     }else if(name==='settings'){
      const profile=page.locator('.s2-panel[data-settings-tone="mint"] details.s2-item').first();
@@ -140,6 +163,8 @@ try{
      const edit=page.locator('.dashboard-edit-trigger').first();
      if(await edit.count()){await edit.click();await snap(page,name,language,width,'editing');}
     }else if(name==='history'){
+     const advanced=page.locator('[data-history-advanced]');
+     if(await advanced.count()){await advanced.click();await snap(page,name,language,width,'filters-open');}
      const first=page.locator('[data-select-id]').first();
      if(await first.count()){await first.click();await snap(page,name,language,width,'selected');}
     }
@@ -165,7 +190,8 @@ try{
  const ranked=findings.filter(x=>!x.disabled&&x.minRatio<x.threshold).sort((a,b)=>a.minRatio-b.minRatio);
  const critical=[['record','rv-main-button'],['record','rv-choice.is-selected'],
   ['rof','rof-v4-before-tab'],['consultation','cp-mode-button.active'],
-  ['course','rv-choice.is-selected']];
+  ['course','rv-choice.is-selected'],
+  ['gait','g4-choice'],['environment','e4-chip']];
  for(const [screen,identity] of critical){
   const matches=findings.filter(row=>row.screen===screen&&row.selector.includes(identity));
   assert.ok(matches.length>=2,'must observe '+screen+' '+identity);
