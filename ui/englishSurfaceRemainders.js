@@ -293,7 +293,7 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
    if(parts){
     const distance=parts[1]==='距離未入力'?'Distance Not Entered':parts[1];
     const duration=parts[2]==='時間未入力'?'Time Not Entered':
-     parts[2].replace(/^([\\d.]+) 分$/,'$1 min');
+     parts[2].replace(/^([\d.]+) 分$/,'$1 min');
     return distance+' / '+duration;
    }
   }
