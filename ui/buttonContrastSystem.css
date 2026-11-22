@@ -222,3 +222,87 @@
 .record-v3.rv-course .rv-surface-tile:not(.is-selected) span:last-child{
  color:#b7dce5!important;
 }
+
+/* 2026-11-22, visual follow-up: both three-choice Gait groups share a single
+   two-column rhythm. Unknown is deliberately last and spans the bottom row
+   at all widths; values/ids/validation do not change. */
+.gait-v4 .g4-choice{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:9px;
+ align-items:stretch;
+}
+.gait-v4 .g4-choice button{
+ min-width:0;
+ min-height:58px;
+ width:100%;
+ font-family:inherit;
+ font-size:clamp(12px,2.7vw,14px);
+ font-weight:800;
+ line-height:1.35;
+ text-align:center;
+ white-space:normal;
+ overflow-wrap:normal;
+ word-break:normal;
+}
+.gait-v4 .g4-choice button:last-child{
+ grid-column:1/-1;
+}
+
+/* Body & Equipment: same system typeface and control-weight hierarchy used by
+   Record. Prior differences were mostly button-specific font weights/sizes,
+   not a different font family; preserve the distinct color treatment. */
+.cx-page :is(button,input,textarea,select){font-family:inherit!important}
+.cx-page :is(.cx-tab,.cx-picker-trigger,.cx-picker-option,
+ .cx-selected-chip,.cx-selected-more,.cx-context-action,
+ .cx-apply,.cx-transfer button){font-weight:800}
+.cx-page :is(.cx-clear,.cx-picker-trigger){font-weight:750}
+.cx-page .cx-tab{font-size:clamp(12px,2.7vw,14px);line-height:1.4}
+.cx-page .cx-apply{font-size:clamp(13px,2.8vw,15px)}
+.cx-page .cx-picker-option{line-height:1.4}
+.cx-page :is(.cx-tab,.cx-picker-option,.cx-context-action,.cx-apply):focus-visible{
+ outline:3px solid var(--rl-button-focus);
+ outline-offset:2px;
+}
+
+/* Learning: stable left back / title / help layout matching detail-screen
+   headers. A lesson goes to Learning; the catalogue returns Home. */
+.lr-root .lr-page-heading{
+ display:grid;
+ grid-template-columns:44px minmax(0,1fr) 44px;
+ align-items:center;
+ column-gap:11px;
+ justify-content:initial;
+}
+.lr-root .lr-page-heading>.lr-page-back{
+ box-sizing:border-box;
+ display:grid;
+ place-items:center;
+ width:44px;
+ height:44px;
+ flex:none;
+ border:1px solid #548a9b;
+ background:#173e50;
+ border-radius:11px;
+ color:#e3f6fa;
+ text-decoration:none;
+ font-size:29px;
+ font-weight:500;
+ line-height:1;
+}
+.lr-root .lr-page-heading>.lr-page-back:focus-visible{
+ outline:3px solid var(--rl-button-focus);
+ outline-offset:3px;
+}
+.lr-root .lr-page-heading>h1{
+ min-width:0;
+ overflow-wrap:anywhere;
+ text-align:left;
+}
+.lr-root .lr-page-heading>.lr-screen-help{
+ margin-left:0;
+ justify-self:end;
+ grid-column:3;
+}
+@media(max-width:380px){
+ .lr-root .lr-page-heading{column-gap:8px}
+}
