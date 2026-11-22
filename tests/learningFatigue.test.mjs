@@ -47,5 +47,5 @@ test('L5 running exertion, perceived fatigue and recovery is bounded general kno
  const current=index.match(/app\.js\?v=([\w-]+)/)?.[1];
  assert.ok(current,'app entry must be versioned');
  assert.ok(sw.includes('app.js?v='+current),'app entry must be available offline');
- assert.match(app,/learningExperience\.js\?v=20261111-explore-controls-v1/);
+ assert.match(app,/learningExperience\.js\?v=20261122-gait-learning-type-v1/);
 });
