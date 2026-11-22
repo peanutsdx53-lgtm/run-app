@@ -211,3 +211,14 @@
  color:var(--rl-button-bright-text)!important;
  -webkit-text-fill-color:var(--rl-button-bright-text);
 }
+
+/* Preserve Body & Equipment's graded turquoise tab aesthetic while removing
+   the white-ink contrast failure at the lighter gradient stop. */
+.cx-page .cx-tab[aria-pressed="true"]{
+ background:linear-gradient(108deg,#27b2d6,#11c6b5)!important;
+ color:var(--rl-button-bright-text)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+.record-v3.rv-course .rv-surface-tile:not(.is-selected) span:last-child{
+ color:#b7dce5!important;
+}
