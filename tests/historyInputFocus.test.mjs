@@ -12,7 +12,7 @@ test("history bundled shadow styles set mobile editable fields to 16px",()=>{
  assert.match(read("ui/historyExperience.js"),/data-history-inline-styles/);
  assert.match(styles,/@media\(max-width:800px\)\{[^}]*#hx-search/);
  assert.match(styles,/#hx-search[^}]*font-size:16px!important/);
- assert.match(app,/historyExperience\.js\?v=20261121-button-contrast-v1/);
+ assert.match(app,/historyExperience\.js\?v=20261122-mobile-controls-v1/);
  assert.match(html,/mobileInputFocus\.css\?v=20261026-ios-input-v25/);
 });
 test("typing in history retains a single focused field, not repeated draw and focus",()=>{
