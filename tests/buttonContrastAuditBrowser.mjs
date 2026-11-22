@@ -144,6 +144,11 @@ try{
      const runwalk=page.locator('[data-g4-format="RUN_WALK"]');
      await source.click();await runwalk.click();
      await page.waitForTimeout(90);
+     if(language==='en'){
+      const overall=await page.locator('.g4-summary p').first().innerText();
+      assert.doesNotMatch(overall,/[\u3040-\u30ff\u3400-\u9fff]/u,
+       'overall Gait distance/time summary must not retain Japanese: '+overall);
+     }
      const controls=await page.locator('[data-g4-source],[data-g4-format]').evaluateAll(buttons=>
       buttons.map(b=>({text:b.innerText,client:b.clientWidth,scroll:b.scrollWidth,
        height:b.clientHeight,scrollHeight:b.scrollHeight})));
