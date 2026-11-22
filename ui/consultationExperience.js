@@ -10,6 +10,17 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const isValid=r=>r&&typeof r.id==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&Number.isFinite(r.distanceKm)&&r.distanceKm>0;
 const secs=r=>r.source==='manual'?r.durationSeconds:r.activeSeconds;
 const gait=r=>r.source==='manual'?({RUNNING:'ランニング',JOGGING:'ジョギング',WALK:'ウォーキング'}[r.draft?.activityGait]||'活動種別未選択'):({RUNNING:'ランニング',JOGGING:'ジョギング',WALK:'ウォーキング',MIXED:'走歩混在'}[r.activity]||'不明');
+/** Localize only system-generated date/activity/source labels; never stored notes. */
+export function consultationTargetLabel(record,language='ja'){
+ const activity=gait(record),date=dateLabel(record.date);
+ const source=record.source==='manual'?'手入力':record.source==='gps-v2'?'GPSの保存記録（概要のみ）':'GPS';
+ if(language!=='en')return date+'　'+activity+'（'+source+'）';
+ const names={'ランニング':'Running','ジョギング':'Jogging','ウォーキング':'Walking',
+  '走歩混在':'Run + Walk','活動種別未選択':'Activity Not Selected','不明':'Unknown'};
+ const enSource=record.source==='manual'?'Manual Entry':
+  record.source==='gps-v2'?'Saved GPS Summary':'GPS Measurement';
+ return date+'  '+(names[activity]||'Unknown')+' ('+enSource+')';
+}
 const pad=n=>String(n).padStart(2,'0');
 const clock=n=>Number.isFinite(n)&&n>0?Math.floor(n/3600)?Math.floor(n/3600)+':'+pad(Math.floor(n%3600/60))+':'+pad(Math.floor(n%60)):Math.floor(n/60)+':'+pad(Math.floor(n%60)):'—';
 const pace=r=>Number.isFinite(secs(r))&&r.distanceKm>0?clock(Math.round(secs(r)/r.distanceKm))+' /km':'—';
@@ -163,7 +174,7 @@ export function mountConsultation(host,source){
  const options=()=>{const old=state.chosen;target.innerHTML='';if(state.mode==='single'){
   const available=records();
   if(!available.length)target.add(new Option('保存された運動記録がありません',''));
-  else available.forEach(r=>target.add(new Option(dateLabel(r.date)+'　'+gait(r)+'（'+(r.source==='manual'?'手入力':r.source==='gps-v2'?'GPSの保存記録（概要のみ）':'GPS')+'）',r.id)));
+  else available.forEach(r=>target.add(new Option(consultationTargetLabel(r,host.ownerDocument?.documentElement?.lang),r.id)));
   state.chosen=available.some(r=>r.id===old)?old:available[0]?.id||'';
  }else{target.add(new Option('直近30日間','30'));target.add(new Option('直近7日間','7'));target.value=String(state.periodDays);}
  target.value=state.mode==='single'?state.chosen:String(state.periodDays);};
