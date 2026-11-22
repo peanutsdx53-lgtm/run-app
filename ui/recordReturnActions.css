@@ -113,9 +113,10 @@
  justify-content:flex-end!important;
 }
 .environment-v4 .e4-bottom.rl-record-footer{
- display:flex!important;
- flex-direction:column;
- align-items:flex-end!important;
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr);
+ justify-items:end;
+ align-items:start;
  gap:12px;
 }
 .environment-v4 .e4-leave-warning[hidden]{display:none!important}
@@ -197,4 +198,17 @@
 }
 @media(prefers-reduced-motion:reduce){
  .rl-record-footer .rl-record-return{transition:none}
+}
+
+/* The pre-existing :is() bright-role rule has a max-specificity selector
+   elsewhere in its list, giving even the Gait/ROF/Environment branches 0-5
+   specificity. Explicitly scope the terminal return to outrank it. The
+   disabled states keep their legible inactive style. */
+.record-v3.rv4-page .rv4-next-actions.rl-record-footer .rv4-done.rl-record-return,
+.record-v3.gait-v4 .g4-footer.rl-record-footer .g4-apply.rl-record-return:not(:disabled),
+.record-v3.environment-v4 .e4-bottom.rl-record-footer .e4-done.rl-record-return:not(.e4-disabled){
+ background:linear-gradient(100deg,#27b2d6,#11c6b5)!important;
+ color:#052939!important;
+ border-color:#7bf5eb!important;
+ -webkit-text-fill-color:#052939!important;
 }
