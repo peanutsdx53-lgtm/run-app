@@ -39,8 +39,8 @@ test('UX05: language state remains explicit; consent remains independent and man
  assert.match(legal,/data-onboard-terms/);
  assert.match(legal,/data-onboard-privacy/);
  assert.match(legal,/data-onboard-next disabled/);
- assert.doesNotMatch(renderFirstUse(state(1,{termsAccepted:true,privacyConfirmed:false})),/data-onboard-next (?!(?:disabled|class))/);
- assert.doesNotMatch(renderFirstUse(state(1,{termsAccepted:false,privacyConfirmed:true})),/data-onboard-next (?!(?:disabled|class))/);
+ assert.match(renderFirstUse(state(1,{termsAccepted:true,privacyConfirmed:false})),/data-onboard-next disabled/);
+ assert.match(renderFirstUse(state(1,{termsAccepted:false,privacyConfirmed:true})),/data-onboard-next disabled/);
  assert.doesNotMatch(renderFirstUse(state(1,{termsAccepted:true,privacyConfirmed:true})),/data-onboard-next disabled/);
  for(const step of [0,1,7])assert.doesNotMatch(renderFirstUse(state(step)),/data-onboard-skip-guide/);
  for(const step of [2,3,4,5,6])assert.match(renderFirstUse(state(step)),/data-onboard-skip-guide/);
@@ -62,7 +62,7 @@ test('UX05: empty Home retains one record CTA, missing != zero, and four optiona
  const awards=achievementCard({ok:true,records:[]});
  for(const name of ['初回の走行','30分以上','累計50 km','累計100 km'])
   assert.ok(awards.includes(name),'do not remove a milestone without comparative user testing');
- assert.doesNotMatch(awards,/達成</small>/,'no fabricated earned milestone');
+ assert.doesNotMatch(awards,/<small>達成<\/small>/,'no fabricated earned milestone');
  for(const hash of ['#/course','#/learning','#/consultation'])
   assert.ok(shortcutsCard().includes('href="'+hash+'"'),'original shortcut cannot disappear');
 });
@@ -70,7 +70,7 @@ test('UX05: empty Home retains one record CTA, missing != zero, and four optiona
 test('UX05: compact Home edit label has an explicit name without widening its text',()=>{
  const app=read('app.js');
  assert.match(app,/data-home-edit aria-pressed="\$\{editing\}" aria-label="\$\{editing\?'編集を終了':'ホームの表示を編集'\}"/);
- assert.match(app,/\$\{editing\?"編集を終了":"編集"\}</button>/);
+ assert.match(app,/\$\{editing\?"編集を終了":"編集"\}<\/button>/);
  assert.equal(translateUiText('ホームの表示を編集'),'Edit Home Layout');
  assert.equal(translateUiText('編集を終了'),'Finish Editing');
 });
