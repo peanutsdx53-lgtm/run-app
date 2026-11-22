@@ -16,10 +16,13 @@ await mkdir(out,{recursive:true});
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml'};
 const server=createServer(async(req,res)=>{
  try{
-  const file=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname));
-  if(file!==root&&!file.startsWith(root+sep))throw Error('blocked');
+  const requested=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname));
+  if(requested!==root&&!requested.startsWith(root+sep))throw Error('blocked');
+  // The homepage URL is '/'. Determine MIME from the actual index.html file
+  // rather than the root directory; otherwise Chromium starts a download.
+  const file=requested===root?resolve(root,'index.html'):requested;
   res.setHeader('content-type',mime[extname(file)]||'application/octet-stream');
-  res.end(await readFile(file===root?resolve(root,'index.html'):file));
+  res.end(await readFile(file));
  }catch{res.statusCode=404;res.end('Not Found');}
 });
 await new Promise(ok=>server.listen(0,'127.0.0.1',ok));
