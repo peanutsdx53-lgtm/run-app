@@ -43,8 +43,9 @@ test('UX04 keyed translation is opt-in, preserves unknown and original saved tex
  assert.equal(translateOptInActionText('記録',{element:tagged('nav.record'),attribute:'aria-label'}),null);
  assert.equal(translateUiText('ユーザーの考え',{element:{...tagged('nav.home'),closest:()=>({})}}),'ユーザーの考え');
  assert.equal(translateUiText('記録',{element:tagged('unknown')}),translateUiText('記録'));
- assert.ok(!read('ui/actionCopyKeys.js').includes('localStorage'));
- assert.ok(!read('ui/actionCopyKeys.js').includes('indexedDB'));
+ const source=read('ui/actionCopyKeys.js');
+ assert.doesNotMatch(source,/\b(?:localStorage|sessionStorage|indexedDB)\s*(?:\.|\[|\()/,
+  'display-only action table cannot access persistence APIs');
 });
 
 test('UX04 versioned app, dictionary and new action keys are coherent with offline precache',()=>{
