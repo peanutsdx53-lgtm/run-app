@@ -1,3 +1,4 @@
+import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261121-history-more-filters-v2';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261120-s09-comparison-english-v1';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261111-exploration-inquiry-v1';
@@ -260,6 +261,10 @@ export function translateUiText(text,context={}){
  if(trimmed==='選択中の部位'&&
     context.element?.matches?.('.rv4-reading > small')&&
     context.element?.closest?.('.rv4-body'))return raw.replace(trimmed,'Selected Region');
+ // UX04: explicit labels opt into stable action IDs; all existing legacy
+ // exact-phrase mapping and context-specific scientific terms remain intact.
+ const keyed=translateOptInActionText(trimmed,context);
+ if(keyed!==null)return raw.replace(trimmed,keyed);
  const exact=Object.prototype.hasOwnProperty.call(ENGLISH_UI_TEXT,trimmed)?ENGLISH_UI_TEXT[trimmed]:null;
  const translated=exact??translateExploreDynamic(trimmed,context)??translateResidualDynamic(trimmed,context);
  return translated===null?raw:raw.replace(trimmed,translated);
