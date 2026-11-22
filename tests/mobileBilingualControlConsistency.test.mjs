@@ -49,6 +49,7 @@ test('Selected bright controls use dark ink, neutral controls stay pale, and nat
  for(const selector of ['.gait-v4 .g4-choice button[aria-pressed="true"]',
    '.environment-v4 .e4-chip[aria-pressed="true"]',
    '.record-v3.rv-course .rv-surface-pick button[aria-pressed="true"]',
+   '.record-v3.rv-course .rv-surface-tile.is-selected',
    '.lr-root .lr-action:not(.lr-secondary):not(.lr-outline):not(:disabled)']){
   assert.ok(css.includes(selector),selector);
  }
