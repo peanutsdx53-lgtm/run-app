@@ -83,24 +83,28 @@ export function evaluateQuiz(answers){
  return QUIZ.map(item=>{const chosen=answers?.[item.id];return {id:item.id,correct:chosen!==null&&chosen!==undefined&&chosen!==""&&Number(chosen)===item.correct,explanation:item.rationales?.[Number(chosen)]||item.explanation};});
 }
 /* P12: the existing learning guidance is shown once beside the screen title. */
-function learningHeading(){
- return '<header class="lr-page-heading"><h1>学習</h1>'+
+function learningHeading(selected=null){
+ const isLesson=Boolean(selected),backHref=isLesson?'#/learning':'#/home';
+ const backLabel=isLesson?'学習の一覧へ戻る':'ホームに戻る';
+ return '<header class="lr-page-heading"><a class="lr-page-back" href="'+backHref+'" aria-label="'+backLabel+'">‹</a><h1>学習</h1>'+
   '<details class="rl-screen-help lr-screen-help"><summary aria-label="学習の目的と使い方">？</summary>'+
   '<div class="lr-screen-help-content"><strong>学習でできること</strong>'+
   '<p>走る速さ、身体の動き、疲労感や休養の基本を、例題とともに学べます。</p>'+
   '<strong>使い方</strong><p>教材を選び、気になる章を開いてください。復習では学んだ知識を問題で確かめられます。</p>'+
   '<p>記録の読み方を知りたいときは、補助教材も利用できます。</p></div></details></header>';
 }
-function insertLearningHeading(host){
+function insertLearningHeading(host,selected=null){
  // Keep support for source tests using a minimal {innerHTML:''} host.
  if(typeof host?.querySelector!=='function'){
   if(typeof host?.innerHTML==='string'&&!host.innerHTML.includes('class="lr-page-heading"'))
-   host.innerHTML=learningHeading()+host.innerHTML;
+   host.innerHTML=learningHeading(selected)+host.innerHTML;
   return;
  }
  const scope=host.querySelector('.lr-lesson')||host;
  if(scope.querySelector(':scope > .lr-page-heading'))return;
- scope.insertAdjacentHTML('afterbegin',learningHeading());
+ scope.insertAdjacentHTML('afterbegin',learningHeading(selected));
+ // Replace the old inline lesson-back link with the consistent header control.
+ if(selected)scope.querySelector(':scope > .lr-back')?.remove();
 }
 const learningCardIcons=Object.freeze({
  data:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h18M5 15l4-5 4 3 6-8"/><path d="M16 5h3v3"/></svg>',
@@ -166,11 +170,11 @@ function lesson(){
 export function mountLearning(host,params){
  if(!host)return;
  const selected=params?.get("lesson");
- if(selected===ORIGIN_LESSON.id){mountOriginLesson(host);insertLearningHeading(host);enhanceLearningLesson(host,selected);return;}
- if(selected===MOTION_LESSON.id){mountMotionLesson(host);insertLearningHeading(host);enhanceLearningLesson(host,selected);return;}
- if(selected===FATIGUE_LESSON.id){mountFatigueLesson(host);insertLearningHeading(host);enhanceLearningLesson(host,selected);return;}
+ if(selected===ORIGIN_LESSON.id){mountOriginLesson(host);insertLearningHeading(host,selected);enhanceLearningLesson(host,selected);return;}
+ if(selected===MOTION_LESSON.id){mountMotionLesson(host);insertLearningHeading(host,selected);enhanceLearningLesson(host,selected);return;}
+ if(selected===FATIGUE_LESSON.id){mountFatigueLesson(host);insertLearningHeading(host,selected);enhanceLearningLesson(host,selected);return;}
  host.innerHTML=selected===READY_LESSON.id?lesson():selected?'<section class="lr-panel"><h1>この教材は利用できません</h1><p>学習の一覧から利用できる教材を選んでください。</p><a href="#/learning">学習の一覧へ戻る</a></section>':catalogue();
- insertLearningHeading(host);
+ insertLearningHeading(host,selected);
  if(selected!==READY_LESSON.id)return;
  const jumpTo=id=>host.querySelector("#"+id)?.scrollIntoView({block:"start",behavior:"auto"});
  host.querySelectorAll("[data-lr-jump]").forEach(button=>button.addEventListener("click",()=>jumpTo(button.dataset.lrJump)));
