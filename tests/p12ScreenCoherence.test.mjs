@@ -11,7 +11,7 @@ test('P12: Home guide, learning header, History and Exploration controls preserv
  assert.match(home,/homeUi\.guideOpen=!homeUi\.guideOpen/);
  assert.doesNotMatch(home,/historyHeading\.after\(shortcut\)/);
  const learning=read('ui/learningExperience.js');
- assert.match(learning,/function learningHeading\(\)/);
+ assert.match(learning,/function learningHeading\(selected=null\)/);
  assert.match(learning,/aria-label="学習の目的と使い方"/);
  assert.doesNotMatch(learning,/lr-help-disclosure/);
  assert.match(learning,/class="lr-course" data-lr-course=/);
