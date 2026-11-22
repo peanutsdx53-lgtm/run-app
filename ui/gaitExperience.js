@@ -65,7 +65,7 @@ export function gaitPage(d={}){
     </div>
    </section>
   </div>
-  <div class="g4-footer"><button type="button" data-g4-apply class="g4-apply">入力内容を反映</button></div>
+  <footer class="g4-footer rl-record-footer"><button type="button" data-g4-apply class="g4-apply rl-record-return">記録に戻る <span aria-hidden="true">→</span></button></footer>
  </div>`;
 }
 export function paintGait(page,d={}){
