@@ -31,8 +31,8 @@ export function renderFatigueInquiry(input={},options={}){
   '<h3 id="ex-e-t02-title">'+FATIGUE_INQUIRY.question+'</h3>'+
   (m.state==='VERIFIED'?'<p class="ex-e-provenance">出所：'+sourceLabel[m.source]+'</p>':'')+evidence+
   '<div class="ex-e-boundary"><strong>この記録だけでは分からないこと</strong>'+
-  '<p>運動前・運動後は本人が選んだ回答区分です。実際の評価時刻、変化の原因、身体の状態はこの回答だけでは確定できません。</p></div>'+
+  '<p>運動前・運動後は本人が選んだ回答区分です。実際の評価時刻、変化の原因、身体の状態はこの回答だけでは確定できません。</p><p>問いへの答えに正解・不正解はありません。記述は任意です。一般知識の学習・復習とは別の活動です。</p></div>'+
   '<p class="ex-e-prompt">そのときの経験について何が気になりますか？ 以前の経験や状況と照らして、次に確かめたいことを自分で考えられます。</p>'+
-  '<small>問いへの答えに正解・不正解はありません。記述は任意です。一般知識の学習・復習とは別の活動です。</small>'+
+  ''+
   (canWrite?'<button type="button" class="ex-e-memo" data-ex-action="note">この問いについて書く（任意）</button>':'')+'</section>';
 }
