@@ -68,7 +68,7 @@ test('Selected bright controls use dark ink, neutral controls stay pale, and nat
 
 test('The revision is aligned across active shell and PWA; science and English dictionary are unchanged',()=>{
  const html=read('index.html'),app=read('app.js'),sw=read('sw.js');
- const ver='20261122-record-return-v1',prior='20261122-mobile-controls-v1',previous='20261122-gait-learning-type-v1',shell='20261122-explore-clean-v1',cacheGeneration='20261122-ux03-reflow-v1';
+ const ver='20261122-record-return-v1',prior='20261122-mobile-controls-v1',previous='20261122-gait-learning-type-v1',shell='20261122-ux04-stable-actions-v1',cacheGeneration='20261122-ux04-stable-actions-v1';
  for(const [src,fragment] of [[html,'ui/buttonContrastSystem.css?v='+previous],
   [html,'ui/recordReturnActions.css?v='+ver],
   [html,'app.js?v='+shell],[app,'recordExperience.js?v='+ver],
