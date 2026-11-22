@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {manualPage,initialCourseUi} from '../ui/recordExperience.js';
 import {gaitPage,gaitValidation} from '../ui/gaitExperience.js';
 import {ENGLISH_FINAL_RECORDING} from '../ui/englishFinalRecording.js';
+import {consultationTargetLabel} from '../ui/consultationExperience.js';
 
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const draft={date:'2026-11-22',distance:'',minutes:'',activityGait:'UNKNOWN',
@@ -34,6 +35,14 @@ test('Gait message nodes translate individually, preserving validation decisions
  assert.ok(ENGLISH_FINAL_RECORDING['取得方法を選択していますが、歩数は未入力です。']);
 });
 
+test('System-generated Consultation options are English in English mode, without touching record IDs',()=>{
+ const r={id:'record-id-1',date:'2026-11-20',source:'manual',draft:{activityGait:'RUNNING'}};
+ assert.equal(consultationTargetLabel(r,'en'),'2026/11/20  Running (Manual Entry)');
+ assert.equal(consultationTargetLabel(r,'ja'),'2026/11/20　ランニング（手入力）');
+ const gps={id:'gps-1',date:'2026-11-21',source:'gps-v2',activity:'WALK'};
+ assert.equal(consultationTargetLabel(gps,'en'),'2026/11/21  Walking (Saved GPS Summary)');
+});
+
 test('Selected bright controls use dark ink, neutral controls stay pale, and native GPS picker is localized',()=>{
  const css=read('ui/buttonContrastSystem.css');
  for(const selector of ['.gait-v4 .g4-choice button[aria-pressed="true"]',
@@ -44,6 +53,8 @@ test('Selected bright controls use dark ink, neutral controls stay pale, and nat
  }
  assert.match(css,/color:var\(--rl-button-bright-text\)!important/);
  assert.match(css,/\.gait-v4 \.g4-choice button\{[\s\S]*?white-space:normal/);
+ assert.ok(css.includes('.rv4-page .rv4-done'));
+ assert.ok(css.includes('.cp-app .cp-mobile-switch button.active'));
  assert.match(css,/\.gps-history-backup-actions input\[data-gps-v2-backup-file\]\{/);
  assert.match(css,/clip-path:inset\(50%\)/);
  assert.doesNotMatch(css,/(?:^|\n)\s*button\s*\{\s*color:/);
@@ -57,7 +68,7 @@ test('The revision is aligned across active shell and PWA; science and English d
  const ver='20261122-mobile-controls-v1';
  for(const [src,fragment] of [[html,'ui/buttonContrastSystem.css?v='+ver],
   [html,'app.js?v='+ver],[app,'recordExperience.js?v='+ver],
-  [app,'historyExperience.js?v='+ver],[app,'gaitExperience.js?v='+ver],
+  [app,'historyExperience.js?v='+ver],[app,'gaitExperience.js?v='+ver],[app,'consultationExperience.js?v='+ver],
   [sw,'runload-ui-next-shell-'+ver],[sw,'ui/gaitExperience.js?v='+ver]])
   assert.ok(src.includes(fragment),'missing active '+fragment);
  assert.ok(!app.includes('localStorage.clear()'));
