@@ -6,6 +6,7 @@ export const ENGLISH_EXPLORE_KNOWLEDGE=Object.freeze({
  "選んだ分野と強調表示の説明":"About the Selected Category and Highlighting",
  "表示の説明":"About This Display",
  "情報の限界・出所":"Sources and Limitations",
+ "関連の出所と限界":"Record Sources and Limitations",
  "テーマは左右にスワイプするか、矢印で切り替えられます。":"Swipe between topics or use the arrow buttons.",
  "メモを読み取れません。保存済みのデータは変更していません。":"Saved notes could not be read. Existing data was not changed.",
  "表示例：走行距離の入力":"Example: Running Distance Entry",
