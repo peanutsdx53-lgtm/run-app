@@ -50,7 +50,7 @@ test('field terminology names seven fields and makes relevance explicit without 
  assert.match(sample,/表示例/);
  assert.doesNotMatch(sample,/星/);
  u.modal='learn-help';const sourceHelp=render(u,ctx);
- assert.match(sourceHelp,/分野の強調表示は、入力・保存記録との関連を示す目印です/);
+ assert.doesNotMatch(sourceHelp,/分野の強調表示は、入力・保存記録との関連を示す目印です/);assert.match(sourceHelp,/参考知識は一般的な情報です/);
  assert.doesNotMatch(sourceHelp,/星/);
 });
 test('purpose label wraps only between semantic words without changing its accessible name',()=>{
