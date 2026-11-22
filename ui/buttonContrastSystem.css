@@ -143,3 +143,30 @@
  border-color:#608493!important;
  -webkit-text-fill-color:#d7e9ee;
 }
+
+/* The native file-picker chrome follows the OS locale, which can be Japanese
+   while the app is set to English. The parent label is translated by our UI
+   dictionary and still opens the real file input when activated. */
+.gps-history-backup-actions label:has(input[data-gps-v2-backup-file]){
+ position:relative;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+}
+.gps-history-backup-actions input[data-gps-v2-backup-file]{
+ position:absolute;
+ width:1px!important;
+ height:1px!important;
+ min-width:0!important;
+ padding:0!important;
+ margin:0!important;
+ border:0!important;
+ opacity:0;
+ clip-path:inset(50%);
+ overflow:hidden;
+}
+.gps-history-backup-actions label:has(input[data-gps-v2-backup-file]:focus-visible){
+ outline:3px solid var(--rl-button-focus);
+ outline-offset:2px;
+}
