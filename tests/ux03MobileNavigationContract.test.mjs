@@ -26,6 +26,9 @@ test('UX03 fixed-pixel Settings labels now enlarge without shortening content or
  ])assert.ok(shell.includes(s),'missing zoom-capable type: '+s);
  assert.match(browser,/settingsSubtitleSize>=original\.settingsSubtitleSize\*1\.6/);
  assert.match(browser,/settingsTitleSize>=original\.settingsTitleSize\*1\.6/);
+ assert.ok(shell.includes('.s2-panel[data-settings-tone="mint"] .s2-item:has(.s3-profile-form)>summary .s2-indicator{'));
+ assert.ok(shell.includes('font-size:max(12px,.58rem)'));
+ assert.match(browser,/settingsOptionalSize>=original\.settingsOptionalSize\*1\.5/);
  assert.match(browser,/for\(const lang of \['ja','en'\]\)/);
  assert.match(browser,/for\(const width of \[320,390,768,1440\]\)/);
  assert.match(browser,/for\(const percent of \[100,200\]\)/);
