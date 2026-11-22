@@ -92,6 +92,7 @@ test('Body-like accent button is shared, responsive, and translated in both lang
  assert.match(css,/width:100%!important/);
  assert.match(css,/@media\(max-width:520px\)/);
  assert.match(css,/\.e4-leave-warning\[hidden\]\{display:none!important\}/);
+ assert.ok(css.includes('.e4-bottom:has(.e4-leave-warning:not([hidden]))>.e4-done'));
  assert.equal(ENGLISH_FINAL_RECORDING['記録に戻る'],'Back to Recording');
  assert.equal(ENGLISH_FINAL_RECORDING['条件を反映して記録に戻る'],'Apply Conditions & Return');
  assert.equal(ENGLISH_FINAL_RECORDING['反映して戻る'],'Apply & Return');
