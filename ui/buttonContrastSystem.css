@@ -132,3 +132,14 @@
  overflow-wrap:break-word;
  white-space:normal;
 }
+
+/* Disabled remains clearly visible without suggesting an available action. */
+.gait-v4 .g4-apply:disabled,
+.environment-v4 .e4-commit:disabled,
+.environment-v4 .e4-done.e4-disabled{
+ opacity:1!important;
+ background:#204657!important;
+ color:#d7e9ee!important;
+ border-color:#608493!important;
+ -webkit-text-fill-color:#d7e9ee;
+}
