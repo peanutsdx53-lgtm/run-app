@@ -78,3 +78,57 @@
 @media(prefers-reduced-motion:reduce){
  :is(.record-v3 .rv-main-button,.rr-page .rr-foot-actions .rr-save){transition:none}
 }
+
+/* 2026-11-22: role-driven extensions for phone controls. The contrast of the
+   background determines the ink: selected/primary cyan -> navy, neutral dark
+   -> pale. Keep danger/disabled/white lesson panels in their own roles. */
+:is(
+ .record-v3.rv-course .rv-surface-pick button[aria-pressed="true"],
+ .gait-v4 .g4-choice button[aria-pressed="true"],
+ .gait-v4 .g4-apply:not(:disabled),
+ .environment-v4 .e4-chip[aria-pressed="true"],
+ .environment-v4 .e4-flag[aria-pressed="true"],
+ .environment-v4 .e4-commit:not(:disabled),
+ .environment-v4 .e4-done:not(.e4-disabled),
+ .lr-root .lr-action:not(.lr-secondary):not(.lr-outline):not(:disabled)
+){
+ background:var(--rl-button-bright)!important;
+ color:var(--rl-button-bright-text)!important;
+ border-color:var(--rl-button-bright-border)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+.cp-mode-button.active :is(span,small){
+ color:var(--rl-button-bright-text)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+/* Wrap rather than cut or shrink the accessible English choice labels. */
+.gait-v4 .g4-choice button{
+ height:auto;
+ min-height:58px;
+ white-space:normal;
+ overflow-wrap:break-word;
+ word-break:normal;
+ line-height:1.35;
+ padding:9px 6px;
+}
+.gait-v4 .g4-choice{
+ align-items:stretch;
+}
+@media(max-width:430px){
+ html[lang="en"] .gait-v4 .g4-choice{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+}
+.record-v3.rv-course .rv-surface-pick button{
+ white-space:normal;
+ min-height:48px;
+ line-height:1.35;
+}
+.record-v3.rv-course .rv-surface-pick button b{flex:0 0 auto}
+.environment-v4 .e4-chip,
+.environment-v4 .e4-flag,
+.environment-v4 .e4-done{
+ line-height:1.35;
+ overflow-wrap:break-word;
+ white-space:normal;
+}
