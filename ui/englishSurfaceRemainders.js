@@ -286,6 +286,18 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
   if(is('.rv-section-row-head button')&&s==='削除')return 'Remove';
  }
  if(inView('[data-g4-page]')){
+  // The overall-activity summary combines two system-generated values in one
+  // text node. Translate each part without modifying the recorded numbers.
+  if(is('.g4-summary p:first-child strong')){
+   const parts=s.match(/^(.+) \/ (.+)$/);
+   if(parts){
+    const distance=parts[1]==='距離未入力'?'Distance Not Entered':parts[1];
+    const duration=parts[2]==='時間未入力'?'Time Not Entered':
+     parts[2].replace(/^([\\d.]+) 分$/,'$1 min');
+    return distance+' / '+duration;
+   }
+  }
+
   if(is('.g4-step-input b')&&s==='歩')return 'steps';
   const stepsLabels={'端末計測':'Measured by Device','概数入力':'Estimated Count','連続走行':'Continuous Running',
    '走行＋歩行':'Run + Walk','不明・未設定':'Unknown / Unspecified'};
