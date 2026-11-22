@@ -12,7 +12,7 @@ The user's evidence comes from the smartphone English interface; removal of redu
 ## Functional design rationale
 
 - Manual: retain required distance/time/activity field semantics, `aria-required`, save validation and feedback at the appropriate action. Remove only the redundant progress paragraph (`要入力：…`), regardless of interface language.
-- Course: selecting multiple surface types, editing percentages and saving a course remain unchanged. Preserve full accessible surface names and the stored surface IDs.
+- Course: selecting multiple surface types, editing percentages and saving a course remain unchanged. Final screenshot showed the added surface-name tile still had pale ink on dark teal; move selected surface-name tiles to cyan fill/dark ink, independent of percentage-editor selection. Preserve full accessible surface names and the stored surface IDs.
 - Gait: preserve source/format identifiers, running/walking calculation restrictions, and validation. Wrap each independent error/warning in an escaped span so the existing English dictionary can translate it; add the one missing source warning mapping. Screenshot inspection exposed a combined Japanese distance/time summary even in EN; translate its two system-generated parts while preserving exact numeric values.
 - Environment: preserve the distinction between a temporary selection and applying it to the optional note; leave inactive or disabled controls visually distinct. WebKit screenshots revealed an untranslated note placeholder; add its English phrase and an automated screenshot assertion.
 - History: keep 2 period choices, source/type controls, saved records, and Shadow DOM. Brighten selected filter colors within the Shadow DOM rather than applying global document CSS.
