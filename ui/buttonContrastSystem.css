@@ -181,3 +181,25 @@
  border-color:var(--rl-button-bright-border)!important;
  -webkit-text-fill-color:var(--rl-button-bright-text);
 }
+
+/* History backup actions must not grow to 150px-tall blank tiles on phones. */
+@media(max-width:540px){
+ .gps-history-tools-content .gps-history-backup-actions{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  align-content:flex-start!important;
+  gap:8px;
+ }
+ .gps-history-tools-content .gps-history-backup-actions>button,
+ .gps-history-tools-content .gps-history-backup-actions>label{
+  flex:0 0 auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:46px!important;
+  max-height:75px!important;
+  padding:11px 12px!important;
+  box-sizing:border-box;
+  justify-content:center;
+ }
+}
