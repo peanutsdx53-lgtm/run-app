@@ -142,7 +142,8 @@ test('GPS V2 sharing must require an explicit unchecked option and never request
  assert.match(src,/setAttribute\('data-consultation-gps-v2',''\)/);
  assert.match(src,/check\.addEventListener\('change'/);
  assert.match(src,/gpsV2Records|v2Records/);
- assert.ok(src.includes("r.source==='gps-v2'?'GPSの保存記録（概要のみ）'"));
+ assert.ok(src.includes("record.source==='gps-v2'?'GPSの保存記録（概要のみ）'"),'system-only option keeps GPS summary provenance');
+ assert.match(src,/consultationTargetLabel\(r,host\.ownerDocument\?\.documentElement\?\.lang\)/,'option labels are rendered at the actual interface language');
  assert.match(src,/GPS記録の部位別参考値は含めません/);
  assert.match(app,/gpsV2:gpsV2Cache/);
  assert.doesNotMatch(src,/readGpsV2Detail\(|gpsV2DetailToFeature\(/);
