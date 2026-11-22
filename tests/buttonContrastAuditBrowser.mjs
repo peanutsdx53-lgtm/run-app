@@ -213,6 +213,8 @@ try{
      await snap(page,name,language,width,'selected');
      await page.locator('[data-e4-done]').click();
      await page.locator('[data-e4-leave-warning]').waitFor({state:'visible'});
+     assert.equal(await page.locator('[data-e4-done]').isVisible(),false,
+      'when pending, show only explicit apply/discard exits, not the ordinary return beneath navigation');
      assert.ok(page.url().includes('#/record-environment'),'pending temporary weather must prevent navigation');
      if(language==='en'){
       assert.match(await page.locator('[data-e4-leave-warning]').innerText(),
