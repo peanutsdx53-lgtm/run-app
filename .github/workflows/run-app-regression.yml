@@ -85,6 +85,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
       - name: Explore all 28 topics and saved-run English surface copy
+        env:
+          RUNLOAD_EXPLORE_STRICT: '1'
         run: node tests/exploreFullCopyBrowser.mjs
       - name: Preserve exhaustive Explore language and layout evidence
         if: always()
