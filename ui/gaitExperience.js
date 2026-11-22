@@ -6,7 +6,7 @@ const sourceOptions=Object.freeze([
  ["DEVICE_MEASURED","端末計測"], ["ESTIMATED","概数入力"],["UNKNOWN","不明"]]);
 const allowedActivities=new Set(["UNKNOWN","RUNNING","JOGGING","WALK"]);
 const formatOptions=Object.freeze([
- ["UNKNOWN","不明"],["CONTINUOUS_RUN","連続走行"],["RUN_WALK","走行＋歩行"]]);
+ ["CONTINUOUS_RUN","連続走行"],["RUN_WALK","走行＋歩行"],["UNKNOWN","不明"]]);
 const parsed=value=>String(value??"").trim()===""?null:Number(value);
 const quantity=(v,min,max)=>{const n=parsed(v);return n!==null&&Number.isFinite(n)&&n>=min&&n<=max?n:null};
 const fmt=(n,d=1)=>Number(n).toFixed(d);
