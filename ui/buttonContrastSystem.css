@@ -90,6 +90,8 @@
  .environment-v4 .e4-flag[aria-pressed="true"],
  .environment-v4 .e4-commit:not(:disabled),
  .environment-v4 .e4-done:not(.e4-disabled),
+ .rv4-page .rv4-done,
+ .cp-app .cp-mobile-switch button.active,
  .lr-root .lr-action:not(.lr-secondary):not(.lr-outline):not(:disabled)
 ){
  background:var(--rl-button-bright)!important;
@@ -169,4 +171,13 @@
 .gps-history-backup-actions label:has(input[data-gps-v2-backup-file]:focus-visible){
  outline:3px solid var(--rl-button-focus);
  outline-offset:2px;
+}
+
+/* Preserve the Body/Equipment turquoise-blue gradient, but brighten its
+   darker stop sufficiently for navy text to remain readable throughout. */
+.cx-page .cx-apply:not(:disabled){
+ background:linear-gradient(100deg,#27b2d6,#11c6b5)!important;
+ color:var(--rl-button-bright-text)!important;
+ border-color:var(--rl-button-bright-border)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
 }
