@@ -70,12 +70,17 @@ try{
     });
     const settingsSubtitle=document.querySelector('.s2-item-copy small');
     const settingsTitle=document.querySelector('.s2-item-copy strong');
+    const optional=document.querySelector('.s2-panel[data-settings-tone="mint"] .s2-item:has(.s3-profile-form)>summary .s2-indicator');
+    const optionalBounds=optional?.getBoundingClientRect();
+    const parentBounds=optional?.closest('summary')?.getBoundingClientRect();
     return {display:style.display,rect:{top:+rect.top.toFixed(1),height:+rect.height.toFixed(1),bottom:+rect.bottom.toFixed(1)},
      rootFont:parseFloat(getComputedStyle(document.documentElement).fontSize),
      mainBottomPadding:parseFloat(getComputedStyle(main).paddingBottom),
      scrollWidth:document.documentElement.scrollWidth,links,
      settingsSubtitleSize:settingsSubtitle?parseFloat(getComputedStyle(settingsSubtitle).fontSize):null,
-     settingsTitleSize:settingsTitle?parseFloat(getComputedStyle(settingsTitle).fontSize):null};
+     settingsTitleSize:settingsTitle?parseFloat(getComputedStyle(settingsTitle).fontSize):null,
+     settingsOptionalSize:optional?parseFloat(getComputedStyle(optional).fontSize):null,
+     settingsOptionalFits:optionalBounds&&parentBounds?optionalBounds.left>=parentBounds.left-2&&optionalBounds.right<=parentBounds.right+2:null};
    });
    assert.equal(row.links.length,5,screen+' must preserve five navigation links');
    assert.deepEqual(row.links.map(x=>x.href),
@@ -103,7 +108,9 @@ try{
     assert.equal(row.display,'none','desktop must keep sidebar navigation');
    }
    if(screen==='settings'){
-    assert.ok(row.settingsSubtitleSize!==null&&row.settingsTitleSize!==null,'Settings labels must be measurable');
+    assert.ok(row.settingsSubtitleSize!==null&&row.settingsTitleSize!==null&&row.settingsOptionalSize!==null,
+      'Settings titles, descriptions, and optionality must be measurable');
+     assert.ok(row.settingsOptionalFits,'optional status must fit within its summary: '+JSON.stringify({lang,width,percent}));
    }
    results.push({engine,lang,width,percent,screen,...row});
    if(percent===200&&(width<=390||width===768&&['explore','settings'].includes(screen)||width===1440&&screen==='explore'))
@@ -119,6 +126,8 @@ try{
    'settings help copy must visibly grow at 200%: '+JSON.stringify({lang,width,at100:original.settingsSubtitleSize,at200:current.settingsSubtitleSize}));
   assert.ok(current.settingsTitleSize>=original.settingsTitleSize*1.6,
    'settings item title must visibly grow at 200%: '+JSON.stringify({lang,width,at100:original.settingsTitleSize,at200:current.settingsTitleSize}));
+  assert.ok(current.settingsOptionalSize>=original.settingsOptionalSize*1.5,
+   'optional status must grow at 200%: '+JSON.stringify({lang,width,at100:original.settingsOptionalSize,at200:current.settingsOptionalSize}));
  }
  assert.equal(results.length,96,'6 routes x 2 languages x 4 widths x 2 font scales');
  await writeFile(resolve(out,'nav-resize-matrix.json'),JSON.stringify({engine,tests:results.length,results},null,2));
