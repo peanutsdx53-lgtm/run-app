@@ -76,19 +76,23 @@ test('UX05: compact Home edit label has an explicit name without widening its te
 });
 
 test('UX05: CSS reflows all stage labels while both dynamic JS and CSS stay offline',()=>{
- const css=read('ui/firstUseExperience.css'),index=read('index.html'),app=read('app.js'),sw=read('sw.js');
+ const css=read('ui/firstUseExperience.css'),homeCss=read('ui/homeExperience.css'),index=read('index.html'),app=read('app.js'),sw=read('sw.js');
  assert.match(css,/\.fu-topbar \.fu-step-indicator\{/);
  assert.match(css,/overflow-wrap:anywhere/);
  assert.match(css,/@media\(max-width:900px\)/);
  assert.match(css,/\.fu-topbar\{height:auto;min-height:59px/);
  assert.ok(!css.includes('.fu-step-name{display:none'));
+ assert.ok(homeCss.includes('#app .home-v3 .home-head h1{white-space:nowrap;flex:0 0 auto}'));
+ assert.ok(homeCss.includes('.hx-condition .hx-title-button .hx-head{flex-wrap:wrap;row-gap:7px}'));
  const gen='20261122-ux05-firstuse-home-v1';
  for(const [txt,fragment] of [
   [app,'firstUseExperience.js?v='+gen],
   [index,'firstUseExperience.css?v='+gen],
+  [index,'homeExperience.css?v='+gen],
   [index,'app.js?v='+gen],
   [sw,'runload-ui-next-shell-'+gen],
   [sw,'firstUseExperience.css?v='+gen],
+  [sw,'homeExperience.css?v='+gen],
   [sw,'firstUseExperience.js?v='+gen],
   [sw,'app.js?v='+gen]
  ])assert.ok(txt.includes(fragment),'active offline version is missing: '+fragment);
