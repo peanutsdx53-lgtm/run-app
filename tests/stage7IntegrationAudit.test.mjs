@@ -4,11 +4,11 @@ import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('stage7: responsive 200% navigation text remains full-length and PWA uses one new stylesheet generation',()=>{
  const shell=read('ui/unifiedLearningShell.css'),html=read('index.html'),sw=read('sw.js');
- assert.match(shell,/grid-template-columns:repeat\(auto-fit,minmax\(min\(100%,3\.6rem\),1fr\)\)!important/);
+ assert.match(shell,/grid-template-columns:repeat\(auto-fit,minmax\(min\(100%,clamp\(60px,3\.2rem,112px\)\),1fr\)\)!important/);
  assert.match(shell,/white-space:nowrap!important/);
  assert.match(shell,/grid-template-columns:minmax\(0,1fr\)/);
  assert.match(html,/styles\.css\?v=20261117-s16-settings-v1/);
- assert.match(sw,/runload-ui-next-shell-20261122-ux02-contrast-v1/);
+ assert.match(sw,/runload-ui-next-shell-20261122-ux03-reflow-v1/);
  assert.match(sw,/\.\/styles\.css\?v=20261117-s16-settings-v1/);
  assert.doesNotMatch(sw,/styles\.css\?v=20261115-retire-whatif-v1/);
  const record=read('ui/recordExperience.css');

@@ -100,6 +100,16 @@ jobs:
         run: |
           node tests/buttonContrastAuditBrowser.mjs
           node tests/ux02ContrastMatrixBrowser.mjs
+      - name: Verify UX03 nav/zoom bilingual responsive matrix
+        run: node tests/ux03NavigationTextZoomBrowser.mjs
+      - name: Preserve UX03 navigation and text resizing visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux03-navigation-${{ matrix.engine }}
+          path: audit-output/ux03-navigation-${{ matrix.engine }}/
+          if-no-files-found: error
+          retention-days: 7
       - name: Preserve button contrast screenshots and computed style inventory
         if: always()
         uses: actions/upload-artifact@v4
