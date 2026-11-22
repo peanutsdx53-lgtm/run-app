@@ -97,13 +97,13 @@ async function scan(page,screen,language,width,phase){
  },{screen,language,width,phase});
 }
 async function snap(page,screen,language,width,phase){
- if(width!==390)return;
+ if(width!==390&&!(width===1024&&['course','rof','gait','environment','body'].includes(screen)))return;
  const name=screen+'-'+phase+'-'+language+'-'+width;
  findings.push(...await scan(page,screen,language,width,phase));
- await page.screenshot({path:resolve(out,name+'.png'),animations:'disabled',fullPage:['course','settings','gait','environment'].includes(screen)});
+ await page.screenshot({path:resolve(out,name+'.png'),animations:'disabled',fullPage:['course','settings','gait','environment','rof','body'].includes(screen)});
 }
 try{
- for(const [language,width] of [['en',390],['ja',390],['en',320]]){
+ for(const [language,width] of [['en',390],['ja',390],['en',320],['en',768],['en',1024],['ja',1024]]){
   const ua=engine==='webkit'?
    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1':
    'Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36';
@@ -124,11 +124,39 @@ try{
    if(!x.ok)throw Error('audit record: '+x.reason);
    return x.record.id;
   });
-  for(const [name,path,selector] of [...paths,['result','result?record='+encodeURIComponent(savedId),'#runload-result-v4']]){
+  const scenarios=width>430?paths.filter(([name])=>['course','rof','gait','environment','body'].includes(name)):[...paths,['result','result?record='+encodeURIComponent(savedId),'#runload-result-v4']];
+   for(const [name,path,selector] of scenarios){
    try{
     await page.goto(base+'#/'+path,{waitUntil:'networkidle'});
     await page.locator(selector).first().waitFor({timeout:13000});
     await page.waitForTimeout(75);
+    if(['course','rof','gait','environment','body'].includes(name)){
+     const primary=page.locator('.rl-record-footer .rl-record-return').first();
+     await primary.waitFor({state:'visible'});
+     const caption=(await primary.innerText()).replace(/[→›]/g,'').trim().replace(/\\s+/g,' ');
+     const expected=language==='en'?(name==='course'?'Apply Conditions & Return':'Back to Recording'):
+      (name==='course'?'条件を反映して記録に戻る':'記録に戻る');
+     assert.equal(caption,expected,'primary return label for '+name+' '+language);
+     const g=await primary.evaluate(el=>{
+      const r=el.getBoundingClientRect(),f=el.closest('.rl-record-footer').getBoundingClientRect(),
+        st=getComputedStyle(el);
+      return {w:r.width,h:r.height,right:r.right,footerWidth:f.width,footerRight:f.right,
+       scroll:el.scrollWidth,client:el.clientWidth,scrollHeight:el.scrollHeight,clientHeight:el.clientHeight,
+       fg:st.color,gradient:st.backgroundImage};
+     });
+     assert.equal(g.fg,'rgb(5, 41, 57)','Body-inspired action uses dark ink');
+     assert.ok(g.gradient.includes('rgb(39, 178, 214)')&&g.gradient.includes('rgb(17, 198, 181)'),
+      'turquoise gradient required: '+name+' '+JSON.stringify(g));
+     assert.ok(g.h>=51&&g.scroll<=g.client+2&&g.scrollHeight<=g.clientHeight+2,
+      'return label must fit '+width+'px '+name+': '+JSON.stringify(g));
+     assert.ok(Math.abs(g.right-g.footerRight)<=3,'return aligns to footer right edge');
+     if(width<=800)assert.ok(Math.abs(g.w-g.footerWidth)<=3,'mobile and tablet footer is full width');
+     else assert.ok(g.w<=321&&g.footerWidth>=g.w,'desktop footer capped at 320px');
+     if(name==='course')assert.equal(await page.locator('[data-course-save]').count(),1,
+      'reusable course remains separate');
+     if(name==='rof')assert.ok(await primary.evaluate(el=>!el.closest('.rv4-card')),
+      'fatigue footer must be outside the rating card');
+    }
     const entries=await scan(page,name,language,width,'default');
     findings.push(...entries);
     if(width===390)await page.screenshot({path:resolve(out,name+'-default-'+language+'-'+width+'.png'),animations:'disabled',fullPage:name==='course'||name==='settings'});
