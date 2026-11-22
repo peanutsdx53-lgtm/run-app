@@ -120,6 +120,16 @@ jobs:
           path: audit-output/ux04-actions-${{ matrix.engine }}/
           if-no-files-found: error
           retention-days: 7
+      - name: Verify UX05 eight-stage onboarding and Home in JA/EN at text zoom
+        run: node tests/ux05OnboardingHomeBrowser.mjs
+      - name: Preserve UX05 first-use progression and empty Home screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux05-onboarding-home-${{ matrix.engine }}
+          path: audit-output/ux05-intro-home-${{ matrix.engine }}/
+          if-no-files-found: error
+          retention-days: 7
       - name: Preserve button contrast screenshots and computed style inventory
         if: always()
         uses: actions/upload-artifact@v4
