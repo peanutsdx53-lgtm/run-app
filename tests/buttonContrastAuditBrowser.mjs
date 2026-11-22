@@ -172,6 +172,24 @@ try{
     }else if(name==='history'){
      const advanced=page.locator('[data-history-advanced]');
      if(await advanced.count()){await advanced.click();await snap(page,name,language,width,'filters-open');}
+     const gpsDetails=page.locator('[data-gps-history-disclosure]'),tools=page.locator('[data-gps-history-tools]');
+     if(await gpsDetails.count()&&await tools.count()){
+      await gpsDetails.evaluate(node=>node.open=true);
+      await tools.evaluate(node=>node.open=true);
+      const upload=page.locator('label:has(input[data-gps-v2-backup-file])').first();
+      await upload.waitFor({state:'visible'});
+      if(language==='en'){
+       const visibleText=(await upload.innerText()).trim();
+       assert.match(visibleText,/Import GPS Backup/i,'use the app English label instead of device-language file-picker chrome');
+       assert.doesNotMatch(visibleText,/[\u3040-\u30ff\u3400-\u9fff]/u,'GPS backup label is fully English');
+      }
+      const input=upload.locator('input[data-gps-v2-backup-file]');
+      const style=await input.evaluate(node=>({opacity:getComputedStyle(node).opacity,position:getComputedStyle(node).position}));
+      assert.equal(style.opacity,'0','native locale-specific file input must not be visible');
+      assert.equal(style.position,'absolute');
+      await upload.scrollIntoViewIfNeeded();
+      await snap(page,name,language,width,'gps-import');
+     }
      const first=page.locator('[data-select-id]').first();
      if(await first.count()){await first.click();await snap(page,name,language,width,'selected');}
     }
