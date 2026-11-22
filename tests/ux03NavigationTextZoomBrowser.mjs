@@ -51,7 +51,7 @@ try{
      const texts=[...el.childNodes].filter(node=>node.nodeType===Node.TEXT_NODE && node.textContent.trim());
      for(const node of texts)range.selectNodeContents(node);
      const label=range.getBoundingClientRect();
-     return {href:el.getAttribute('href'),name:el.textContent.replace(/\\s+/g,' ').trim(),
+     return {href:el.getAttribute('href'),name:el.textContent.replace(/\s+/g,' ').trim(),
       top:+bounds.top.toFixed(1),bottom:+bounds.bottom.toFixed(1),
       w:+bounds.width.toFixed(1),h:+bounds.height.toFixed(1),
       scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,
