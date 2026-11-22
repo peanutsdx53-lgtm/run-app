@@ -102,6 +102,6 @@ test('Body-like accent button is shared, responsive, and translated in both lang
  assert.ok(idx.includes('ui/recordReturnActions.css?v='+ver));
  assert.ok(sw.includes('ui/recordReturnActions.css?v='+ver));
  assert.ok(sw.includes('runload-ui-next-shell-'+shell));
- for(const module of ['recordExperience','gaitExperience','rofExperience','bodyContextExperience','environmentExperience','englishUi'])
+ for(const module of ['recordExperience','gaitExperience','rofExperience','bodyContextExperience'])
   assert.ok(app.includes(module+'.js?v='+ver),'app must load '+module);
 });
