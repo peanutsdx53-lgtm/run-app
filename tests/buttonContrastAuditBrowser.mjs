@@ -147,7 +147,7 @@ try{
      assert.equal(g.fg,'rgb(5, 41, 57)','Body-inspired action uses dark ink');
      assert.ok(g.gradient.includes('rgb(39, 178, 214)')&&g.gradient.includes('rgb(17, 198, 181)'),
       'turquoise gradient required: '+name+' '+JSON.stringify(g));
-     assert.ok(g.h>=51&&g.scroll<=g.client+2&&g.scrollHeight<=g.clientHeight+2,
+     assert.ok(g.h>=51&&g.h<=95&&g.scroll<=g.client+2&&g.scrollHeight<=g.clientHeight+2,
       'return label must fit '+width+'px '+name+': '+JSON.stringify(g));
      assert.ok(Math.abs(g.right-g.footerRight)<=3,'return aligns to footer right edge');
      if(width<=800)assert.ok(Math.abs(g.w-g.footerWidth)<=3,'mobile and tablet footer is full width');
