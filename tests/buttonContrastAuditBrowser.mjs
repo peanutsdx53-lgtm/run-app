@@ -221,15 +221,17 @@ try{
      await snap(page,name,language,width,'pending-return');
      await page.locator('[data-e4-apply-return]').click();
      await page.waitForURL('**/#/record',{timeout:8000});
-     await page.goto(base+'#/record-environment',{waitUntil:'networkidle'});
+     await page.evaluate(()=>{window.location.hash='#/record-environment'});
+     await page.locator('[data-e4-page]').waitFor({state:'visible'});
      const original=await page.locator('[data-draft="environmentNote"]').inputValue();
-     assert.match(original,/【本人申告の環境選択】天候：晴れ、風が強い/,'only explicit apply records weather');
+     assert.match(original,/【本人申告の環境選択】天候：晴れ、風が強い/,'only explicit apply records weather: '+JSON.stringify(original));
      await page.locator('[data-e4-weather="RAIN"]').click();
      await page.locator('[data-e4-done]').click();
      await page.locator('[data-e4-leave-warning]').waitFor({state:'visible'});
      await page.locator('[data-e4-discard-return]').click();
      await page.waitForURL('**/#/record',{timeout:8000});
-     await page.goto(base+'#/record-environment',{waitUntil:'networkidle'});
+     await page.evaluate(()=>{window.location.hash='#/record-environment'});
+     await page.locator('[data-e4-page]').waitFor({state:'visible'});
      assert.equal(await page.locator('[data-draft="environmentNote"]').inputValue(),original,
       'Return Without Applying preserves note and discards transient new weather');
     }else if(name==='body'){
