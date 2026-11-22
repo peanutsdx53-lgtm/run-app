@@ -19,7 +19,7 @@ User supplied smartphone English screenshots of the Steps and Running Pattern pa
 - Body selection buttons maintain semantic size differences for primary/secondary actions, but share their parent font and coherent 750/800-weight range. Existing turquoise-selected/dark-unselected colors remain.
 - Learning header uses the same 44px back button size and left/back–title–help order as Record detail headers, with independent accessible labels and keyboard focus ring.
 
-## Verification gates
+WebKit screenshot follow-up: the native stepper of a number input was visible in the optional Steps field. The number input type and keyboard remain unchanged; only its native spinner decoration is hidden in the Gait scope.\n\n## Verification gates
 - Node tests assert Gait option order, IDs and validity continuity, Learning destinations, typeface rules, and version/pwa integrity.
 - Browser contrast audit asserts actual Gait geometry (aligned first row, full-width Unknown second row), text fitting, active state readability, Body button computed font family, and Learning back links on overview and lesson with no overlap; captures real screenshots in Chromium and WebKit.
 - PASS should be claimed only for test executions that actually finish. A separate real-device Safari test is not implied by browser emulation.
