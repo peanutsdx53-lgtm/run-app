@@ -1903,7 +1903,32 @@ function recordExtras(){
     if(weather){environmentExperience.toggleWeather(environmentUi,weather.dataset.e4Weather);environmentExperience.paintEnvironment(app.querySelector("[data-e4-page]"),d,environmentUi);return;}
     const flag=event.target.closest("[data-e4-flag]");
     if(flag){environmentExperience.toggleFlag(environmentUi,flag.dataset.e4Flag);environmentExperience.paintEnvironment(app.querySelector("[data-e4-page]"),d,environmentUi);return;}
-    if(event.target.closest("[data-e4-done]")&&environmentExperience.temperatureError(d.temperatureC)){event.preventDefault();return;}
+    const e4Return=event.target.closest('[data-e4-done],[data-e4-back]');
+    if(e4Return){
+      if(e4Return.matches('[data-e4-done]')&&environmentExperience.temperatureError(d.temperatureC)){
+        event.preventDefault();return;
+      }
+      if(environmentExperience.environmentSelectionState(d,environmentUi).status==='pending'){
+        event.preventDefault();
+        const warning=app.querySelector('[data-e4-leave-warning]');
+        if(warning){
+          warning.hidden=false;
+          warning.scrollIntoView({block:'nearest'});
+          warning.querySelector('[data-e4-apply-return]')?.focus({preventScroll:true});
+        }
+      }
+      return;
+    }
+    if(event.target.closest('[data-e4-apply-return]')){
+      if(environmentExperience.temperatureError(d.temperatureC))return;
+      const result=environmentExperience.applyEnvironmentSelections(d,environmentUi);
+      if(!result.ok){
+        environmentUi.notice=result.reason;
+        environmentExperience.paintEnvironment(app.querySelector('[data-e4-page]'),d,environmentUi);
+        app.querySelector('[data-e4-notice]')?.scrollIntoView({block:'nearest'});
+      }else location.hash=state.recordReviewReturn?'#/record-review':'#/record';
+      return;
+    }
     const gaitSource=event.target.closest("[data-g4-source]");
     if(gaitSource){d.stepsProvenance=gaitSource.dataset.g4Source;gaitExperience.paintGait(app.querySelector("[data-g4-page]"),d);return;}
     const gaitFormat=event.target.closest("[data-g4-format]");
@@ -1957,7 +1982,7 @@ function recordExtras(){
     if(event.target.closest("[data-rv-apply]")){
       const err=recordExperience.courseReadiness(d,ui);
       if(err.length){ui.notice=err.join(" ");drawRecord();return;}
-      ui.notice="";location.hash=currentPage()==="course"?"#/record":"#/record";return;
+      ui.notice="";location.hash=state.recordReviewReturn?"#/record-review":"#/record";return;
     }
     const pick=event.target.closest("[data-duration-minute]");
     if(pick){
