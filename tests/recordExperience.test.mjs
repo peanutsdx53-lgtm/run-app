@@ -46,10 +46,10 @@ test("course layout presents approved three-step flow without changing the save/
  assert.match(html,/rv-course-flow/);
  assert.equal((html.match(/rv-course-step"/g)||[]).length,3);
  assert.match(html,/rv-condition-pair/);
- assert.match(html,/rv-commit-group--apply/);
+ assert.match(html,/class="rl-record-footer rv-course-return"/);
  assert.match(html,/rv-commit-group--save/);
- assert.match(html,/この条件を記録に使う/);
- assert.doesNotMatch(html,/rv-commit-help|記録の入力画面へ戻ります/);
+ assert.match(html,/条件を反映して記録に戻る/);
+ assert.doesNotMatch(html,/rv-commit-group--apply|rv-commit-help|記録の入力画面へ戻ります/);
  assert.doesNotMatch(html,/次回の入力でも使用できます/);
  assert.equal((html.match(/data-course-save /g)||[]).length,1);
  assert.equal((html.match(/data-rv-apply/g)||[]).length,1);
