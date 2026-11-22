@@ -115,6 +115,38 @@ try{
    for(const key of ['home','condition'])
     assert.ok(headings[key].scrollWidth<=headings[key].clientWidth+2,'full heading must fit without horizontal clipping '+JSON.stringify({key,lang,width,headings}));
    assert.ok(headings.controlsRight.every(x=>x<=width+2),'Home edit/help controls may not leave screen');
+
+   // The Japanese three-column Condition metrics used to let full-size
+   // 200% text overflow into neighboring metrics. Check real geometry in
+   // both languages, not just a source-level grid-template assertion.
+   const metrics=await page.evaluate(()=>{
+    const root=document.querySelector('.hx-condition-stats');
+    const boxes=[...root.children].map(card=>{
+     const label=card.querySelector('small');
+     const r=card.getBoundingClientRect(),t=label.getBoundingClientRect();
+     return {text:label.textContent.trim(),
+       x:r.left,right:r.right,top:r.top,bottom:r.bottom,
+       labelRight:t.right,labelScroll:label.scrollWidth,
+       labelWidth:label.clientWidth,
+       value:card.querySelector('strong')?.textContent.trim()};
+    });
+    return {columns:getComputedStyle(root).gridTemplateColumns,boxes};
+   });
+   assert.equal(metrics.boxes.length,3,'preserve all three condition metrics');
+   for(const x of metrics.boxes){
+    assert.ok(x.labelScroll<=x.labelWidth+2,
+     'condition metric label must not overflow: '+JSON.stringify({lang,width,x,metrics}));
+    assert.ok(x.labelRight<=x.right+2,
+     'metric text must stay in its own card: '+JSON.stringify({lang,width,x}));
+   }
+   const [a,b,c]=metrics.boxes;
+   assert.ok(a.right<=b.x+2&&a.bottom>=b.top-2,
+    'first two metrics have separate card bounds: '+JSON.stringify(metrics));
+   assert.ok(c.top>=Math.max(a.bottom,b.bottom)-1&&c.right<=width+2,
+    'third metric must occupy its own next row: '+JSON.stringify(metrics));
+   assert.ok(a.value&&b.value&&c.value,
+    'unanswered condition values and recorded-days denominator must remain visible');
+
   }
   assert.match(await page.locator('.hx-condition-empty').innerText(),lang==='en'?/Missing Days Are Not Treated as Zero Hours/:/未記録日は0時間として扱いません/);
   if(zoom===200&&(width===320||width===390||width===1440))
