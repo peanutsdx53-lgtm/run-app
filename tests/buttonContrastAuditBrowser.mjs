@@ -144,6 +144,22 @@ try{
      const runwalk=page.locator('[data-g4-format="RUN_WALK"]');
      await source.click();await runwalk.click();
      await page.waitForTimeout(90);
+     const layout=await page.locator('.g4-choice').evaluateAll(groups=>groups.map(group=>{
+      const btn=[...group.querySelectorAll('button')];
+      const rects=btn.map(b=>{const r=b.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,scroll:b.scrollWidth,client:b.clientWidth,txt:b.innerText}});
+      return {columns:getComputedStyle(group).gridTemplateColumns,keys:btn.map(b=>b.dataset.g4Source||b.dataset.g4Format),rects};
+     }));
+     assert.equal(layout.length,2,'both step and running pattern groups are visible');
+     for(const group of layout){
+      assert.equal(group.rects.length,3,'each choice group has three buttons');
+      assert.equal(group.keys[2],'UNKNOWN','Unknown must be the final choice');
+      const [first,second,last]=group.rects;
+      assert.ok(Math.abs(first.y-second.y)<2,'specific choices must share a row');
+      assert.ok(last.y>first.y+first.h-2,'Unknown must be on the next row');
+      assert.ok(Math.abs(last.x-first.x)<3,'Unknown must align with the grid left');
+      assert.ok(Math.abs(last.w-(first.w+second.w+(second.x-first.x-first.w)))<4,
+       'Unknown must span the full row, not leave a blank second cell');
+     }
      if(language==='en'){
       const overall=await page.locator('.g4-summary p').first().innerText();
       assert.doesNotMatch(overall,/[\u3040-\u30ff\u3400-\u9fff]/u,
@@ -176,7 +192,35 @@ try{
       'selected Body tab has dark ink throughout the turquoise gradient');
      assert.ok(style.gradient.includes('rgb(39, 178, 214)')&&
       style.gradient.includes('rgb(17, 198, 181)'),'Body gradient remains turquoise');
+     const fonts=await page.locator('.cx-tab,.cx-picker-trigger,.cx-apply,.cx-transfer button').evaluateAll(buttons=>
+      buttons.map(button=>({text:button.innerText,actual:getComputedStyle(button).fontFamily,
+       expected:getComputedStyle(button.closest('.cx-page')).fontFamily})));
+     assert.ok(fonts.length>=5,'Body should expose a representative button family');
+     assert.ok(fonts.every(item=>item.actual===item.expected),
+      'Body controls must inherit the screen typeface: '+JSON.stringify(fonts));
      await snap(page,name,language,width,'selected');
+    }else if(name==='learning'){
+     const back=page.locator('.lr-page-heading .lr-page-back').first();
+     await back.waitFor({state:'visible'});
+     assert.equal(await back.getAttribute('href'),'#/home','Learning catalogue returns Home');
+     const geometry=await page.locator('.lr-page-heading').evaluate(root=>{
+      const back=root.querySelector('.lr-page-back').getBoundingClientRect(),
+       title=root.querySelector('h1').getBoundingClientRect(),
+       help=root.querySelector('.lr-screen-help').getBoundingClientRect();
+      return {back:{x:back.x,w:back.width,y:back.y},title:{x:title.x,w:title.width,y:title.y},
+       help:{x:help.x,w:help.width,y:help.y}};
+     });
+     assert.ok(geometry.back.x+geometry.back.w<=geometry.title.x+2&&
+      geometry.title.x+geometry.title.w<=geometry.help.x+2,
+      'Learning header must have left back, title, right help with no overlaps');
+     await snap(page,name,language,width,'back-to-home');
+     await page.goto(base+'#/learning?lesson=pace-basics',{waitUntil:'networkidle'});
+     await page.locator('.lr-lesson .lr-page-heading .lr-page-back').waitFor({state:'visible'});
+     assert.equal(await page.locator('.lr-page-heading .lr-page-back').getAttribute('href'),'#/learning',
+      'Learning lesson returns to catalogue instead of Home');
+     assert.equal(await page.locator('.lr-lesson > .lr-back').count(),0,
+      'old duplicated lesson back action should be removed');
+     await snap(page,name,language,width,'lesson-back');
     }else if(name==='course'){
      await page.locator('[data-rv-grade="SUMMARY"]').click();
      await page.locator('[data-rv-surface-mode="MIXED"]').click();
