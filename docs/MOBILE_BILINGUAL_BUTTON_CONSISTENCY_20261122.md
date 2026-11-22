@@ -18,7 +18,7 @@ The user's evidence comes from the smartphone English interface; removal of redu
 - History: keep 2 period choices, source/type controls, saved records, and Shadow DOM. Brighten selected filter colors within the Shadow DOM rather than applying global document CSS.
 - GPS backup: keep the real input and its import handler. Use the app-translated wrapper label as the visible selection control instead of duplicating OS-native picker text, which follows the device locale. Browser screenshots exposed oversized 150px backup actions; constrain them to compact, equal-height mobile rows.
 - Consultation and Learning: preserve their mode-selection behavior and readable neutral/white lesson panels. The role system changes bright actions, not text on every white/dark surface. Visual inspection found a system-generated Consultation saved-run option still in Japanese; localize only the generated date/activity/source label, never user notes or IDs.
-- Body and Equipment: retain its layout and turquoise-blue gradient aesthetic; brighten only the gradient's darker stop so the primary action can use readable dark ink.
+- Body and Equipment: retain its layout and turquoise-blue gradient aesthetic; brighten the primary-action gradient and selected turquoise tab gradient so both can use dark ink with readable contrast; leave layout and the visual direction unchanged.
 - No changes to scientific reference model, calculation, original research, archived records, data schema, privacy guarantees, or three Result tabs.
 
 ## Screen-design rationale
