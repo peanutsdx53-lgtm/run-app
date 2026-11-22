@@ -167,6 +167,16 @@ try{
      await page.locator('[data-e4-weather="SUN"]').click();
      await page.locator('[data-e4-flag="WIND"]').click();
      await snap(page,name,language,width,'selected');
+    }else if(name==='body'){
+     const selectedTab=page.locator('.cx-tab[aria-pressed="true"]').first();
+     await selectedTab.waitFor({state:'visible'});
+     const style=await selectedTab.evaluate(el=>({ink:getComputedStyle(el).color,
+      gradient:getComputedStyle(el).backgroundImage}));
+     assert.equal(style.ink,'rgb(5, 41, 57)',
+      'selected Body tab has dark ink throughout the turquoise gradient');
+     assert.ok(style.gradient.includes('rgb(39, 178, 214)')&&
+      style.gradient.includes('rgb(17, 198, 181)'),'Body gradient remains turquoise');
+     await snap(page,name,language,width,'selected');
     }else if(name==='course'){
      await page.locator('[data-rv-grade="SUMMARY"]').click();
      await page.locator('[data-rv-surface-mode="MIXED"]').click();
