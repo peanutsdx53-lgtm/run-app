@@ -33,6 +33,7 @@ test('Gait message nodes translate individually, preserving validation decisions
  assert.match(markup,/data-g4-apply/);
  assert.equal(ENGLISH_FINAL_RECORDING['入力内容を反映'],'Apply This Entry');
  assert.ok(ENGLISH_FINAL_RECORDING['取得方法を選択していますが、歩数は未入力です。']);
+ assert.match(ENGLISH_FINAL_RECORDING['例：向かい風が強かった。日陰は涼しかった。'],/Strong headwind/);
 });
 
 test('System-generated Consultation options are English in English mode, without touching record IDs',()=>{
