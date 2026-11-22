@@ -56,6 +56,7 @@ test('Selected bright controls use dark ink, neutral controls stay pale, and nat
  assert.match(css,/color:var\(--rl-button-bright-text\)!important/);
  assert.match(css,/\.gait-v4 \.g4-choice button\{[\s\S]*?white-space:normal/);
  assert.ok(css.includes('.rv4-page .rv4-done'));
+ assert.ok(css.includes('.cx-page .cx-tab[aria-pressed="true"]'));
  assert.ok(css.includes('.cp-app .cp-mobile-switch button.active'));
  assert.match(css,/\.gps-history-backup-actions input\[data-gps-v2-backup-file\]\{/);
  assert.match(css,/clip-path:inset\(50%\)/);
