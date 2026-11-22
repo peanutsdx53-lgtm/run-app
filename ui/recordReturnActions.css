@@ -212,3 +212,10 @@
  border-color:#7bf5eb!important;
  -webkit-text-fill-color:#052939!important;
 }
+
+/* While the person decides whether to preserve temporary weather choices,
+   hide the ordinary return CTA. Two explicit outcomes, not three competing
+   exits, remain visible above the bottom navigation on small screens. */
+.environment-v4 .e4-bottom:has(.e4-leave-warning:not([hidden]))>.e4-done{
+ display:none!important;
+}
