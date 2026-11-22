@@ -172,6 +172,12 @@ try{
      await page.locator('[data-rv-surface-mode="MIXED"]').click();
      await page.locator('[data-rv-surface="paved"]').click();
      await page.locator('[data-rv-surface="track"]').click();
+     const selectedSurfaces=await page.locator('.rv-surface-tile.is-selected').evaluateAll(nodes=>
+      nodes.map(el=>({background:getComputedStyle(el).backgroundColor,
+       ink:getComputedStyle(el.querySelector('span')).color, text:el.innerText})));
+     assert.ok(selectedSurfaces.length>=2,'both mixed-surface selections must remain visible');
+     assert.ok(selectedSurfaces.every(x=>x.background==='rgb(57, 207, 208)'&&x.ink==='rgb(5, 41, 57)'),
+      'added surface names must share selected cyan/dark ink: '+JSON.stringify(selectedSurfaces));
      await snap(page,name,language,width,'selected');
     }else if(name==='settings'){
      const profile=page.locator('.s2-panel[data-settings-tone="mint"] details.s2-item').first();
