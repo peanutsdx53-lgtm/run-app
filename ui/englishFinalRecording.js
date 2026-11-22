@@ -153,6 +153,7 @@ export const ENGLISH_FINAL_RECORDING=Object.freeze({
  "走歩混在では単一活動の12部位参考値を算出しません。": "Single-activity regional reference values cannot be calculated for mixed running and walking.",
  "歩数は0〜10,000,000の整数で入力してください。": "Enter a whole-number step count between 0 and 10,000,000.",
  "歩数の取得方法が未設定です。分かる場合は選択してください。": "The step-count source is not set. Select it if known.",
+ "取得方法を選択していますが、歩数は未入力です。": "A Step Source Is Selected, but No Step Count Was Entered.",
  "走った距離は0より大きい値を入力してください。": "Enter a running distance greater than zero.",
  "走った時間は0より大きい値を入力してください。": "Enter a running duration greater than zero.",
  "記録画面に戻る": "Back to Recording",
