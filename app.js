@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261122-mobile-controls-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261122-gait-learning-type-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -66,7 +66,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/manualRunCanonical.js"),
     import("./ui/recordExperience.js?v=20261122-mobile-controls-v1"),
     import("./ui/coursePresetStore.js?v=20261026-courses-v30"),
-    import("./ui/gaitExperience.js?v=20261122-mobile-controls-v1"),
+    import("./ui/gaitExperience.js?v=20261122-gait-learning-type-v1"),
     import("./ui/environmentExperience.js?v=20261117-record-stage4-v1"),
     import("./ui/bodyContextExperience.js?v=20261109-p6d-recorddetails-v1"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
@@ -94,7 +94,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
     import("./ui/consultationExperience.js?v=20261122-mobile-controls-v1"),
     import("./ui/explorationExperience.js?v=20261117-reflection-g3-v1"),
-    import("./ui/learningExperience.js?v=20261111-explore-controls-v1"),
+    import("./ui/learningExperience.js?v=20261122-gait-learning-type-v1"),
     import("./ui/interpretationView.js?v=20261026-interpret-v14"),
     import("./ui/interpretationRules.js?v=20261026-interpret-v14"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
