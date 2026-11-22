@@ -161,6 +161,7 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  '「ウォームアップ」について、感じたことや次に試したいことを自由に書けます。あとから画面下部の「ふり返り」で読み返せます。':'You may write about what you noticed or would like to try next regarding warm-ups. You can review it later under Reflections at the bottom of this screen.',
  // Daily condition and dated records
  'ホームに戻る':'Return to Home',
+ '学習の一覧へ戻る':'Back to Learning',
  '記録なし':'No Record',
  '表示期間':'Displayed Period',
  'コンディションの見方':'How to Read Condition History',
