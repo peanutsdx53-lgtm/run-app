@@ -154,6 +154,11 @@ try{
       'English gait choices must not contain Japanese labels: '+JSON.stringify(controls));
      await snap(page,name,language,width,'selected');
     }else if(name==='environment'){
+     if(language==='en'){
+      const placeholder=await page.locator('[data-draft="environmentNote"]').getAttribute('placeholder');
+      assert.match(placeholder,/Strong headwind/i,'Environment note example is fully English');
+      assert.doesNotMatch(placeholder,/[\u3040-\u30ff\u3400-\u9fff]/u);
+     }
      await page.locator('[data-e4-weather="SUN"]').click();
      await page.locator('[data-e4-flag="WIND"]').click();
      await snap(page,name,language,width,'selected');
