@@ -50,7 +50,7 @@ test('specialist inquiry stays out of general themes and appears only with expli
   assert.ok(selected.includes('class="ex-inline-inquiry"'),category+'|'+topic);
   assert.doesNotMatch(selected,/class="ex-e-kicker"|class="ex-e-prompt"|id="ex-e-t0[2-8]-title"/,
    'embedded inquiry must not repeat a second question');
-  assert.match(selected,/class="ex-e-boundary-disclosure"/,'science caveat remains accessible');
+  assert.match(selected,/class="ex-inquiry-details"/,'science caveat remains accessible in source disclosure');
  }
  const ui=makeUi(storage);ui.selected='03';ui.topic='気温・天候';
  const html=render(ui,ctx);
