@@ -68,7 +68,7 @@ test('Selected bright controls use dark ink, neutral controls stay pale, and nat
 
 test('The revision is aligned across active shell and PWA; science and English dictionary are unchanged',()=>{
  const html=read('index.html'),app=read('app.js'),sw=read('sw.js');
- const ver='20261122-mobile-controls-v1';
+ const ver='20261122-gait-learning-type-v1';
  for(const [src,fragment] of [[html,'ui/buttonContrastSystem.css?v='+ver],
   [html,'app.js?v='+ver],[app,'recordExperience.js?v='+ver],
   [app,'historyExperience.js?v='+ver],[app,'gaitExperience.js?v='+ver],[app,'consultationExperience.js?v='+ver],
