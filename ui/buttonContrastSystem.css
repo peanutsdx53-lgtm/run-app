@@ -306,3 +306,18 @@
 @media(max-width:380px){
  .lr-root .lr-page-heading{column-gap:8px}
 }
+
+/* A desktop-WebKit number spinner appeared inside the Steps field in phone
+   screenshots, although the input is intended for direct numeric entry.
+   Hide only the native spinner chrome; retain number type, keyboard and value. */
+.gait-v4 :is(.g4-step-input,.g4-number) input[type="number"]{
+ -moz-appearance:textfield;
+ appearance:textfield;
+}
+.gait-v4 input[type="number"]::-webkit-inner-spin-button,
+.gait-v4 input[type="number"]::-webkit-outer-spin-button{
+ -webkit-appearance:none;
+ appearance:none;
+ margin:0;
+ display:none;
+}
