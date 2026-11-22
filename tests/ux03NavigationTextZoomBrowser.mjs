@@ -41,6 +41,16 @@ try{
   for(const [screen,route] of routes){
    await page.goto(base+'#/'+route,{waitUntil:'networkidle'});
    await page.locator('.app-shell .main-content').waitFor({timeout:14000});
+   // WebKit can complete networkidle while the SPA is still mounting route
+   // content. Sampling the shell alone produced a false "missing Settings"
+   // result; wait for the actual active view before measuring any controls.
+   const ready={
+    home:'.home-v3',record:'.record-v3',body:'.cx-page',
+    history:'#runload-history-v2',explore:'[data-experience-v3]',
+    settings:'[data-settings-v2]'
+   };
+   await page.locator(ready[screen]).first().waitFor({state:'visible',timeout:18000});
+   if(screen==='settings')await page.locator('.s2-item-copy small').first().waitFor({state:'visible',timeout:18000});
    if(percent===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
    const row=await page.evaluate(()=>{
     const nav=document.querySelector('.app-shell .mobile-nav');
