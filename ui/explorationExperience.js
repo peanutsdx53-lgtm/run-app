@@ -153,7 +153,9 @@ function embedSelectedInquiry(markup){
   .replace(/<small class="ex-e-kicker">[\s\S]*?<\/small>/,'')
   .replace(/<h3 id="ex-e-t\d+-title"[^>]*>[\s\S]*?<\/h3>/,'')
   .replace(/<p class="ex-e-prompt">[\s\S]*?<\/p>/,'')
-  .replace(/<button[^>]*data-ex-action="note"[^>]*>[\s\S]*?<\/button>/,'');
+  .replace(/<button[^>]*data-ex-action="note"[^>]*>[\s\S]*?<\/button>/,'')
+  .replace(/<div class="ex-e-boundary">([\s\S]*?)<\/div>/g,
+   '<details class="ex-e-boundary-disclosure"><summary>情報の限界・出所</summary><div class="ex-e-boundary">$1</div></details>');
 }
 function renderSelectedInquiry(ui,ctx,category,topic){
  // A general theme is not itself a request to disclose or inspect any saved run.
