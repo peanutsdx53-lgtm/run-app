@@ -460,7 +460,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
  }).join("");
  const controls=editing?`<section class="dashboard-edit-toolbar" role="group" aria-label="ホームの表示を編集"><div><strong>ホームの表示を編集</strong><p>ハンドルを長押しして移動できます。上下ボタン・表示・サイズ変更も使えます。操作するとすぐに保存されます。</p></div><div class="dashboard-edit-buttons"><button type="button" class="btn" data-home-reset>初期配置に戻す</button></div></section>`:"";
  return `<div class="home-v3"><section class="home-head"><h1>ホーム</h1><div class="home-heading-actions">
- <button type="button" class="btn dashboard-edit-trigger" data-home-edit aria-pressed="${editing}" ${!homePreferenceState.canSave?"disabled":""}>${editing?"編集を終了":"編集"}</button>
+ <button type="button" class="btn dashboard-edit-trigger" data-home-edit aria-pressed="${editing}" aria-label="${editing?'編集を終了':'ホームの表示を編集'}" ${!homePreferenceState.canSave?"disabled":""}>${editing?"編集を終了":"編集"}</button>
  <button type="button" class="hx-help-toggle" data-home-guide-toggle aria-expanded="${homeUi.guideOpen}" aria-controls="home-screen-guide" aria-label="ホーム画面の使い方" title="ホーム画面の使い方">？</button>
  </div></section>
  ${homeEditState.notice?`<div class="dashboard-edit-notice" role="status">${esc(homeEditState.notice)}</div>`:""}
