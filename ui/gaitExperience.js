@@ -79,7 +79,7 @@ export function paintGait(page,d={}){
  page.querySelector('[data-g4-summary-format]').textContent=labels[d.runningFormat]||labels.UNKNOWN;
  const provenance={UNKNOWN:'取得方法不明',DEVICE_MEASURED:'端末・時計で計測',ESTIMATED:'手入力・概数'};
  page.querySelector('[data-g4-summary-steps]').textContent=String(d.steps??'').trim()===''?'未入力':`${d.steps}歩・${provenance[d.stepsProvenance]||provenance.UNKNOWN}`;
- const issue=page.querySelector('[data-g4-issue]');issue.hidden=check.errors.length===0&&check.warnings.length===0;issue.textContent=[...check.errors,...check.warnings].join(' ');
+ const issue=page.querySelector('[data-g4-issue]');issue.hidden=check.errors.length===0&&check.warnings.length===0;issue.innerHTML=[...check.errors,...check.warnings].map(message=>`<span data-g4-message>${clean(message)}</span>`).join(' ');
  page.querySelector('[data-g4-apply]').disabled=!check.valid;
  const show=isMixed&&check.fullDist!==null&&check.dist!==null&&Number.isFinite(check.dist)&&check.dist>0&&check.dist<=check.fullDist;
  page.querySelector('[data-g4-bar-container]').hidden=!show;

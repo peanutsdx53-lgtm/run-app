@@ -29,6 +29,9 @@ const paths=[
  ['record','record','.record-v3'],
  ['course','record-course','.rv-course'],
  ['rof','record-rof','[data-rof-v4-root]'],
+ ['gait','record-compare','[data-g4-page]'],
+ ['environment','record-environment','[data-e4-page]'],
+ ['body','record-reflection','.cx-page'],
  ['more','record-more','.rv-aux'],
  ['settings','settings','[data-settings-v2]'],
  ['history','history','#runload-history-v2 .stage'],
@@ -82,7 +85,7 @@ async function scan(page,screen,language,width,phase){
     const threshold=size>=24||(size>=18.66&&bold)?3:4.5;
     const label=btn.className?.baseVal??btn.className??'';
     all.push({screen,language,width,phase,selector:btn.tagName.toLowerCase()+'#'+btn.id+'.'+String(label).replace(/\s+/g,'.').slice(0,90),
-     context:String(btn.closest('.rv4-view-tabs,.rv4-mobile-tabs,.rv4-actions,.rr-foot-actions,.rv4-rof-correct-form,.rv4-question-continuation,.gps-v2-tabs,.rv4-tabs,.record-v3,.ex-topic-set,.s2-choice-row,.cp-mode-button')?.className||'').slice(0,100),
+     context:String(btn.closest('.rv4-view-tabs,.rv4-mobile-tabs,.rv4-actions,.rr-foot-actions,.rv4-rof-correct-form,.rv4-question-continuation,.gps-v2-tabs,.rv4-tabs,.record-v3,.ex-topic-set,.s2-choice-row,.cp-mode-button,.g4-choice,.e4-weather,.e4-flags')?.className||'').slice(0,100),
      text,foreground:low.fg,background:font.backgroundColor,gradient:font.backgroundImage.slice(0,160),
      minRatio:+low.min.toFixed(2),threshold,pressed:btn.getAttribute('aria-pressed')||btn.getAttribute('aria-selected')||'',
      disabled:btn.disabled||false,node:low.node,widthPx:+r.width.toFixed(1),heightPx:+r.height.toFixed(1)});
@@ -97,7 +100,7 @@ async function snap(page,screen,language,width,phase){
  if(width!==390)return;
  const name=screen+'-'+phase+'-'+language+'-'+width;
  findings.push(...await scan(page,screen,language,width,phase));
- await page.screenshot({path:resolve(out,name+'.png'),animations:'disabled',fullPage:screen==='course'||screen==='settings'});
+ await page.screenshot({path:resolve(out,name+'.png'),animations:'disabled',fullPage:['course','settings','gait','environment'].includes(screen)});
 }
 try{
  for(const [language,width] of [['en',390],['ja',390],['en',320]]){
@@ -129,9 +132,62 @@ try{
     const entries=await scan(page,name,language,width,'default');
     findings.push(...entries);
     if(width===390)await page.screenshot({path:resolve(out,name+'-default-'+language+'-'+width+'.png'),animations:'disabled',fullPage:name==='course'||name==='settings'});
-    if(name==='course'){
+    if(name==='consultation'&&language==='en'){
+     const target=page.locator('#cp-target');
+     const options=await target.locator('option').allTextContents();
+     assert.ok(options.length>0,'consultation must offer the seeded activity');
+     assert.ok(options.every(x=>!/[\u3040-\u30ff\u3400-\u9fff]/u.test(x)),
+      'English system record options must not contain Japanese: '+JSON.stringify(options));
+    }
+    if(name==='gait'){
+     const source=page.locator('[data-g4-source="DEVICE_MEASURED"]');
+     const runwalk=page.locator('[data-g4-format="RUN_WALK"]');
+     await source.click();await runwalk.click();
+     await page.waitForTimeout(90);
+     if(language==='en'){
+      const overall=await page.locator('.g4-summary p').first().innerText();
+      assert.doesNotMatch(overall,/[\u3040-\u30ff\u3400-\u9fff]/u,
+       'overall Gait distance/time summary must not retain Japanese: '+overall);
+     }
+     const controls=await page.locator('[data-g4-source],[data-g4-format]').evaluateAll(buttons=>
+      buttons.map(b=>({text:b.innerText,client:b.clientWidth,scroll:b.scrollWidth,
+       height:b.clientHeight,scrollHeight:b.scrollHeight})));
+     assert.ok(controls.length>=5,'gait options must be rendered');
+     assert.ok(controls.every(x=>x.scroll<=x.client+2&&x.scrollHeight<=x.height+2),
+      'gait labels must fit inside their buttons: '+JSON.stringify(controls));
+     if(language==='en')assert.ok(controls.every(x=>!/[\u3040-\u30ff\u3400-\u9fff]/u.test(x.text)),
+      'English gait choices must not contain Japanese labels: '+JSON.stringify(controls));
+     await snap(page,name,language,width,'selected');
+    }else if(name==='environment'){
+     if(language==='en'){
+      const placeholder=await page.locator('[data-draft="environmentNote"]').getAttribute('placeholder');
+      assert.match(placeholder,/Strong headwind/i,'Environment note example is fully English');
+      assert.doesNotMatch(placeholder,/[\u3040-\u30ff\u3400-\u9fff]/u);
+     }
+     await page.locator('[data-e4-weather="SUN"]').click();
+     await page.locator('[data-e4-flag="WIND"]').click();
+     await snap(page,name,language,width,'selected');
+    }else if(name==='body'){
+     const selectedTab=page.locator('.cx-tab[aria-pressed="true"]').first();
+     await selectedTab.waitFor({state:'visible'});
+     const style=await selectedTab.evaluate(el=>({ink:getComputedStyle(el).color,
+      gradient:getComputedStyle(el).backgroundImage}));
+     assert.equal(style.ink,'rgb(5, 41, 57)',
+      'selected Body tab has dark ink throughout the turquoise gradient');
+     assert.ok(style.gradient.includes('rgb(39, 178, 214)')&&
+      style.gradient.includes('rgb(17, 198, 181)'),'Body gradient remains turquoise');
+     await snap(page,name,language,width,'selected');
+    }else if(name==='course'){
      await page.locator('[data-rv-grade="SUMMARY"]').click();
      await page.locator('[data-rv-surface-mode="MIXED"]').click();
+     await page.locator('[data-rv-surface="paved"]').click();
+     await page.locator('[data-rv-surface="track"]').click();
+     const selectedSurfaces=await page.locator('.rv-surface-tile.is-selected').evaluateAll(nodes=>
+      nodes.map(el=>({background:getComputedStyle(el).backgroundColor,
+       ink:getComputedStyle(el.querySelector('span')).color, text:el.innerText})));
+     assert.ok(selectedSurfaces.length>=2,'both mixed-surface selections must remain visible');
+     assert.ok(selectedSurfaces.every(x=>x.background==='rgb(57, 207, 208)'&&x.ink==='rgb(5, 41, 57)'),
+      'added surface names must share selected cyan/dark ink: '+JSON.stringify(selectedSurfaces));
      await snap(page,name,language,width,'selected');
     }else if(name==='settings'){
      const profile=page.locator('.s2-panel[data-settings-tone="mint"] details.s2-item').first();
@@ -140,6 +196,26 @@ try{
      const edit=page.locator('.dashboard-edit-trigger').first();
      if(await edit.count()){await edit.click();await snap(page,name,language,width,'editing');}
     }else if(name==='history'){
+     const advanced=page.locator('[data-history-advanced]');
+     if(await advanced.count()){await advanced.click();await snap(page,name,language,width,'filters-open');}
+     const gpsDetails=page.locator('[data-gps-history-disclosure]'),tools=page.locator('[data-gps-history-tools]');
+     if(await gpsDetails.count()&&await tools.count()){
+      await gpsDetails.evaluate(node=>node.open=true);
+      await tools.evaluate(node=>node.open=true);
+      const upload=page.locator('label:has(input[data-gps-v2-backup-file])').first();
+      await upload.waitFor({state:'visible'});
+      if(language==='en'){
+       const visibleText=(await upload.innerText()).trim();
+       assert.match(visibleText,/Import GPS Backup/i,'use the app English label instead of device-language file-picker chrome');
+       assert.doesNotMatch(visibleText,/[\u3040-\u30ff\u3400-\u9fff]/u,'GPS backup label is fully English');
+      }
+      const input=upload.locator('input[data-gps-v2-backup-file]');
+      const style=await input.evaluate(node=>({opacity:getComputedStyle(node).opacity,position:getComputedStyle(node).position}));
+      assert.equal(style.opacity,'0','native locale-specific file input must not be visible');
+      assert.equal(style.position,'absolute');
+      await upload.scrollIntoViewIfNeeded();
+      await snap(page,name,language,width,'gps-import');
+     }
      const first=page.locator('[data-select-id]').first();
      if(await first.count()){await first.click();await snap(page,name,language,width,'selected');}
     }
@@ -165,9 +241,10 @@ try{
  const ranked=findings.filter(x=>!x.disabled&&x.minRatio<x.threshold).sort((a,b)=>a.minRatio-b.minRatio);
  const critical=[['record','rv-main-button'],['record','rv-choice.is-selected'],
   ['rof','rof-v4-before-tab'],['consultation','cp-mode-button.active'],
-  ['course','rv-choice.is-selected']];
+  ['course','rv-choice.is-selected'],
+  ['gait','g4-choice'],['environment','e4-chip']];
  for(const [screen,identity] of critical){
-  const matches=findings.filter(row=>row.screen===screen&&row.selector.includes(identity));
+  const matches=findings.filter(row=>row.screen===screen&&row.selector.includes(identity)||row.context.includes(identity));
   assert.ok(matches.length>=2,'must observe '+screen+' '+identity);
   assert.ok(matches.every(row=>row.minRatio>=4.5),
    'primary or selected button below normal text contrast: '+JSON.stringify(matches.filter(row=>row.minRatio<4.5)));

@@ -38,7 +38,6 @@ export function requiredProgress(d){
 }
 export function manualPage(state){
  const d=state.recordDraft,run=state.recordType==='run',s=courseSummary(d,state.recordCourseUi),required=checkManualRequiredFields(d);
- const requiredMessage=run?requiredProgress(d):'';
  const date=escape(d.date);
  const time=filled(d.minutes)?Number(d.minutes):null;
  const pace=run&&filled(d.distance)&&Number(d.distance)>0&&Number.isFinite(time)&&time>0
@@ -51,7 +50,7 @@ export function manualPage(state){
   ['#/record-reflection','body','身体・使用品・メモ',filled(d.bodyObservation)||filled(d.shoeName)||filled(d.memo)?'入力あり':'未入力']
  ];
  return `<div class="record-v3 rv-manual"><header class="rv-head"><a href="#/record-start" class="rv-back rv-phone-only" aria-label="記録方法の選択へ戻る">‹</a><div><h1>手入力で記録</h1></div><details class="rv-screen-help"><summary aria-label="手入力の使い方">？</summary><p>日付・距離・時間・活動種目を入力します。追加情報は任意です。入力後に内容を確認して保存します。</p></details></header>
- <div class="rv-manual-grid"><section class="rv-panel rv-primary"><h2 class="rv-section-title">基本情報 <small class="rv-required-heading">必須</small></h2>${run?`<p class="rv-required-progress" role="status" ${requiredMessage?'':'hidden'}>${requiredMessage}</p>`:''}
+ <div class="rv-manual-grid"><section class="rv-panel rv-primary"><h2 class="rv-section-title">基本情報 <small class="rv-required-heading">必須</small></h2>
  ${optionGroup('data-record-type',[['run','走行'],['rest','休養']],state.recordType)}
  <label class="rv-field rv-date"><span>日付</span><span class="rl-date-control"><span class="rl-date-value" data-date-display aria-hidden="true">${date.replaceAll("-", "/")}</span><svg class="rl-date-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg><input aria-label="記録日" data-draft="date" type="date" value="${date}"></span></label>
  ${run?`<div class="rv-numbers"><label class="rv-field" data-required-field="distance" data-required-ok="${required.fields.distance}"><span>距離</span><div class="rv-unit-input"><input data-draft="distance" aria-label="距離（km）" aria-required="true" aria-invalid="${!required.fields.distance}" type="number" inputmode="decimal" min="0.01" max="10000" step="0.01" placeholder="0.00" value="${escape(d.distance)}"><em>km</em></div></label>

@@ -78,3 +78,147 @@
 @media(prefers-reduced-motion:reduce){
  :is(.record-v3 .rv-main-button,.rr-page .rr-foot-actions .rr-save){transition:none}
 }
+
+/* 2026-11-22: role-driven extensions for phone controls. The contrast of the
+   background determines the ink: selected/primary cyan -> navy, neutral dark
+   -> pale. Keep danger/disabled/white lesson panels in their own roles. */
+:is(
+ .record-v3.rv-course .rv-surface-tile.is-selected,
+ .record-v3.rv-course .rv-surface-pick button[aria-pressed="true"],
+ .gait-v4 .g4-choice button[aria-pressed="true"],
+ .gait-v4 .g4-apply:not(:disabled),
+ .environment-v4 .e4-chip[aria-pressed="true"],
+ .environment-v4 .e4-flag[aria-pressed="true"],
+ .environment-v4 .e4-commit:not(:disabled),
+ .environment-v4 .e4-done:not(.e4-disabled),
+ .rv4-page .rv4-done,
+ .cp-app .cp-mobile-switch button.active,
+ .lr-root .lr-action:not(.lr-secondary):not(.lr-outline):not(:disabled)
+){
+ background:var(--rl-button-bright)!important;
+ color:var(--rl-button-bright-text)!important;
+ border-color:var(--rl-button-bright-border)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+.cp-mode-button.active :is(span,small){
+ color:var(--rl-button-bright-text)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+/* Wrap rather than cut or shrink the accessible English choice labels. */
+.gait-v4 .g4-choice button{
+ height:auto;
+ min-height:58px;
+ white-space:normal;
+ overflow-wrap:break-word;
+ word-break:normal;
+ line-height:1.35;
+ padding:9px 6px;
+}
+.gait-v4 .g4-choice{
+ align-items:stretch;
+}
+@media(max-width:430px){
+ html[lang="en"] .gait-v4 .g4-choice{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+}
+.record-v3.rv-course .rv-surface-pick button{
+ white-space:normal;
+ min-height:48px;
+ line-height:1.35;
+}
+.record-v3.rv-course .rv-surface-pick button b{flex:0 0 auto}
+.environment-v4 .e4-chip,
+.environment-v4 .e4-flag,
+.environment-v4 .e4-done{
+ line-height:1.35;
+ overflow-wrap:break-word;
+ white-space:normal;
+}
+
+/* Disabled remains clearly visible without suggesting an available action. */
+.gait-v4 .g4-apply:disabled,
+.environment-v4 .e4-commit:disabled,
+.environment-v4 .e4-done.e4-disabled{
+ opacity:1!important;
+ background:#204657!important;
+ color:#d7e9ee!important;
+ border-color:#608493!important;
+ -webkit-text-fill-color:#d7e9ee;
+}
+
+/* The native file-picker chrome follows the OS locale, which can be Japanese
+   while the app is set to English. The parent label is translated by our UI
+   dictionary and still opens the real file input when activated. */
+.gps-history-backup-actions label:has(input[data-gps-v2-backup-file]){
+ position:relative;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+}
+.gps-history-backup-actions input[data-gps-v2-backup-file]{
+ position:absolute;
+ width:1px!important;
+ height:1px!important;
+ min-width:0!important;
+ padding:0!important;
+ margin:0!important;
+ border:0!important;
+ opacity:0;
+ clip-path:inset(50%);
+ overflow:hidden;
+}
+.gps-history-backup-actions label:has(input[data-gps-v2-backup-file]:focus-visible){
+ outline:3px solid var(--rl-button-focus);
+ outline-offset:2px;
+}
+
+/* Preserve the Body/Equipment turquoise-blue gradient, but brighten its
+   darker stop sufficiently for navy text to remain readable throughout. */
+.cx-page .cx-apply:not(:disabled){
+ background:linear-gradient(100deg,#27b2d6,#11c6b5)!important;
+ color:var(--rl-button-bright-text)!important;
+ border-color:var(--rl-button-bright-border)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+
+/* History backup actions must not grow to 150px-tall blank tiles on phones. */
+@media(max-width:540px){
+ .gps-history-tools-content .gps-history-backup-actions{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  align-content:flex-start!important;
+  gap:8px;
+ }
+ .gps-history-tools-content .gps-history-backup-actions>button,
+ .gps-history-tools-content .gps-history-backup-actions>label{
+  flex:0 0 auto!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:46px!important;
+  max-height:75px!important;
+  padding:11px 12px!important;
+  box-sizing:border-box;
+  justify-content:center;
+ }
+}
+
+/* Selection of a surface *kind* also has bright fill/dark ink, not just the
+   separate active percentage editor. Applied to both English and Japanese. */
+.record-v3.rv-course .rv-surface-tile.is-selected :is(span,b){
+ color:var(--rl-button-bright-text)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+
+/* Preserve Body & Equipment's graded turquoise tab aesthetic while removing
+   the white-ink contrast failure at the lighter gradient stop. */
+.cx-page .cx-tab[aria-pressed="true"]{
+ background:linear-gradient(108deg,#27b2d6,#11c6b5)!important;
+ color:var(--rl-button-bright-text)!important;
+ -webkit-text-fill-color:var(--rl-button-bright-text);
+}
+.record-v3.rv-course .rv-surface-tile:not(.is-selected) span:last-child{
+ color:#b7dce5!important;
+}
