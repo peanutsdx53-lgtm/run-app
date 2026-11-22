@@ -62,7 +62,27 @@ export const ENGLISH_EXPLORE_UI=Object.freeze({
  "経過時間：":"Elapsed Time:",
  "平均ペース：":"Average Pace:",
  "平均速度：":"Average Speed:",
- "この関連だけから原因や身体の状態は判断できません。":"This Link Alone Does Not Establish Causes or Physical Condition."
+ "この関連だけから原因や身体の状態は判断できません。":"This Link Alone Does Not Establish Causes or Physical Condition.",
+ "関連する学習を見る":"Related Learning",
+ "参考資料：":"Source:",
+ "この走行の結果へ戻る ›":"Return to This Run's Results ›",
+ "この走行の結果に戻る ›":"Return to This Run's Results ›",
+ "この走行の結果画面の参考情報を見る ›":"View Reference Information for This Run ›",
+ "履歴から結果画面の参考情報を見る ›":"View Reference Information in History ›",
+ "履歴を確認する ›":"View History ›",
+ "履歴で保存した走行を確認 ›":"View Saved Runs in History ›",
+ "生活コンディションの記録を確認 ›":"Review Daily Condition Records ›",
+ "睡眠と朝の調子を見てみる ›":"Review Sleep and Morning Condition ›",
+ "記録を始める ›":"Start Recording ›",
+ "出所：本人が手入力した走行":"Source: Manually Entered Run",
+ "注目する関節":"Select a Joint",
+ "問いへの答えに正解・不正解はありません。記述は任意です。一般知識の学習・復習とは別の活動です。":"There is no scored answer. Reflection is optional and separate from knowledge lessons.",
+ "運動前・運動後は本人が選んだ回答区分です。実際の評価時刻、変化の原因、身体の状態はこの回答だけでは確定できません。":"Before and after are user-selected response categories; the values alone do not establish actual assessment time, causes of change or physical condition.",
+ "Fukuchi ほか（2017） ↗":"Fukuchi et al. (2017) ↗",
+ "Vernillo ほか（2020） ↗":"Vernillo et al. (2020) ↗",
+ "Suzuki・Arai（2026） ↗":"Suzuki & Arai (2026) ↗",
+ "Epstein ほか（2015） ↗":"Epstein et al. (2015) ↗",
+ "Walsh ほか（2021） ↗":"Walsh et al. (2021) ↗"
 });
 export function translateExploreDynamic(raw,{element=null}={}){
  if(!element?.closest?.('.ex-page'))return null;
@@ -101,6 +121,27 @@ export function translateExploreDynamic(raw,{element=null}={}){
   return (m[1]==='入力途中'?'Unsaved Entry':'Saved Run')+' Proportions: Uphill '+m[2]+'% / Downhill '+m[3]+'% / Flat '+m[4]+'%. Route proportions, not a GPS elevation profile, study slope angle or road grade.';
  if((m=s.match(/^(\d{4}-\d\d-\d\d)に保存した走行の情報です。ほかの記録とは自動で結びつけません。$/)))
   return 'Information saved for the '+m[1]+' run, not automatically linked to other records.';
+ const areas={'走りの記録':'Your Running Records','身体のしくみ':'How the Body Works',
+  'コースと環境':'Course & Environment','疲れと回復':'Fatigue & Recovery',
+  '暮らしと気持ち':'Life & Feelings','走る前後の工夫':'Before & After Running',
+  '目的と楽しみ方':'Goals & Enjoying Running'};
+ if(element.matches?.('.ex-node')&&(m=s.match(/^([^、]+)、(.+)$/))&&areas[m[1]]){
+  const description=translateExploreDynamic(m[2],{element});
+  if(description)return areas[m[1]]+', '+description;
+ }
+ if((m=s.match(/^([\d:]+) 分\/km$/)))return m[1]+' min/km';
+ if((m=s.match(/^：運動前 (未回答|\d{1,2}) ／ 運動後 (未回答|\d{1,2})。保存済みの本人の回答です。$/)))
+  return ': Before '+(m[1]==='未回答'?'Unanswered':m[1])+' / After '+(m[2]==='未回答'?'Unanswered':m[2])+'. Saved self-reported ratings.';
+ if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|ROF-Jの入力|身体に関するメモ)に関連。保存した手入力の情報との対応です。(入力途中の値はこのテーマの計算に用いていません。)?この関連だけから原因や身体の状態は判断できません。$/)))
+  return 'Related to '+({'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','ROF-Jの入力':'ROF-J self-reports','身体に関するメモ':'body notes'}[m[2]])+' saved on '+m[1]+'. This association does not establish causes or physical condition.';
+ if((m=s.match(/^入力中の走行距離・時間などに関連。入力途中の内容であり、保存済み記録ではありません。この関連だけから原因や身体の状態は判断できません。$/)))
+  return 'Related to unsaved running distance and duration. This is not a saved record and does not establish causes or physical condition.';
+ if((m=s.match(/^入力中の上り坂・下り坂の情報に関連。入力途中の内容であり、保存済み記録ではありません。この関連だけから原因や身体の状態は判断できません。$/)))
+  return 'Related to unsaved uphill/downhill data. This is not a saved record and does not establish causes or physical condition.';
+ if((m=s.match(/^入力中の運動前後の疲れに関連。入力途中の内容であり、保存済み記録ではありません。この関連だけから原因や身体の状態は判断できません。$/)))
+  return 'Related to unsaved perceived fatigue. This is not a saved record and does not establish causes or physical condition.';
+ if((m=s.match(/^入力中の身体に関するメモに関連。入力途中の内容であり、保存済み記録ではありません。この関連だけから原因や身体の状態は判断できません。$/)))
+  return 'Related to unsaved body notes. This is not a saved record and does not establish causes or physical condition.';
  if(s==='入力中の走行距離・時間などに関連')return 'Related to Unsaved Running Distance and Duration';
  if(s==='入力中の上り坂・下り坂の情報に関連')return 'Related to Unsaved Uphill and Downhill Data';
  if(s==='入力中の運動前後の疲れに関連')return 'Related to Unsaved Perceived Fatigue';
