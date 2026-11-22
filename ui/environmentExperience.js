@@ -50,7 +50,7 @@ export function applyEnvironmentSelections(d,ui){
 export function environmentPage(d={},ui=newEnvironmentUi()){
  const options=weatherOptions.map(([key,label,icon])=>`<button type="button" class="e4-chip" data-e4-weather="${key}" aria-pressed="${ui.weather===key}"><span aria-hidden="true">${icon}</span>${label}</button>`).join('');
  const checks=conditionOptions.map(([key,label])=>`<button type="button" class="e4-flag" data-e4-flag="${key}" aria-pressed="${ui.flags.includes(key)}">${label}</button>`).join('');
- return `<div class="record-v3 environment-v4" data-e4-page><header class="rv-head"><a href="#/record" class="rv-back" aria-label="手入力に戻る">‹</a><h1>環境</h1><details class="rv-screen-help"><summary aria-label="環境の記録方法">？</summary><p>気温とメモは保存前の確認画面に引き継がれます。天候・風・湿度の選択は一時表示です。記録に残す場合は「環境メモに反映」を押してください。画面移動や再読み込みでは選択が解除されます。既存のメモはそのまま保たれ、天候は同じ選択肢を再度押すと解除できます。</p></details></header>
+ return `<div class="record-v3 environment-v4" data-e4-page><header class="rv-head"><a href="#/record" class="rv-back" data-e4-back aria-label="手入力に戻る">‹</a><h1>環境</h1><details class="rv-screen-help"><summary aria-label="環境の記録方法">？</summary><p>気温とメモは保存前の確認画面に引き継がれます。天候・風・湿度の選択は一時表示です。記録に残す場合は「環境メモに反映」を押してください。画面移動や再読み込みでは選択が解除されます。既存のメモはそのまま保たれ、天候は同じ選択肢を再度押すと解除できます。</p></details></header>
  <div class="e4-grid"><section class="rv-panel e4-panel"><div class="e4-top"><h2>気温と天候</h2><small>任意</small></div>
  <label class="e4-label">気温<span class="e4-temperature"><input data-draft="temperatureC" type="number" min="-50" max="60" inputmode="decimal" step="0.1" placeholder="未入力" value="${safe(d.temperatureC)}" aria-label="気温（摂氏）"><b>℃</b></span></label><p class="e4-help">0℃と未入力を区別して記録します。</p><div class="e4-divider"></div>
  <p class="e4-label-text">天候を選択</p><div class="e4-chips" role="group" aria-label="天候の選択">${options}</div>
@@ -61,7 +61,13 @@ export function environmentPage(d={},ui=newEnvironmentUi()){
  <button type="button" class="e4-commit" data-e4-commit ${environmentSelectionState(d,ui).status==='pending'?'':'disabled'}>選択した天候などを環境メモに反映</button><p data-e4-notice role="status">${safe(ui.notice||'')}</p>
  <div class="e4-summary"><strong>入力内容の確認</strong><p data-e4-summary>${safe(environmentSummary(d,ui))}</p></div>
  <p class="e4-error" data-e4-error role="alert" ${temperatureError(d.temperatureC)?'':'hidden'}>${safe(temperatureError(d.temperatureC))}</p>
- </section></div><div class="e4-bottom"><a class="e4-done" data-e4-done href="#/record">入力を確認</a></div></div>`;
+ </section></div><footer class="e4-bottom rl-record-footer">
+ <div class="e4-leave-warning" data-e4-leave-warning hidden role="group" aria-label="未反映の条件を確認">
+  <p role="alert">選択した天候・条件はまだ環境メモに反映されていません。反映して戻るか、反映せず戻るかを選んでください。</p>
+  <div class="e4-leave-choices"><button type="button" data-e4-apply-return>反映して戻る</button><a href="#/record" data-e4-discard-return>反映せず戻る</a></div>
+ </div>
+ <a class="e4-done rl-record-return" data-e4-done href="#/record">記録に戻る <span aria-hidden="true">→</span></a>
+ </footer></div>`;
 }
 export function paintEnvironment(root,d,ui){
  if(!root)return;
@@ -75,5 +81,6 @@ export function paintEnvironment(root,d,ui){
  if(statusNode){statusNode.textContent=status.text;statusNode.dataset.state=status.status;}
  const commit=root.querySelector('[data-e4-commit]');
  if(commit)commit.disabled=status.status!=='pending';
+ const pendingLeave=root.querySelector('[data-e4-leave-warning]');if(pendingLeave)pendingLeave.hidden=true;
  const notice=root.querySelector('[data-e4-notice]');if(notice)notice.textContent=ui.notice||'';
 }

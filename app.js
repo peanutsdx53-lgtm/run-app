@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261122-gait-learning-type-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261122-record-return-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -58,17 +58,17 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/homeDashboardDrag.js"),
     import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2"),
     import("./ui/rofJScale.js"),
-    import("./ui/rofExperience.js?v=20261116-record-stage1-v1"),
+    import("./ui/rofExperience.js?v=20261122-record-return-v1"),
     import("./ui/recordDraftReview.js"),
     import("./ui/recordReviewExperience.js?v=20261117-s17-help-v1"),
     import("./ui/manualRunStore.js?v=20261030-rof-evidence-v2"),
     import("./ui/manualRunLock.js"),
     import("./ui/manualRunCanonical.js"),
-    import("./ui/recordExperience.js?v=20261122-mobile-controls-v1"),
+    import("./ui/recordExperience.js?v=20261122-record-return-v1"),
     import("./ui/coursePresetStore.js?v=20261026-courses-v30"),
-    import("./ui/gaitExperience.js?v=20261122-gait-learning-type-v1"),
-    import("./ui/environmentExperience.js?v=20261117-record-stage4-v1"),
-    import("./ui/bodyContextExperience.js?v=20261109-p6d-recorddetails-v1"),
+    import("./ui/gaitExperience.js?v=20261122-record-return-v1"),
+    import("./ui/environmentExperience.js?v=20261122-record-return-v1"),
+    import("./ui/bodyContextExperience.js?v=20261122-record-return-v1"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
     import("./ui/measurementExperience.js?v=20261117-record-stage4-v1"),
     import("./ui/gpsMeasurementCore.js?v=20261116-gps-stage2-controls-v1"),
@@ -1903,7 +1903,32 @@ function recordExtras(){
     if(weather){environmentExperience.toggleWeather(environmentUi,weather.dataset.e4Weather);environmentExperience.paintEnvironment(app.querySelector("[data-e4-page]"),d,environmentUi);return;}
     const flag=event.target.closest("[data-e4-flag]");
     if(flag){environmentExperience.toggleFlag(environmentUi,flag.dataset.e4Flag);environmentExperience.paintEnvironment(app.querySelector("[data-e4-page]"),d,environmentUi);return;}
-    if(event.target.closest("[data-e4-done]")&&environmentExperience.temperatureError(d.temperatureC)){event.preventDefault();return;}
+    const e4Return=event.target.closest('[data-e4-done],[data-e4-back]');
+    if(e4Return){
+      if(e4Return.matches('[data-e4-done]')&&environmentExperience.temperatureError(d.temperatureC)){
+        event.preventDefault();return;
+      }
+      if(environmentExperience.environmentSelectionState(d,environmentUi).status==='pending'){
+        event.preventDefault();
+        const warning=app.querySelector('[data-e4-leave-warning]');
+        if(warning){
+          warning.hidden=false;
+          warning.scrollIntoView({block:'nearest'});
+          warning.querySelector('[data-e4-apply-return]')?.focus({preventScroll:true});
+        }
+      }
+      return;
+    }
+    if(event.target.closest('[data-e4-apply-return]')){
+      if(environmentExperience.temperatureError(d.temperatureC))return;
+      const result=environmentExperience.applyEnvironmentSelections(d,environmentUi);
+      if(!result.ok){
+        environmentUi.notice=result.reason;
+        environmentExperience.paintEnvironment(app.querySelector('[data-e4-page]'),d,environmentUi);
+        app.querySelector('[data-e4-notice]')?.scrollIntoView({block:'nearest'});
+      }else location.hash=state.recordReviewReturn?'#/record-review':'#/record';
+      return;
+    }
     const gaitSource=event.target.closest("[data-g4-source]");
     if(gaitSource){d.stepsProvenance=gaitSource.dataset.g4Source;gaitExperience.paintGait(app.querySelector("[data-g4-page]"),d);return;}
     const gaitFormat=event.target.closest("[data-g4-format]");
@@ -1957,7 +1982,7 @@ function recordExtras(){
     if(event.target.closest("[data-rv-apply]")){
       const err=recordExperience.courseReadiness(d,ui);
       if(err.length){ui.notice=err.join(" ");drawRecord();return;}
-      ui.notice="";location.hash=currentPage()==="course"?"#/record":"#/record";return;
+      ui.notice="";location.hash=state.recordReviewReturn?"#/record-review":"#/record";return;
     }
     const pick=event.target.closest("[data-duration-minute]");
     if(pick){

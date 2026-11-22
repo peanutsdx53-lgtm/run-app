@@ -64,7 +64,7 @@ ${ui.pickerOpen?`<div class="cx-picker" role="group" aria-label="${current.title
 <section class="cx-notes-column" aria-label="自覚情報と使用品の入力"><div class="cx-notes-heading"><h2>感じたこと・使用品</h2></div>${fields.map(f=>fieldCard(d,f)).join('')}${opts.mentalHtml||''}
 <div class="cx-transfer"><p class="cx-transfer-status" role="status">${safe(transfer.message)}</p><button type="button" data-append-name ${transfer.disabled?'disabled':''}>選択部位名を自覚情報に追加 <span aria-hidden="true">↗</span></button></div>
 </section></div>
-<footer class="cx-footer"><button class="cx-apply" type="button" data-apply>入力を反映する <span aria-hidden="true">→</span></button></footer>
+<footer class="cx-footer rl-record-footer"><button class="cx-apply rl-record-return" type="button" data-apply>記録に戻る <span aria-hidden="true">→</span></button></footer>
 <div class="cx-status" data-status role="status" aria-live="polite">${safe(ui.notice)}</div>
 </div>`;
 }

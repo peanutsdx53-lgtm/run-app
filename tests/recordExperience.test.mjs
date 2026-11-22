@@ -46,10 +46,10 @@ test("course layout presents approved three-step flow without changing the save/
  assert.match(html,/rv-course-flow/);
  assert.equal((html.match(/rv-course-step"/g)||[]).length,3);
  assert.match(html,/rv-condition-pair/);
- assert.match(html,/rv-commit-group--apply/);
+ assert.match(html,/class="rl-record-footer rv-course-return"/);
  assert.match(html,/rv-commit-group--save/);
- assert.match(html,/この条件を記録に使う/);
- assert.doesNotMatch(html,/rv-commit-help|記録の入力画面へ戻ります/);
+ assert.match(html,/条件を反映して記録に戻る/);
+ assert.doesNotMatch(html,/rv-commit-group--apply|rv-commit-help|記録の入力画面へ戻ります/);
  assert.doesNotMatch(html,/次回の入力でも使用できます/);
  assert.equal((html.match(/data-course-save /g)||[]).length,1);
  assert.equal((html.match(/data-rv-apply/g)||[]).length,1);
@@ -126,7 +126,7 @@ test('S07: options at step 03 are independent actions, not sequential 1 then 2',
  assert.doesNotMatch(h,/使わない場合は次へ進めます|この名前は保存コースの識別用です/);
  assert.doesNotMatch(h,/rv-commit-label"><b>[12]<\/b>/);
  assert.match(h,/使い方を選ぶ/);
- assert.match(h,/今回の記録に使う/);
+ assert.match(h,/条件を反映して記録に戻る/);
  assert.match(h,/保存コースとして残す/);
  assert.equal((h.match(/data-rv-apply/g)||[]).length,1);
  assert.equal((h.match(/data-course-save /g)||[]).length,1);
@@ -155,7 +155,8 @@ test('S08: selected preset removes the second save operation in 03, keeping appl
  assert.equal((h.match(/data-course-save(?:[ >])/g)||[]).length,1);
  assert.equal((h.match(/data-course-save-new/g)||[]).length,1);
  assert.doesNotMatch(h,/rv-commit-group--save/);
- assert.match(h,/rv-summary-actions--single/);
+ assert.match(h,/rl-record-footer rv-course-return/);
+ assert.doesNotMatch(h,/rv-summary-actions/);
  assert.equal((h.match(/data-rv-apply/g)||[]).length,1);
 });
 test('S08: unsaved case still has a single save action at 03',()=>{
