@@ -56,10 +56,10 @@ test('UX-026/027/039: responsive labels, three explicit activities, original ato
   assert.match(view(d),new RegExp('data-manual-gait="'+activity+'"'));
  assert.match(view({...d,activityGait:'JOGGING'}),/data-manual-gait="JOGGING" aria-pressed="true"/);
  assert.doesNotMatch(view(d),/rv-gait-hint|活動種目が未選択のため保存できません/);
- const gen='20261123-ux07-course-clarity-v1',shell='20261123-ux10-presave-focus-v2',index=read('index.html'),sw=read('sw.js');
+ const gen='20261123-ux07-course-clarity-v1',shell='20261123-ux11-result-source-v1',index=read('index.html'),sw=read('sw.js');
  for(const [s,url] of [
   [app,'recordExperience.js?v='+gen],[index,'recordExperience.css?v='+gen],
-  [index,'app.js?v='+shell],[sw,'runload-ui-next-shell-20261123-pwa-update-notice-v1'],
+  [index,'app.js?v='+shell],[sw,'runload-ui-next-shell-'+shell],
   [sw,'recordExperience.js?v='+gen],[sw,'recordExperience.css?v='+gen],
   [sw,'app.js?v='+shell]
  ])assert.ok(s.includes(url),'PWA required active URL missing: '+url);

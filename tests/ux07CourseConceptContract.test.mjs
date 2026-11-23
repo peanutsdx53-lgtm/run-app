@@ -59,10 +59,10 @@ test('UX-032: hidden fields are not erased; only chosen input modes drive curren
  assert.ok(courseReadiness(summary,ui).length>0,'invalid active summary must not be silently accepted');
 });
 test('UX-07: offline boot uses new shell and dictionary imports; old immutable URLs are not pinned',()=>{
- const ver='20261123-ux07-course-clarity-v1',shell='20261123-ux10-presave-focus-v2',app=read('app.js'),html=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
+ const ver='20261123-ux07-course-clarity-v1',shell='20261123-ux11-result-source-v1',app=read('app.js'),html=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  for(const [source,url] of [[app,'recordExperience.js?v='+ver],[app,'englishUi.js?v='+shell],
   [html,'app.js?v='+shell],[html,'recordExperience.css?v='+ver],
-  [sw,'runload-ui-next-shell-20261123-pwa-update-notice-v1'],[sw,'app.js?v='+shell],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'app.js?v='+shell],
   [sw,'recordExperience.js?v='+ver],[sw,'englishFinalRecording.js?v='+shell],
   [en,'englishFinalRecording.js?v='+shell]])assert.ok(source.includes(url),'missing versioned URL: '+url);
  assert.doesNotMatch(sw,/20261123-ux06-manual-clarity-v1/);

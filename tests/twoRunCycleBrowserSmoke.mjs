@@ -130,7 +130,7 @@ try{
  assert.match(await page.locator('.rv4-compare-cards').innerText(),/距離/);
  const regionPanel=page.locator('.rv4-region-compare');
  await regionPanel.waitFor();
- assert.match(await regionPanel.innerText(),/部位の参考値/);
+ assert.match(await regionPanel.innerText(),/部位の文献参考値/);
  // Preserve actual browser-rendered evidence for a human visual acceptance review.
  // The capture is taken from TWO genuinely saved runs, not synthetic fixture values.
  await mkdir('audit-output/p0-continuity',{recursive:true});
@@ -433,7 +433,7 @@ try{
  await page.setViewportSize({width:1440,height:900});
  await page.screenshot({path:'audit-output/p0-continuity/'+engineName+'-S09-reference-ready-1440.png',fullPage:true});
  await page.setViewportSize({width:390,height:844});
- assert.match(eligibleText,/部位の参考値/);
+ assert.match(eligibleText,/部位の文献参考値/);
  assert.match(eligibleText,/比較相手|選択中/);
  assert.ok(await eligiblePanel.locator('.rv4-region-compare-method summary').evaluate(el=>parseFloat(getComputedStyle(el).fontSize)>=12),'same-model scientific comparison limitation is readable');
  const eligibleDifference=await eligiblePanel.locator('.rv4-region-compare-change strong').innerText();

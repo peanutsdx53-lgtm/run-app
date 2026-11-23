@@ -80,13 +80,13 @@ test('UX08: five new display phrases have explicit English counterparts, not imp
 });
 test('UX08: the live ROF and body modules, styles, English dictionary and PWA shell share their active versions',()=>{
  const version='20261123-ux08-rof-body-clarity-v1';
- const shell='20261123-ux10-presave-focus-v2';
+ const shell='20261123-ux11-result-source-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
   [app,'rofExperience.js?v='+version],[app,'bodyContextExperience.js?v='+version],
   [app,'englishUi.js?v='+shell],[index,'rofExperience.css?v='+version],
   [index,'bodyContextExperience.css?v='+version],[index,'app.js?v='+shell],
-  [sw,'runload-ui-next-shell-20261123-pwa-update-notice-v1'],[sw,'rofExperience.js?v='+version],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'rofExperience.js?v='+version],
   [sw,'bodyContextExperience.js?v='+version],[sw,'rofExperience.css?v='+version],
   [sw,'bodyContextExperience.css?v='+version],[sw,'englishUi.js?v='+shell],
   [sw,'englishFinalRecording.js?v='+shell],[en,'englishFinalRecording.js?v='+shell]

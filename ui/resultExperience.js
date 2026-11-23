@@ -145,6 +145,12 @@ const RESULT_T01_READABILITY_STYLES=String.raw`
  overflow-wrap:anywhere;
  min-width:0;
 }
+/* UX11: visible reference legend/cap remain legible under root font enlargement. */
+.rv4-app .rv4-body .rv4-reference-scale-section .rv4-scale-note{
+ font-size:clamp(13px,0.75rem,21px);
+ line-height:1.55;
+ overflow-wrap:anywhere;
+}
 `;
 
 export function mountResult(host,inputDraft={},options={}){
@@ -257,10 +263,10 @@ export function mountResult(host,inputDraft={},options={}){
    '<summary><span class="rv4-icon">'+icon('memo')+'</span><span><strong>文献の根拠と条件</strong><small>'+clean(badge)+'</small></span><b>⌄</b></summary>'+
    '<div class="rv4-note">'+entry+'</div></details>';
  };
- const body=()=>{if(!hasInput)return '<section class="rv4-card rv4-body rv4-empty-card" data-pane="body"><div class="rv4-card-heading"><span class="rv4-icon">'+icon('body')+'</span><div><h2>部位の参考値</h2></div></div><p class="rv4-empty-note">記録後に参考値を表示します。</p></section>';
+ const body=()=>{if(!hasInput)return '<section class="rv4-card rv4-body rv4-empty-card" data-pane="body"><div class="rv4-card-heading"><span class="rv4-icon">'+icon('body')+'</span><div><h2>部位の文献参考値</h2></div></div><p class="rv4-empty-note">記録後に参考値を表示します。</p></section>';
    const r=current(),v=selectedView(),scale=bodyReferenceScale(r.value);
    const delta=r.value===null?'':(r.value>=100?'+':'')+format(r.value-100,1);
-   return '<section class="rv4-card rv4-body" data-pane="body"><div class="rv4-card-heading"><span class="rv4-icon">'+icon('body')+'</span><div><h2>部位の参考値</h2></div></div>'
+   return '<section class="rv4-card rv4-body" data-pane="body"><div class="rv4-card-heading"><span class="rv4-icon">'+icon('body')+'</span><div><h2>部位の文献参考値</h2></div></div>'
 
     +'<div class="rv4-view-tabs">'+BODY_REGION_VIEWS.map(item=>'<button type="button" data-view="'+item.key+'" aria-pressed="'+(view===item.key)+'" class="'+(view===item.key?'active':'')+'">'+item.title+'</button>').join('')+'</div>'
     +'<div class="rv4-body-content"><div class="rv4-body-figure"><span class="rv4-orbit"></span>'+svgMap()+'</div>'
@@ -272,7 +278,8 @@ export function mountResult(host,inputDraft={},options={}){
       '<div class="rv4-reference-scale-section"><div class="rv4-scale" style="background-image:'+BODY_REFERENCE_GRADIENT+';background-color:#66C4B5" role="img" aria-label="部位ごとの文献参考値の色目盛り。左端60、中央は文献基準100、右端140。色は数値の相対的な違いを示します。">'+
       '<span class="rv4-scale-ref"></span>'+(scale?'<span class="rv4-scale-current" style="left:'+scale.position.toFixed(2)+'%"></span>':'')+'</div>'+
       '<div class="rv4-scale-labels"><span>60</span><span>100</span><span>140</span></div>'+
-      (scale?.clipped?'<div class="rv4-scale-note">配色範囲（60〜140）外。数値はそのままです。</div>':'')+'</div>')
+      '<div class="rv4-scale-note" data-reference-scale-meaning>各部位の文献基準100との差を示す色です。危険度ではありません。</div>'+
+      (scale?.clipped?'<div class="rv4-scale-note">色は60〜140で表示します。参考値は変更しません。</div>':'')+'</div>')
      +'<div class="rv4-figure-actions"><span>タップで部位を確認</span><button type="button" data-label-toggle aria-pressed="'+showBodyNumbers+'">'+(showBodyNumbers?'数値を隠す':'図に数値を表示')+'</button></div><div class="rv4-region-selection"><button type="button" class="rv4-picker" data-picker-toggle aria-expanded="'+picker+'"><span>部位を選ぶ</span><span aria-hidden="true">⌄</span></button></div>'
     +(picker?'<div class="rv4-choices">'+v.paths.map(([id])=>{const n=data.find(x=>x.id===id);return '<button type="button" data-region="'+id+'" class="'+(id===chosen?'active':'')+'">'+clean(n?.name||id)+'</button>'}).join('')+'</div>':'')
     +(fromGps&&gps.detailSaved&&['RUNNING','JOGGING','WALK'].includes(gps.activity)?
@@ -322,7 +329,7 @@ export function mountResult(host,inputDraft={},options={}){
   // The compared record may share a date or be later than the selected record.
    const provenance=fromSaved&&other?'<div class="rv4-compare-summary" aria-label="比較中の記録"><div><small>比較する記録</small><strong>'+clean(other.date)+'</strong><span>'+format(other.distanceKm,2)+' km ・ '+clean(ACTIVITY_LABELS[gaitOf(other)]||'種別不明')+'</span></div><div><small>今回の記録</small><strong>'+clean(options.record.date)+'</strong><span>'+format(Number(options.record.distanceKm),2)+' km ・ '+clean(ACTIVITY_LABELS[gaitOf(options.record)]||'種別不明')+'</span></div></div>':'';
    const regionCmpView=fromSaved&&other&&comparison?.status==='ready'?'<section class="rv4-region-compare" aria-label="同一部位の文献参考値比較">'+
-    '<div class="rv4-region-compare-heading"><h3>部位の参考値</h3><span>同一部位</span></div>'+
+    '<div class="rv4-region-compare-heading"><h3>部位の文献参考値</h3><span>同一部位</span></div>'+
     '<label class="rv4-region-compare-picker">比較する部位 <select data-reference-compare-region aria-label="文献参考値を比較する部位">'+
     OFFICIAL_NAMES.map(([id,name])=>'<option value="'+clean(id)+'"'+(id===chosen?' selected':'')+'>'+clean(name)+'</option>').join('')+
     '</select></label>'+
