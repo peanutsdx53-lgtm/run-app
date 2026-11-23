@@ -57,7 +57,7 @@ test('UX04 versioned app, dictionary and new action keys are coherent with offli
   './app.js?v=20261123-ux07-course-clarity-v1',
   './ui/englishUi.js?v=20261123-ux07-course-clarity-v1',
   './ui/actionCopyKeys.js',
-  './ui/actionCopyKeys.js?v=20261123-ux07-course-clarity-v1'
+  './ui/actionCopyKeys.js?v=20261122-ux04-stable-actions-v1'
  ])assert.ok(sw.includes(expected),'offline precache missing '+expected);
  assert.match(read('ui/englishUi.js'),/translateOptInActionText\(trimmed,context\)/);
 });
