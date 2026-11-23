@@ -1,6 +1,10 @@
 /* English text for manual recording, course selection, draft validation,
  * review, steps and mixed running/walking. All validation rules unchanged. */
 export const ENGLISH_FINAL_RECORDING=Object.freeze({
+ "選択なし": "No Selection",
+ "一時選択・未反映": "Temporary · Not Applied",
+ "今回の下書きに反映済み": "Applied to Current Draft",
+ "環境メモへの反映は、走行記録の保存完了ではありません。": "Applying to the environment note does not save the activity record.",
  "回答済み": "Answered",
  "運動時刻と疲労感の回答時点は別の項目です。どちらも任意です。": "Activity start/end times and the time you assessed fatigue are different fields. Both are optional.",
  "図で選択中": "Selected on Body Map",

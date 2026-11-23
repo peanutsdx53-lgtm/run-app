@@ -12,6 +12,8 @@ export function temperatureError(value){
  const x=Number(raw);
  return !Number.isFinite(x)||x< -50||x>60?'気温は−50〜60℃の範囲で入力してください。':'';
 }
+/** Discard only transient UI choices; never erase the person-authored draft note. */
+export function clearEnvironmentSelections(ui){ui.weather=null;ui.flags=[];ui.notice='';}
 export function toggleWeather(ui,key){if(!weatherOptions.some(x=>x[0]===key))return false;ui.weather=ui.weather===key?null:key;ui.notice='';return true;}
 export function toggleFlag(ui,key){if(!conditionOptions.some(x=>x[0]===key))return false;ui.flags=ui.flags.includes(key)?ui.flags.filter(k=>k!==key):[...ui.flags,key];ui.notice='';return true;}
 /** A selector is not a stored observation until the user copies it to their own note. */
@@ -26,6 +28,7 @@ export function environmentSelectionState(d={},ui=newEnvironmentUi()){
   {status:'applied',text:'選択した内容は環境メモに反映済みです。保存前の確認画面でも確認できます。'}:
   {status:'pending',text:'選択した内容はまだ環境メモに反映されていません。下のボタンで確定できます。'};
 }
+export const environmentStageLabel=status=>({none:'選択なし',pending:'一時選択・未反映',applied:'今回の下書きに反映済み'}[status]||'選択なし');
 export function environmentSummary(d,ui){
  const t=String(d.temperatureC??'').trim(),weather=weatherOptions.find(x=>x[0]===ui.weather),flags=conditionOptions.filter(x=>ui.flags.includes(x[0])).map(x=>x[1]);
  const summary=[temperatureError(t)?'気温を確認':t===''?'気温未入力':t+'℃',weather?.[1]||'天候未入力',...flags].join(' · ');
@@ -55,11 +58,11 @@ export function environmentPage(d={},ui=newEnvironmentUi()){
  <label class="e4-label">気温<span class="e4-temperature"><input data-draft="temperatureC" type="number" min="-50" max="60" inputmode="decimal" step="0.1" placeholder="未入力" value="${safe(d.temperatureC)}" aria-label="気温（摂氏）"><b>℃</b></span></label><p class="e4-help">0℃と未入力を区別して記録します。</p><div class="e4-divider"></div>
  <p class="e4-label-text">天候を選択</p><div class="e4-chips" role="group" aria-label="天候の選択">${options}</div>
  <p class="e4-label-text e4-gap">気になった条件（複数可）</p><div class="e4-flags" role="group" aria-label="環境に関する補足">${checks}</div>
- <p class="e4-selection-status" data-e4-selection-status data-state="${environmentSelectionState(d,ui).status}" role="status" aria-live="polite">${safe(environmentSelectionState(d,ui).text)}</p></section>
+ <p class="e4-selection-status" data-e4-selection-status data-state="${environmentSelectionState(d,ui).status}" role="status" aria-live="polite"><strong class="e4-stage-label" data-e4-stage-label>${safe(environmentStageLabel(environmentSelectionState(d,ui).status))}</strong><span data-e4-status-message>${safe(environmentSelectionState(d,ui).text)}</span></p></section>
  <section class="rv-panel e4-panel"><div class="e4-top"><h2>環境メモ</h2><small>任意</small></div>
  <label class="e4-label">気づいたこと<textarea data-draft="environmentNote" rows="5" maxlength="500" placeholder="例：向かい風が強かった。日陰は涼しかった。">${safe(d.environmentNote)}</textarea></label>
  <button type="button" class="e4-commit" data-e4-commit ${environmentSelectionState(d,ui).status==='pending'?'':'disabled'}>選択した天候などを環境メモに反映</button><p data-e4-notice role="status">${safe(ui.notice||'')}</p>
- <div class="e4-summary"><strong>入力内容の確認</strong><p data-e4-summary>${safe(environmentSummary(d,ui))}</p></div>
+ <div class="e4-summary"><strong>入力内容の確認</strong><p data-e4-summary>${safe(environmentSummary(d,ui))}</p><p class="e4-save-boundary">環境メモへの反映は、走行記録の保存完了ではありません。</p></div>
  <p class="e4-error" data-e4-error role="alert" ${temperatureError(d.temperatureC)?'':'hidden'}>${safe(temperatureError(d.temperatureC))}</p>
  </section></div><footer class="e4-bottom rl-record-footer">
  <div class="e4-leave-warning" data-e4-leave-warning hidden role="group" aria-label="未反映の条件を確認">
@@ -78,7 +81,12 @@ export function paintEnvironment(root,d,ui){
  const summary=root.querySelector('[data-e4-summary]');if(summary)summary.textContent=environmentSummary(d,ui);
  const status=environmentSelectionState(d,ui);
  const statusNode=root.querySelector('[data-e4-selection-status]');
- if(statusNode){statusNode.textContent=status.text;statusNode.dataset.state=status.status;}
+ if(statusNode){
+  const title=statusNode.querySelector('[data-e4-stage-label]'),message=statusNode.querySelector('[data-e4-status-message]');
+  if(title)title.textContent=environmentStageLabel(status.status);
+  if(message)message.textContent=status.text;
+  statusNode.dataset.state=status.status;
+ }
  const commit=root.querySelector('[data-e4-commit]');
  if(commit)commit.disabled=status.status!=='pending';
  const pendingLeave=root.querySelector('[data-e4-leave-warning]');if(pendingLeave)pendingLeave.hidden=true;
