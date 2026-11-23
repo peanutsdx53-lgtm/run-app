@@ -66,6 +66,27 @@ try{
   assert.equal((await rof.locator('[data-rof-v4-number]').innerText()).trim(),'—');
   assert.equal(await rof.locator('[data-rof-v4-anchor]').count(),5,'five original representative illustrations');
   assert.equal(await rof.locator('[data-rof-v4-tick]').count(),11,'integer 0-10 axis');
+  const anchorTextBounds=await rof.locator('.rv4-anchor-row').evaluate(row=>{
+   const bounds=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}};
+   const rowBounds=bounds(row);
+   return {row:rowBounds,anchors:[...row.querySelectorAll('.rv4-anchor')].map(el=>{
+    const button=bounds(el),labels=[...el.querySelectorAll('strong,small')].map(span=>({
+     text:span.textContent,bounds:bounds(span),scroll:span.scrollWidth,client:span.clientWidth,
+     whitespace:getComputedStyle(span).whiteSpace
+    }));
+    return {button,labels};
+   })};
+  });
+  if(width<=390){
+   assert.equal(anchorTextBounds.anchors.length,5);
+   for(const anchor of anchorTextBounds.anchors)for(const label of anchor.labels){
+    assert.ok(label.scroll<=label.client+2,'ROF illustration label text clipping '+JSON.stringify({engine,lang,width,zoom,label}));
+    assert.ok(label.bounds.left>=anchor.button.left-3&&label.bounds.right<=anchor.button.right+3,
+     'ROF illustration label escapes its own anchor '+JSON.stringify({engine,lang,width,zoom,anchor}));
+    assert.ok(label.bounds.bottom<=anchorTextBounds.row.bottom+3,
+     'ROF illustration label overlaps following scale '+JSON.stringify({engine,lang,width,zoom,label,anchorTextBounds}));
+   }
+  }
   const slider=rof.locator('[data-rof-v4-range]');
   const sliderHeight=await slider.evaluate(el=>el.getBoundingClientRect().height);
   assert.ok(sliderHeight>=44,'effective slider touch area at least 44px: '+sliderHeight);
@@ -143,7 +164,7 @@ try{
    await page.screenshot({path:resolve(out,engine+'-'+lang+'-'+width+'-body-selection.png'),
     fullPage:true,animations:'disabled'});
   assert.deepEqual(errors,[],'uncaught browser errors '+JSON.stringify({engine,lang,width,zoom,errors}));
-  results.push({engine,lang,width,zoom,sliderHeight,stateFont,introFont,bodyLabelFont,rof:rg,body:bg,
+  results.push({engine,lang,width,zoom,sliderHeight,stateFont,introFont,bodyLabelFont,anchorTextBounds,rof:rg,body:bg,
    trueZero:true,missingDistinct:true,illustrationsUnchanged:5,
    bodySelectionNotSaved:true,errors});
   await context.close();

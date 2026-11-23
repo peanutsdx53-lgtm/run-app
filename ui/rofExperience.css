@@ -254,3 +254,19 @@
 /* UX08 accessibility follow-up: state and optional timing help scale at 200% text. */
 .rv4-page .rv4-state-label{font-size:clamp(12px,.76rem,21px)}
 .rv4-page .rv4-meta-intro{font-size:clamp(13px,.8rem,22px)}
+
+/* UX08 visual acceptance: five representative positions remain separate at
+ * 320/390px and 200% zoom; full descriptions remain in the selected caption. */
+@media(max-width:430px){
+ .rv4-page .rv4-anchor-row{height:184px}
+ .rv4-page .rv4-anchor>strong,
+ .rv4-page .rv4-anchor>small{
+  white-space:normal;
+  overflow-wrap:anywhere;
+  max-width:100%;
+  text-align:center;
+  line-height:1.25;
+ }
+ .rv4-page .rv4-anchor>strong{min-height:2.5em;display:grid;place-items:center}
+ .rv4-page .rv4-anchor>small{min-height:2.5em;display:grid;place-items:center}
+}
