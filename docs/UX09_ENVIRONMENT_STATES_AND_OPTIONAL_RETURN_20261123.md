@@ -24,3 +24,6 @@
 
 ## Node CI 1件の修正理由
 PR #63初期headのNode 821件中820件PASS、1件FAIL。`ui/englishFinalRecording.js`に追加した環境状態の既存4文言は、後から展開される既存の`ENGLISH_FINAL_CONDITIONS`辞書に上書きされ、英語版が新しい画面意図と一致しなかった。重複を削除し、これら4件は既存の環境専門辞書`ui/englishFinalConditions.js`を正式な出所として更新。独立したバージョン付きimport/precacheも整合。翻訳以外の保存・科学処理は不変更。
+
+## UX-028共通フッター最終監査による最小差分
+ブラウザCI初回head `ac66df2f…` のChromiumで、共通フッター文字200%条件の `record-course` が14pxのまま（`clamp(14px,2.8vw,16px)`）で、新設テストの実測16px閾値を下回った。11/22のレイアウト・位置・色・5画面構成を再実装せず、**共通戻るボタンの文字指定1行だけをroot remへ変更**し、最大22px・折返し可を維持。PWA配信URLも新verへ。この変更で5画面が横はみ出しせず、文字200%で少なくとも16pxとなることを新設32条件ブラウザで再検証する。合格前にはmainへ統合しない。

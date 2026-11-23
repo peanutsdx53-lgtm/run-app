@@ -33,7 +33,7 @@
  -webkit-text-fill-color:#052939!important;
  box-shadow:0 8px 21px #001a2770,inset 0 1px #e3ffff51!important;
  font-family:inherit!important;
- font-size:clamp(14px,2.8vw,16px)!important;
+ font-size:clamp(14px,.94rem,22px)!important;
  font-weight:800!important;
  line-height:1.4!important;
  letter-spacing:0!important;
