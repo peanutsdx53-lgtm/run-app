@@ -44,6 +44,8 @@ test('UX034/035: the two optional timing concepts remain separate and illustrati
  assert.match(markup,/数値は変えません/);
  assert.doesNotMatch(markup,/input\s+type="number"\s+.*data-rof-v4-range/);
  assert.match(read('ui/rofExperience.css'),/rv4-track input\{min-height:48px\}/);
+ assert.match(read('ui/rofExperience.css'),/rv4-state-label\{font-size:clamp/);
+ assert.match(read('ui/bodyContextExperience.css'),/cx-notes-current\{font-size:clamp/);
 });
 test('UX036: 12 anatomy regions remain user-chosen and only an explicit note transfer writes text',()=>{
  const d=draft(),ui=makeUi();

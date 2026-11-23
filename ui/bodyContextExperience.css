@@ -179,3 +179,8 @@
 .cx-page .cx-notes-current strong{color:#91f3e7;font-size:13px;font-variant-numeric:tabular-nums}
 .cx-page .cx-notes-current span:last-child{flex-basis:100%;font-size:12px}
 @media(max-width:430px){.cx-page .cx-notes-current{font-size:13px;line-height:1.6}}
+
+/* UX08 accessibility follow-up: note-location status grows with user text zoom. */
+.cx-page .cx-notes-current{font-size:clamp(12px,.8rem,20px)}
+.cx-page .cx-notes-current strong{font-size:clamp(13px,.82rem,22px)}
+.cx-page .cx-notes-current span:last-child{font-size:clamp(12px,.76rem,20px)}

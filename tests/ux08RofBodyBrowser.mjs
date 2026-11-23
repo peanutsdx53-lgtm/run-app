@@ -101,6 +101,10 @@ try{
   const rg=await geometry(page,['.rv4-current','.rv4-state-label','.rv4-rail',
    '.rv4-anchor','.rv4-track input','.rv4-meta-intro','.rv4-run-times-grid','.rv4-timing']);
   withinViewport(rg,width,engine+' '+lang+' '+width+' '+zoom+' ROF');
+  const stateFont=await rof.locator('.rv4-state-label').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+  const introFont=await rof.locator('.rv4-meta-intro').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+  assert.ok(stateFont>=(zoom===200?18:12)&&introFont>=(zoom===200?18:12),
+   'new ROF state/optional copy must visibly scale '+JSON.stringify({engine,lang,width,zoom,stateFont,introFont}));
   if(zoom===200&&(width===320||width===390||width===1440)){
    await page.screenshot({path:resolve(out,engine+'-'+lang+'-'+width+'-rof-meta.png'),
     fullPage:true,animations:'disabled'});
@@ -132,11 +136,14 @@ try{
    '.cx-notes-current','.cx-notes-current strong','.cx-selected-chip',
    '.cx-field-card','.cx-transfer','.cx-footer']);
   withinViewport(bg,width,engine+' '+lang+' '+width+' '+zoom+' Body');
+  const bodyLabelFont=await body.locator('.cx-notes-current').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+  assert.ok(bodyLabelFont>=(zoom===200?18:12),
+   'body selection status must visibly scale '+JSON.stringify({engine,lang,width,zoom,bodyLabelFont}));
   if(zoom===200&&(width===320||width===390||width===1440))
    await page.screenshot({path:resolve(out,engine+'-'+lang+'-'+width+'-body-selection.png'),
     fullPage:true,animations:'disabled'});
   assert.deepEqual(errors,[],'uncaught browser errors '+JSON.stringify({engine,lang,width,zoom,errors}));
-  results.push({engine,lang,width,zoom,sliderHeight,rof:rg,body:bg,
+  results.push({engine,lang,width,zoom,sliderHeight,stateFont,introFont,bodyLabelFont,rof:rg,body:bg,
    trueZero:true,missingDistinct:true,illustrationsUnchanged:5,
    bodySelectionNotSaved:true,errors});
   await context.close();
