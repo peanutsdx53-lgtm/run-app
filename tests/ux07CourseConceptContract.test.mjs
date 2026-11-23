@@ -13,7 +13,7 @@ const render=(d,ui=initialCourseUi(d))=>coursePage({recordDraft:d,recordCourseUi
 const pairs=[
  ['保存コース・今回の入力','Saved Courses and This Entry'],
  ['保存済みコースを今回の入力に使う','Use a Saved Course for This Entry'],
- ['今回の走行条件は、下の「条件を反映して記録に戻る」で記録に戻せます。コースを次回も使う場合だけ「このコースを保存」を選んでください。','Use “Apply Conditions & Return” below to apply these conditions to your current entry. Select “Save This Course” only if you want to reuse it later.'],
+ ['「条件を反映して記録に戻る」は今回の記録に反映する操作です。次回も再利用する保存コースの保存・更新とは別の操作です。','“Apply Conditions & Return” updates this activity entry. Saving or updating a reusable course for later is a separate action.'],
  ['保存コース作成時のみ必須・今回の走行記録では任意','Required to Save a Course · Optional for This Activity'],
  ['今回の走行条件','Conditions for This Activity'],
  ['坂道・路面は今回の記録に反映します。割合を設定する場合は、入力した値の合計を確認してください。','Uphill, downhill, and surface choices apply to this entry. When entering percentages, check the total.'],
