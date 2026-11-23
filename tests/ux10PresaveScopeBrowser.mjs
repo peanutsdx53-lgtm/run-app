@@ -87,6 +87,54 @@ async function jump(page,language){
   'original location privacy opt-out must remain visible');
  if(language==='en')assert.doesNotMatch(consentText,/[ぁ-んァ-ン一-龯]/);
 }
+// Verify the ACTUAL short mobile viewport: a focusable control can be inside
+// the DOM viewport while invisible underneath the fixed bottom navigation.
+// Programmatic keyboard focus and the review shortcut must leave it legible.
+async function auditNavClearance(page,lang,width,zoom){
+ if(width>800)return {skipped:'desktop'};
+ const height=width===320?568:width===390?620:720;
+ await page.setViewportSize({width,height});
+ const results=[];
+ for(const [label,selector] of [['return-shortcut','[data-review-jump-scope]'],
+                                 ['save-control','[data-manual-run-save]']]){
+  await page.locator(selector).focus();
+  const sample=await page.evaluate(selector=>{
+   const elem=document.querySelector(selector),nav=document.querySelector('.mobile-nav');
+   if(!elem||!nav)throw new Error('missing focus or mobile nav');
+   const r=elem.getBoundingClientRect(),n=nav.getBoundingClientRect();
+   return {focused:document.activeElement===elem,position:getComputedStyle(nav).position,
+    control:{top:r.top,bottom:r.bottom,height:r.height},
+    nav:{top:n.top,height:n.height,bottom:n.bottom},
+    scrollY:window.scrollY,scrollMax:document.documentElement.scrollHeight-innerHeight};
+  },selector);
+  results.push({label,...sample});
+  await writeFile(resolve(output,'nav-clearance-'+lang+'-'+width+'-'+zoom+'.json'),
+    JSON.stringify({engine,lang,width,zoom,height,results},null,2));
+  if(!sample.focused||sample.position!=='fixed'||sample.control.top<0||
+     sample.control.bottom>sample.nav.top-4){
+   await page.screenshot({path:resolve(output,'nav-obstruction-'+lang+'-'+width+'-'+zoom+'-'+label+'.png'),
+    animations:'disabled'});
+   assert.fail('UX10 fixed-nav focus obstruction '+JSON.stringify({engine,lang,width,zoom,label,sample}));
+  }
+ }
+ await jump(page,lang);
+ const target=await page.evaluate(()=>{
+  const el=document.querySelector('#rr-save-scope'),nav=document.querySelector('.mobile-nav');
+  const r=el.getBoundingClientRect(),n=nav.getBoundingClientRect();
+  return {focused:document.activeElement===el,top:r.top,bottom:r.bottom,navTop:n.top,scrollY};
+ });
+ results.push({label:'jump-target',...target});
+ await writeFile(resolve(output,'nav-clearance-'+lang+'-'+width+'-'+zoom+'.json'),
+   JSON.stringify({engine,lang,width,zoom,height,results},null,2));
+ if(!target.focused||target.top<0||target.top>=target.navTop-4){
+  await page.screenshot({path:resolve(output,'nav-obstruction-'+lang+'-'+width+'-'+zoom+'-jump.png'),
+   animations:'disabled'});
+  assert.fail('UX10 jump destination obstructed '+JSON.stringify({engine,lang,width,zoom,target}));
+ }
+ await page.setViewportSize({width,height:width===1440?900:844});
+ return results;
+}
+
 try{
  for(const lang of ['ja','en'])for(const width of [320,390,768,1440])for(const zoom of [100,200]){
   const context=await browser.newContext({viewport:{width,height:width===1440?900:844},
@@ -131,6 +179,7 @@ try{
   const after=await snapshot(page,width,engine+' '+lang+' '+width+' '+zoom+' expanded');
   if(zoom===200&&[320,390,1440].includes(width))
    await page.screenshot({path:resolve(output,engine+'-'+lang+'-'+width+'-privacy-expanded.png'),fullPage:true,animations:'disabled'});
+  const navClearance=await auditNavClearance(page,lang,width,zoom);
   if(width===390&&zoom===100){
    const two=await seedTwoRuns(page);
    // Return from a long optional section preserves the saved IDs and draft status.
