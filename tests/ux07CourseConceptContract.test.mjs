@@ -59,12 +59,12 @@ test('UX-032: hidden fields are not erased; only chosen input modes drive curren
  assert.ok(courseReadiness(summary,ui).length>0,'invalid active summary must not be silently accepted');
 });
 test('UX-07: offline boot uses new shell and dictionary imports; old immutable URLs are not pinned',()=>{
- const ver='20261123-ux07-course-clarity-v1',app=read('app.js'),html=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
- for(const [source,url] of [[app,'recordExperience.js?v='+ver],[app,'englishUi.js?v='+ver],
-  [html,'app.js?v='+ver],[html,'recordExperience.css?v='+ver],
-  [sw,'runload-ui-next-shell-'+ver],[sw,'app.js?v='+ver],
-  [sw,'recordExperience.js?v='+ver],[sw,'englishFinalRecording.js?v='+ver],
-  [en,'englishFinalRecording.js?v='+ver]])assert.ok(source.includes(url),'missing versioned URL: '+url);
+ const ver='20261123-ux07-course-clarity-v1',shell='20261123-ux08-rof-body-clarity-v1',app=read('app.js'),html=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
+ for(const [source,url] of [[app,'recordExperience.js?v='+ver],[app,'englishUi.js?v='+shell],
+  [html,'app.js?v='+shell],[html,'recordExperience.css?v='+ver],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'app.js?v='+shell],
+  [sw,'recordExperience.js?v='+ver],[sw,'englishFinalRecording.js?v='+shell],
+  [en,'englishFinalRecording.js?v='+shell]])assert.ok(source.includes(url),'missing versioned URL: '+url);
  assert.doesNotMatch(sw,/20261123-ux06-manual-clarity-v1/);
 });
 
