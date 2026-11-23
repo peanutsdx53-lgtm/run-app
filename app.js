@@ -1916,7 +1916,17 @@ function recordExtras(){
           warning.scrollIntoView({block:'nearest'});
           warning.querySelector('[data-e4-apply-return]')?.focus({preventScroll:true});
         }
+        return;
       }
+      event.preventDefault();
+      environmentExperience.clearEnvironmentSelections(environmentUi);
+      location.hash=state.recordReviewReturn?'#/record-review':'#/record';
+      return;
+    }
+    if(event.target.closest('[data-e4-discard-return]')){
+      event.preventDefault();
+      environmentExperience.clearEnvironmentSelections(environmentUi);
+      location.hash=state.recordReviewReturn?'#/record-review':'#/record';
       return;
     }
     if(event.target.closest('[data-e4-apply-return]')){
@@ -1926,7 +1936,10 @@ function recordExtras(){
         environmentUi.notice=result.reason;
         environmentExperience.paintEnvironment(app.querySelector('[data-e4-page]'),d,environmentUi);
         app.querySelector('[data-e4-notice]')?.scrollIntoView({block:'nearest'});
-      }else location.hash=state.recordReviewReturn?'#/record-review':'#/record';
+      }else{
+        environmentExperience.clearEnvironmentSelections(environmentUi);
+        location.hash=state.recordReviewReturn?'#/record-review':'#/record';
+      }
       return;
     }
     const gaitSource=event.target.closest("[data-g4-source]");

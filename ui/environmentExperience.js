@@ -12,6 +12,8 @@ export function temperatureError(value){
  const x=Number(raw);
  return !Number.isFinite(x)||x< -50||x>60?'気温は−50〜60℃の範囲で入力してください。':'';
 }
+/** Discard only transient UI choices; never erase the person-authored draft note. */
+export function clearEnvironmentSelections(ui){ui.weather=null;ui.flags=[];ui.notice='';}
 export function toggleWeather(ui,key){if(!weatherOptions.some(x=>x[0]===key))return false;ui.weather=ui.weather===key?null:key;ui.notice='';return true;}
 export function toggleFlag(ui,key){if(!conditionOptions.some(x=>x[0]===key))return false;ui.flags=ui.flags.includes(key)?ui.flags.filter(k=>k!==key):[...ui.flags,key];ui.notice='';return true;}
 /** A selector is not a stored observation until the user copies it to their own note. */
