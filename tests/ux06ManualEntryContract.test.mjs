@@ -43,6 +43,7 @@ test('UX-025: occurrence date is named explicitly without changing stored date',
 });
 
 test('UX-026/027/039: responsive labels, three explicit activities, original atomic save',()=>{
+ const d=draft();
  assert.equal(translateUiText('例：5.00'),'e.g. 5.00');
  assert.equal(translateUiText('例：30'),'e.g. 30');
  const css=read('ui/recordExperience.css'),app=read('app.js');
