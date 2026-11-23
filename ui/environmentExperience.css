@@ -82,3 +82,11 @@
 .environment-v4 .e4-selection-status[data-state="applied"] .e4-stage-label{background:#155354;border-color:#83ddd2;color:#e8fffa}
 .environment-v4 .e4-selection-status [data-e4-status-message]{display:block;overflow-wrap:anywhere}
 .environment-v4 .e4-save-boundary{font-size:clamp(12px,.81rem,20px);color:#cee7eb;line-height:1.6;margin:10px 0 0;padding:9px 11px;border-left:3px solid #6ecad1;background:#123d4a;overflow-wrap:anywhere}
+
+/* UX09 real-image correction: at 320px/200%, Optional must not be
+   clipped beside multi-line Environment card headings. */
+@media(max-width:430px){
+ .environment-v4 .e4-top{flex-wrap:wrap;gap:5px 10px}
+ .environment-v4 .e4-top h2{flex:1 1 100%;min-width:0;overflow-wrap:anywhere}
+ .environment-v4 .e4-top small{flex:0 1 auto;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+}

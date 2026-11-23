@@ -127,6 +127,22 @@ try{
   await state(page,lang,'pending');
   assert.equal(await page.locator('[data-draft="environmentNote"]').inputValue(),original);
   assert.equal(await page.locator('[data-e4-commit]').isEnabled(),true);
+  if(width<=390){
+   const headBounds=await page.locator('.environment-v4 .e4-top').evaluateAll(rows=>rows.map(row=>{
+    const r=row.getBoundingClientRect();
+    return {panel:{left:r.left,right:r.right},labels:[...row.querySelectorAll('h2,small')].map(e=>{
+     const b=e.getBoundingClientRect();return {text:e.textContent,left:b.left,right:b.right,
+      scrollWidth:e.scrollWidth,clientWidth:e.clientWidth};
+    })};
+   }));
+   assert.equal(headBounds.length,2,'temperature and note headings required');
+   for(const row of headBounds)for(const label of row.labels){
+    assert.ok(label.left>=row.panel.left-3&&label.right<=row.panel.right+3,
+     'optional heading is clipped beyond header '+JSON.stringify({engine,lang,width,zoom,label,row}));
+    assert.ok(label.scrollWidth<=label.clientWidth+2,
+     'optional heading text is cut off '+JSON.stringify({engine,lang,width,zoom,label,row}));
+   }
+  }
   const pending=await geometry(page,width,engine+' '+lang+' '+width+' '+zoom+' pending');
   if(zoom===200&&(width===320||width===390||width===1440))
    await page.screenshot({path:resolve(out,engine+'-'+lang+'-'+width+'-pending.png'),fullPage:true,animations:'disabled'});

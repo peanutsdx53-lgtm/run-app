@@ -45,6 +45,7 @@ test('UX028 uses existing footer/return guard and distinguishes review return',(
  assert.match(css,/\.rl-record-footer/);
  assert.match(css,/linear-gradient\(100deg,#27b2d6,#11c6b5\)/);
  assert.match(css,/font-size:clamp\(14px,\.94rem,22px\)!important/);
+ assert.match(read('ui/environmentExperience.css'),/\.e4-top\{flex-wrap:wrap/);
  assert.match(app,/event\.target\.closest\('\[data-e4-done\],\[data-e4-back\]'\)/);
  assert.match(app,/event\.target\.closest\('\[data-e4-discard-return\]'\)/);
  assert.match(app,/environmentExperience\.clearEnvironmentSelections\(environmentUi\)/);
