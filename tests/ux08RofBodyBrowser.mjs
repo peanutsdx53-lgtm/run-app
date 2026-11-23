@@ -57,7 +57,7 @@ try{
   const rof=page.locator('[data-rof-v4-root]');
   await rof.waitFor({state:'visible',timeout:20000});
   if(zoom===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
-  const unanswered=lang==='en'?'Unanswered':'未回答',answered=lang==='en'?'Answered':'回答済み';
+  const unanswered=lang==='en'?'Not answered':'未回答',answered=lang==='en'?'Answered':'回答済み';
   await page.waitForFunction(({lang,unanswered})=>
    document.documentElement.lang===lang&&
    document.querySelector('[data-rof-v4-state]')?.textContent.trim()===unanswered,

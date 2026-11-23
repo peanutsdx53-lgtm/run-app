@@ -66,7 +66,7 @@ test('UX036: 12 anatomy regions remain user-chosen and only an explicit note tra
 });
 test('UX08: five new display phrases have explicit English counterparts, not implicit user-text translation',()=>{
  const pairs=[
-  ['回答済み','Answered'],['未回答','Unanswered'],
+  ['回答済み','Answered'],['未回答','Not answered'],
   ['運動時刻と疲労感の回答時点は別の項目です。どちらも任意です。',
    'Activity start/end times and the time you assessed fatigue are different fields. Both are optional.'],
   ['図で選択中','Selected on Body Map'],

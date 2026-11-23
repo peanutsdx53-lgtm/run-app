@@ -2,7 +2,6 @@
  * review, steps and mixed running/walking. All validation rules unchanged. */
 export const ENGLISH_FINAL_RECORDING=Object.freeze({
  "回答済み": "Answered",
- "未回答": "Unanswered",
  "運動時刻と疲労感の回答時点は別の項目です。どちらも任意です。": "Activity start/end times and the time you assessed fatigue are different fields. Both are optional.",
  "図で選択中": "Selected on Body Map",
  "部位の選択だけでは記録に残りません": "Selecting a body region alone does not add it to your saved note.",
