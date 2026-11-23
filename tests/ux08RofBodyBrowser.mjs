@@ -126,6 +126,8 @@ try{
   await body.locator('[data-append-name]').click();
   assert.match(await body.locator('#cx-bodyObservation').inputValue(),/気になった部位：/,
    'only explicit user action transfers selected name');
+  const notice=lang==='en'?"Selected region names were added to your body observations.":"部位名を身体の自覚情報に追加しました。";
+  await page.waitForFunction(text=>document.querySelector('[data-cx-page] [data-status]')?.textContent.trim()===text,notice,{timeout:15000});
   const bg=await geometry(page,['.cx-header','.cx-main-card','.cx-notes-heading',
    '.cx-notes-current','.cx-notes-current strong','.cx-selected-chip',
    '.cx-field-card','.cx-transfer','.cx-footer']);
