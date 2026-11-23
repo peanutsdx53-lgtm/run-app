@@ -63,7 +63,7 @@ test('P14: Condition journey matches violet home card, while Condition and Achie
 
 test('P14: app, worker, and style versions are aligned without deleting local history data',()=>{
  const index=read('index.html'),sw=read('sw.js'),app=read('app.js');
- const v='20261110-p14-visual-v4',entryV='20261123-ux10-presave-focus-v2',pwaV='20261111-home-autosave-v1';
+ const v='20261110-p14-visual-v4',entryV='20261123-ux10-presave-focus-v2',pwaV='20261123-pwa-update-notice-v1';
  assert.ok(index.includes('app.js?v='+entryV),'HTML missing app.js');
  assert.ok(sw.includes('app.js?v='+entryV),'SW missing app.js');
  assert.ok(index.includes('pwa.js?v='+pwaV),'HTML missing pwa.js');

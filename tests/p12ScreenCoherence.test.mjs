@@ -26,7 +26,7 @@ test('P12: Home guide, learning header, History and Exploration controls preserv
 
 test('P12: newest stylesheet, module imports and PWA precache share one release version',()=>{
  const html=read('index.html'),sw=read('sw.js'),css=read('ui/screenCoherenceP12.css'),app=read('app.js');
- const version='20261123-ux10-presave-focus-v2',pwaVersion='20261111-home-autosave-v1',presentationVersion='20261110-p14-visual-v4';
+ const version='20261123-ux10-presave-focus-v2',pwaVersion='20261123-pwa-update-notice-v1',presentationVersion='20261110-p14-visual-v4';
  const previous='20261110-p12-card-help-v1';
  assert.ok(html.indexOf('unifiedLearningShell.css')<html.indexOf('screenCoherenceP12.css'));
  assert.ok(html.indexOf('screenCoherenceP12.css')<html.indexOf('screenRefinementP13.css'));
