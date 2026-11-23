@@ -75,7 +75,7 @@ try{
   await result.locator('.rv4-mobile-tabs [data-tab]').first().waitFor({state:'attached',timeout:20000});
   assert.equal(await result.locator('.rv4-mobile-tabs [data-tab]').count(),3);
   assert.ok((await result.locator('.rv4-note p').allTextContents()).includes('記録'),'saved user-authored memo identical to a UI label must not be translated');
-  assert.equal(await result.locator('.rv4-body .rv4-card-heading h2').first().innerText(),'Region Reference Values');
+  assert.equal(await result.locator('.rv4-body .rv4-card-heading h2').first().innerText(),'Research Reference Values by Body Region');
   await page.screenshot({path:resolve(out,width+'-english-result.png'),fullPage:true});
   // Canvas output is separate from HTML: inspect the strings actually drawn
   // onto the 1200x630 PNG. A translated button does not prove a translated PNG.

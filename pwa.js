@@ -20,39 +20,124 @@ function showInstall(){
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e});
 window.addEventListener("appinstalled",()=>{deferredInstall=null});
 document.addEventListener("click",e=>{if(e.target.closest("[data-install-app]")){e.preventDefault();showInstall()}});
+const PAGE_RELEASE=new URL(document.querySelector('script[src*="pwa.js?v="]')?.src||location.href).searchParams.get("v");
+let updateNoticeDismissed=false;
 function showAppUpdateNotice(){
+ if(updateNoticeDismissed)return;
  if(document.getElementById("runload-update-notice"))return;
  const banner=document.createElement("div");banner.id="runload-update-notice";banner.setAttribute("role","status");
  banner.style.cssText="position:fixed;z-index:100000;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));max-width:450px;margin:auto;background:#092e46;color:#f4fdff;border:1px solid #3bd5dc;border-radius:14px;box-shadow:0 10px 35px #001522bb;padding:12px 14px;display:flex;gap:12px;align-items:center;font:600 14px/1.5 system-ui,sans-serif";
- const label=document.createElement("span");label.textContent=document.documentElement.lang==='en'?"An app update is available.":"画面が更新されました。";label.style.flex="1";
+ const label=document.createElement("span");label.textContent=document.documentElement.lang==='en'?"A new version is available. Save or finish any unsaved work before reloading.":"新しい版を利用できます。入力中の内容を確認してから更新してください。";label.style.flex="1";
  const refresh=document.createElement("button");refresh.type="button";refresh.textContent=document.documentElement.lang==='en'?"Reload":"更新する";
  refresh.style.cssText="border:0;border-radius:9px;background:#17c6d1;color:#06233a;padding:9px 12px;font:700 14px system-ui,sans-serif";
  refresh.addEventListener("click",()=>location.reload());
  const dismiss=document.createElement("button");dismiss.type="button";dismiss.textContent=document.documentElement.lang==='en'?"Later":"後で";
  dismiss.style.cssText="border:0;background:transparent;color:#c8ebf2;padding:7px;font:600 13px system-ui,sans-serif";
- dismiss.addEventListener("click",()=>banner.remove());
+ dismiss.addEventListener("click",()=>{updateNoticeDismissed=true;banner.remove()});
  banner.append(label,refresh,dismiss);document.body.append(banner);
+}
+// The installed Home Screen app can stay in memory while the screen is locked.
+// Check on launch AND when returning to the foreground, without reloading automatically.
+// A release handshake also finds a stale page after the new worker activated unseen.
+const MIN_UPDATE_CHECK_MS=60000;
+async function workerRelease(worker){
+ if(!worker||typeof MessageChannel!=="function")return null;
+ return new Promise(resolve=>{
+  const channel=new MessageChannel();
+  let settled=false;
+  const finish=release=>{
+   if(settled)return;
+   settled=true;clearTimeout(timeout);
+   try{channel.port1.close();channel.port2.close()}catch{}
+   resolve(release);
+  };
+  const timeout=setTimeout(()=>finish(null),1400);
+  channel.port1.onmessage=event=>{
+   const data=event.data;
+   finish(data?.type==="RUNLOAD_RELEASE"&&typeof data.release==="string"?data.release:null);
+  };
+  try{worker.postMessage({type:"RUNLOAD_GET_RELEASE"},[channel.port2])}
+  catch{finish(null)}
+ });
+}
+async function inspectCurrentRelease(){
+ const controller=navigator.serviceWorker.controller;
+ const observed=await workerRelease(controller);
+ if(observed&&PAGE_RELEASE&&observed!==PAGE_RELEASE)showAppUpdateNotice(observed);
 }
 // HTTPS Pages and trustworthy localhost/127.0.0.1 HTTP can register; ordinary HTTP cannot.
 if("serviceWorker" in navigator&&window.isSecureContext&&/^https?:$/.test(location.protocol)){
- window.addEventListener("load",()=>{
-  const registerAfterReady=async()=>{
-  const wasControlled=Boolean(navigator.serviceWorker.controller);
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(wasControlled)showAppUpdateNotice()});
-  try{
-   const registration=await navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"});
-   registration.addEventListener("updatefound",()=>{
-    const installing=registration.installing;
-    installing?.addEventListener("statechange",()=>{
-     if(installing.state==="installed"&&wasControlled)showAppUpdateNotice();
-    });
-   });
-   await registration.update();
-  }catch(e){console.warn("Offline cache:",e)}
+ let registration=null;
+ let started=false;
+ let priorRegistration=false;
+ let previousController=navigator.serviceWorker.controller;
+ let lastChecked=0;
+ let pendingCheck=null;
+ const observeInstalling=worker=>{
+  if(!worker)return;
+  const inspectState=()=>{
+   if(worker.state==="installed"&&(priorRegistration||navigator.serviceWorker.controller)){
+    showAppUpdateNotice();
+   }
   };
-  // Do not fetch the large offline precache while the opening screen is still
-  // loading its first view. Installed service workers continue to serve requests.
-  if(!window.runloadBoot||window.runloadBoot.isReady)void registerAfterReady();
-  else window.addEventListener("runload:boot-ready",()=>{void registerAfterReady()},{once:true});
+  worker.addEventListener("statechange",inspectState);
+  inspectState();
+ };
+ navigator.serviceWorker.addEventListener("controllerchange",()=>{
+  const next=navigator.serviceWorker.controller;
+  if(next&&next!==previousController&&(previousController||priorRegistration)){
+   showAppUpdateNotice();
+  }
+  previousController=next;
+  void inspectCurrentRelease();
  });
+ async function checkForUpdates(force=false){
+  if(!registration)return;
+  if(pendingCheck)return pendingCheck;
+  const now=Date.now();
+  if(!force&&now-lastChecked<MIN_UPDATE_CHECK_MS){
+   await inspectCurrentRelease();
+   return;
+  }
+  if(navigator.onLine===false){
+   await inspectCurrentRelease();
+   return;
+  }
+  lastChecked=now;
+  pendingCheck=(async()=>{
+   try{await registration.update()}
+   catch(error){console.warn("Offline cache update:",error)}
+   if(registration.waiting&&(priorRegistration||navigator.serviceWorker.controller)){
+    showAppUpdateNotice();
+   }
+   await inspectCurrentRelease();
+  })().finally(()=>{pendingCheck=null});
+  return pendingCheck;
+ }
+ async function registerAfterReady(){
+  if(started)return;
+  started=true;
+  try{
+   priorRegistration=Boolean(await navigator.serviceWorker.getRegistration("./"))||
+    Boolean(navigator.serviceWorker.controller);
+   registration=await navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"});
+   registration.addEventListener("updatefound",()=>observeInstalling(registration.installing));
+   observeInstalling(registration.installing);
+   if(registration.waiting&&priorRegistration)showAppUpdateNotice();
+   await checkForUpdates(true);
+  }catch(error){console.warn("Offline cache:",error)}
+ }
+ window.addEventListener("load",()=>{
+  // A failed/stuck boot must not permanently block recovery of an old PWA.
+  if(!window.runloadBoot||window.runloadBoot.isReady)void registerAfterReady();
+  else{
+   window.addEventListener("runload:boot-ready",()=>void registerAfterReady(),{once:true});
+   setTimeout(()=>void registerAfterReady(),8000);
+  }
+ });
+ document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible")void checkForUpdates();
+ });
+ window.addEventListener("pageshow",()=>void checkForUpdates());
+ window.addEventListener("focus",()=>void checkForUpdates());
 }

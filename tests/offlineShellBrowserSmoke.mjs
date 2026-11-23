@@ -44,8 +44,24 @@ try{
  assert.equal(installed.active,true,'app itself registers the service worker, with no test bypass');
  assert.equal(installed.scope,host,'registered scope is the app origin');
  await page.waitForFunction(()=>!!navigator.serviceWorker.controller,null,{timeout:40000});
+ const activeRelease=await page.evaluate(async()=>{
+  const controller=navigator.serviceWorker.controller;
+  if(!controller)return null;
+  return await new Promise(resolve=>{
+   const channel=new MessageChannel();
+   const timeout=setTimeout(()=>resolve(null),2500);
+   channel.port1.onmessage=event=>{
+    clearTimeout(timeout);resolve(event.data?.type==='RUNLOAD_RELEASE'?event.data.release:null);
+    channel.port1.close();channel.port2.close();
+   };
+   controller.postMessage({type:'RUNLOAD_GET_RELEASE'},[channel.port2]);
+  });
+ });
+ assert.ok(activeRelease,'the production worker must answer the release query');
+ assert.equal(await page.locator('#runload-update-notice').count(),0,'first installation must not claim an update');
  const swSource=await readFile(resolve(root,'sw.js'),'utf8');
  const assets=JSON.parse(swSource.match(/const ASSETS=(\[[^\n]*\]);/)[1]);
+ assert.equal(activeRelease,swSource.match(/const CACHE="runload-ui-next-shell-([^"]+)"/)[1],'installed active worker matches current cache generation');
  const initialManifest=await page.evaluate(async cachedAssets=>{
   const keys=await caches.keys(),key=keys.find(k=>k.startsWith('runload-ui-next-shell-'));
   if(!key)return {total:cachedAssets.length,missing:cachedAssets};
