@@ -87,17 +87,17 @@ test('UX05: CSS reflows all stage labels while both dynamic JS and CSS stay offl
  assert.ok(homeCss.includes('#app .home-v3 .hx-condition-stats{grid-template-columns:repeat(2,minmax(0,1fr))}'));
  assert.ok(homeCss.includes('#app .home-v3 .hx-condition-stats > div:last-child{grid-column:1/-1}'));
  assert.ok(homeCss.includes('white-space:normal;overflow-wrap:anywhere;line-height:1.4;'));
- const gen='20261122-ux05-firstuse-home-v1';
+ const gen='20261122-ux05-firstuse-home-v1',shellGen='20261123-ux06-manual-clarity-v1';
  for(const [txt,fragment] of [
   [app,'firstUseExperience.js?v='+gen],
   [index,'firstUseExperience.css?v='+gen],
   [index,'homeExperience.css?v='+gen],
-  [index,'app.js?v='+gen],
-  [sw,'runload-ui-next-shell-'+gen],
+  [index,'app.js?v='+shellGen],
+  [sw,'runload-ui-next-shell-'+shellGen],
   [sw,'firstUseExperience.css?v='+gen],
   [sw,'homeExperience.css?v='+gen],
   [sw,'firstUseExperience.js?v='+gen],
-  [sw,'app.js?v='+gen]
+  [sw,'app.js?v='+shellGen]
  ])assert.ok(txt.includes(fragment),'active offline version is missing: '+fragment);
  assert.match(read('.github/workflows/run-app-regression.yml'),/node tests\/ux05OnboardingHomeBrowser\.mjs/);
 });
