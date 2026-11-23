@@ -73,3 +73,12 @@
  .environment-v4 .e4-chip{min-height:51px;flex-direction:row;justify-content:center;gap:5px}
  .environment-v4 .e4-flag{min-height:48px;white-space:normal}
 }
+
+/* UX09: show the transient selection status separately from draft contents.
+   Applying an environment note is not a saved run. No buttons/guard are modified. */
+.environment-v4 .e4-selection-status{display:grid;gap:5px;min-width:0}
+.environment-v4 .e4-stage-label{display:inline-block;justify-self:start;max-width:100%;padding:4px 8px;border-radius:8px;background:#254f5b;border:1px solid #8baab3;color:#eefaff;font-size:clamp(12px,.83rem,20px);line-height:1.45;font-weight:800;overflow-wrap:anywhere}
+.environment-v4 .e4-selection-status[data-state="pending"] .e4-stage-label{background:#714827;border-color:#efc58f;color:#fff0d6}
+.environment-v4 .e4-selection-status[data-state="applied"] .e4-stage-label{background:#155354;border-color:#83ddd2;color:#e8fffa}
+.environment-v4 .e4-selection-status [data-e4-status-message]{display:block;overflow-wrap:anywhere}
+.environment-v4 .e4-save-boundary{font-size:clamp(12px,.81rem,20px);color:#cee7eb;line-height:1.6;margin:10px 0 0;padding:9px 11px;border-left:3px solid #6ecad1;background:#123d4a;overflow-wrap:anywhere}
