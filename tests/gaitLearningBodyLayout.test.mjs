@@ -63,7 +63,7 @@ test('current bilingual mobile assets are versioned and cached consistently',()=
   [index,'ui/recordReturnActions.css?v='+v],
   [app,'gaitExperience.js?v='+v],
   [app,'learningExperience.js?v='+previous],
-  [app,'englishUi.js?v=20261122-ux04-stable-actions-v1'],
+  [app,'englishUi.js?v=20261123-ux07-course-clarity-v1'],
   [english,'englishSurfaceRemainders.js?v='+previous],
   [sw,'runload-ui-next-shell-'+cacheGeneration],
   [sw,'ui/learningExperience.js?v='+previous],
