@@ -172,3 +172,10 @@
  }
  .cx-page .cx-context strong{overflow-wrap:anywhere}
 }
+
+/* UX08: show the current map selection beside long optional notes.
+   Selection does not persist until the user explicitly adds names to their own text. */
+.cx-page .cx-notes-current{display:flex;gap:4px 7px;align-items:baseline;flex-wrap:wrap;margin:6px 0 0;color:#cce5ea;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+.cx-page .cx-notes-current strong{color:#91f3e7;font-size:13px;font-variant-numeric:tabular-nums}
+.cx-page .cx-notes-current span:last-child{flex-basis:100%;font-size:12px}
+@media(max-width:430px){.cx-page .cx-notes-current{font-size:13px;line-height:1.6}}

@@ -161,8 +161,8 @@ export function rofPage(d,ui,options={}){
  return `<div class="record-v3 rv4-page" data-rof-v4-root><header class="rv-head rv4-head"><a href="${backHref}" class="rv-back" aria-label="${gpsMode?'GPSに戻る':'手入力へ戻る'}">‹</a><div><h1>${gpsMode?(ui.phase==='before'?'運動前':'運動後')+'の疲労感':'運動前後の疲労感'}</h1><p>ROF-J｜0〜10の整数11段階</p></div><details class="rv-screen-help"><summary aria-label="疲労感の記録方法">？</summary><p>運動前と運動後の疲労感を0〜10の整数で選びます。評価は横軸または±ボタンで操作します。5つの代表イラストは尺度の目安です。「未入力」と「0」を区別して記録します。数値は本人が感じた疲労感を表します。医学的な診断や身体負荷の測定とは用途が異なります。</p></details></header>
  <section class="rv4-card" aria-labelledby="rv4-title"><div class="rv4-title"><h2 id="rv4-title">疲労感の記録</h2><span>任意</span></div>
  <div class="rv4-tabs" role="tablist" aria-label="疲労感の入力タイミング">${tabs}</div>
- ${gpsMode?'':`<details class="rv4-optional-meta" ${ui.metaOpen?'open':''}><summary>運動時刻・回答時点（任意）</summary><div class="rv4-meta-body">${exerciseTiming}${provenance}</div></details>`}<div class="rv4-workspace" role="tabpanel" id="rof-v4-panel" aria-labelledby="rof-v4-${ui.phase}-tab">
- <div class="rv4-current${hasScore?'':' is-empty'}" aria-live="polite"><output data-rof-v4-number>${hasScore?n:'—'}</output><div><small data-rof-v4-scoreline>${ui.phase==='before'?'運動前':'運動後'} / 10</small><strong data-rof-v4-meaning>${hasScore?anchorDescriptionMarkup(guidanceForRofJ(n)):'まだ選択されていません'}</strong><p data-rof-v4-caption>${hasScore?'選択値：'+n+' / 10':'横軸で数値を選択してください'}</p></div></div>
+ ${gpsMode?'':`<details class="rv4-optional-meta" ${ui.metaOpen?'open':''}><summary>運動時刻・回答時点（任意）</summary><div class="rv4-meta-body"><p class="rv4-meta-intro">運動時刻と疲労感の回答時点は別の項目です。どちらも任意です。</p>${exerciseTiming}${provenance}</div></details>`}<div class="rv4-workspace" role="tabpanel" id="rof-v4-panel" aria-labelledby="rof-v4-${ui.phase}-tab">
+ <div class="rv4-current${hasScore?'':' is-empty'}" data-rof-v4-selected="${hasScore}" aria-live="polite"><output data-rof-v4-number>${hasScore?n:'—'}</output><div><small class="rv4-state-label" data-rof-v4-state>${hasScore?'回答済み':'未回答'}</small><small data-rof-v4-scoreline>${ui.phase==='before'?'運動前':'運動後'} / 10</small><strong data-rof-v4-meaning>${hasScore?anchorDescriptionMarkup(guidanceForRofJ(n)):'まだ選択されていません'}</strong><p data-rof-v4-caption>${hasScore?'選択値：'+n+' / 10':'横軸で数値を選択してください'}</p></div></div>
  <div class="rv4-rail" aria-label="評価軸と対応する代表イラスト"><div class="rv4-rail-top"><strong>代表イラスト</strong></div>
  <div class="rv4-anchor-row" aria-label="原版の5つの代表位置">${anchors}</div>
  <div class="rv4-description" aria-live="polite" aria-atomic="true"><small>イラストの説明 <span data-rof-v4-position>（目安：${esc(anchor.positionLabel)}）</span></small><strong data-rof-v4-anchor-meaning>${anchorDescriptionMarkup(anchor.descriptor)}</strong></div>
@@ -181,6 +181,8 @@ export function reflectRofPage(root,d,ui){
  });
  page.querySelector('#rof-v4-panel')?.setAttribute('aria-labelledby','rof-v4-'+ui.phase+'-tab');
  const current=page.querySelector('.rv4-current');current?.classList.toggle('is-empty',!selected);
+ current?.setAttribute('data-rof-v4-selected',String(selected));
+ update('[data-rof-v4-state]',selected?'回答済み':'未回答');
  update('[data-rof-v4-number]',selected?String(n):'—');
  update('[data-rof-v4-scoreline]',(ui.phase==='before'?'運動前':'運動後')+' / 10');
  const scoreMeaning=page.querySelector('[data-rof-v4-meaning]');

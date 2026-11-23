@@ -240,3 +240,13 @@
    min-width:0;word-break:normal;overflow-wrap:anywhere
  }
 }
+
+/* UX08: a real zero is an answered score, never styled as no answer. */
+.rv4-page .rv4-current[data-rof-v4-selected="true"]{border-color:#60e7dd;box-shadow:inset 3px 0 #39d7d0}
+.rv4-page .rv4-current[data-rof-v4-selected="false"]{border-color:#477584;box-shadow:none}
+.rv4-page .rv4-state-label{display:inline-block;justify-self:start;width:max-content;max-width:100%;padding:3px 8px;border-radius:8px;background:#195f66;border:1px solid #57d3cb;color:#e5fffc;font-size:12px;line-height:1.4;font-weight:800}
+.rv4-page .rv4-current.is-empty .rv4-state-label{background:#244655;border-color:#86a6b1;color:#dbe9ed}
+.rv4-page .rv4-meta-intro{margin:0 0 2px;padding:8px 10px;border-left:3px solid #69cfc9;color:#e0f4f4;background:#133d4a;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.rv4-page .rv4-track input{min-height:48px}
+.rv4-page .rv4-track:focus-within{outline:2px solid #9bf5ed;outline-offset:2px;border-radius:8px}
+@media(max-width:430px){.rv4-page .rv4-current>div{gap:4px}.rv4-page .rv4-state-label{font-size:12px}}
