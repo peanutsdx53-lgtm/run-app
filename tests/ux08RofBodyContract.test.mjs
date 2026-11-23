@@ -80,7 +80,7 @@ test('UX08: five new display phrases have explicit English counterparts, not imp
 });
 test('UX08: the live ROF and body modules, styles, English dictionary and PWA shell share their active versions',()=>{
  const version='20261123-ux08-rof-body-clarity-v1';
- const shell='20261123-ux11-result-source-v1';
+ const shell='20261124-ux12-history-discovery-v1',resultVersion='20261123-ux11-result-source-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
   [app,'rofExperience.js?v='+version],[app,'bodyContextExperience.js?v='+version],
@@ -89,7 +89,7 @@ test('UX08: the live ROF and body modules, styles, English dictionary and PWA sh
   [sw,'runload-ui-next-shell-'+shell],[sw,'rofExperience.js?v='+version],
   [sw,'bodyContextExperience.js?v='+version],[sw,'rofExperience.css?v='+version],
   [sw,'bodyContextExperience.css?v='+version],[sw,'englishUi.js?v='+shell],
-  [sw,'englishFinalRecording.js?v='+shell],[en,'englishFinalRecording.js?v='+shell]
+  [sw,'englishFinalRecording.js?v='+resultVersion],[en,'englishFinalRecording.js?v='+resultVersion]
  ];
  for(const [source,token] of items)assert.ok(source.includes(token),'missing live/offline version '+token);
  assert.ok(app.includes('recordExperience.js?v=20261123-ux07-course-clarity-v1'));

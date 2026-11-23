@@ -1,5 +1,5 @@
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
-import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261121-history-more-filters-v2';
+import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261124-ux12-history-discovery-v1';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261111-exploration-inquiry-v1';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261121-profile-optional-right-v1';
