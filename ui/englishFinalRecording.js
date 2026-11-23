@@ -1,6 +1,8 @@
 /* English text for manual recording, course selection, draft validation,
  * review, steps and mixed running/walking. All validation rules unchanged. */
 export const ENGLISH_FINAL_RECORDING=Object.freeze({
+ "保存する内容と出所を確認する": "Review What Will Be Saved and Its Source",
+ "保存可否と出所を確認する": "Review Save Availability and Source",
  "選択なし": "No Selection",
  "一時選択・未反映": "Temporary · Not Applied",
  "今回の下書きに反映済み": "Applied to Current Draft",

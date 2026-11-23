@@ -1515,6 +1515,11 @@ function recordExtras(){
       }
       return;
     }
+    if(event.target.closest('[data-review-jump-scope]')&&currentPage()==='record-review'){
+      const target=app.querySelector('#rr-save-scope');
+      if(target){target.scrollIntoView({block:'start',behavior:'instant'});target.focus({preventScroll:true});}
+      return;
+    }
     const reviewGait=event.target.closest("[data-review-gait]");
     if(reviewGait&&currentPage()==='record-review'){
      const gait=reviewGait.dataset.reviewGait;
