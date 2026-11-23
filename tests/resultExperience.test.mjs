@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {OFFICIAL_NAMES,resultImageAnnotation} from '../ui/resultExperience.js';
+import {bodyReferenceScale} from '../ui/bodyReferencePresentation.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('Result v4 references all formal region names, with immutable official identifiers',()=>{
  assert.equal(OFFICIAL_NAMES.length,12);
@@ -315,10 +316,10 @@ test('S09 side-by-side bilingual strings preserve reference provenance',()=>{
  const english=read('ui/englishResultCopy.js');
  const remainder=read('ui/englishSurfaceRemainders.js');
  assert.match(js,/部位の文献基準100との差/);
- assert.match(js,/配色範囲（60〜140）外。数値はそのままです。/);
+ assert.match(js,/色は60〜140で表示します。参考値は変更しません。/);
  assert.match(english,/出所：ROF-J／本人回答/);
  assert.match(remainder,/vs. This Region’s Reference 100/);
- assert.match(remainder,/Outside the 60–140 color scale/);
+ assert.match(english,/The color scale ends at 60 and 140/);
 });
 
 test('S09 reference range and color-cap message occupy full width outside selected-region card',()=>{
@@ -327,4 +328,23 @@ test('S09 reference range and color-cap message occupy full width outside select
  assert.match(css,/\.rv4-reference-scale-section/);
  assert.match(js,/\+'<\/div><\/div>'\s*\+\(r\.value===null/,'reading and body grid close before range status');
  assert.match(js,/data-reference-region=/,'real selected region scientific value remains visible');
+});
+
+
+test('UX11: reference color legend names provenance without changing numeric results',()=>{
+ const js=read('ui/resultExperience.js'),english=read('ui/englishResultCopy.js');
+ assert.equal((js.match(/<h2>部位の文献参考値<\/h2>/g)||[]).length,2,'body pane title is explicit in populated and empty cases');
+ assert.match(js,/<h3>部位の文献参考値<\/h3>/,'comparison keeps reference provenance');
+ assert.match(js,/data-reference-scale-meaning/,'meaning remains visible without opening details');
+ assert.match(js,/各部位の文献基準100との差を示す色です。危険度ではありません。/);
+ assert.match(js,/色は60〜140で表示します。参考値は変更しません。/);
+ assert.match(english,/Research Reference Values by Body Region/);
+ assert.match(english,/Colors show differences from each region/);
+ assert.equal(bodyReferenceScale(145.7).position,100,'color marker is capped');
+ assert.equal(bodyReferenceScale(145.7).clipped,'high');
+ assert.equal(bodyReferenceScale(44.8).position,0);
+ assert.equal(bodyReferenceScale(44.8).clipped,'low');
+ assert.match(js,/format\(r.value,1\)/,'the displayed numeric reference is not capped');
+ assert.match(js,/data-rof-time-status="unverified"/,'ROF-J timing remains an answer, not a measured change');
+ assert.match(js,/data-export-rof/,'export remains opt-in');
 });
