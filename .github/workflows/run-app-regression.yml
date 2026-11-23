@@ -130,6 +130,16 @@ jobs:
           path: audit-output/ux05-intro-home-${{ matrix.engine }}/
           if-no-files-found: error
           retention-days: 7
+      - name: Verify UX10 review scope and focus at 32 bilingual states
+        run: node tests/ux10PresaveScopeBrowser.mjs
+      - name: Preserve UX10 review and privacy screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux10-presave-${{ matrix.engine }}
+          path: audit-output/ux10-presave-${{ matrix.engine }}/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify UX09 environment and optional return at 32 bilingual states
         run: node tests/ux09EnvironmentReturnBrowser.mjs
       - name: Preserve UX09 environment statuses and optional return screenshots
