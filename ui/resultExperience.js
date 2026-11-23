@@ -145,6 +145,12 @@ const RESULT_T01_READABILITY_STYLES=String.raw`
  overflow-wrap:anywhere;
  min-width:0;
 }
+/* UX11: visible reference legend/cap remain legible under root font enlargement. */
+.rv4-app .rv4-body .rv4-reference-scale-section .rv4-scale-note{
+ font-size:clamp(13px,0.75rem,21px);
+ line-height:1.55;
+ overflow-wrap:anywhere;
+}
 `;
 
 export function mountResult(host,inputDraft={},options={}){

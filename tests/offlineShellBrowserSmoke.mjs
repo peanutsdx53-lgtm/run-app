@@ -125,7 +125,7 @@ try{
  await page.waitForFunction(()=>document.documentElement.lang==='en',null,{timeout:18000});
  await page.goto(host+'#/result?record='+encodeURIComponent(state.records[0].id),{waitUntil:'load',timeout:18000});
  await page.locator('#runload-result-v4').waitFor();
- await page.waitForFunction(()=>document.querySelector('#runload-result-v4')?.shadowRoot?.querySelector('.rv4-card-heading h2')?.textContent==='Region Reference Values',null,{timeout:18000});
+ await page.waitForFunction(()=>document.querySelector('#runload-result-v4')?.shadowRoot?.querySelector('.rv4-card-heading h2')?.textContent==='Research Reference Values by Body Region',null,{timeout:18000});
  assert.equal((await page.locator('.rv4-note p').allTextContents()).includes('オフラインの走行メモ'),true,'offline English must preserve original Japanese user memo');
  await page.goto(host+'#/learning?lesson=pace-basics',{waitUntil:'load',timeout:18000});
  await page.waitForFunction(()=>document.querySelector('.lr-lesson-title')?.textContent==='Average Pace and Split Pace',null,{timeout:18000});
