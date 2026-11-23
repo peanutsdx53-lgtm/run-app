@@ -98,10 +98,11 @@ test('Body-like accent button is shared, responsive, and translated in both lang
  assert.equal(ENGLISH_FINAL_RECORDING['反映して戻る'],'Apply & Return');
  assert.equal(ENGLISH_FINAL_RECORDING['反映せず戻る'],'Return Without Applying');
  const idx=read('index.html'),sw=read('sw.js'),app=read('app.js');
- const ver='20261122-record-return-v1',shell='20261122-ux05-firstuse-home-v1';
+ const ver='20261122-record-return-v1',shell='20261123-ux06-manual-clarity-v1';
  assert.ok(idx.includes('ui/recordReturnActions.css?v='+ver));
  assert.ok(sw.includes('ui/recordReturnActions.css?v='+ver));
  assert.ok(sw.includes('runload-ui-next-shell-'+shell));
- for(const module of ['recordExperience','gaitExperience','rofExperience','bodyContextExperience'])
+ assert.ok(app.includes('recordExperience.js?v=20261123-ux06-manual-clarity-v1'),'active manual entry module');
+ for(const module of ['gaitExperience','rofExperience','bodyContextExperience'])
   assert.ok(app.includes(module+'.js?v='+ver),'app must load '+module);
 });
