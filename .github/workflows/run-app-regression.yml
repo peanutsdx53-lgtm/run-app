@@ -130,6 +130,16 @@ jobs:
           path: audit-output/ux05-intro-home-${{ matrix.engine }}/
           if-no-files-found: error
           retention-days: 7
+      - name: Verify UX08 ROF-J and body-equipment at 32 bilingual states
+        run: node tests/ux08RofBodyBrowser.mjs
+      - name: Preserve UX08 ROF-J and body-equipment screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux08-rof-body-${{ matrix.engine }}
+          path: audit-output/ux08-rof-body-${{ matrix.engine }}/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Verify UX07 course concepts and five sections at 32 bilingual states
         run: node tests/ux07CourseBrowser.mjs
       - name: Preserve UX07 course screen and section screenshots

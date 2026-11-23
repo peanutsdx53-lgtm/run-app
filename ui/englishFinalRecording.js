@@ -1,6 +1,11 @@
 /* English text for manual recording, course selection, draft validation,
  * review, steps and mixed running/walking. All validation rules unchanged. */
 export const ENGLISH_FINAL_RECORDING=Object.freeze({
+ "回答済み": "Answered",
+ "運動時刻と疲労感の回答時点は別の項目です。どちらも任意です。": "Activity start/end times and the time you assessed fatigue are different fields. Both are optional.",
+ "図で選択中": "Selected on Body Map",
+ "部位名を身体の自覚情報に追加しました。": "Selected region names were added to your body observations.",
+ "部位の選択だけでは記録に残りません": "Selecting a body region alone does not add it to your saved note.",
   "活動日": "Activity Date",
   "休養日": "Rest Day",
   "日付は活動・休養を行った日です。入力した日と異なる場合は変更してください。": "Choose the day the activity or rest occurred. Change it if you are entering the record on a different day.",

@@ -61,7 +61,7 @@ ${focus?`<div class="cx-context" aria-live="polite"><div class="cx-context-kicke
 ${ui.pickerOpen?`<div class="cx-picker" role="group" aria-label="${current.title}の部位名から選ぶ"><div class="cx-picker-title">${current.title}で選べる部位 <span>${current.paths.length}件</span></div><div class="cx-picker-grid">${namedPicker}</div></div>`:''}
 <p class="cx-science-note">部位の選択だけでは保存されません。必要なら自覚情報に追加してください。</p>
 </section>
-<section class="cx-notes-column" aria-label="自覚情報と使用品の入力"><div class="cx-notes-heading"><h2>感じたこと・使用品</h2></div>${fields.map(f=>fieldCard(d,f)).join('')}${opts.mentalHtml||''}
+<section class="cx-notes-column" aria-label="自覚情報と使用品の入力"><div class="cx-notes-heading"><h2>感じたこと・使用品</h2><p class="cx-notes-current"><span>図で選択中</span> <strong>${selected.length} / 12</strong><span>部位の選択だけでは記録に残りません</span></p></div>${fields.map(f=>fieldCard(d,f)).join('')}${opts.mentalHtml||''}
 <div class="cx-transfer"><p class="cx-transfer-status" role="status">${safe(transfer.message)}</p><button type="button" data-append-name ${transfer.disabled?'disabled':''}>選択部位名を自覚情報に追加 <span aria-hidden="true">↗</span></button></div>
 </section></div>
 <footer class="cx-footer rl-record-footer"><button class="cx-apply rl-record-return" type="button" data-apply>記録に戻る <span aria-hidden="true">→</span></button></footer>
