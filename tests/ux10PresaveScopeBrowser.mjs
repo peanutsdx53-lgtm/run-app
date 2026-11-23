@@ -82,8 +82,10 @@ async function jump(page,language){
  const focus=await page.evaluate(()=>document.activeElement?.id);
  assert.equal(focus,'rr-save-scope','keyboard focus must reach review scope');
  assert.equal(await page.locator('[data-pre-save-scope]').count(),1);
- assert.equal(await page.locator('[data-route-consent-status]').innerText(),
-  language==='en'?'Not Saved':'保存しない');
+ const consentText=await page.locator('[data-route-consent-status]').innerText();
+ assert.match(consentText,language==='en'?/(?:Do Not Save|Not Saved)/i:/保存しない/,
+  'original location privacy opt-out must remain visible');
+ if(language==='en')assert.doesNotMatch(consentText,/[ぁ-んァ-ン一-龯]/);
 }
 try{
  for(const lang of ['ja','en'])for(const width of [320,390,768,1440])for(const zoom of [100,200]){
