@@ -12,7 +12,7 @@ import {ENGLISH_CURRICULUM_FATIGUE} from './englishCurriculumFatigue.js';
 import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js';
 import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js';
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js';
-import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux09-environment-states-v1';
+import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux10-presave-focus-v1';
 import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261123-ux09-environment-states-v1';
 import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261121-home-core-i18n-v2';
 import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261111-settings-dialog-v1';
