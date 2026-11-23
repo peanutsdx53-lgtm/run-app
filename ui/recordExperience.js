@@ -141,16 +141,16 @@ export function coursePage(state,ui,library={ok:true,records:[]},fromHome=false)
  <header class="rv-head"><a href="${fromHome?'#/home':'#/record'}" class="rv-back" aria-label="${fromHome?'ホーム':'手入力'}へ戻る">‹</a><div><h1>コース・走行条件</h1></div><details class="rv-screen-help"><summary aria-label="コースと走行条件の使い方">？</summary><p>コース名・坂道・路面を確認します。不明な条件は「不明」を選べます。「条件を反映して記録に戻る」は今回の入力に反映し、保存コースは次回も再利用できます。保存コースの編集・削除は過去の記録を変更しません。</p></details></header>
  <div class="rv-flow-rail" aria-label="操作の順番"><span><b>01</b> コースを選ぶ<small>保存済み・新規作成</small></span><span><b>02</b> 条件を整える<small>坂道・路面</small></span><span><b>03</b> ${selectedPreset?'内容を確認':'使い方を選ぶ'}<small>今回の記録${selectedPreset?'':'・保存コース'}</small></span></div>
  <div class="rv-course-grid rv-course-flow">
- <section class="rv-panel rv-course-setup rv-course-step" aria-label="コースの選択と名前"><div class="rv-section-title rv-block-heading"><span class="rv-step-index">01</span><h2>今回のコース</h2><small>保存済み ${records.length}件</small></div>
- <div class="rv-course-select-strip"><div class="rv-block-label"><strong>保存コースから選ぶ</strong></div>${records.length?`<div class="rv-preset-list">${listing}</div>`:library.ok?'<div class="rv-empty-mini">保存したコースはありません。</div>':listing}</div>
- <div class="rv-course-name-inline"><label class="rv-field"><span>コース名 <small>保存時のみ必須</small></span><input type="text" maxlength="80" data-draft="courseName" value="${courseValue(d,'courseName')}" placeholder="例：川沿い往復"></label></div>
+ <section class="rv-panel rv-course-setup rv-course-step" aria-label="コースの選択と名前"><div class="rv-section-title rv-block-heading"><span class="rv-step-index">01</span><h2>保存コース・今回の入力</h2><small>保存済み ${records.length}件</small></div>
+ <div class="rv-course-select-strip"><div class="rv-block-label"><strong>保存済みコースを今回の入力に使う</strong></div>${records.length?`<div class="rv-preset-list">${listing}</div>`:library.ok?'<div class="rv-empty-mini">保存したコースはありません。</div>':listing}</div>
+ <div class="rv-course-name-inline"><p class="rv-hint">今回の走行条件は、下の「条件を反映」で記録に戻せます。コースを次回も使う場合だけ「このコースを保存」を選んでください。</p><label class="rv-field"><span>コース名 <small>保存コース作成時のみ必須・今回の走行記録では任意</small></span><input type="text" maxlength="80" data-draft="courseName" value="${courseValue(d,'courseName')}" placeholder="例：川沿い往復"></label></div>
  ${quickSave}
  </section>
- <section class="rv-panel rv-course-conditions rv-course-step" aria-label="坂道と路面の条件"><div class="rv-section-title rv-block-heading"><span class="rv-step-index">02</span><h2>走行条件</h2></div><div class="rv-condition-pair">${slopeSection(d,ui).replace('class="rv-panel"','class="rv-panel rv-step-slope"')}${surfaceSection(d,ui).replace('class="rv-panel"','class="rv-panel rv-step-surface"')}</div></section>
+ <section class="rv-panel rv-course-conditions rv-course-step" aria-label="坂道と路面の条件"><div class="rv-section-title rv-block-heading"><span class="rv-step-index">02</span><h2>今回の走行条件</h2></div><p class="rv-hint">坂道・路面は今回の記録に反映します。割合を設定する場合は、入力した値の合計を確認してください。</p><div class="rv-condition-pair">${slopeSection(d,ui).replace('class="rv-panel"','class="rv-panel rv-step-slope"')}${surfaceSection(d,ui).replace('class="rv-panel"','class="rv-panel rv-step-surface"')}</div></section>
  <section class="rv-panel rv-course-summary rv-course-step"><div class="rv-section-title rv-block-heading"><span class="rv-step-index">03</span><h2>設定内容の確認</h2></div>
  <div class="rv-summary-facts"><div class="rv-summary-line"><span>コース名</span><strong${filled(d.courseName)?' data-user-authored':''}>${escape(d.courseName||'未入力')}</strong></div><div class="rv-summary-line"><span>坂道</span><strong data-rv-summary-slope>${escape(s.slope)}</strong></div><div class="rv-summary-line"><span>路面</span><strong data-rv-summary-surface>${escape(s.surface)}</strong></div></div>
  ${!selectedPreset?`<div class="rv-summary-actions"><div class="rv-commit-group rv-commit-group--save">
-  <div class="rv-commit-label">保存コースとして残す</div>
+  <div class="rv-commit-label">次回も再利用する場合だけ保存コースとして残す</div>
   <div class="rv-course-save-actions"><button type="button" data-course-save ${!library.ok?'disabled':''}>このコースを保存</button></div>
   </div></div>`:''}
  ${summary?`<div class="rv-error" role="alert">${escape(summary)}</div>`:''}
