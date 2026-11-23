@@ -121,7 +121,9 @@ try{
   assert.equal(await page.locator('.sv4-review-help').getAttribute('open'),null);
   await page.locator('.sv4-review-help summary').click();
   assert.equal(await page.locator('.sv4-review-help').getAttribute('open'),'');
-  assert.ok((await page.locator('.sv4-review-help').innerText()).length>80);
+  const help=await page.locator('.sv4-review-help p').innerText();
+  assert.ok(help.length>20,'privacy detail remains readable: '+JSON.stringify({engine,lang,width,zoom,help}));
+  assert.match(help,lang==='en'?/user|medical|reported|manually/i:/本人|診断|申告/);
   const after=await snapshot(page,width,engine+' '+lang+' '+width+' '+zoom+' expanded');
   if(zoom===200&&[320,390,1440].includes(width))
    await page.screenshot({path:resolve(output,engine+'-'+lang+'-'+width+'-privacy-expanded.png'),fullPage:true,animations:'disabled'});
