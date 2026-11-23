@@ -51,10 +51,10 @@ test('UX04 keyed translation is opt-in, preserves unknown and original saved tex
 test('UX04 versioned app, dictionary and new action keys are coherent with offline precache',()=>{
  const app=read('app.js'),html=read('index.html'),sw=read('sw.js');
  assert.match(app,/englishUi\.js\?v=20261122-ux04-stable-actions-v1/);
- assert.match(html,/app\.js\?v=20261122-ux05-firstuse-home-v1/);
- assert.match(sw,/runload-ui-next-shell-20261122-ux05-firstuse-home-v1/);
+ assert.match(html,/app\.js\?v=20261123-ux06-manual-clarity-v1/);
+ assert.match(sw,/runload-ui-next-shell-20261123-ux06-manual-clarity-v1/);
  for(const expected of [
-  './app.js?v=20261122-ux05-firstuse-home-v1',
+  './app.js?v=20261123-ux06-manual-clarity-v1',
   './ui/englishUi.js?v=20261122-ux04-stable-actions-v1',
   './ui/actionCopyKeys.js',
   './ui/actionCopyKeys.js?v=20261122-ux04-stable-actions-v1'

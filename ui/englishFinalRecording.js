@@ -1,6 +1,11 @@
 /* English text for manual recording, course selection, draft validation,
  * review, steps and mixed running/walking. All validation rules unchanged. */
 export const ENGLISH_FINAL_RECORDING=Object.freeze({
+  "活動日": "Activity Date",
+  "休養日": "Rest Day",
+  "日付は活動・休養を行った日です。入力した日と異なる場合は変更してください。": "Choose the day the activity or rest occurred. Change it if you are entering the record on a different day.",
+  "例：5.00": "e.g. 5.00",
+  "例：30": "e.g. 30",
  "手入力で記録": "Enter a Record Manually",
  "日付・距離・時間・活動種目を入力します。追加情報は任意です。入力後に内容を確認して保存します。": "Enter a date, distance, duration and activity type. Additional information is optional. Review before saving.",
  "平均ペース": "Average Pace",

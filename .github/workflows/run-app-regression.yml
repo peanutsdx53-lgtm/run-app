@@ -130,6 +130,16 @@ jobs:
           path: audit-output/ux05-intro-home-${{ matrix.engine }}/
           if-no-files-found: error
           retention-days: 7
+      - name: Verify UX06 manual inputs and save integrity at 32 display conditions
+        run: node tests/ux06ManualEntryBrowser.mjs
+      - name: Preserve UX06 bilingual responsive manual-entry screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux06-manual-${{ matrix.engine }}
+          path: audit-output/ux06-manual-${{ matrix.engine }}/
+          if-no-files-found: error
+          retention-days: 7
       - name: Preserve button contrast screenshots and computed style inventory
         if: always()
         uses: actions/upload-artifact@v4
