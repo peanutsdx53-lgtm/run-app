@@ -47,5 +47,5 @@ test('new UI contrast revision is present in both loaded and offline precached C
  assert.ok(precache.includes(key),'PWA must precache the matching revision');
  assert.ok(!html.includes('mentalExperience.css?v=20261108-professor-m4-v1'));
  assert.ok(!precache.includes('mentalExperience.css?v=20261108-professor-m4-v1'));
- assert.match(precache,/runload-ui-next-shell-20261123-ux09-environment-states-v1/);
+ assert.match(precache,/runload-ui-next-shell-20261123-ux10-presave-focus-v1/);
 });

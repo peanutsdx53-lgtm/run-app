@@ -41,7 +41,7 @@ test('UX03 new stylesheet generation is cached consistently for offline use',()=
  assert.ok(sw.includes(resource),'offline cache must include the same query');
  assert.ok(!sw.includes('./ui/unifiedLearningShell.css?v=20261116-gps-stage7-v3'));
  assert.ok(!html.includes('./ui/unifiedLearningShell.css?v=20261116-gps-stage7-v3'));
- assert.match(sw,/runload-ui-next-shell-20261123-ux09-environment-states-v1/);
+ assert.match(sw,/runload-ui-next-shell-20261123-ux10-presave-focus-v1/);
  assert.match(read('.github/workflows/run-app-regression.yml'),/node tests\/ux03NavigationTextZoomBrowser\.mjs/);
 });
 
