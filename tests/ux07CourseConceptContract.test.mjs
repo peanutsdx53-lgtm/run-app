@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {coursePage,courseSummary,courseReadiness,initialCourseUi} from '../ui/recordExperience.js';
 import {translateUiText} from '../ui/englishUi.js';
+import {snapshotCourse} from '../ui/coursePresetStore.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const draft=()=>({courseName:'',gradeMode:'UNKNOWN',surfaceMode:'UNKNOWN',primarySurface:'',
  upPercent:'',downPercent:'',date:'2026-11-19',distance:'5',minutes:'30',activityGait:'JOGGING'});
@@ -14,7 +15,7 @@ const pairs=[
  ['保存コース・今回の入力','Saved Courses and This Entry'],
  ['保存済みコースを今回の入力に使う','Use a Saved Course for This Entry'],
  ['「条件を反映して記録に戻る」は今回の記録に反映する操作です。次回も再利用する保存コースの保存・更新とは別の操作です。','“Apply Conditions & Return” updates this activity entry. Saving or updating a reusable course for later is a separate action.'],
- ['保存コース作成時のみ必須・今回の走行記録では任意','Required to Save a Course · Optional for This Activity'],
+ ['保存コースの保存・更新時のみ必須／走行記録では任意','Required to Save or Update a Course · Optional for This Activity'],
  ['今回の走行条件','Conditions for This Activity'],
  ['坂道・路面は今回の記録に反映します。割合を設定する場合は、入力した値の合計を確認してください。','Uphill, downhill, and surface choices apply to this entry. When entering percentages, check the total.'],
  ['次回も再利用する場合だけ保存コースとして残す','Save as a Reusable Course Only If Needed Later']
@@ -65,4 +66,21 @@ test('UX-07: offline boot uses new shell and dictionary imports; old immutable U
   [sw,'recordExperience.js?v='+ver],[sw,'englishFinalRecording.js?v='+ver],
   [en,'englishFinalRecording.js?v='+ver]])assert.ok(source.includes(url),'missing versioned URL: '+url);
  assert.doesNotMatch(sw,/20261123-ux06-manual-clarity-v1/);
+});
+
+
+test('UX-032: reusable-course serialization omits stale hidden modes without changing the draft',()=>{
+ const d={...draft(),courseName:'川沿い',gradeMode:'FLAT',surfaceMode:'SINGLE',primarySurface:'paved',
+  upPercent:'90',downPercent:'90',surfacetrail:'85',surfacepaved:'15',
+  sectionShare0:'70',sectionDirection0:'UPHILL',sectionGrade0:'3',sectionSurface0:'soil'};
+ const before=JSON.stringify(d),saved=snapshotCourse(d,initialCourseUi(d));
+ assert.equal(saved.ok,true,JSON.stringify(saved));
+ assert.equal(saved.data.gradeMode,'FLAT');
+ assert.equal(saved.data.surfaceMode,'SINGLE');
+ assert.equal(saved.data.primarySurface,'paved');
+ for(const k of ['upPercent','downPercent','surfacetrail','surfacepaved','sectionShare0','sectionGrade0'])
+  assert.equal(saved.data[k],'',k+' must be omitted in the chosen mode');
+ assert.equal(saved.data.sectionDirection0,'FLAT');
+ assert.equal(saved.data.sectionSurface0,'UNKNOWN');
+ assert.equal(JSON.stringify(d),before,'do not clear hidden draft values without a user action');
 });
