@@ -65,7 +65,7 @@ test('PWA update notification checks release identity on foreground without forc
  assert.match(pwa,/RUNLOAD_GET_RELEASE/);
  assert.match(sw,/RUNLOAD_RELEASE/);
  assert.match(pwa,/showAppUpdateNotice/);
- assert.match(pwa,/dismissedRelease/);
+ assert.match(pwa,/updateNoticeDismissed/);
  assert.match(pwa,/location\.reload\(\)/);
  assert.doesNotMatch(pwa,/\blocation\.reload\(\)\s*;(?![^]*addEventListener)/,'automated reload must not be added');
  assert.ok(html.includes('pwa.js?v='+pwaVersion));

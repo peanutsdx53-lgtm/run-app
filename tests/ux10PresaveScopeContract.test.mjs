@@ -83,7 +83,7 @@ test('UX038 bilingual shortcut and active offline review assets match the curren
  const items=[
   [app,'recordReviewExperience.js?v='+ver],[app,'englishUi.js?v='+ver],
   [index,'recordReviewExperience.css?v='+ver],[index,'app.js?v='+ver],
-  [sw,'runload-ui-next-shell-'+ver],[sw,'recordReviewExperience.js?v='+ver],
+  [sw,'runload-ui-next-shell-20261123-pwa-update-notice-v1'],[sw,'recordReviewExperience.js?v='+ver],
   [sw,'recordReviewExperience.css?v='+ver],[sw,'englishFinalRecording.js?v='+ver],
   [en,'englishFinalRecording.js?v='+ver],
   [en,'englishFinalGps.js?v='+ver],[sw,'englishFinalGps.js?v='+ver]

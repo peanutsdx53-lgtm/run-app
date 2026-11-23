@@ -75,7 +75,7 @@ test('UX09 versioned environment modules and dictionary are precached without ov
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v='+shell],
   [index,'environmentExperience.css?v='+v],[index,'app.js?v='+shell],
-  [sw,'runload-ui-next-shell-'+shell],[sw,'environmentExperience.js?v='+v],
+  [sw,'runload-ui-next-shell-20261123-pwa-update-notice-v1'],[sw,'environmentExperience.js?v='+v],
   [sw,'environmentExperience.css?v='+v],[sw,'englishFinalRecording.js?v='+shell],
   [en,'englishFinalRecording.js?v='+shell]])assert.ok(s.includes(label),'missing '+label);
  assert.ok(en.includes('englishFinalConditions.js?v='+v));

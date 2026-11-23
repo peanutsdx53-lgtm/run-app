@@ -93,7 +93,7 @@ test('UX05: CSS reflows all stage labels while both dynamic JS and CSS stay offl
   [index,'firstUseExperience.css?v='+gen],
   [index,'homeExperience.css?v='+gen],
   [index,'app.js?v='+shellGen],
-  [sw,'runload-ui-next-shell-'+shellGen],
+  [sw,'runload-ui-next-shell-20261123-pwa-update-notice-v1'],
   [sw,'firstUseExperience.css?v='+gen],
   [sw,'homeExperience.css?v='+gen],
   [sw,'firstUseExperience.js?v='+gen],

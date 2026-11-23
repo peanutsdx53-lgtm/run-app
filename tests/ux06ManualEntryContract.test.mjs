@@ -59,7 +59,7 @@ test('UX-026/027/039: responsive labels, three explicit activities, original ato
  const gen='20261123-ux07-course-clarity-v1',shell='20261123-ux10-presave-focus-v2',index=read('index.html'),sw=read('sw.js');
  for(const [s,url] of [
   [app,'recordExperience.js?v='+gen],[index,'recordExperience.css?v='+gen],
-  [index,'app.js?v='+shell],[sw,'runload-ui-next-shell-'+shell],
+  [index,'app.js?v='+shell],[sw,'runload-ui-next-shell-20261123-pwa-update-notice-v1'],
   [sw,'recordExperience.js?v='+gen],[sw,'recordExperience.css?v='+gen],
   [sw,'app.js?v='+shell]
  ])assert.ok(s.includes(url),'PWA required active URL missing: '+url);

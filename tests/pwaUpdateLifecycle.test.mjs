@@ -26,6 +26,7 @@ const tick=()=>new Promise(resolve=>setTimeout(resolve,12));
 function mockApp({installed,controllerVersion=release}={}){
  let now=120000, reloads=0;
  const document=new Emitter();
+ document.documentElement={lang:'ja'};
  document.visibilityState='visible';
  document.body=new FakeElement('body');
  document.createElement=tag=>new FakeElement(tag);
