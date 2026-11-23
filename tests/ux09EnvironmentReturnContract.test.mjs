@@ -44,6 +44,7 @@ test('UX028 uses existing footer/return guard and distinguishes review return',(
  const app=read('app.js'),css=read('ui/recordReturnActions.css');
  assert.match(css,/\.rl-record-footer/);
  assert.match(css,/linear-gradient\(100deg,#27b2d6,#11c6b5\)/);
+ assert.match(css,/font-size:clamp\(14px,\.94rem,22px\)!important/);
  assert.match(app,/event\.target\.closest\('\[data-e4-done\],\[data-e4-back\]'\)/);
  assert.match(app,/event\.target\.closest\('\[data-e4-discard-return\]'\)/);
  assert.match(app,/environmentExperience\.clearEnvironmentSelections\(environmentUi\)/);
@@ -77,6 +78,8 @@ test('UX09 versioned environment modules and dictionary are precached without ov
   [sw,'environmentExperience.css?v='+v],[sw,'englishFinalRecording.js?v='+v],
   [en,'englishFinalRecording.js?v='+v]])assert.ok(s.includes(label),'missing '+label);
  assert.ok(en.includes('englishFinalConditions.js?v='+v));
+ assert.ok(index.includes('recordReturnActions.css?v='+v));
+ assert.ok(sw.includes('recordReturnActions.css?v='+v));
  assert.ok(sw.includes('englishFinalConditions.js?v='+v));
  assert.ok(app.includes('rofExperience.js?v=20261123-ux08-rof-body-clarity-v1'));
  assert.ok(app.includes('recordExperience.js?v=20261123-ux07-course-clarity-v1'));

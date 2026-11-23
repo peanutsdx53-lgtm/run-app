@@ -70,11 +70,11 @@ test('The revision is aligned across active shell and PWA; science and English d
  const html=read('index.html'),app=read('app.js'),sw=read('sw.js');
  const ver='20261122-record-return-v1',prior='20261122-mobile-controls-v1',previous='20261122-gait-learning-type-v1',shell='20261123-ux09-environment-states-v1',cacheGeneration='20261123-ux09-environment-states-v1';
  for(const [src,fragment] of [[html,'ui/buttonContrastSystem.css?v='+previous],
-  [html,'ui/recordReturnActions.css?v='+ver],
+  [html,'ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'],
   [html,'app.js?v='+shell],[app,'recordExperience.js?v=20261123-ux07-course-clarity-v1'],
   [app,'historyExperience.js?v='+prior],[app,'gaitExperience.js?v='+ver],[app,'learningExperience.js?v='+previous],[app,'consultationExperience.js?v='+prior],
   [app,'bodyContextExperience.js?v=20261123-ux08-rof-body-clarity-v1'],[app,'environmentExperience.js?v=20261123-ux09-environment-states-v1'],[app,'rofExperience.js?v=20261123-ux08-rof-body-clarity-v1'],
-  [sw,'runload-ui-next-shell-'+cacheGeneration],[sw,'ui/gaitExperience.js?v='+ver],[sw,'ui/recordReturnActions.css?v='+ver]])
+  [sw,'runload-ui-next-shell-'+cacheGeneration],[sw,'ui/gaitExperience.js?v='+ver],[sw,'ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1']])
   assert.ok(src.includes(fragment),'missing active '+fragment);
  assert.ok(!app.includes('localStorage.clear()'));
  assert.ok(app.includes('resultExperience.js?v=20261121-button-contrast-v1'));

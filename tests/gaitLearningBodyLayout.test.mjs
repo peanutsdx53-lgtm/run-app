@@ -60,7 +60,7 @@ test('current bilingual mobile assets are versioned and cached consistently',()=
  for(const [content,asset] of [
   [index,'buttonContrastSystem.css?v='+previous],
   [index,'app.js?v='+shell],
-  [index,'ui/recordReturnActions.css?v='+v],
+  [index,'ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'],
   [app,'gaitExperience.js?v='+v],
   [app,'learningExperience.js?v='+previous],
   [app,'englishUi.js?v=20261123-ux09-environment-states-v1'],
