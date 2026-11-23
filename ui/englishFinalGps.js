@@ -87,7 +87,7 @@ export const ENGLISH_FINAL_GPS=Object.freeze({
  "同じGPS記録を再照合しました。重複保存はしていません。任意回答は結果で確認してください。": "The Same GPS Record Was Verified. No Duplicate Was Saved. Review Optional Responses in Results.",
  "GPS記録の保存後照合を確認できません。": "Could Not Verify the GPS Record After Saving.",
  "保存前の確認": "Review Before Saving",
- "端末内に保存": "Saved on This Device",
+ "端末内に保存": "Save Destination: This Device",
  "記録の出所": "Record Source",
  "保存する内容": "Information to Save",
  "位置情報を含む詳細": "Location and Detailed Data",

@@ -113,6 +113,8 @@ try{
   assert.equal(await page.locator('.rr-alert').count(),0);
   assert.equal(await page.locator('[data-manual-run-save]').isEnabled(),true);
   assert.equal(await page.locator('[data-pre-save-scope]').getAttribute('data-save-source'),'manual');
+  const localCaption=lang==='en'?'Save Destination: This Device':'端末内に保存';
+  await page.waitForFunction(text=>document.querySelector('.sv4-review-head span')?.textContent.trim()===text,localCaption);
   const head=await snapshot(page,width,engine+' '+lang+' '+width+' '+zoom+' initial');
   if(zoom===200&&[320,390,1440].includes(width))
    await page.screenshot({path:resolve(output,engine+'-'+lang+'-'+width+'-before-jump.png'),fullPage:true,animations:'disabled'});
