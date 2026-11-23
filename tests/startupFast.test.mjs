@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const source=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const version='20261123-ux10-presave-focus-v2';
-const pwaVersion='20261111-home-autosave-v1';
-const cacheVersion='20261123-ux10-presave-focus-v2';
+const pwaVersion='20261123-pwa-update-notice-v1';
+const cacheVersion='20261123-pwa-update-notice-v1';
 test('all 46 current startup modules load as one concurrent import batch',()=>{
  const app=source('app.js');
  const block=app.slice(app.indexOf('const ['),app.indexOf('const [initialGpsV2Cache,canonicalStartup]'));
@@ -52,4 +52,23 @@ test('PWA precache registration runs after the real first view and keeps full of
  assert.ok(html.includes('pwa.js?v='+pwaVersion));
  const assets=JSON.parse(sw.match(/const ASSETS=(\[[^\n]+\]);/)[1]);
  assert.ok(assets.length>=150,'the installed shell must cache the application and its offline modules');
+});
+
+
+test('PWA update notification checks release identity on foreground without forced reload or storage deletion',()=>{
+ const pwa=source('pwa.js'),sw=source('sw.js'),html=source('index.html');
+ assert.match(pwa,/visibilitychange/);
+ assert.match(pwa,/pageshow/);
+ assert.match(pwa,/controllerchange/);
+ assert.match(pwa,/runload:boot-ready/);
+ assert.match(pwa,/navigator\.serviceWorker\.getRegistration/);
+ assert.match(pwa,/RUNLOAD_GET_RELEASE/);
+ assert.match(sw,/RUNLOAD_RELEASE/);
+ assert.match(pwa,/showAppUpdateNotice/);
+ assert.match(pwa,/updateNoticeDismissed/);
+ assert.match(pwa,/location\.reload\(\)/);
+ assert.doesNotMatch(pwa,/\blocation\.reload\(\)\s*;(?![^]*addEventListener)/,'automated reload must not be added');
+ assert.ok(html.includes('pwa.js?v='+pwaVersion));
+ assert.ok(sw.includes('pwa.js?v='+pwaVersion));
+ assert.ok(sw.includes('runload-ui-next-shell-'+pwaVersion));
 });

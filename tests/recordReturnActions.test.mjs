@@ -101,7 +101,7 @@ test('Body-like accent button is shared, responsive, and translated in both lang
  const ver='20261122-record-return-v1',shell='20261123-ux10-presave-focus-v2';
  assert.ok(idx.includes('ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'));
  assert.ok(sw.includes('ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'));
- assert.ok(sw.includes('runload-ui-next-shell-'+shell));
+ assert.ok(sw.includes('runload-ui-next-shell-20261123-pwa-update-notice-v1'));
  assert.ok(app.includes('recordExperience.js?v=20261123-ux07-course-clarity-v1'),'active manual entry module');
  assert.ok(app.includes('gaitExperience.js?v='+ver),'gait module remains unchanged');
  for(const module of ['rofExperience','bodyContextExperience'])

@@ -52,7 +52,7 @@ test('UX04 versioned app, dictionary and new action keys are coherent with offli
  const app=read('app.js'),html=read('index.html'),sw=read('sw.js');
  assert.match(app,/englishUi\.js\?v=20261123-ux10-presave-focus-v2/);
  assert.match(html,/app\.js\?v=20261123-ux10-presave-focus-v2/);
- assert.match(sw,/runload-ui-next-shell-20261123-ux10-presave-focus-v2/);
+ assert.match(sw,/runload-ui-next-shell-20261123-pwa-update-notice-v1/);
  for(const expected of [
   './app.js?v=20261123-ux10-presave-focus-v2',
   './ui/englishUi.js?v=20261123-ux10-presave-focus-v2',
