@@ -179,3 +179,11 @@ button{font:inherit;cursor:pointer}a{color:inherit;text-decoration:none}button:f
 .rr-page .rr-jump-scope:focus-visible,.rr-page .rr-save-target:focus-visible{outline:3px solid #80ece5;outline-offset:3px}
 .rr-page .rr-save-target{min-width:0;scroll-margin-top:14px}
 @media(max-width:430px){.rr-page .rr-summary-jump{justify-content:stretch}.rr-page .rr-jump-scope{width:100%}}
+
+/* UX10 focus-safe fixed-nav scroll clearance: a control focused by keyboard or
+ * script must scroll above the fixed five-item navigation, including 200% text. */
+@media(max-width:800px){
+ .rr-page .rr-jump-scope,.rr-page .rr-foot-actions .rr-save{
+  scroll-margin-bottom:max(calc(112px + env(safe-area-inset-bottom,0px)),calc(6rem + env(safe-area-inset-bottom,0px)));
+ }
+}

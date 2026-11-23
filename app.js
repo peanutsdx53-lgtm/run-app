@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261123-ux10-presave-focus-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261123-ux10-presave-focus-v2';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -60,7 +60,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/rofJScale.js"),
     import("./ui/rofExperience.js?v=20261123-ux08-rof-body-clarity-v1"),
     import("./ui/recordDraftReview.js"),
-    import("./ui/recordReviewExperience.js?v=20261123-ux10-presave-focus-v1"),
+    import("./ui/recordReviewExperience.js?v=20261123-ux10-presave-focus-v2"),
     import("./ui/manualRunStore.js?v=20261030-rof-evidence-v2"),
     import("./ui/manualRunLock.js"),
     import("./ui/manualRunCanonical.js"),

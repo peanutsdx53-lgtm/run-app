@@ -118,7 +118,7 @@ test('Result and manual-save surfaces use the approved dark chrome and button st
   '.rr-page .rr-foot-actions .rr-save:focus-visible{outline:3px',
  ]) assert.ok(review.includes(style),style);
  assert.match(html,/homeExperience\.css\?v=20261122-ux05-firstuse-home-v1/);
- assert.match(html,/recordReviewExperience\.css\?v=20261123-ux10-presave-focus-v1/);
+ assert.match(html,/recordReviewExperience\.css\?v=20261123-ux10-presave-focus-v2/);
 });
 
 test('public-facing result copy omits internal branding and preserves formal names',()=>{
