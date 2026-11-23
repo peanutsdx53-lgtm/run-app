@@ -71,13 +71,13 @@ test('UX037 status, warning and save-boundary interface have explicit offline En
  for(const [jp,en] of pairs)assert.equal(translateUiText(jp),en,jp);
 });
 test('UX09 versioned environment modules and dictionary are precached without overriding other modules',()=>{
- const v='20261123-ux09-environment-states-v1';
+ const v='20261123-ux09-environment-states-v1',shell='20261123-ux10-presave-focus-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
- for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v='+v],
-  [index,'environmentExperience.css?v='+v],[index,'app.js?v='+v],
-  [sw,'runload-ui-next-shell-'+v],[sw,'environmentExperience.js?v='+v],
-  [sw,'environmentExperience.css?v='+v],[sw,'englishFinalRecording.js?v='+v],
-  [en,'englishFinalRecording.js?v='+v]])assert.ok(s.includes(label),'missing '+label);
+ for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v='+shell],
+  [index,'environmentExperience.css?v='+v],[index,'app.js?v='+shell],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'environmentExperience.js?v='+v],
+  [sw,'environmentExperience.css?v='+v],[sw,'englishFinalRecording.js?v='+shell],
+  [en,'englishFinalRecording.js?v='+shell]])assert.ok(s.includes(label),'missing '+label);
  assert.ok(en.includes('englishFinalConditions.js?v='+v));
  assert.ok(index.includes('recordReturnActions.css?v='+v));
  assert.ok(sw.includes('recordReturnActions.css?v='+v));
