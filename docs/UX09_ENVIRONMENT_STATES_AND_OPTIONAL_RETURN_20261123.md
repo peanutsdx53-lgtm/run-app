@@ -30,3 +30,14 @@ PR #63初期headのNode 821件中820件PASS、1件FAIL。`ui/englishFinalRecordi
 
 ## 320px・文字200%の画像に基づく追加修正
 最新head `dd942210…` のChromium UX09 16条件PASSと実画像を確認。英語320px/200%で環境カードの「Optional」がカード右端に切れる表示を発見した。既存の意味・構造・環境選択フローは変更せず、430px以下の既存`.e4-top`に限って見出しと「任意」ラベルの折り返しを許可。日英両方の320/390pxで見出し・任意ラベルの矩形とscrollWidthを検査する反例を追加。これを最終画像で確認するまでmain統合しない。
+
+## 2026-11-23追補｜マージ後の確定GitHub状態・未認定範囲
+
+この見出しより前は、当時のDraft/FAIL/HOLD、設計判断、実画像所見を時系列証拠として保全した。下記は**後日、GitHubのマージ・統合後main Actionsを独立照合して追記**したものであり、初回失敗の履歴を削除・改ざんしない。
+
+- **実装と統合**：[PR #63](https://github.com/peanutsdx53-lgtm/run-app/pull/63) は **merged**（2026-11-23T06:25:10Z）。正式なmainのマージコミットは [`576a8da31aa2392ac8ca62390b4997c0e409c296`](https://github.com/peanutsdx53-lgtm/run-app/commit/576a8da31aa2392ac8ca62390b4997c0e409c296)。このコミットは現在のmain `576a8da31aa2392ac8ca62390b4997c0e409c296` の直系祖先として確認。
+- **統合後自動回帰**：[Run App regression #45123966423](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45123966423) は `completed/success`、**必須18/18ジョブSUCCESS**。任意の公開Pagesバイト同一性・ライブブラウザ照合ジョブは `SKIPPED`。これを公開実体一致や全実画像独立目視の証明と誤記しない。
+- **mainのPages**：[Pages build and deployment #45123965791](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45123965791) は `completed/success`。Pages実体の配信バイト比較は別ゲート。
+- **ブラウザ用画像/JSON証拠の所在**：上記統合後回帰Runに `ux09-environment-chromium`（Artifact ID `14795350508`）と `ux09-environment-webkit`（ID `14795580147`）が存在し、照合時点で `expired=false`。成果物の存在・ジョブSUCCESSは確認したが、ここで個別ファイルの全件目視を新規実施したわけではない。
+- **工程対象と限界**：UX-028/037：環境の未反映・適用・破棄、共通復帰。途中のFAIL/HOLDは最終CIの成功へ更新済みではないため、本追補で時点を明示する。
+- **今回認定できる状態**：`MERGED-CI`（第09回のmain反映と同一SHAの必須CI/Pagesを確認）。**全32表示状態の人手視認性、正常/反例の独立再審査、実機、利用者受入、最新版G1〜G8の正式承認は本追補ではPASSにしない**。最新進捗はLibrary `/RunLoad/RunLoad_UX_固定20回_進捗管理_20261123.md` で区別する。

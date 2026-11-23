@@ -42,3 +42,14 @@ Complete Node/scientific/storage tests, all standard browser regressions, two-ru
 ## Scientific and device limits
 
 This stage creates no evidence that wording increases beginner runners' self-understanding, running safety, engagement, or motivation. Missing/zero and reference-study eligibility remain separate. Browser simulated root font 200% is not physical iOS/Android Dynamic Type or VoiceOver/TalkBack certification. Formal `RunLoad/Current` files are not edited. User-entered notes and legally required texts are not translated or rewritten.
+
+## 2026-11-23追補｜マージ後の確定GitHub状態・未認定範囲
+
+この見出しより前は、当時のDraft/FAIL/HOLD、設計判断、実画像所見を時系列証拠として保全した。下記は**後日、GitHubのマージ・統合後main Actionsを独立照合して追記**したものであり、初回失敗の履歴を削除・改ざんしない。
+
+- **実装と統合**：[PR #59](https://github.com/peanutsdx53-lgtm/run-app/pull/59) は **merged**（2026-11-22T14:17:03Z）。正式なmainのマージコミットは [`a1c75483682a7189cecfaa53711723652867a0b6`](https://github.com/peanutsdx53-lgtm/run-app/commit/a1c75483682a7189cecfaa53711723652867a0b6)。このコミットは現在のmain `576a8da31aa2392ac8ca62390b4997c0e409c296` の直系祖先として確認。
+- **統合後自動回帰**：[Run App regression #45031977630](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45031977630) は `completed/success`、**必須18/18ジョブSUCCESS**。任意の公開Pagesバイト同一性・ライブブラウザ照合ジョブは `SKIPPED`。これを公開実体一致や全実画像独立目視の証明と誤記しない。
+- **mainのPages**：[Pages build and deployment #45031976739](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45031976739) は `completed/success`。Pages実体の配信バイト比較は別ゲート。
+- **ブラウザ用画像/JSON証拠の所在**：上記統合後回帰Runに `ux05-onboarding-home-chromium`（Artifact ID `14757882428`）と `ux05-onboarding-home-webkit`（ID `14758790956`）が存在し、照合時点で `expired=false`。成果物の存在・ジョブSUCCESSは確認したが、ここで個別ファイルの全件目視を新規実施したわけではない。
+- **工程対象と限界**：UX-015〜022：初回導入・ホーム。8段階、空状態と未取得、200%での可読性をブラウザで検証。利用者実験の受入ではない。
+- **今回認定できる状態**：`MERGED-CI`（第05回のmain反映と同一SHAの必須CI/Pagesを確認）。**全32表示状態の人手視認性、正常/反例の独立再審査、実機、利用者受入、最新版G1〜G8の正式承認は本追補ではPASSにしない**。最新進捗はLibrary `/RunLoad/RunLoad_UX_固定20回_進捗管理_20261123.md` で区別する。

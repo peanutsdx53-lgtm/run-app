@@ -28,3 +28,14 @@ Date: 2026-11-23. Approved 20-stage plan: Stage 06, UX-024, 025, 026, 027, 039. 
 - Also require full existing Node/scientific/storage tests, two saved-run consistency cycles, installed PWA/offline flows, main regression CI and Pages deployment. Actual screenshots must be visually reviewed, not merely geometry-scanned.
 - STATUS: Implementation pushed to a Stage06 branch; automated CI, screenshot review, post-merge Pages remain pending until verified. A failing gate means HOLD and no main merge.
 - Official Current, scientific references/calculation rules, saved data, user prose, GPS, record identity, Results three tabs, sharing permissions, and irreversible deletion contract are not changed. Physical iOS/Android voice/accessibility/GPS are not certified; no claim about improved self-understanding.
+
+## 2026-11-23追補｜マージ後の確定GitHub状態・未認定範囲
+
+この見出しより前は、当時のDraft/FAIL/HOLD、設計判断、実画像所見を時系列証拠として保全した。下記は**後日、GitHubのマージ・統合後main Actionsを独立照合して追記**したものであり、初回失敗の履歴を削除・改ざんしない。
+
+- **実装と統合**：[PR #60](https://github.com/peanutsdx53-lgtm/run-app/pull/60) は **merged**（2026-11-23T02:50:44Z）。正式なmainのマージコミットは [`82943a57948e172a7577b853fc084ad2a72a44f6`](https://github.com/peanutsdx53-lgtm/run-app/commit/82943a57948e172a7577b853fc084ad2a72a44f6)。このコミットは現在のmain `576a8da31aa2392ac8ca62390b4997c0e409c296` の直系祖先として確認。
+- **統合後自動回帰**：[Run App regression #45102500985](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45102500985) は `completed/success`、**必須18/18ジョブSUCCESS**。任意の公開Pagesバイト同一性・ライブブラウザ照合ジョブは `SKIPPED`。これを公開実体一致や全実画像独立目視の証明と誤記しない。
+- **mainのPages**：[Pages build and deployment #45102500540](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45102500540) は `completed/success`。Pages実体の配信バイト比較は別ゲート。
+- **ブラウザ用画像/JSON証拠の所在**：上記統合後回帰Runに `ux06-manual-chromium`（Artifact ID `14785769732`）と `ux06-manual-webkit`（ID `14786171790`）が存在し、照合時点で `expired=false`。成果物の存在・ジョブSUCCESSは確認したが、ここで個別ファイルの全件目視を新規実施したわけではない。
+- **工程対象と限界**：UX-024〜027/039：手入力の必須不足・0/空欄・日付・保存排他。古い「CI/Pages pending」は作成時点の記述であり、最終統合後の現況ではない。
+- **今回認定できる状態**：`MERGED-CI`（第06回のmain反映と同一SHAの必須CI/Pagesを確認）。**全32表示状態の人手視認性、正常/反例の独立再審査、実機、利用者受入、最新版G1〜G8の正式承認は本追補ではPASSにしない**。最新進捗はLibrary `/RunLoad/RunLoad_UX_固定20回_進捗管理_20261123.md` で区別する。

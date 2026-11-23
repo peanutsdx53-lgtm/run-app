@@ -36,3 +36,14 @@ The seven generic action examples are a **glossary/reference only**, not mass-in
 - CI must also pass full Node/science/record regression, installed-PWA offline, two-run continuity, Results S09, and standard contrast checks.
 
 **Explicitly not claimed:** a redesign of every existing screen/CTA, better user understanding proven empirically, physical-device VoiceOver, linguistic validation of scientific references, or approval of formal 29 criteria. This is a bounded migration of **navigation text only**, with a reusable pattern for future UI. If changing buttons in other screens would weaken scientific or saved-data explanations, leave them for their relevant numbered stage.
+
+## 2026-11-23追補｜マージ後の確定GitHub状態・未認定範囲
+
+この見出しより前は、当時のDraft/FAIL/HOLD、設計判断、実画像所見を時系列証拠として保全した。下記は**後日、GitHubのマージ・統合後main Actionsを独立照合して追記**したものであり、初回失敗の履歴を削除・改ざんしない。
+
+- **実装と統合**：[PR #58](https://github.com/peanutsdx53-lgtm/run-app/pull/58) は **merged**（2026-11-22T13:28:59Z）。正式なmainのマージコミットは [`e6a9b45dc39cdc76a13629d1935b934999c92a39`](https://github.com/peanutsdx53-lgtm/run-app/commit/e6a9b45dc39cdc76a13629d1935b934999c92a39)。このコミットは現在のmain `576a8da31aa2392ac8ca62390b4997c0e409c296` の直系祖先として確認。
+- **統合後自動回帰**：[Run App regression #45027706618](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45027706618) は `completed/success`、**必須18/18ジョブSUCCESS**。任意の公開Pagesバイト同一性・ライブブラウザ照合ジョブは `SKIPPED`。これを公開実体一致や全実画像独立目視の証明と誤記しない。
+- **mainのPages**：[Pages build and deployment #45027706510](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45027706510) は `completed/success`。Pages実体の配信バイト比較は別ゲート。
+- **ブラウザ用画像/JSON証拠の所在**：上記統合後回帰Runに `ux04-action-copy-chromium`（Artifact ID `14756143592`）と `ux04-action-copy-webkit`（ID `14756831473`）が存在し、照合時点で `expired=false`。成果物の存在・ジョブSUCCESSは確認したが、ここで個別ファイルの全件目視を新規実施したわけではない。
+- **工程対象と限界**：UX-005/006/014：日英共通操作語・画面遷移キー。全画面・研究文献・法的原文の翻訳精査を完了したとは判定しない。
+- **今回認定できる状態**：`MERGED-CI`（第04回のmain反映と同一SHAの必須CI/Pagesを確認）。**全32表示状態の人手視認性、正常/反例の独立再審査、実機、利用者受入、最新版G1〜G8の正式承認は本追補ではPASSにしない**。最新進捗はLibrary `/RunLoad/RunLoad_UX_固定20回_進捗管理_20261123.md` で区別する。

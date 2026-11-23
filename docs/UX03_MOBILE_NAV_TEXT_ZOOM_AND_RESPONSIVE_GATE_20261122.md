@@ -36,3 +36,14 @@ In real Chromium and WebKit screenshots at **320 CSS px / English / 200% root te
 ## Release gate
 
 Dedicated branch and Draft PR only before final CI. Stop integration if any normal or negative test fails or if a saved run, scientific reference, consent/URL mode or history route differs. After full PR-head green and documented screenshot review, integrate a single scoped PR into main as authorized by the user's per-stage merge policy. Recheck post-merge CI/Pages, write the commit IDs and outstanding device caveats to the ChatGPT progress ledger.
+
+## 2026-11-23追補｜マージ後の確定GitHub状態・未認定範囲
+
+この見出しより前は、当時のDraft/FAIL/HOLD、設計判断、実画像所見を時系列証拠として保全した。下記は**後日、GitHubのマージ・統合後main Actionsを独立照合して追記**したものであり、初回失敗の履歴を削除・改ざんしない。
+
+- **実装と統合**：[PR #57](https://github.com/peanutsdx53-lgtm/run-app/pull/57) は **merged**（2026-11-22T12:54:36Z）。正式なmainのマージコミットは [`2a3cfb9c9535bbddfe0c7feabd0e14683ab9a1c0`](https://github.com/peanutsdx53-lgtm/run-app/commit/2a3cfb9c9535bbddfe0c7feabd0e14683ab9a1c0)。このコミットは現在のmain `576a8da31aa2392ac8ca62390b4997c0e409c296` の直系祖先として確認。
+- **統合後自動回帰**：[Run App regression #45024703350](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45024703350) は `completed/success`、**必須18/18ジョブSUCCESS**。任意の公開Pagesバイト同一性・ライブブラウザ照合ジョブは `SKIPPED`。これを公開実体一致や全実画像独立目視の証明と誤記しない。
+- **mainのPages**：[Pages build and deployment #45024703637](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45024703637) は `completed/success`。Pages実体の配信バイト比較は別ゲート。
+- **ブラウザ用画像/JSON証拠の所在**：上記統合後回帰Runに `ux03-navigation-chromium`（Artifact ID `14755511379`）と `ux03-navigation-webkit`（ID `14755591443`）が存在し、照合時点で `expired=false`。成果物の存在・ジョブSUCCESSは確認したが、ここで個別ファイルの全件目視を新規実施したわけではない。
+- **工程対象と限界**：UX-002/003/007/008/009：文字200%・リフロー・5主ナビ。実機OS Dynamic Type・画面の任意スクロール状態でのフォーカス遮蔽は別検証。
+- **今回認定できる状態**：`MERGED-CI`（第03回のmain反映と同一SHAの必須CI/Pagesを確認）。**全32表示状態の人手視認性、正常/反例の独立再審査、実機、利用者受入、最新版G1〜G8の正式承認は本追補ではPASSにしない**。最新進捗はLibrary `/RunLoad/RunLoad_UX_固定20回_進捗管理_20261123.md` で区別する。

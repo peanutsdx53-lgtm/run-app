@@ -33,3 +33,14 @@ No record, answer, reference formula, comparison eligibility, note or data schem
 ## Decision gate
 
 This stage is **not complete until the draft PR has a final-CI PASS, browser-matrix PASS, and preservation checks**, with no failing tests. If CI finds a mismatch, correct only this branch and repeat. Keep the PR draft and do not merge to main without user authorization. Official `/RunLoad/Current/` remains unchanged.
+
+## 2026-11-23追補｜マージ後の確定GitHub状態・未認定範囲
+
+この見出しより前は、当時のDraft/FAIL/HOLD、設計判断、実画像所見を時系列証拠として保全した。下記は**後日、GitHubのマージ・統合後main Actionsを独立照合して追記**したものであり、初回失敗の履歴を削除・改ざんしない。
+
+- **実装と統合**：[PR #56](https://github.com/peanutsdx53-lgtm/run-app/pull/56) は **merged**（2026-11-22T10:13:14Z）。正式なmainのマージコミットは [`338e87bd0c39a10ad71d170be0de800570e7a305`](https://github.com/peanutsdx53-lgtm/run-app/commit/338e87bd0c39a10ad71d170be0de800570e7a305)。このコミットは現在のmain `576a8da31aa2392ac8ca62390b4997c0e409c296` の直系祖先として確認。
+- **統合後自動回帰**：[Run App regression #45011361428](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45011361428) は `completed/success`、**必須18/18ジョブSUCCESS**。任意の公開Pagesバイト同一性・ライブブラウザ照合ジョブは `SKIPPED`。これを公開実体一致や全実画像独立目視の証明と誤記しない。
+- **mainのPages**：[Pages build and deployment #45011361195](https://github.com/peanutsdx53-lgtm/run-app/actions/runs/45011361195) は `completed/success`。Pages実体の配信バイト比較は別ゲート。
+- **ブラウザ用画像/JSON証拠の所在**：上記統合後回帰Runに `button-contrast-chromium`（Artifact ID `14749952966`）と `button-contrast-webkit`（ID `14749848657`）が存在し、照合時点で `expired=false`。成果物の存在・ジョブSUCCESSは確認したが、ここで個別ファイルの全件目視を新規実施したわけではない。
+- **工程対象と限界**：UX-001/082：実効コントラスト。自動検査は合成背景に対する推定値を含み、実画素の独立計測と同義ではない。
+- **今回認定できる状態**：`MERGED-CI`（第02回のmain反映と同一SHAの必須CI/Pagesを確認）。**全32表示状態の人手視認性、正常/反例の独立再審査、実機、利用者受入、最新版G1〜G8の正式承認は本追補ではPASSにしない**。最新進捗はLibrary `/RunLoad/RunLoad_UX_固定20回_進捗管理_20261123.md` で区別する。
