@@ -76,6 +76,8 @@ test('UX09 versioned environment modules and dictionary are precached without ov
   [sw,'runload-ui-next-shell-'+v],[sw,'environmentExperience.js?v='+v],
   [sw,'environmentExperience.css?v='+v],[sw,'englishFinalRecording.js?v='+v],
   [en,'englishFinalRecording.js?v='+v]])assert.ok(s.includes(label),'missing '+label);
+ assert.ok(en.includes('englishFinalConditions.js?v='+v));
+ assert.ok(sw.includes('englishFinalConditions.js?v='+v));
  assert.ok(app.includes('rofExperience.js?v=20261123-ux08-rof-body-clarity-v1'));
  assert.ok(app.includes('recordExperience.js?v=20261123-ux07-course-clarity-v1'));
 });

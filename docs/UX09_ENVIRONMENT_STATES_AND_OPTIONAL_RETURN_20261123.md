@@ -21,3 +21,6 @@
 
 ## 専用ブラウザ試験追加（実行前）
 `tests/ux09EnvironmentReturnBrowser.mjs`でJA/EN×320/390/768/1440×通常/200%×Chromium/WebKit=32条件。5画面共通フッター・環境状態3種・未反映警告・明示適用・破棄・レビューからの復帰・二つの保存済み活動の不変性を確認し、操作状態のJSONと実画像を保存する。CIで未PASSの現時点では完了未認定。
+
+## Node CI 1件の修正理由
+PR #63初期headのNode 821件中820件PASS、1件FAIL。`ui/englishFinalRecording.js`に追加した環境状態の既存4文言は、後から展開される既存の`ENGLISH_FINAL_CONDITIONS`辞書に上書きされ、英語版が新しい画面意図と一致しなかった。重複を削除し、これら4件は既存の環境専門辞書`ui/englishFinalConditions.js`を正式な出所として更新。独立したバージョン付きimport/precacheも整合。翻訳以外の保存・科学処理は不変更。
