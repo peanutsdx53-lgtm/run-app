@@ -1,0 +1,43 @@
+name: UX14 exact product Explore preflight
+on:
+  push:
+    branches: ['diagnostics/ux14-exact-explore-scope-fix-20261124']
+permissions:
+  contents: read
+jobs:
+  explore:
+    name: ${{ matrix.engine }} exact product Explore audit
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+      RUNLOAD_EXPLORE_STRICT: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5e95ff7854bea24c0881c28fd7262ad00597f428
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact candidate
+        run: |
+          test "$(git rev-parse HEAD)" = "5e95ff7854bea24c0881c28fd7262ad00597f428"
+          test "$(git rev-parse HEAD^{tree})" = "1d47bd991ce6b4fd50d1ced172957e42f15bf096"
+          test "$(git status --porcelain --untracked-files=no)" = ""
+      - run: npm install --no-save playwright@1.56.1
+      - run: node --check tests/exploreFullCopyBrowser.mjs
+      - run: node tests/exploreFullCopyBrowser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ux14-exact-explore-${{ matrix.engine }}
+          path: audit-output/explore-copy-${{ matrix.engine }}/
+          if-no-files-found: error
+          retention-days: 7
