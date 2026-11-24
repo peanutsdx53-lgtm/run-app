@@ -84,7 +84,7 @@ function list(ui,records,connected,canOpen,canAnnotate=false,canDeleteGps=false)
   ui.source==='MANUAL'?'<span>手入力のみ</span>':ui.source==='GPS_V2'?'<span>GPSのみ</span>':'',
   ui.type==='run'?'<span>走行のみ</span>':ui.type==='rest'?'<span>休養のみ</span>':''
  ].filter(Boolean).join('');
- return `<section class="surface list-panel"><div class="list-head"><div><h2>記録を探す</h2></div>${connected&&total>0&&!allMonths?'<button type="button" class="hx-recent-shortcut" data-history-scope="all">最近の記録を見る</button>':''}</div>
+ return `<section class="surface list-panel"><div class="list-head"><div><h2>記録を探す</h2></div>${connected&&total>0&&!allMonths?'<button type="button" class="hx-recent-shortcut" data-history-recent>最近の記録を見る</button>':''}</div>
  <details class="hx-find-help"><summary aria-label="検索条件の説明">？</summary><div class="hx-find-help-body"><p class="hx-scope-hint">${hint}</p><p>全期間を選んでも、月間集計は表示中の月のみです。</p></div></details>
  <label class="search" aria-label="記録を検索">${ico('search')}<input id="hx-search" placeholder="コース・メモで検索" autocomplete="off" value="${escapeHtml(ui.query)}"/></label>
   <div class="hx-filter-group"><span class="hx-filter-label">検索期間</span><div class="hx-scope" role="group" aria-label="履歴の検索範囲"><button type="button" data-history-scope="month" aria-pressed="${!allMonths}" class="${!allMonths?'active':''}">この月</button><button type="button" data-history-scope="all" aria-pressed="${allMonths}" class="${allMonths?'active':''}">全期間</button></div></div>
@@ -147,7 +147,7 @@ export function mountHistory(host,{records=[],connected=false,gpsReadFailed=fals
    else if('recordKind'in d){ui.type=d.recordKind;ui.selectedId=null;}
   else if('recordSource'in d){if(!['all','MANUAL','GPS_V2'].includes(d.recordSource))return;ui.source=d.recordSource;ui.selectedId=null;}
   else if('resetFilters'in d){ui.day=null;ui.type='all';ui.source='all';ui.query='';ui.selectedId=null;}
-  else if('historyScope'in d){ui.allMonths=d.historyScope==='all';ui.day=null;ui.selectedId=null;}
+  else if('historyRecent'in d||'historyScope'in d){ui.allMonths='historyRecent'in d||d.historyScope==='all';ui.day=null;ui.selectedId=null;}
   else if('jumpMonth'in d){if(!safeRecords.some(r=>r.date.startsWith(d.jumpMonth)))return;ui.month=d.jumpMonth;ui.day=null;ui.type='all';ui.query='';ui.allMonths=false;ui.selectedId=null;}
   else if('selectId'in d){const choice=lookupRecord(filterRecords(safeRecords,ui),d.selectId);ui.selectedId=choice?.id??null;}
   else if('openRecord'in d){const choice=lookupRecord(filterRecords(safeRecords,ui),ui.selectedId);if(choice?.type==='run'&&typeof onOpen==='function')onOpen(choice.id,choice.sourceType);return;}

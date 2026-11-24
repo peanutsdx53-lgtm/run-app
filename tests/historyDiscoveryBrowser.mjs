@@ -87,10 +87,14 @@ try{
   assert.match(await rootSel.locator('.empty').innerText(),/この月の記録はありません/);
   assert.match(await rootSel.locator('.empty').innerText(),/別の月に保存済み/);
   await capture(page,width,'02-other-month-exists');
-  assert.equal(await rootSel.locator('.hx-recent-shortcut').count(),1,'recent records remain reachable above the large calendar');
-  await rootSel.locator('.hx-recent-shortcut').click();
+  const recent=rootSel.locator('.hx-recent-shortcut[data-history-recent]');
+  assert.equal(await recent.count(),1,'recent records remain reachable above the large calendar');
+  assert.equal(await recent.getAttribute('data-history-scope'),null,'shortcut is not a period-filter option');
+  assert.equal(await rootSel.locator('.hx-scope [data-history-scope]').count(),2,'exactly two period filters remain');
+  await recent.click();
   assert.match(await rootSel.locator('.hx-active-conditions').innerText(),/全期間を表示/);
-  await rootSel.locator('[data-history-scope="all"]').first().click();
+  assert.equal(await rootSel.locator('[data-open-record]').count(),0,'recent shortcut must not select a run implicitly');
+  await rootSel.locator('.hx-scope [data-history-scope="all"]').click();
   await rootSel.locator('[data-select-id="'+runId+'"]').waitFor({state:'visible'});
   assert.match(await rootSel.locator('.hx-entry-month').innerText(),new RegExp(String(old.getFullYear())+'年'));
   await capture(page,width,'03-all-months');

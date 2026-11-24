@@ -171,6 +171,8 @@ test('UX12 mobile calendar is optional, keeps an ISO day filter and never select
  ui.calendarOpen=false;html=renderHistory(ui,fixtures,{connected:true,onOpen(){}});
  assert.match(html,/<details class="hx-calendar-fold" data-history-calendar ><summary>/);
  assert.match(html,/data-day="21"/);
+ assert.match(html,/<button type="button" class="hx-recent-shortcut" data-history-recent>/);
+ assert.equal((html.match(/data-history-scope=/g)||[]).length,2,'recent shortcut is not a third period filter');
  assert.match(html,/data-history-scope="all"/);
  assert.equal(filterRecords(normalizeRecords(fixtures),ui).length,3);
  assert.doesNotMatch(html,/data-open-record/);
