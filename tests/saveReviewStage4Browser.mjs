@@ -18,7 +18,40 @@ const server=createServer(async(req,res)=>{try{
 await new Promise(ok=>server.listen(4387,'127.0.0.1',ok));
 const engine=process.env.RUNLOAD_BROWSER_ENGINE==='webkit'?'webkit':'chromium';
 const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true});
-const out=resolve(root,'audit-output','gps-stage4-save');await mkdir(out,{recursive:true});
+const manualActivation=process.env.RUNLOAD_STAGE4_ACTIVATION||'mouse';
+assert.ok(['mouse','touch','keyboard'].includes(manualActivation),'known manual activation');
+const out=resolve(root,'audit-output',manualActivation==='mouse'?'gps-stage4-save':'gps-stage4-save-'+manualActivation);
+await mkdir(out,{recursive:true});
+const activateManual=async button=>{
+ if(manualActivation==='touch')await button.tap();
+ else if(manualActivation==='keyboard'){await button.focus();await button.press('Enter');}
+ else await button.click();
+};
+async function beginManualTrace(page){
+ await page.evaluate(()=>{
+  window.__manualSaveTrace=[];
+  for(const type of ['pointerdown','mousedown','focusin','pointerup','mouseup','click','pointercancel','keydown'])
+   document.addEventListener(type,event=>{
+    const button=document.querySelector('[data-manual-run-save]');
+    const nav=document.querySelector('.mobile-nav');
+    window.__manualSaveTrace.push({type,tag:event.target.tagName,
+     onSave:!!event.target.closest?.('[data-manual-run-save]'),
+     pointer:event.pointerType??null,scrollY,
+     button:button?.getBoundingClientRect().toJSON()??null,navTop:nav?.getBoundingClientRect().top??null});
+   },true);
+ });
+}
+async function manualTrace(page){
+ return page.evaluate(async()=>{
+  const canonical=await import('/ui/manualRunCanonical.js'),read=await canonical.readCanonical();
+  return {hash:location.hash,canonicalOk:read.ok,records:read.read?.records?.map(record=>({
+   id:record.id,distanceKm:record.distanceKm,durationSeconds:record.durationSeconds,
+   activityGait:record.draft.activityGait}))??null,
+   pending:sessionStorage.getItem('runload-v2-pending-manual-commit-id'),
+   notice:document.querySelector('[data-save-failure]')?.textContent??null,
+   events:window.__manualSaveTrace??[]};
+ });
+}
 const base='http://127.0.0.1:4387/#/';
 const phoneUA='Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
 const audit=[];
@@ -105,15 +138,33 @@ try{
       return original.call(this,stores,mode,...rest);
      };
     });
-    await page.locator('[data-manual-run-save]').click();
+    await activateManual(page.locator('[data-manual-run-save]'));
     await page.locator('[data-save-failure]').waitFor({timeout:14000});
     await waitEnglish(page,language);
     const identity=await page.evaluate(()=>sessionStorage.getItem('runload-v2-pending-manual-commit-id'));
     assert.match(identity||'',/^run-v1-/,'manual retry ID preserved');
     assert.equal(await page.locator('[data-manual-run-save]').isEnabled(),true,'retry remains available');
     await capture(page,language,width,'manual-save-failure');
-    await page.locator('[data-manual-run-save]').click();
-    await page.locator('#runload-result-v4').waitFor({timeout:15000});
+    const before=await manualTrace(page);
+    assert.equal(before.canonicalOk,true,'readable authoritative store after failed attempt');
+    assert.equal(before.records.length,0,'failed write cannot create a parent record');
+    assert.equal(before.pending,identity);
+    await beginManualTrace(page);
+    try{
+     await activateManual(page.locator('[data-manual-run-save]'));
+     await page.locator('#runload-result-v4').waitFor({timeout:15000});
+    }catch(error){
+     const trace=await manualTrace(page).catch(e=>({diagnosticError:String(e)}));
+     await writeFile(resolve(out,engine+'-'+language+'-manual-retry-failure.json'),JSON.stringify({engine,language,width,manualActivation,trace,errors},null,2));
+     console.error('MANUAL RETRY TRACE '+JSON.stringify(trace));
+     await page.screenshot({path:resolve(out,engine+'-'+language+'-manual-retry-failure.png'),animations:'disabled'}).catch(()=>{});
+     throw error;
+    }
+    const verified=await manualTrace(page);
+    await writeFile(resolve(out,engine+'-'+language+'-manual-retry-confirmed.json'),JSON.stringify({engine,language,width,manualActivation,verified,errors},null,2));
+    assert.ok(verified.events.some(event=>event.type==='click'&&event.onSave),'actual retry click reaches save control');
+    assert.equal(verified.canonicalOk,true);
+    assert.deepEqual(verified.records,[{id:identity,distanceKm:6,durationSeconds:2520,activityGait:'RUNNING'}],'exactly one canonical record with original data and ID');
     const savedId=new URLSearchParams(page.url().split('?')[1]).get('record');
     assert.equal(savedId,identity,'manual retry uses original request ID');
     assert.equal(await page.evaluate(()=>sessionStorage.getItem('runload-v2-pending-manual-commit-id')),null);

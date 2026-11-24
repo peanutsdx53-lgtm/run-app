@@ -104,3 +104,17 @@ test('UX038 bilingual shortcut and active offline review assets match the curren
  for(const [s,token] of items)assert.ok(s.includes(token),'missing active/offline URL '+token);
  assert.ok(app.includes('environmentExperience.js?v=20261123-ux09-environment-states-v1'));
 });
+
+
+test('review focus correction cannot scroll during pointer activation or stale animation frames',()=>{
+ const app=read('app.js');
+ const focus=app.slice(app.indexOf('const reviewPointers=new Set();'),app.indexOf('app.addEventListener("click",async(event)=>{'));
+ assert.ok(focus.includes("window.addEventListener('pointerdown'"));
+ assert.ok(focus.includes("window.addEventListener('pointerup'"));
+ assert.ok(focus.includes("window.addEventListener('pointercancel'"));
+ assert.ok(focus.includes("window.addEventListener('mousedown'"));
+ assert.ok(focus.includes("window.addEventListener('mouseup'"));
+ assert.ok(focus.includes("if(reviewPointerBusy()||currentPage()!=='record-review'"));
+ assert.ok(focus.includes('epoch===reviewFocusEpoch'));
+ assert.ok(focus.includes('reviewFocusEpoch++'));
+});

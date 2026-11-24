@@ -1268,8 +1268,23 @@ function recordExtras(){
   // Native focus scrolling is not consistent across engines after a viewport
   // resize. Keep only the review controls clear of the measured fixed nav.
   // Never change the selected control, draft, validation or save state.
+  // A pointer press (including a synthesized mouse press after touch) can
+  // focus a button before click dispatch. Scrolling during that sequence can
+  // move the target out from under the pointer and cancel the save/retry.
+  const reviewPointers=new Set();
+  let reviewMousePressed=false,reviewFocusEpoch=0;
+  const reviewPointerBusy=()=>reviewPointers.size>0||reviewMousePressed;
+  window.addEventListener('pointerdown',event=>{
+    reviewPointers.add(event.pointerId);reviewFocusEpoch++;
+  },true);
+  const releaseReviewPointer=event=>reviewPointers.delete(event.pointerId);
+  window.addEventListener('pointerup',releaseReviewPointer,true);
+  window.addEventListener('pointercancel',releaseReviewPointer,true);
+  window.addEventListener('mousedown',()=>{reviewMousePressed=true;reviewFocusEpoch++;},true);
+  window.addEventListener('mouseup',()=>{reviewMousePressed=false;},true);
+  window.addEventListener('blur',()=>{reviewPointers.clear();reviewMousePressed=false;reviewFocusEpoch++;});
   function keepReviewControlVisible(target){
-    if(currentPage()!=='record-review'||!target?.isConnected||document.activeElement!==target||
+    if(reviewPointerBusy()||currentPage()!=='record-review'||!target?.isConnected||document.activeElement!==target||
        !matchMedia('(max-width:800px)').matches)return;
     const nav=app.querySelector('.mobile-nav');
     if(!nav||getComputedStyle(nav).position!=='fixed')return;
@@ -1282,13 +1297,15 @@ function recordExtras(){
   }
   app.addEventListener('focusin',event=>{
     const target=event.target;
-    if(!target?.matches?.('.rr-page [data-review-jump-scope],.rr-page [data-manual-run-save],.rr-page [data-rest-day-save]'))return;
-    keepReviewControlVisible(target);
-    // A later native scroll may supersede the first correction; recheck after
-    // layout, but never move the page if the user has changed focus.
+    if(reviewPointerBusy()||!target?.matches?.('.rr-page [data-review-jump-scope],.rr-page [data-manual-run-save],.rr-page [data-rest-day-save]'))return;
+    const epoch=reviewFocusEpoch;
+    const correct=()=>{if(epoch===reviewFocusEpoch)keepReviewControlVisible(target);};
+    correct();
+    // Native focus scrolling may finish later. A new pointer press invalidates
+    // all scheduled corrections, even if released before the next frame.
     requestAnimationFrame(()=>{
-      keepReviewControlVisible(target);
-      requestAnimationFrame(()=>keepReviewControlVisible(target));
+      correct();
+      requestAnimationFrame(correct);
     });
   });
   app.addEventListener("click",async(event)=>{
