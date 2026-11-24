@@ -1,0 +1,37 @@
+name: UX15 condition baseline evidence
+on:
+  push:
+    branches: [diagnostics/ux15-condition-baseline-20261124]
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: b0921911967da011212068803e88bf45b2040999
+          path: baseline
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - name: Capture exact current main
+        run: RUNLOAD_UX15_ROOT="$PWD/baseline" node tests/ux15BaselineBrowser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ux15-baseline-${{ matrix.engine }}
+          path: audit-output/ux15-baseline
+          if-no-files-found: error
