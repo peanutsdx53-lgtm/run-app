@@ -9,8 +9,6 @@ export const ENGLISH_EXPLORE_UI=Object.freeze({
  "指定した走行を確認できません":"Selected Run Unavailable",
  "保存済みの走行はまだありません":"No Saved Runs Yet",
  "走行記録を読み取れません":"Run Records Unavailable",
- "表示例を見ています":"Viewing an Example",
- "この画面では実際の走行記録と表示例を混ぜません。表示例を終了すると保存済みの値を確認できます。":"This example is separate from your saved runs. Close it to view your records.",
  "保存データの読み取りに問題があります。記録は変更せず、数値の表示を中止しています。":"Saved data could not be read. Values are hidden; your records have not changed.",
  "学習から一般的な問いへ移動しました。保存記録があっても自動では表示しません。本人の走行を確認するときは履歴から選んでください。":"You arrived from Learning. Choose a run in History to see your own values.",
  "このリンクに対応する保存済み走行が見つかりません。別の走行の数値で代用せず、履歴から記録を選び直してください。":"This saved run could not be found. Choose a run in History.",

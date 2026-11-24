@@ -170,10 +170,10 @@ test('distance and pace column reads only confirmed manual runs, never an unsave
  const invalid=render(u,{...ctx(draft),manualRuns:{ok:false,records:[run]}});
  assert.match(invalid,/走行記録を読み取れません/);
  assert.doesNotMatch(invalid,/6:15 分\/km/);
- u.sample=true;
- const sample=render(u,{...ctx(draft),manualRuns:{ok:true,records:[run]}});
- assert.match(sample,/表示例を終了すると/);
- assert.doesNotMatch(sample,/6:15 分\/km/);
+ u.sample=true; // stale state cannot change genuine saved-run information
+ const unchanged=render(u,{...ctx(draft),manualRuns:{ok:true,records:[run]}});
+ assert.doesNotMatch(unchanged,/表示例を終了すると|data-ex-action="sample"/);
+ assert.match(unchanged,/6:15 分\/km/);
 });
 
 test('all ten learning sources and eighteen prompts identify origin and prohibited causal/medical overreach',async()=>{

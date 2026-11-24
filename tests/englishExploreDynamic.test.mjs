@@ -46,7 +46,7 @@ test('new modal help, research sources and state captions have exact English equ
 });
 
 // UX14: the same full category name must appear in visible titles and
-// accessible names, including the real draft/saved/example provenance suffixes.
+// accessible names, including the real draft/saved provenance suffixes.
 test('UX14 category names agree across plain and related accessible labels',()=>{
  const node={...english,matches:selector=>selector==='.ex-node'};
  const ctx={element:node,attribute:'aria-label'};
@@ -61,9 +61,7 @@ test('UX14 category names agree across plain and related accessible labels',()=>
   ['コースと環境','Course & Environment','入力中の上り坂・下り坂の情報に関連','Related to Unsaved Uphill and Downhill Data'],
   ['疲れと回復','Fatigue & Recovery','入力中の運動前後の疲れに関連','Related to Unsaved Perceived Fatigue'],
   ['疲れと回復','Fatigue & Recovery','2026-11-11 に保存したROF-Jの入力に関連','Related to self-reported ROF-J saved on 2026-11-11'],
-  ['暮らしと気持ち','Life & Feelings','2026-11-20 の生活コンディション記録に関連','Related to the Daily Condition Entry on 2026-11-20'],
-  ['走りの記録','Your Running Records','表示例：走行距離の入力','Example: Running Distance Entry'],
-  ['コースと環境','Course & Environment','表示例：上り坂の入力','Example: Uphill Entry']
+  ['暮らしと気持ち','Life & Feelings','2026-11-20 の生活コンディション記録に関連','Related to the Daily Condition Entry on 2026-11-20']
  ])assert.equal(translateUiText(ja+'、'+reason,ctx),en+', '+description);
  const authored='走りの記録、入力中の走行距離・時間などに関連';
  assert.equal(translateUiText(authored,{element:el(true,true),attribute:'aria-label'}),authored);

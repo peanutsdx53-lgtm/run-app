@@ -885,3 +885,12 @@
 .ex-page .ex-focus h2:focus-visible{outline:3px solid #87f1e8;outline-offset:4px;border-radius:4px}
 .ex-page .ex-change-area{min-height:44px;max-width:100%;white-space:normal;overflow-wrap:anywhere}
 .ex-page .ex-constellation .ex-map-foot .ex-action{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+
+/* UPR-01: the two modes share the same available width and text sizing.
+   Do not disable pinch zoom or the user's root-font preference. */
+.ex-page{-webkit-text-size-adjust:100%;text-size-adjust:100%;min-width:0;max-width:min(100%,1320px)}
+.app-shell:has(.ex-page) .main-content{grid-template-columns:minmax(0,1fr)}
+.ex-page .ex-switch{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ex-page .ex-catalog,.ex-page .ex-orbit-workspace,.ex-page .ex-catalog-grid,.ex-page .ex-catalog-items,.ex-page .ex-catalog-items button,.ex-page .ex-catalog-items button strong{min-width:0;max-width:100%}
+.ex-page .ex-catalog-items button strong{overflow-wrap:anywhere}
+.ex-page .ex-catalog-group-head{flex-wrap:wrap}

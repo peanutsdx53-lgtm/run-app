@@ -14,7 +14,7 @@ const categories=[
 const memory=()=>{const m=new Map();return {getItem:k=>m.has(k)?m.get(k):null,setItem:(k,v)=>m.set(k,v),map:m}};
 test('exploration has no invented saved activity or sample relevance by default',()=>{
  const u=makeUi(memory()),r=render(u,{categories,draft:{date:'2026-10-25'},conditions:{entries:[]}});
- assert.doesNotMatch(r,/class="ex-legend ex-signal-legend"/);assert.doesNotMatch(r,/記録がなくても自由に選べます/);assert.match(r,/data-ex-action="sample"/);assert.equal((r.match(/is-related/g)||[]).length,0);
+ assert.doesNotMatch(r,/class="ex-legend ex-signal-legend"/);assert.doesNotMatch(r,/記録がなくても自由に選べます/);assert.doesNotMatch(r,/data-ex-action="sample"/);assert.equal((r.match(/is-related/g)||[]).length,0);
  assert.doesNotMatch(r,/10月22日|8\.20 km/);
 });
 test('relevance is linked to explicitly provided draft fields and does not treat zero as missing',()=>{
@@ -25,11 +25,13 @@ test('relevance is linked to explicitly provided draft fields and does not treat
  assert.equal(signals({},cond).linked.get('05'),'2026-10-24 の生活コンディション記録に関連');
  assert.equal(signals({distance:''},{entries:[]}).linked.size,0);
 });
-test('sample preview is opt-in and clearly labeled',()=>{
- const ui=makeUi(memory());ui.sample=true;
- const r=render(ui,{categories,draft:{},conditions:{entries:[]}});
- assert.match(r,/表示例/);assert.match(r,/表示例/);assert.match(r,/表示例を終了/);
- assert.equal((r.match(/ex-node is-related/g)||[]).length,2);
+test('UPR-02: no sample state or controls; genuine draft relevance remains',()=>{
+ const ui=makeUi(memory());assert.equal(Object.hasOwn(ui,'sample'),false);
+ const context={categories,draft:{},conditions:{entries:[]}};
+ ui.sample=true; // stale caller cannot resurrect the removed feature
+ const empty=render(ui,context);assert.doesNotMatch(empty,/data-ex-action="sample"|強調表示の例を見る|表示例を終了/);assert.equal((empty.match(/ex-node is-related/g)||[]).length,0);
+ const linked=render(ui,{...context,draft:{distance:'5',gradeMode:'SUMMARY',upPercent:'20',downPercent:'0'}});
+ assert.equal((linked.match(/ex-node is-related/g)||[]).length,2);assert.match(linked,/入力中の走行距離・時間などに関連/);assert.match(linked,/入力中の上り坂・下り坂の情報に関連/);
 });
 test('field terminology names seven fields and makes relevance explicit without star metaphors',()=>{
  const u=makeUi(memory()),ctx={categories,draft:{},conditions:{entries:[]}};
@@ -37,7 +39,7 @@ test('field terminology names seven fields and makes relevance explicit without 
  assert.match(plain,/気になる分野を選ぶ/);
  assert.doesNotMatch(plain,/class="ex-legend ex-signal-legend"/);assert.equal((plain.match(/class="ex-map-help"/g)||[]).length,1);
  assert.match(plain,/aria-label="7つの分野から探す"/);
- assert.match(plain,/強調表示の例を見る/);
+ assert.doesNotMatch(plain,/強調表示の例を見る/);
  assert.doesNotMatch(plain,/星/);
  u.modal='field-help';const help=render(u,ctx);
  assert.match(help,/強調表示は、現在入力している情報/);
@@ -46,9 +48,7 @@ test('field terminology names seven fields and makes relevance explicit without 
  u.modal='';const linked=render(u,{...ctx,draft:{distance:'5'}});
  assert.doesNotMatch(linked,/強調表示は、入力や記録と関連する分野を示します/);assert.doesNotMatch(linked,/ex-related-label|記録とつながる/);
  assert.doesNotMatch(linked,/星/);
- u.sample=true;const sample=render(u,ctx);
- assert.match(sample,/表示例/);
- assert.doesNotMatch(sample,/星/);
+ assert.doesNotMatch(linked,/表示例|星/);
  u.modal='learn-help';const sourceHelp=render(u,ctx);
  assert.doesNotMatch(sourceHelp,/分野の強調表示は、入力・保存記録との関連を示す目印です/);assert.match(sourceHelp,/参考知識は一般的な情報です/);
  assert.doesNotMatch(sourceHelp,/星/);

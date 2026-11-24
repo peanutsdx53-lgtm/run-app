@@ -55,11 +55,8 @@ test('UX13 compact discovery headings retain all controls and distinguish unknow
  const missing=render(ui,{...ctx,focusRunId:'missing-record',focusRun:null});
  assert.match(missing,/指定された走行記録が見つかりません/);
  assert.doesNotMatch(missing,/保存された手入力走行は0件/);
- ui.sample=true;
- const sample=render(ui,ctx);
- assert.match(sample,/表示例を見ています/);
- assert.doesNotMatch(sample,/保存された手入力走行は0件/);
- ui.sample=false;ui.selected='03';ui.topic='上り坂・下り坂';
+ assert.doesNotMatch(normal,/表示例を見ています|data-ex-action="sample"/);
+ ui.selected='03';ui.topic='上り坂・下り坂';
  assert.match(render(ui,ctx),/<strong>上りの動き<\/strong>/);
  ui.toolChoice='down';assert.match(render(ui,ctx),/<strong>下りの動き<\/strong>/);
 });
