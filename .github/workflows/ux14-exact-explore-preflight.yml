@@ -28,9 +28,9 @@ jobs:
           node-version: '22'
       - name: Verify exact candidate
         run: |
-          test "$(git rev-parse HEAD)" = "5e95ff7854bea24c0881c28fd7262ad00597f428"
-          test "$(git rev-parse HEAD^{tree})" = "1d47bd991ce6b4fd50d1ced172957e42f15bf096"
-          test "$(git status --porcelain --untracked-files=no)" = ""
+          test "$(git -c safe.directory="$PWD" rev-parse HEAD)" = "5e95ff7854bea24c0881c28fd7262ad00597f428"
+          test "$(git -c safe.directory="$PWD" rev-parse HEAD^{tree})" = "1d47bd991ce6b4fd50d1ced172957e42f15bf096"
+          test "$(git -c safe.directory="$PWD" status --porcelain --untracked-files=no)" = ""
       - run: npm install --no-save playwright@1.56.1
       - run: node --check tests/exploreFullCopyBrowser.mjs
       - run: node tests/exploreFullCopyBrowser.mjs
