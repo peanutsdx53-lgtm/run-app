@@ -85,3 +85,16 @@ test('invalid calendar dates reject safely without changing opt-in next-check re
  s.setItem(ACTION_INTENT_KEY,JSON.stringify({...created.intent,baseline:{...created.intent.baseline,date:'2026-13-99'}}));
  assert.equal(loadIntent(s).ok,false,'corrupt saved date is rejected without exception');
 });
+
+test('UX15 empty state has no zero bars and retains explicit period and method selection',()=>{
+ const html=renderConditionJourney({canSave:true,entries:[]},{days:7,method:'time-in-bed'});
+ assert.match(html,/選択した期間・方法の記録なし/);assert.match(html,/未記録日は0時間として扱いません/);
+ assert.doesNotMatch(html,/data-cj-chart|data-cj-day=/);assert.match(html,/data-cj-range="7" aria-label="7日" aria-pressed="true"/);
+ assert.match(html,/就床から起床までの経過時間：0日分/);assert.doesNotMatch(html,/棒の基準/);
+});
+test('UX15 missing method is distinct from an absent date, and self-report symbols do not assess health',()=>{
+ const data={canSave:true,entries:[record(a,420,'良い','','duration'),record(b,480,'ふつう','','clock')]};
+ const html=renderConditionJourney(data,{days:7,method:'self-reported'});
+ assert.match(html,new RegExp(b+' 選択した方法の記録なし'));assert.match(html,new RegExp(c+' 記録なし'));
+ assert.match(html,/色や記号は健康状態や走行能力の評価ではありません/);assert.match(html,/本人が入力した調子/);
+});

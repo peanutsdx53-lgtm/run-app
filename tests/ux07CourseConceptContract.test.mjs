@@ -59,7 +59,7 @@ test('UX-032: hidden fields are not erased; only chosen input modes drive curren
  assert.ok(courseReadiness(summary,ui).length>0,'invalid active summary must not be silently accepted');
 });
 test('UX-07: offline boot uses new shell and dictionary imports; old immutable URLs are not pinned',()=>{
- const ver='20261123-ux07-course-clarity-v1',shell='20261124-upr-explore-gps-v1',resultVersion='20261123-ux11-result-source-v1',app=read('app.js'),html=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
+ const ver='20261123-ux07-course-clarity-v1',shell='20261125-ux15-condition-v1',resultVersion='20261123-ux11-result-source-v1',app=read('app.js'),html=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  for(const [source,url] of [[app,'recordExperience.js?v='+ver],[app,'englishUi.js?v='+shell],
   [html,'app.js?v='+shell],[html,'recordExperience.css?v='+ver],
   [sw,'runload-ui-next-shell-'+shell],[sw,'app.js?v='+shell],

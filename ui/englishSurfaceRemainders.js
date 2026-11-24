@@ -415,8 +415,9 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  if((m=s.match(/^(\d+)\s*分$/)))return m[1]+' min';
  if((m=s.match(/^（目安：(.+)）$/)))return '(Anchor: '+m[1]+')';
  if((m=s.match(/^尺度：(.+)。図：(.+)。$/)))return 'Scale Source: '+m[1]+'. Illustration Source: '+m[2]+'.';
- if((m=s.match(/^本人申告の睡眠時間：(\d+)日分 ／ 棒の基準：最大(\d+)時間(\d{2})分$/)))
-  return 'Self-Reported Sleep Duration: '+m[1]+' Days / Chart Maximum: '+m[2]+' h '+m[3]+' min';
+ if((m=s.match(/^(本人申告の睡眠時間|就床から起床までの経過時間)：(\d+)日分(?: ／ 棒の基準：最大(\d+)時間(\d{2})分)?$/)))
+  return (m[1]==='本人申告の睡眠時間'?'Self-Reported Sleep Duration':'Elapsed Time in Bed')+': '+m[2]+' Days'+(m[3]?' / Chart Maximum: '+m[3]+' h '+m[4]+' min':'');
+ if((m=s.match(/^(\d{4}-\d{2}-\d{2}) (記録なし|選択した方法の記録なし)$/)))return m[1]+' '+(m[2]==='記録なし'?'No Record':'No Record for the Selected Method');
  if((m=s.match(/^(\d+)分の時間枠 · ([\d.]+)分\/km$/)))return 'Time Budget '+m[1]+' min · '+m[2]+' min/km';
  if((m=s.match(/^(\d+)分走る（一定ペース）$/)))return 'Run for '+m[1]+' min (Constant Pace)';
  if((m=s.match(/^(\d+)分走る → (\d+)分歩く · (\d+)分サイクル$/)))
