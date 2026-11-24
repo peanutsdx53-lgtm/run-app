@@ -133,6 +133,38 @@ try{
   }
   await context.close();
  }
+ // UX13: all 16 language/width/root-font states per engine, with the same
+ // general slope topic, no saved run, and exact semantic labels (not just no Japanese).
+ const ux13Matrix=[];
+ for(const language of ['ja','en'])for(const width of [320,390,768,1440])for(const percent of [100,200]){
+  const ctx=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce',serviceWorkers:'block'});
+  try{
+   await ctx.addInitScript(lang=>{
+    localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:lang}));
+    localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({textSize:'standard',motion:'system',language:lang}));
+   },language);
+   const page=await ctx.newPage();page.on('pageerror',e=>errors.push({type:'ux13-js',language,width,percent,error:String(e)}));
+   const query=new URLSearchParams({category:'03',topic:'上り坂・下り坂'});
+   await page.goto(base+'#/exploration-tree?'+query.toString(),{waitUntil:'networkidle'});
+   await page.locator('.ex-inquiry-start h3').waitFor({state:'visible',timeout:14000});
+   if(percent===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
+   const expected=language==='en'?['7 Areas','Topics','Uphill Movement','Use Records or Experience as Clues','Sources & Limits','Background & Research Sources']:['7つの分野','読むテーマ','上りの動き','記録や経験を手がかりにする','情報の出所と限界','参考知識と研究出典'];
+   await page.waitForFunction(labels=>{
+    const q=s=>document.querySelector(s)?.textContent.trim();
+    return q('.ex-core span')===labels[0]&&q('.ex-topic-controls>strong')===labels[1]&&q('.ex-tool-result>strong')===labels[2]&&q('.ex-inquiry-stage>h4')===labels[3]&&[...document.querySelectorAll('.ex-inquiry-details>summary')].some(e=>e.textContent.trim()===labels[4])&&q('.ex-knowledge-reference>summary')===labels[5];
+   },expected,{timeout:14000});
+   const geometry=await page.locator('[data-experience-v3]').evaluate(el=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,font:parseFloat(getComputedStyle(document.documentElement).fontSize),areas:el.querySelectorAll('.ex-node').length,questions:el.querySelectorAll('.ex-inquiry-start h3').length,stages:el.querySelectorAll('.ex-inquiry-stage').length,stepper:el.querySelectorAll('[data-ex-topic-step]').length,note:el.querySelectorAll('[data-ex-action="note"]').length,share:el.querySelectorAll('[data-ex-action="share"]').length,history:el.querySelectorAll('[data-ex-action="memories"]').length}));
+   assert.ok(geometry.scroll<=width+3,'UX13 whole page overflow '+JSON.stringify({language,width,percent,geometry}));
+   assert.equal(geometry.font,percent===200?32:16,'UX13 root font');
+   assert.deepEqual([geometry.areas,geometry.questions,geometry.stages,geometry.stepper,geometry.note,geometry.share,geometry.history],[7,1,3,2,1,1,1],'UX13 preserves discovery and optional actions');
+   const filename='ux13-'+language+'-'+width+'-'+percent+'.png';
+   await page.screenshot({path:resolve(out,filename),fullPage:true,animations:'disabled',timeout:20000});
+   ux13Matrix.push({engine,language,width,percent,filename,expected,...geometry});
+  }finally{await ctx.close();}
+ }
+ assert.equal(ux13Matrix.length,16,'UX13 complete per-engine matrix');
+ await writeFile(resolve(out,'ux13-matrix.json'),JSON.stringify(ux13Matrix,null,2));
+ console.log('UX13-MATRIX '+engine+' '+ux13Matrix.length+' states');
  const untranslated=reports.flatMap(r=>[...r.out,...r.attrs].map(x=>({...x,category:r.category,topic:r.topic,mode:r.mode,state:r.state})));
  const grouped=Object.create(null);
  for(const e of untranslated){const key=e.text;const row=grouped[key]||{text:key,count:0,places:[]};row.count++;if(row.places.length<4)row.places.push({category:e.category,topic:e.topic,mode:e.mode,state:e.state});grouped[key]=row;}

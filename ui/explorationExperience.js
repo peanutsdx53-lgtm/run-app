@@ -1,6 +1,6 @@
 import {createExplorationContext, compareLifeDays, readCourseDraft} from "./explorationReadAdapter.js";
 import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from "./explorationTopicGuides.js?v=20261111-exploration-inquiry-v1";
-import {renderObservationGuide} from "./explorationTopicView.js?v=20261122-explore-clean-v1";
+import {renderObservationGuide} from "./explorationTopicView.js?v=20261124-ux13-explore-copy-v1";
 import {isRunId,resolveOptionalNoteRunLink,visibleTopicNotes,noteRunBackLink} from "./noteRunLink.js";
 import {renderFatigueInquiry} from "./explorationInquiry.js?v=20261109-p7-wording-v1";
 import {renderComparisonInquiry} from "./explorationComparisonInquiry.js";
@@ -216,12 +216,14 @@ function experience(ui,ctx,cat,topic,inquiry=''){
   }
  }else if(['reference-reading','felt-fatigue','saved-comparison','voluntary-reflection','fatigue-reading','personal-record-use'].includes(key)){
   const run=ui.sample?null:latestSavedManualRun(ctx.manualRuns,ctx.focusRunId||null);
-  const count=ctx.manualRuns?.ok===true?ctx.manualRuns.records.filter(x=>x?.source==='manual'&&x.type==='run').length:0;
-  const detail=run?'<p>保存済み走行：'+h(run.date)+'、'+run.distanceKm.toFixed(2)+' km、経過時間 '+(run.durationSeconds/60).toFixed(1)+' 分</p>':ctx.learningEntry?'<p data-ex-no-auto-record>学習から移動したため、このテーマでは本人の走行は未選択です。履歴から明示的に選べます。</p>':'<p>記録がなくても自分の経験から考えられます。</p>';
+  const readable=ctx.manualRuns?.ok===true&&Array.isArray(ctx.manualRuns.records);
+  const count=readable&&!ui.sample&&!ctx.learningEntry&&(!ctx.focusRunId||run)?ctx.manualRuns.records.filter(x=>x?.source==='manual'&&x.type==='run').length:null;
+  const detail=run?'<p>保存済み走行：'+h(run.date)+'、'+run.distanceKm.toFixed(2)+' km、経過時間 '+(run.durationSeconds/60).toFixed(1)+' 分</p>':ui.sample?'<p>この画面では実際の走行記録と表示例を混ぜません。表示例を終了すると保存済みの値を確認できます。</p>':ctx.manualRuns?.ok===false?'<p>保存データの読み取りに問題があります。記録は変更せず、数値の表示を中止しています。</p>':ctx.learningEntry?'<p data-ex-no-auto-record>学習から移動したため、このテーマでは本人の走行は未選択です。履歴から明示的に選べます。</p>':'<p>記録がなくても自分の経験から考えられます。</p>';
   const feeling=run?'<p>本人の疲労感：運動前 '+(run.rofBefore===null?'未回答':run.rofBefore)+' ／ 運動後 '+(run.rofAfter===null?'未回答':run.rofAfter)+'</p>':'';
   const url=run?'#/result?record='+encodeURIComponent(run.id):'#/history';
-  tool='<div class="ex-tool-result">'+(!run?'<strong>走行は未選択です</strong>':'')+detail+(['felt-fatigue','fatigue-reading'].includes(key)?feeling:'')
-   +(key==='saved-comparison'?'<p>保存された手入力走行は'+count+'件です。2件以上あれば結果画面から記録を選んで比較できます。</p>':'')
+  const status=!run?(ui.sample?'表示例を見ています':ctx.manualRuns?.ok===false?'走行記録を読み取れません':ctx.focusRunId?'指定した走行を確認できません':ctx.learningEntry?'走行は未選択です':''):'';
+  tool='<div class="ex-tool-result">'+(status?'<strong>'+status+'</strong>':'')+detail+(['felt-fatigue','fatigue-reading'].includes(key)?feeling:'')
+   +(key==='saved-comparison'&&count!==null?'<p>保存された手入力走行は'+count+'件です。2件以上あれば結果画面から記録を選んで比較できます。</p>':'')
    +'</div><a class="ex-learning-link" href="'+url+'">'+(run?'この走行の結果へ戻る':'履歴を確認する')+' ›</a>';
  }else if(key==='body-movement'){
   const parts={hip:{label:"股関節",body:"脚を前後に動かす関節。走るときに身体を前へ進める動きに関係します。"},knee:{label:"膝",body:"着地して体を支える間に曲げ伸ばしし、力を受け止める動きに関わります。"},ankle:{label:"足首",body:"地面を押して進むときや、着地の姿勢を調整するときに働きます。"}};
@@ -233,7 +235,7 @@ function experience(ui,ctx,cat,topic,inquiry=''){
  }else if(key==='slope-running'){
   const course=ctx.focusRunId&&ctx.focusRun?readCourseDraft(ctx.focusRun.draft):strict.course;
   const sourceLabel=ctx.focusRunId&&ctx.focusRun?'保存した走行の入力':'入力途中';
-  const choices={up:{label:"上り",title:"押して進む",body:"上りでは重力に逆らって身体を持ち上げる必要があり、平坦路とは動きや力の使い方が異なります。"},down:{label:"下り",title:"勢いを受け止める",body:"下りでは前へ進む勢いを制御するため、着地時のブレーキの働きが大切になります。"}};
+  const choices={up:{label:"上り",title:"上りの動き",body:"上りでは重力に逆らって身体を持ち上げる必要があり、平坦路とは動きや力の使い方が異なります。"},down:{label:"下り",title:"下りの動き",body:"下りでは前へ進む勢いを制御するため、着地時のブレーキの働きが大切になります。"}};
   const c=choices[ui.toolChoice]||choices.up;
   const shares=course.status==='complete'&&course.shares?
    `<div class="ex-course-bars" role="img" aria-label="${sourceLabel}の上り${course.shares.up}％、下り${course.shares.down}％、入力上の平坦${course.shares.flat}％"><span style="width:${course.shares.up}%;background:#65ddce"></span><span style="width:${course.shares.down}%;background:#80a9ef"></span><span style="width:${course.shares.flat}%;background:#426577"></span></div><small>${sourceLabel}の割合：上り ${course.shares.up}％／下り ${course.shares.down}％／平坦 ${course.shares.flat}％。GPSによる標高断面ではありません。割合はコースの構成比であり、文献にある傾斜角（度）や路面勾配（％）ではありません。</small>`:
@@ -256,15 +258,15 @@ function experience(ui,ctx,cat,topic,inquiry=''){
  const toolHeading=key==='body-movement'?'動きを選んで確かめる':key==='slope-running'?'上りと下りを比べる':'本人の情報を確認する';
  return '<div class="ex-learning" data-ex-learning="'+key+'" data-ex-inquiry-layout="knowledge">'+
   '<header class="ex-inquiry-start"><small>探究の入り口</small><h3>'+h(question)+'</h3></header>'+
-  '<section class="ex-inquiry-stage"><h4>記録を手がかりにする</h4>'+
+  '<section class="ex-inquiry-stage"><h4>記録や経験を手がかりにする</h4>'+
   '<div class="ex-tool">'+(key==='body-movement'||key==='slope-running'?'<h5>'+toolHeading+'</h5>':'')+tool+'</div>'+
   (inquiry?'<div class="ex-inline-inquiry">'+embedSelectedInquiry(inquiry)+'</div>':'')+
   ((specific||reason)&&!ui.sample?'<details class="ex-inquiry-details ex-linked-source"><summary>関連の出所と限界</summary><p>'+h(ctx.focusRunId?specific||'選択した記録との直接の対応はありません':who)+'</p></details>':'')+
   '</section>'+
   '<section class="ex-inquiry-stage"><h4>記録と感覚を照らし合わせる</h4>'+
   '<p>記録の条件と、そのときの感じ方を分けて捉えます。</p>'+
-  '<details class="ex-inquiry-details"><summary>情報の出所と読み取れる範囲</summary><p>'+h(entry.warning)+'</p></details>'+
-  '<details class="ex-inquiry-details ex-knowledge-reference"><summary>参考知識と研究の出典</summary><h5>'+h(entry.heading)+'</h5><p>'+h(entry.lead)+'</p>'+
+  '<details class="ex-inquiry-details"><summary>情報の出所と限界</summary><p>'+h(entry.warning)+'</p></details>'+
+  '<details class="ex-inquiry-details ex-knowledge-reference"><summary>参考知識と研究出典</summary><h5>'+h(entry.heading)+'</h5><p>'+h(entry.lead)+'</p>'+
   '<button type="button" class="ex-help-link" data-ex-action="learn-help">研究の対象と適用条件を確認</button></details>'+
   '</section>'+
   '<section class="ex-inquiry-stage ex-inquiry-last"><h4>気づきを残す</h4>'+
@@ -295,11 +297,11 @@ function field(ui,ctx){
   :(selected.id==='04'&&currentTopic==='疲れの感じ方'||selected.id==='01'&&currentTopic==='自分が感じた疲れ')?'effort-fatigue-recovery':null;
  const summary=links.sample?'強調表示は説明用の例です。自分の記録ではありません。':linked?linked:'';
  const any=links.linked.size>0;
- return '<section class="ex-workspace ex-orbit-workspace"><div class="ex-map-card ex-constellation"><div class="ex-map-head"><div><span class="ex-eyebrow">記録からも広がる発見</span><h2>気になる分野を選ぶ</h2></div><button type="button" class="ex-map-help" data-ex-action="field-help" aria-label="強調表示の意味" title="強調表示の意味">？</button></div>'
- +'<div class="ex-map" role="group" aria-label="7つの分野から探す">'+art(links)+'<div class="ex-core" aria-hidden="true"><span>気になることから</span><strong>探究</strong></div>'+nodes+'</div>'
+ return '<section class="ex-workspace ex-orbit-workspace"><div class="ex-map-card ex-constellation"><div class="ex-map-head"><div><h2>気になる分野を選ぶ</h2></div><button type="button" class="ex-map-help" data-ex-action="field-help" aria-label="強調表示の意味" title="強調表示の意味">？</button></div>'
+ +'<div class="ex-map" role="group" aria-label="7つの分野から探す">'+art(links)+'<div class="ex-core" aria-hidden="true"><span>7つの分野</span><strong>探究</strong></div>'+nodes+'</div>'
  +''
  +'<div class="ex-map-foot">'+(!any&&!links.sample?buttonAction("sample","強調表示の例を見る","quiet"):links.sample?buttonAction("sample","表示例を終了","quiet"):'')+'</div></div>'
- +'<div class="ex-side"><section class="ex-focus" id="ex-topic-content"><div class="ex-focus-label"><span>選んだ分野</span><button type="button" class="ex-focus-help" data-ex-action="field-help" aria-label="選んだ分野と強調表示の説明" title="表示の説明">？</button></div><h2>'+esc(selected.name)+'</h2>'+'<div class="ex-topic-controls"><strong>テーマを切り替える</strong><div class="ex-topic-stepper" role="group" aria-label="テーマの前後移動"><button type="button" data-ex-topic-step="-1" aria-label="前のテーマ"'+(topicIndex===0?' disabled':'')+'><span aria-hidden="true">‹</span></button><output class="ex-topic-position" aria-live="polite">'+(topicIndex+1)+' / '+selected.topics.length+'</output><button type="button" data-ex-topic-step="1" aria-label="次のテーマ"'+(topicIndex===selected.topics.length-1?' disabled':'')+'><span aria-hidden="true">›</span></button></div></div><div class="ex-topic-set" role="group" aria-label="読むテーマ（左右にスワイプして選ぶ）">'+selected.topics.map((name,i)=>'<button type="button" data-ex-topic="'+esc(name)+'" aria-pressed="'+(currentTopic===name)+'" class="ex-topic '+(currentTopic===name?'is-picked':'')+'" title="'+esc(name)+'"><span aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span><strong>'+esc(name)+'</strong><span aria-hidden="true">›</span></button>').join('')+'</div>'
+ +'<div class="ex-side"><section class="ex-focus" id="ex-topic-content"><div class="ex-focus-label"><span>選んだ分野</span><button type="button" class="ex-focus-help" data-ex-action="field-help" aria-label="選んだ分野と強調表示の説明" title="表示の説明">？</button></div><h2>'+esc(selected.name)+'</h2>'+'<div class="ex-topic-controls"><strong>読むテーマ</strong><div class="ex-topic-stepper" role="group" aria-label="テーマの前後移動"><button type="button" data-ex-topic-step="-1" aria-label="前のテーマ"'+(topicIndex===0?' disabled':'')+'><span aria-hidden="true">‹</span></button><output class="ex-topic-position" aria-live="polite">'+(topicIndex+1)+' / '+selected.topics.length+'</output><button type="button" data-ex-topic-step="1" aria-label="次のテーマ"'+(topicIndex===selected.topics.length-1?' disabled':'')+'><span aria-hidden="true">›</span></button></div></div><div class="ex-topic-set" role="group" aria-label="読むテーマ（左右にスワイプして選ぶ）">'+selected.topics.map((name,i)=>'<button type="button" data-ex-topic="'+esc(name)+'" aria-pressed="'+(currentTopic===name)+'" class="ex-topic '+(currentTopic===name?'is-picked':'')+'" title="'+esc(name)+'"><span aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span><strong>'+esc(name)+'</strong><span aria-hidden="true">›</span></button>').join('')+'</div>'
  +experience(ui,ctx,selected,currentTopic,renderSelectedInquiry(ui,ctx,selected,currentTopic))+(relatedLesson?'<a class="ex-related-learning" href="#/learning?lesson='+relatedLesson+'">関連する学習を見る <span aria-hidden="true">›</span></a>':'')+'</section>'
  +'</div></section>';
 }

@@ -1,7 +1,7 @@
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
-import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261124-ux12-history-discovery-v1';
+import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261124-ux13-explore-copy-v1';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1';
-import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261111-exploration-inquiry-v1';
+import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261124-ux13-explore-copy-v1';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261121-profile-optional-right-v1';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js';
 import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js';
@@ -20,9 +20,9 @@ import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261123-ux11-result-sou
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
-import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261122-explore-clean-v1';
+import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261124-ux13-explore-copy-v1';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261123-ux11-result-source-v1';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261124-ux13-explore-copy-v1';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
@@ -64,7 +64,7 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "コースと環境": "Course & Environment",
  "疲れと回復": "Fatigue & Recovery",
  "暮らしと気持ち": "Life & Feelings",
- "走る前後の工夫": "Before & After Running",
+ "走る前後の工夫": "Before & After Runs",
  "目的と楽しみ方": "Goals & Enjoyment",
  "足・膝・股関節": "Feet, Knees & Hips",
  "上り坂・下り坂": "Uphill & Downhill",

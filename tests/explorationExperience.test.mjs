@@ -201,7 +201,8 @@ test('topic layout scales and reflection has one way to review',()=>{
  ui.selected='02';ui.topic='足・膝・股関節';
  const html=render(ui,{categories:extra,draft:{},conditions:{entries:[]}});
  assert.equal((html.match(/data-ex-topic=/g)||[]).length,6);
- assert.match(html,/テーマを切り替える/);
+ assert.match(html,/<strong>読むテーマ<\/strong>/);
+ assert.doesNotMatch(html,/テーマを切り替える/);
  assert.doesNotMatch(html,/class="ex-topic-instruction"/);
  assert.match(html,/1 \/ 6/);
  assert.equal((html.match(/data-ex-topic-step=/g)||[]).length,2);

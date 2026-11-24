@@ -53,7 +53,7 @@ test('E7 T07 & T09: mid-run practices and goal/enjoyment remain independent non-
   const h=show(cat,topic).html;
   assert.match(h,/観察ガイド/);
   assert.match(h,/専門解説は出典審査前/);
-  assert.match(h,/情報の出所と読み取れる範囲/);
+  assert.match(h,/情報の出所と限界/);
   assert.match(h,/気づきを残す/);
   assert.match(h,/data-ex-action="note"/);
   assert.doesNotMatch(h,/data-e-inquiry="T07"|data-e-inquiry="T09"|正答率|心理状態を診断した/);
