@@ -26,14 +26,42 @@ test('all 28 themes share one question and a three-section inquiry flow, with En
   assert.ok(q&&q.endsWith('？'),key+' must have one intentional opening question');
   assert.ok(ENGLISH_GPS_EXPLORATION_COPY[q],key+' must have an English question');
   assert.equal((page.match(/class="ex-inquiry-start"/g)||[]).length,1,key+' must have a single question header');
-  for(const label of ['探究の入り口','記録を手がかりにする','記録と感覚を照らし合わせる','気づきを残す']){
+  for(const label of ['探究の入り口','記録や経験を手がかりにする','記録と感覚を照らし合わせる','気づきを残す']){
    assert.ok(page.includes(label),key+' missing '+label);
   }
-  assert.ok(page.indexOf('記録を手がかりにする')<page.indexOf('記録と感覚を照らし合わせる'),key);
+  assert.ok(page.indexOf('記録や経験を手がかりにする')<page.indexOf('記録と感覚を照らし合わせる'),key);
   assert.ok(page.indexOf('記録と感覚を照らし合わせる')<page.indexOf('気づきを残す'),key);
   assert.equal((page.match(/data-ex-action="note"/g)||[]).length,1,key+' must offer a single optional note');
   if(!LEARNING_TOPICS[key])assert.ok(EXPLORATION_DRAFT_GUIDES[key],key+' must keep observation scope');
  }
+});
+test('UX13 compact discovery headings retain all controls and distinguish unknown records from zero',()=>{
+ const ui=makeUi(storage);ui.selected='01';ui.topic='過去の走りとの比較';
+ const normal=render(ui,ctx);
+ assert.equal((normal.match(/気になることから/g)||[]).length,1);
+ assert.match(normal,/<span>7つの分野<\/span><strong>探究<\/strong>/);
+ assert.doesNotMatch(normal,/記録からも広がる発見|テーマを切り替える/);
+ assert.match(normal,/<strong>読むテーマ<\/strong>/);
+ assert.equal((normal.match(/data-ex-category=/g)||[]).length,7);
+ assert.equal((normal.match(/data-ex-topic-step=/g)||[]).length,2);
+ assert.match(normal,/保存された手入力走行は0件/);
+ assert.doesNotMatch(normal,/走行は未選択です/);
+ const learning=render(ui,{...ctx,learningEntry:true});
+ assert.match(learning,/走行は未選択です/);
+ assert.doesNotMatch(learning,/保存された手入力走行は0件/);
+ const failed=render(ui,{...ctx,manualRuns:{ok:false,records:[]}});
+ assert.match(failed,/走行記録を読み取れません/);
+ assert.doesNotMatch(failed,/保存された手入力走行は0件/);
+ const missing=render(ui,{...ctx,focusRunId:'missing-record',focusRun:null});
+ assert.match(missing,/指定された走行記録が見つかりません/);
+ assert.doesNotMatch(missing,/保存された手入力走行は0件/);
+ ui.sample=true;
+ const sample=render(ui,ctx);
+ assert.match(sample,/表示例を見ています/);
+ assert.doesNotMatch(sample,/保存された手入力走行は0件/);
+ ui.sample=false;ui.selected='03';ui.topic='上り坂・下り坂';
+ assert.match(render(ui,ctx),/<strong>上りの動き<\/strong>/);
+ ui.toolChoice='down';assert.match(render(ui,ctx),/<strong>下りの動き<\/strong>/);
 });
 test('specialist inquiry stays out of general themes and appears only with explicitly selected run',()=>{
  for(const [category,topic,selector] of important){

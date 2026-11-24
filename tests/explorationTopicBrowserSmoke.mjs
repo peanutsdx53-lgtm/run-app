@@ -85,7 +85,7 @@ try{
   assert.equal(purpose.fits,true,'purpose label must not clip '+width);
   const guide=await page.locator('.ex-observation-guide').innerText();
   assert.match(guide,/観察ガイド/);assert.match(guide,/専門解説は出典審査前/);
-  assert.match(guide,/情報の出所と読み取れる範囲/);assert.match(guide,/気づきを残す/);
+  assert.match(guide,/情報の出所と限界/);assert.match(guide,/気づきを残す/);
   const dimensions=await page.evaluate(()=>({body:document.body.scrollWidth,html:document.documentElement.scrollWidth,inner:innerWidth,panels:[...document.querySelectorAll('.ex-inquiry-stage')].map(el=>({w:el.getBoundingClientRect().width,scroll:el.scrollWidth}))}));
   assert.ok(dimensions.body<=width+2&&dimensions.html<=width+2,'page has no horizontal overflow: '+JSON.stringify(dimensions));
   for(const cell of dimensions.panels)assert.ok(cell.scroll<=cell.w+2&&cell.w>140,'card content fits: '+JSON.stringify(cell));
@@ -208,7 +208,7 @@ try{
   const topic=page.locator('[data-ex-learning="distance-time-pace"]');
   await topic.waitFor({timeout:20000});
   assert.match(await topic.innerText(),/保存済みの走行はまだありません/,'explicit zero-record state');
-  assert.match(await topic.innerText(),/記録を手がかりにする/,'personal inquiry remains available');
+  assert.match(await topic.innerText(),/記録や経験を手がかりにする/,'personal inquiry remains available');
   await topic.locator('[data-ex-action="note"]').click();
   assert.match(await page.locator('.ex-dialog').innerText(),/走行記録には自動で関連づけません/);
   await page.locator('#ex-note').fill('記録はまだないけれど、次回は自分の感じ方を確かめたい');

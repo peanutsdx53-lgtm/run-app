@@ -13,14 +13,14 @@ export function renderObservationGuide(ui,ctx,cat,topic,inquiry=''){
  const link=run?'<a class="ex-learning-link" href="#/result?record='+encodeURIComponent(run.id)+'">この走行の結果へ戻る ›</a>':'';
  return '<div class="ex-learning ex-observation-guide" data-ex-inquiry-layout="observation">'+
   '<header class="ex-inquiry-start"><small>探究の入り口</small><h3>'+text(question)+'</h3></header>'+
-  '<section class="ex-inquiry-stage"><h4>記録を手がかりにする</h4>'+
+  '<section class="ex-inquiry-stage"><h4>記録や経験を手がかりにする</h4>'+
   '<p>'+text(guide?.record||'自分の経験や記録から、気になる点を確認します。')+'</p>'+
   ''+
   (run?'<details class="ex-inquiry-details ex-run-context"><summary>選択した走行</summary><p>'+text(run.date)+'に保存した走行の情報です。ほかの記録とは自動で結びつけません。</p>'+link+'</details>':'')+
   (inquiry?'<div class="ex-inline-inquiry">'+inquiry+'</div>':'')+'</section>'+
   '<section class="ex-inquiry-stage"><h4>記録と感覚を照らし合わせる</h4>'+
   '<p>記録された情報と、そのときの感じ方を区別して考えます。</p>'+
-  '<details class="ex-inquiry-details"><summary>情報の出所と読み取れる範囲</summary><p>'+text(guide?.limit||'記録だけから原因や身体の状態を断定しません。')+'</p><p>観察ガイド：このテーマの専門解説は出典審査前です。</p></details>'+
+  '<details class="ex-inquiry-details"><summary>情報の出所と限界</summary><p>'+text(guide?.limit||'記録だけから原因や身体の状態を断定しません。')+'</p><p>観察ガイド：このテーマの専門解説は出典審査前です。</p></details>'+
   '<button type="button" class="ex-help-link" data-ex-action="learn-help">観察ガイドの根拠と注意点</button>'+
   '</section>'+
   '<section class="ex-inquiry-stage ex-inquiry-last"><h4>気づきを残す</h4>'+

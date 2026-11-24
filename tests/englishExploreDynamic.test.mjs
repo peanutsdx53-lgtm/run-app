@@ -23,6 +23,12 @@ test('explicit-run date, fatigue and distance composites translate without chang
   assert.equal(translateExploreDynamic(raw,{element:english}),translation,raw);
  }
 });
+test('UX13 visible system headings have concise correct English and preserve authored text',()=>{
+ for(const [ja,en] of [['7つの分野','7 Areas'],['読むテーマ','Topics'],['選んだ分野','Category'],['走る前後の工夫','Before & After Runs'],['上りの動き','Uphill Movement'],['下りの動き','Downhill Movement'],['押して進む','Push Uphill'],['記録や経験を手がかりにする','Use Records or Experience as Clues'],['情報の出所と限界','Sources & Limits'],['参考知識と研究出典','Background & Research Sources']]){
+  assert.equal(translateUiText(ja,{element:english}),en,ja);
+  assert.equal(translateUiText(ja,{element:el(true,true)}),ja,'authored text must stay unchanged');
+ }
+});
 test('non-Explore and authored records are never translated',()=>{
  assert.equal(translateExploreDynamic('保存済み走行：2026-11-20、5.00 km、経過時間 35.0 分',{element:el(false)}),null);
  assert.equal(translateExploreDynamic('保存済み走行：2026-11-20、5.00 km、経過時間 35.0 分',{element:el(true,true)}),null);
