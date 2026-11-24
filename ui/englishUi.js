@@ -28,6 +28,9 @@ import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurf
  * user text, record IDs, scientific numbers, consent or legal document bodies.
  * The Japanese app remains the canonical source of UI behavior and evidence. */
 export const ENGLISH_UI_TEXT=Object.freeze({
+ "分野図を閉じる": "Hide Area Map",
+ "分野図を開く": "Show Area Map",
+ "分野を変更": "Change Area",
  "この走行の気づきだけを表示しています。": "Showing Notes Linked to This Activity Only.",
  "すべてのメモを表示しています。記録に結びついた文章は、その記録と区別して扱います。": "Showing All Notes. Each Activity-Linked Note Retains Its Original Activity.",
  "元の走行が見つかりません。以前に結びつけたメモは残っています。": "The Original Activity Is Missing. Its Notes Remain Available.",

@@ -14,6 +14,8 @@ import {renderLifeInquiry} from "./explorationLifeInquiry.js";
 export const EXPLORATION_NOTE_KEY="runload-v2-exploration-notes-v1";
 const LIMIT=50;
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const compactEnglish={"01":"Run Logs","02":"Body","03":"Course & Env.","04":"Fatigue & Recovery","05":"Life & Feelings","06":"Before / After","07":"Goals & Fun"};
+const orbitCenters={"01":[1/6,1/6],"02":[1/2,1/6],"03":[5/6,1/6],"04":[5/6,1/2],"05":[2/3,5/6],"06":[1/3,5/6],"07":[1/6,1/2]};
 const meta={
  "01":{short:"走行記録",glyph:"◷",x:17,y:20,accent:"#79c2f4",why:"走行距離や時間の入力があります"},
  "02":{short:"身体",glyph:"◎",x:49,y:12,accent:"#f4b978",why:"身体についてのメモがあります"},
@@ -25,7 +27,7 @@ const meta={
 };
 const isProvided=x=>x!==null&&x!==undefined&&String(x).trim()!=="";
 export function makeUi(storage){
- const ui={selected:"03",topic:"上り坂・下り坂",search:"",tab:"field",sample:false,notes:[],emptyNotesRaw:null,storage,canSave:true,notice:"",modal:"",trialDistance:5,trialMinutes:30,toolChoice:"up",bodyChoice:"hip",lifeA:"",lifeB:"",followup:"",editingNoteId:null,deletingNoteId:null};
+ const ui={selected:"03",topic:"上り坂・下り坂",search:"",tab:"field",mapExpanded:true,sample:false,notes:[],emptyNotesRaw:null,storage,canSave:true,notice:"",modal:"",trialDistance:5,trialMinutes:30,toolChoice:"up",bodyChoice:"hip",lifeA:"",lifeB:"",followup:"",editingNoteId:null,deletingNoteId:null};
  if(!storage){ui.canSave=false;return ui;}
  try{
   const raw=storage.getItem(EXPLORATION_NOTE_KEY);
@@ -89,8 +91,8 @@ function buttonAction(name,label,kind="") {return `<button type="button" class="
 function art(links){
  const stars=Array.from({length:72},(_,i)=>{const x=(i*73+31)%760,y=(i*47+(i%5)*37+17)%520,r=i%7===0?1.75:.85;return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#c4efff" opacity="'+(i%4===0?.52:.16)+'"/>';}).join("");
  const routes=Object.entries(meta).map(([id,p])=>{
-  const active=links.linked.has(id);
-  return '<path class="'+(active?'ex-constellation-link is-related':'ex-constellation-link')+'" d="M380 253 Q'+(380+(p.x*7.6-380)*.48)+' '+(253+(p.y*5.1-253)*.62-18)+' '+p.x*7.6+' '+p.y*5.1+'" stroke="'+p.accent+'" stroke-width="'+(active?'2.7':'1.5')+'" fill="none" opacity="'+(active?'.75':'.19')+'"/>';
+  const active=links.linked.has(id),[cx,cy]=orbitCenters[id],x=cx*760,y=cy*520;
+  return '<path class="'+(active?'ex-constellation-link is-related':'ex-constellation-link')+'" d="M380 260 Q'+(380+(x-380)*.48)+' '+(260+(y-260)*.62-18)+' '+x+' '+y+'" stroke="'+p.accent+'" stroke-width="'+(active?'2.7':'1.5')+'" fill="none" opacity="'+(active?'.75':'.19')+'"/>';
  }).join("");
  return '<svg class="ex-art" viewBox="0 0 760 520" preserveAspectRatio="none" aria-hidden="true"><defs><radialGradient id="ex-glow"><stop stop-color="#59efd9" stop-opacity=".4"/><stop offset="1" stop-color="#59efd9" stop-opacity="0"/></radialGradient></defs>'+stars+'<path class="ex-contours" d="M-70 370 Q125 120 310 356 T820 192 M-70 405 Q125 155 310 391 T820 227 M-70 438 Q125 188 310 424 T820 260 M-70 470 Q125 220 310 456 T820 290 M-70 502 Q125 252 310 488 T820 323" fill="none" stroke="#85d4cd" opacity=".12" stroke-width="2"/>'+routes+'<circle cx="380" cy="253" r="155" fill="url(#ex-glow)" opacity=".3"/></svg>';
 }
@@ -288,7 +290,7 @@ function field(ui,ctx){
   const p=meta[c.id]||{glyph:"○",accent:"#69d5d7",x:50,y:50};
   const chosen=c.id===selected.id,related=links.linked.has(c.id),n=counts[c.id]||0;
   const source=links.sources.get(c.id)||"none";
-  return '<button type="button" class="ex-node '+(related?'is-related ':'')+(chosen?'is-selected':'')+'" data-ex-category="'+esc(c.id)+'" data-ex-source="'+esc(source)+'" style="--ex-accent:'+p.accent+';--ex-x:'+p.x+'%;--ex-y:'+p.y+'%" aria-pressed="'+chosen+'" aria-label="'+esc(c.name)+(related?'、'+esc(links.linked.get(c.id)):'')+'"><span class="ex-node-orb"><span class="ex-node-icon" aria-hidden="true">'+p.glyph+'</span>'+(related?'<span class="ex-node-signal" aria-hidden="true"></span>':'')+'</span><span class="ex-node-copy"><strong class="ex-node-title">'+(c.id==="07"&&c.name==="目的と楽しみ方"?"目的と<wbr>楽しみ方":esc(c.name))+'</strong></span>'+(n?'<span class="ex-memory-count" aria-label="'+n+'件のメモ">'+n+'</span>':'')+'</button>';
+  return '<button type="button" class="ex-node '+(related?'is-related ':'')+(chosen?'is-selected':'')+'" data-ex-category="'+esc(c.id)+'" data-ex-source="'+esc(source)+'" style="--ex-accent:'+p.accent+';--ex-x:'+p.x+'%;--ex-y:'+p.y+'%" aria-pressed="'+chosen+'" aria-label="'+esc(c.name)+(related?'、'+esc(links.linked.get(c.id)):'')+'"><span class="ex-node-orb"><span class="ex-node-icon" aria-hidden="true">'+p.glyph+'</span>'+(related?'<span class="ex-node-signal" aria-hidden="true"></span>':'')+'</span><span class="ex-node-copy"><strong class="ex-node-title">'+(c.id==="07"&&c.name==="目的と楽しみ方"?"目的と<wbr>楽しみ方":esc(c.name))+'</strong><strong class="ex-node-compact" aria-hidden="true">'+esc(compactEnglish[c.id]||'')+'</strong></span>'+(n?'<span class="ex-memory-count" aria-label="'+n+'件のメモ">'+n+'</span>':'')+'</button>';
  }).join("");
  const currentTopic=selected.topics.includes(ui.topic)?ui.topic:selected.topics[0]||selected.name;
  const topicIndex=Math.max(0,selected.topics.indexOf(currentTopic));
@@ -296,12 +298,12 @@ function field(ui,ctx){
   :selected.id==='02'&&currentTopic==='足・膝・股関節'?'running-motion-basics'
   :(selected.id==='04'&&currentTopic==='疲れの感じ方'||selected.id==='01'&&currentTopic==='自分が感じた疲れ')?'effort-fatigue-recovery':null;
  const summary=links.sample?'強調表示は説明用の例です。自分の記録ではありません。':linked?linked:'';
- const any=links.linked.size>0;
+ const any=links.linked.size>0,expanded=ui.mapExpanded!==false;
  return '<section class="ex-workspace ex-orbit-workspace"><div class="ex-map-card ex-constellation"><div class="ex-map-head"><div><h2>気になる分野を選ぶ</h2></div><button type="button" class="ex-map-help" data-ex-action="field-help" aria-label="強調表示の意味" title="強調表示の意味">？</button></div>'
- +'<div class="ex-map" role="group" aria-label="7つの分野から探す">'+art(links)+'<div class="ex-core" aria-hidden="true"><span>7つの分野</span><strong>探究</strong></div>'+nodes+'</div>'
+ +'<div class="ex-map" id="ex-area-map" role="group" aria-label="7つの分野から探す"'+(expanded?'':' hidden')+'>'+art(links)+'<div class="ex-core" aria-hidden="true"><span>7つの分野</span><strong>探究</strong></div>'+nodes+'</div>'
  +''
- +'<div class="ex-map-foot">'+(!any&&!links.sample?buttonAction("sample","強調表示の例を見る","quiet"):links.sample?buttonAction("sample","表示例を終了","quiet"):'')+'</div></div>'
- +'<div class="ex-side"><section class="ex-focus" id="ex-topic-content"><div class="ex-focus-label"><span>選んだ分野</span><button type="button" class="ex-focus-help" data-ex-action="field-help" aria-label="選んだ分野と強調表示の説明" title="表示の説明">？</button></div><h2>'+esc(selected.name)+'</h2>'+'<div class="ex-topic-controls"><strong>読むテーマ</strong><div class="ex-topic-stepper" role="group" aria-label="テーマの前後移動"><button type="button" data-ex-topic-step="-1" aria-label="前のテーマ"'+(topicIndex===0?' disabled':'')+'><span aria-hidden="true">‹</span></button><output class="ex-topic-position" aria-live="polite">'+(topicIndex+1)+' / '+selected.topics.length+'</output><button type="button" data-ex-topic-step="1" aria-label="次のテーマ"'+(topicIndex===selected.topics.length-1?' disabled':'')+'><span aria-hidden="true">›</span></button></div></div><div class="ex-topic-set" role="group" aria-label="読むテーマ（左右にスワイプして選ぶ）">'+selected.topics.map((name,i)=>'<button type="button" data-ex-topic="'+esc(name)+'" aria-pressed="'+(currentTopic===name)+'" class="ex-topic '+(currentTopic===name?'is-picked':'')+'" title="'+esc(name)+'"><span aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span><strong>'+esc(name)+'</strong><span aria-hidden="true">›</span></button>').join('')+'</div>'
+ +'<div class="ex-map-foot"><button type="button" class="ex-action quiet" data-ex-action="toggle-map" aria-controls="ex-area-map" aria-expanded="'+expanded+'">'+(expanded?'分野図を閉じる':'分野図を開く')+'</button>'+(expanded?(!any&&!links.sample?buttonAction("sample","強調表示の例を見る","quiet"):links.sample?buttonAction("sample","表示例を終了","quiet"):''):'')+'</div></div>'
+ +'<div class="ex-side"><section class="ex-focus" id="ex-topic-content"><div class="ex-focus-label"><span>選んだ分野</span><button type="button" class="ex-action quiet ex-change-area" data-ex-action="change-area">分野を変更</button><button type="button" class="ex-focus-help" data-ex-action="field-help" aria-label="選んだ分野と強調表示の説明" title="表示の説明">？</button></div><h2 tabindex="-1">'+esc(selected.name)+'</h2>'+'<div class="ex-topic-controls"><strong>読むテーマ</strong><div class="ex-topic-stepper" role="group" aria-label="テーマの前後移動"><button type="button" data-ex-topic-step="-1" aria-label="前のテーマ"'+(topicIndex===0?' disabled':'')+'><span aria-hidden="true">‹</span></button><output class="ex-topic-position" aria-live="polite">'+(topicIndex+1)+' / '+selected.topics.length+'</output><button type="button" data-ex-topic-step="1" aria-label="次のテーマ"'+(topicIndex===selected.topics.length-1?' disabled':'')+'><span aria-hidden="true">›</span></button></div></div><div class="ex-topic-set" role="group" aria-label="読むテーマ（左右にスワイプして選ぶ）">'+selected.topics.map((name,i)=>'<button type="button" data-ex-topic="'+esc(name)+'" aria-pressed="'+(currentTopic===name)+'" class="ex-topic '+(currentTopic===name?'is-picked':'')+'" title="'+esc(name)+'"><span aria-hidden="true">'+String(i+1).padStart(2,'0')+'</span><strong>'+esc(name)+'</strong><span aria-hidden="true">›</span></button>').join('')+'</div>'
  +experience(ui,ctx,selected,currentTopic,renderSelectedInquiry(ui,ctx,selected,currentTopic))+(relatedLesson?'<a class="ex-related-learning" href="#/learning?lesson='+relatedLesson+'">関連する学習を見る <span aria-hidden="true">›</span></a>':'')+'</section>'
  +'</div></section>';
 }

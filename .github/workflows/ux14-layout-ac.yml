@@ -1,0 +1,45 @@
+name: UX14 diagnostic actual source A-C comparison
+on:
+  push:
+    branches: ['diagnostics/ux14-layout-ac-20261124']
+permissions:
+  contents: read
+jobs:
+  compare:
+    name: ${{ matrix.engine }} actual-source A-C layout and interaction
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+      RUNLOAD_UX14_BASELINE: ${{ github.workspace }}/baseline
+    defaults:
+      run:
+        working-directory: candidate
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fced4c3af51ed26387ef22607f69a1d96598f2a0
+          path: baseline
+      - uses: actions/checkout@v4
+        with:
+          path: candidate
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - run: node .github/diagnostics/ux14-layout-ac.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ux14-layout-ac-${{ matrix.engine }}
+          path: candidate/audit-output/ux14-layout-ac-${{ matrix.engine }}/
+          if-no-files-found: error
+          retention-days: 7
