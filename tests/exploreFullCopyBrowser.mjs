@@ -192,10 +192,23 @@ try{
     await page.locator('[data-ex-action="change-area"]').click();const open=await map.isVisible(),expandedOpen=await toggle.getAttribute('aria-expanded'),active=await page.evaluate(()=>document.activeElement?.dataset?.exCategory),selected=await page.locator('.ex-node[aria-pressed="true"]').getAttribute('data-ex-category');
     disclosure={closed,expandedClosed,focusClosed,open,expandedOpen,active,selected,initialArt:before.artVisible};
    }
-   // Verify the help text and sample highlighting remain reachable; it is not a danger ranking.
+   // UPR-02: absence of the old preview, then real saved-run provenance and geometry.
    await page.locator('.ex-heading [data-ex-action="field-help"]').click();const help=await page.locator('.ex-dialog').innerText();await page.keyboard.press('Escape');
-   const sample=page.locator('.ex-map-foot [data-ex-action="sample"]');let sampleGeometry=null;
-   if(await sample.count()){await sample.click();sampleGeometry=await ux14Geometry(page);await page.locator('.ex-map-card').screenshot({path:resolve(out,'ux14-'+language+'-'+width+'-'+percent+'-sample.png'),animations:'disabled',timeout:20000});}
+   assert.equal(await page.locator('[data-ex-action="sample"]').count(),0,'No simulated highlight control');
+   assert.equal((await ux14Geometry(page)).relatedCount,0,'No fabricated relevance for empty records');
+   const realId=await page.evaluate(async()=>{
+    const [canonical,store]=await Promise.all([import('/ui/manualRunCanonical.js'),import('/ui/manualRunStore.js')]);
+    const prep=await canonical.refresh();if(!prep.ok)throw Error(prep.reason);
+    const result=await canonical.mutate(st=>store.saveManualRun(st,{date:'2026-11-20',distance:'5',hours:'',minutes:'35',seconds:'',activityGait:'RUNNING',runningFormat:'UNKNOWN',rofBefore:2,rofAfter:8,steps:'',stepsProvenance:'UNKNOWN',gradeMode:'SUMMARY',upPercent:'20',downPercent:'10',courseName:'audit',bodyObservation:'',temperatureC:'',environmentNote:''}));
+    if(!result.ok)throw Error(result.reason);return result.record.id;
+   });
+   query.set('source','manual');query.set('record',realId);
+   await page.goto(base+'#/exploration-tree?'+query.toString(),{waitUntil:'networkidle'});
+   await page.locator('.ex-inquiry-start h3').waitFor({state:'visible',timeout:14000});
+   if(percent===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
+   await page.waitForFunction(()=>document.querySelectorAll('.ex-node.is-related[data-ex-source="saved-run"]').length===3);
+   const realGeometry=await ux14Geometry(page);
+   await page.locator('.ex-map-card').screenshot({path:resolve(out,'upr-real-'+language+'-'+width+'-'+percent+'.png'),animations:'disabled',timeout:20000});
     const label=JSON.stringify({language,width,percent});
     assert.deepEqual(g.clipped,[],'C clipped '+label);assert.deepEqual(g.collisions,[],'C collision '+label);assert.deepEqual(g.brokenWords,[],'C mid-word wrap '+label);
     assert.ok(g.scrollWidth<=width+3,'C page overflow '+label);
@@ -203,13 +216,14 @@ try{
     assert.equal(actions.filter(x=>x.ok&&x.activeIsHeading).length,7,'C pointer focus '+label);
     assert.equal(keyboard.filter(x=>x.selected===x.id&&x.activeIsHeading&&x.headingTop>=-1&&x.headingBottom<=900).length,2,'C keyboard focus '+label);
     assert.ok(disclosure.closed&&disclosure.expandedClosed==='false'&&disclosure.focusClosed&&disclosure.open&&disclosure.expandedOpen==='true'&&disclosure.active===disclosure.selected,'C map disclosure '+label);
-    assert.ok(sampleGeometry&&sampleGeometry.relatedCount===2&&sampleGeometry.clipped.length===0&&sampleGeometry.collisions.length===0&&sampleGeometry.brokenWords.length===0,'C sample geometry '+label);
-    assert.ok(sampleGeometry.nodes.every(n=>n.aria&&n.aria.includes(n.fullTitle)),'C sample accessible names '+label);
-    assert.ok(sampleGeometry.nodes.filter(n=>n.source==='sample').every(n=>language==='en'?n.aria.includes('Example:'):n.aria.includes('表示例：')),'C sample provenance '+label);
+    assert.ok(realGeometry.relatedCount===3&&realGeometry.clipped.length===0&&realGeometry.collisions.length===0&&realGeometry.brokenWords.length===0,'Real highlight geometry '+label);
+    assert.ok(realGeometry.nodes.every(n=>n.aria&&n.aria.includes(n.fullTitle)),'Real highlight accessible names '+label);
+    assert.deepEqual(realGeometry.nodes.filter(n=>n.source==='saved-run').map(n=>n.id),['01','03','04'],'Real saved-run provenance '+label);
+    assert.equal(await page.locator('[data-ex-action="sample"]').count(),0,'Sample remains absent with real records');
     assert.ok(language==='en'?/not.*(priority|ranking|burden)|not indicate|not.*load/i.test(help):help.includes('優先順位や身体への負担の大きさを示すものではありません'),'C relevance explanation '+label);
     assert.equal(g.columns.trim().split(/\s+/).length,width===1440&&percent===100?2:1,'C width/font column contract '+label);
 
-   ux14Matrix.push({engine,language,width,percent,...g,actions,keyboard,disclosure,sampleGeometry});
+   ux14Matrix.push({engine,language,width,percent,...g,actions,keyboard,disclosure,realGeometry});
 
   }finally{await ctx.close();}
  }

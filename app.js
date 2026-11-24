@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261124-ux14-explore-responsive-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261124-upr-explore-gps-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -77,7 +77,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
     import("./ui/resultExperience.js?v=20261123-ux11-result-source-v1"),
     import("./ui/runQuestionContinuation.js"),
-    import("./ui/historyExperience.js?v=20261124-ux14-explore-responsive-v1"),
+    import("./ui/historyExperience.js?v=20261124-upr-explore-gps-v1"),
     import("./ui/settingsExperience.js?v=20261121-profile-optional-right-v1"),
     import("./ui/portableDataV2.js?v=20261108-professor-m3-v1"),
     import("./ui/mentalExperience.js?v=20261108-professor-m4-v1"),
@@ -93,7 +93,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/firstUseExperience.js?v=20261122-ux05-firstuse-home-v1"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
     import("./ui/consultationExperience.js?v=20261122-mobile-controls-v1"),
-    import("./ui/explorationExperience.js?v=20261124-ux14-explore-responsive-v1"),
+    import("./ui/explorationExperience.js?v=20261124-upr-explore-gps-v1"),
     import("./ui/learningExperience.js?v=20261122-gait-learning-type-v1"),
     import("./ui/interpretationView.js?v=20261026-interpret-v14"),
     import("./ui/interpretationRules.js?v=20261026-interpret-v14"),
@@ -616,7 +616,7 @@ function recordExtras(){
         lastExploreRoute=route;
         const cat=CATEGORIES.find(c=>c.id===params.get('category'));
         if(cat&&cat.topics.includes(params.get('topic'))){
-          explorationUi.selected=cat.id;explorationUi.topic=params.get('topic');explorationUi.tab='field';explorationUi.modal=params.get('memories')==='1'?'memories':'';explorationUi.sample=false;
+          explorationUi.selected=cat.id;explorationUi.topic=params.get('topic');explorationUi.tab='field';explorationUi.modal=params.get('memories')==='1'?'memories':'';
           if(explorationUi.modal==='memories'){const fresh=explorationExperience.makeUi(onboardStorage);explorationUi.notes=fresh.notes;explorationUi.canSave=fresh.canSave;explorationUi.emptyNotesRaw=fresh.emptyNotesRaw;explorationUi.notice=fresh.notice;explorationReturnAction='memories';}
         }
       }
@@ -2174,7 +2174,7 @@ function recordExtras(){
        return;
      }
     const exploreTab=event.target.closest("[data-ex-tab]");
-    if(exploreTab){explorationUi.tab=exploreTab.dataset.exTab;explorationUi.notice="";render();return;}
+    if(exploreTab){const tab=exploreTab.dataset.exTab;if(tab===explorationUi.tab)return;const y=window.scrollY;explorationUi.tab=tab;explorationUi.notice="";render();app.querySelector(`[data-ex-tab="${tab}"]`)?.focus({preventScroll:true});window.scrollTo(0,y);return;}
     const bodyChoice=event.target.closest("[data-ex-body]");
     if(bodyChoice){const y=window.scrollY;explorationUi.bodyChoice=bodyChoice.dataset.exBody;render();window.scrollTo(0,y);return;}
     const slopeChoice=event.target.closest("[data-ex-slope]");
@@ -2203,7 +2203,6 @@ function recordExtras(){
         explorationUi.deletingNoteId=null;explorationUi.modal="memories";render();app.querySelector('.ex-dialog-head button')?.focus({preventScroll:true});return;
       }
        if(action==="catalog"){explorationUi.tab="catalog";render();return;}
-      if(action==="sample"){explorationUi.sample=!explorationUi.sample;render();return;}
       if(action==="save-edited-note"){
         const revised=await manualRunLock.withManualRunWriteLock(()=>explorationExperience.editNote(
           explorationUi,explorationUi.editingNoteId,app.querySelector("#ex-note-edit")?.value));

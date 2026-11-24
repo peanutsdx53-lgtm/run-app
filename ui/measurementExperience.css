@@ -475,3 +475,12 @@
 
 /* Narrow GPS review: long JA/EN action labels must stay within each button at 200% text. */
 @media(max-width:480px){.gps-review .gps-live-actions{grid-template-columns:minmax(0,1fr)}}
+
+/* UPR-03: the end of the whole ready page, not just the prep panel,
+   must clear the fixed start control and navigation at enlarged text. */
+@media(max-width:800px){
+ .app-shell:has(.gps-v35[data-phase="ready"]) .main-content{padding-bottom:max(calc(200px + env(safe-area-inset-bottom,0px)),calc(12rem + env(safe-area-inset-bottom,0px)))}
+ .gps-v35[data-phase="ready"] .gps-live-prep{padding-bottom:16px}
+ .gps-v35[data-phase="ready"] .gps-live-prep > [data-gps-action="start"]{bottom:max(calc(105px + env(safe-area-inset-bottom,0px)),calc(5.5rem + env(safe-area-inset-bottom,0px)))}
+ .gps-v35[data-phase="ready"] .gps-live-info{scroll-margin-bottom:max(calc(200px + env(safe-area-inset-bottom,0px)),calc(12rem + env(safe-area-inset-bottom,0px)))}
+}

@@ -14,8 +14,6 @@ export const ENGLISH_EXPLORE_KNOWLEDGE=Object.freeze({
  "同じ日付というだけで生活と走行を結び付けたり、別の記録を自動選択したりしません。":"A matching date does not automatically link running and daily records or select another record.",
  "テーマは左右にスワイプするか、矢印で切り替えられます。":"Swipe between topics or use the arrow buttons.",
  "メモを読み取れません。保存済みのデータは変更していません。":"Saved notes could not be read. Existing data was not changed.",
- "表示例：走行距離の入力":"Example: Running Distance Entry",
- "表示例：上り坂の入力":"Example: Uphill Entry",
  "平均ペースと平均速度の見方":"Understanding Average Pace and Speed",
  "平均ペースは1 km進むためにかかる平均時間です。平均速度は1時間に進む平均距離です。どちらも記録した距離と経過時間から求められます。":"Average pace is the average time required to cover 1 km. Average speed is the average distance covered in an hour. Both are calculated from recorded distance and elapsed time.",
  "平均値には速く走った区間もゆっくり進んだ区間も含まれます。手入力された距離と経過時間の計算であり、GPS測定や身体負荷の判定ではありません。":"Averages include both faster and slower segments. These are calculations from manually entered distance and elapsed time, not GPS measurements or an assessment of physical load.",

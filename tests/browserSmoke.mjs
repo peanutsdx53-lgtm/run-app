@@ -440,7 +440,7 @@ try{
   const fromDraft=await ex.locator('.ex-node.is-related').count();
   if(fromDraft)assert.ok((await ex.locator('.ex-focus-intro').innerText()).length>0,'linked field retains a short status');
   // A clean visit without an in-memory unsaved draft must have zero highlighted
-  // domains and show the user-controlled visual example instead.
+  // domains and no simulated highlighting control.
   await page.reload({waitUntil:'networkidle'});
   await ex.waitFor();
   assert.equal(await ex.locator('.ex-node.is-related').count(),1,'saved daily condition highlights only its own area');
@@ -476,12 +476,8 @@ try{
     assert.ok(activeVisibility.left>=-3&&activeVisibility.right>=-3,'last topic is visible: '+JSON.stringify(activeVisibility));
     await ex.locator('[data-ex-topic="足・膝・股関節"]').click();
     await page.screenshot({path:resolve(root,'screenshots',mode.name+'-explore-topic-rail-v24.png'),fullPage:false});
-  await ex.locator('[data-ex-action=sample]').click();
-  assert.equal(await ex.locator('.ex-node.is-related').count(),2,'two clearly labelled preview signals');
-  const visualGlow=await ex.locator('.ex-node.is-related .ex-node-orb').first().evaluate(el=>getComputedStyle(el).boxShadow);
-  assert.ok(visualGlow!=='none'&&visualGlow.includes('px'),'related star must visibly glow: '+visualGlow);
-  assert.equal(await ex.locator('.ex-constellation-link.is-related').count(),2,'connected lines share the same grounded relevance');
-  assert.match(await ex.locator('.ex-focus-intro').innerText(),/説明用の例/);
+  assert.equal(await ex.locator('[data-ex-action=sample]').count(),0,'UPR-02: no simulated highlighting control');
+  assert.equal(await ex.locator('.ex-node.is-related').count(),0,'no invented highlighting');
   await ex.locator('[data-ex-category="03"]').click();
   assert.match(await ex.locator('.ex-focus h2').innerText(),/コースと環境/);
   assert.equal(await ex.locator('[data-ex-learning="slope-running"]').count(),1);
