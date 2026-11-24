@@ -1,0 +1,2631 @@
+{
+  "ref": "9393602f8f28955e111b4b313b7f84b09589ceab",
+  "count": 525,
+  "files": [
+    {
+      "path": ".github/workflows/result-s09-audit.yml",
+      "sha": "2845c03c099c10898e9b7d56d0773033e19796d5",
+      "size": 1317
+    },
+    {
+      "path": ".github/workflows/run-app-regression.yml",
+      "sha": "960aa4fea572c055ba3f84bc734dddbaa7c8806d",
+      "size": 24268
+    },
+    {
+      "path": "README.md",
+      "sha": "12bcbaaf4e8369c233a042bca7894b9b1eb43e0e",
+      "size": 13029
+    },
+    {
+      "path": "app.js",
+      "sha": "9886f017524f22d1e58a0dbd27e472eae6b03eae",
+      "size": 177132
+    },
+    {
+      "path": "assets/ASSET_REGISTER.md",
+      "sha": "ffc0bfae8aa5c1c9d0b6397b7a8913ac1ead3e2f",
+      "size": 5221
+    },
+    {
+      "path": "assets/bodyRegionVisuals.js",
+      "sha": "6c28aa89c0dd7c4fdb8ab7ede58a0b7b76d935e1",
+      "size": 32375
+    },
+    {
+      "path": "assets/rof/rof-visual-high.png",
+      "sha": "ca06cbf69c9deea7e559c285dd77db628f2c2c1e",
+      "size": 11114
+    },
+    {
+      "path": "assets/rof/rof-visual-highest.png",
+      "sha": "88ef8a05ba3d7588e2ed0101c7d6d1f15b106031",
+      "size": 5438
+    },
+    {
+      "path": "assets/rof/rof-visual-low.png",
+      "sha": "8106d01375080ffead896c5816bc71a357ae0685",
+      "size": 8288
+    },
+    {
+      "path": "assets/rof/rof-visual-lowest.png",
+      "sha": "98065f571c69d85ab741b36c353c41e3059bb556",
+      "size": 8746
+    },
+    {
+      "path": "assets/rof/rof-visual-moderate.png",
+      "sha": "a75560932db2e9addb1605557a099f70dfa8d20f",
+      "size": 7957
+    },
+    {
+      "path": "audit/2026-11-19-S09-I02-disclosure-continuity.md",
+      "sha": "63195822e8d051293d1ecac1188d595af02c3455",
+      "size": 3647
+    },
+    {
+      "path": "audit/2026-11-19-S09-T01-readable-copy.md",
+      "sha": "eb2993b3e757568eea111d161f36104d5e2dd85e",
+      "size": 4550
+    },
+    {
+      "path": "audit/2026-11-19-S09-T02-T06-provenance-disclosure.md",
+      "sha": "a7729a8213162595737d44ee2d0405d9e5cff42f",
+      "size": 4963
+    },
+    {
+      "path": "core/activity/activityReference.js",
+      "sha": "860463259479affce4711f38511cf3408f11b795",
+      "size": 1898
+    },
+    {
+      "path": "core/activity/jogging.js",
+      "sha": "cae1203fbc52f9719511bfff15c912624c47d1d8",
+      "size": 754
+    },
+    {
+      "path": "core/activity/running.js",
+      "sha": "1c1a6d04eddba42f343efc3ba310c2a7db172184",
+      "size": 1127
+    },
+    {
+      "path": "core/activity/walking.js",
+      "sha": "f6987ff4d833d378112fa27a9b6d160d7a0c154a",
+      "size": 745
+    },
+    {
+      "path": "core/internal/mobileWalkJogSpeedModel.js",
+      "sha": "107d60abfd8535531d3d896f7539666c3840ea34",
+      "size": 24000
+    },
+    {
+      "path": "core/runningEvidence/runningEvidenceEngine.js",
+      "sha": "23f9237da5f041939288f490fc3e04e2e89357cd",
+      "size": 7827
+    },
+    {
+      "path": "core/runningEvidence/runningEvidenceProductBridge.js",
+      "sha": "18c0ee4204c74da3c0ccc108f04c16a57c32eff1",
+      "size": 6528
+    },
+    {
+      "path": "core/runningEvidence/runningEvidenceRegistry.js",
+      "sha": "796b97b711b58df0e7958c95e53d906f833814cc",
+      "size": 17568
+    },
+    {
+      "path": "docs/ACCEPTANCE_V02_29_GATES_20261102_現行証拠暫定再査定.md",
+      "sha": "aa21e754d79d0236c7b123d07ec45551c8d715c3",
+      "size": 14782
+    },
+    {
+      "path": "docs/APP_CLEANUP_WORKLOG.md",
+      "sha": "bf487a493d58a98b1df0e3bbea82c704c3e750dd",
+      "size": 47194
+    },
+    {
+      "path": "docs/APP_CODE_COMPLETION_7_STAGE_PLAN_20261110.md",
+      "sha": "626f122912bd8ef538aa037221c98088d5551550",
+      "size": 33238
+    },
+    {
+      "path": "docs/BUTTON_COLOR_CONTRAST_AUDIT_AND_RULES_20261121.md",
+      "sha": "d089d5c3496e2afb109891e0c5e34a1d6a98715e",
+      "size": 4857
+    },
+    {
+      "path": "docs/CONDITION_GESTURE_AND_DERIVED_SCREEN_PLAN_20261024.md",
+      "sha": "121ca7467a7fc3a5f91727bedeb00490ac81b63e",
+      "size": 4487
+    },
+    {
+      "path": "docs/COURSE_ENGLISH_LAYOUT_CONTRAST_AND_LIGHT_MODE_PLAN_20261121.md",
+      "sha": "a51794fbd402b9bac107d5a46ca4e3a9e82b989f",
+      "size": 3064
+    },
+    {
+      "path": "docs/ENVIRONMENT_V4_BODY_EQUIPMENT_V4_HANDOFF_20261024.md",
+      "sha": "7841e7eb6a833c3fc960811318c612edeaa37116",
+      "size": 2336
+    },
+    {
+      "path": "docs/EXPLORATION_CSS_CASCADE_CLEANUP_20261104.md",
+      "sha": "d3e4013d27d4fc246a4da2a7f509ca0c5111410e",
+      "size": 3456
+    },
+    {
+      "path": "docs/EXPLORATION_FIELD_TERMINOLOGY_20261103.md",
+      "sha": "dfe3df97963312bac281b92d281f524cb180539d",
+      "size": 3517
+    },
+    {
+      "path": "docs/EXPLORATION_FOCUSED_RETURN_20261028.md",
+      "sha": "c39a571af8bcab9a5caa2a5067516b9d4673b086",
+      "size": 2164
+    },
+    {
+      "path": "docs/EXPLORATION_INQUIRY_REDESIGN_20261111.md",
+      "sha": "2710c3cd8d88428a481e24be91bfcad8e5cb476e",
+      "size": 3149
+    },
+    {
+      "path": "docs/EXPLORATION_LIFE_CONTEXT_20261028.md",
+      "sha": "acfed05bb96b3c8ea57685e9a6ad30f877c27951",
+      "size": 2060
+    },
+    {
+      "path": "docs/EXPLORATION_MODAL_KEYBOARD_ACCESS_20261029.md",
+      "sha": "745a9fe80ae39eded24f8918cf9bb9d728776db4",
+      "size": 1596
+    },
+    {
+      "path": "docs/EXPLORATION_SOURCE_SCOPE_20261028.md",
+      "sha": "36da234fd7565a95b19e65a40dca33c7a1738590",
+      "size": 2164
+    },
+    {
+      "path": "docs/EXPLORATION_THEME_EDITORIAL_QA_20261028.md",
+      "sha": "99f80359993021bed4cdb850d29fff9a22832310",
+      "size": 2851
+    },
+    {
+      "path": "docs/EXPLORATION_THEME_STATUS_20261028.csv",
+      "sha": "c597adefa5fa51890738aca357f0a5571dd25ee9",
+      "size": 5094
+    },
+    {
+      "path": "docs/EXPLORATION_V12_RELEASE_GATES_20261025.md",
+      "sha": "a9a5b3c96c3f25fb2c71acdae1ce2363939eac27",
+      "size": 5000
+    },
+    {
+      "path": "docs/EXPLORATION_V3_ACCEPTANCE_20261025.md",
+      "sha": "ba24f6c714f90a577918a5751099edd51f18b061",
+      "size": 5113
+    },
+    {
+      "path": "docs/EXPLORE_COPY_DENSITY_AND_BILINGUAL_AUDIT_20261122.md",
+      "sha": "dae7b3a0a123311ce366c3d4b1255e401429d9f9",
+      "size": 7314
+    },
+    {
+      "path": "docs/FOUNDATION_ROLLOUT_20261023.md",
+      "sha": "97eacde17c30a0558c03dbca0668250d5b18410a",
+      "size": 4814
+    },
+    {
+      "path": "docs/GAIT_LEARNING_BODY_MOBILE_LAYOUT_20261122.md",
+      "sha": "a075fbb61066d3dcb416633ec17ab6c59a06d955",
+      "size": 3663
+    },
+    {
+      "path": "docs/GPS_CODE_DESIGN_ASSURANCE_20261027.md",
+      "sha": "49d9babf0d4659582908e518b85793d4b3a9aca6",
+      "size": 6999
+    },
+    {
+      "path": "docs/GPS_MEASUREMENT_POLISH_AND_BACKGROUND_20261027.md",
+      "sha": "2432a2a6d8113063f231f6ebac9e3ab56cf2af91",
+      "size": 4006
+    },
+    {
+      "path": "docs/GPS_MEASUREMENT_V2_UI_HANDOFF_20261024.md",
+      "sha": "c330030c4d9c638a12b7939366528756ec7e5c3d",
+      "size": 3840
+    },
+    {
+      "path": "docs/GPS_MIGRATION_V35.md",
+      "sha": "7cca62ddcb3509ba255f308722245096fe20ba33",
+      "size": 10755
+    },
+    {
+      "path": "docs/GPS_SOFTWARE_CLOSEOUT_20261027.md",
+      "sha": "6fae6d07eef5fc775d4c980cce556a3b0b3f65bb",
+      "size": 5145
+    },
+    {
+      "path": "docs/GPX_SIMULATION_V33.md",
+      "sha": "985cfff3e14658104bae02d1d7c2513be4a4524e",
+      "size": 4883
+    },
+    {
+      "path": "docs/HISTORY_FIND_RECORDS_DESIGN_20261121.md",
+      "sha": "7f3293ad3b36356d78b92b7024346c04df034f8e",
+      "size": 2262
+    },
+    {
+      "path": "docs/HISTORY_FIND_RECORDS_PROGRESSIVE_HELP_20261121.md",
+      "sha": "066885f6477b8203b2d5e977ce71aaa99d036d86",
+      "size": 2782
+    },
+    {
+      "path": "docs/HOME_DASHBOARD_AUTOSAVE_ACTION_CONTRAST_20261111.md",
+      "sha": "ba2d10cffa6105364dfea1997d42275b5f1f54dd",
+      "size": 3222
+    },
+    {
+      "path": "docs/HOME_DASHBOARD_ROLLOUT.md",
+      "sha": "a4847b7ec67d8bbf76fe1cf7be760f0fbb4e1c4f",
+      "size": 5824
+    },
+    {
+      "path": "docs/HOME_EXPLORE_CAPTION_UI_AUDIT_20261121.md",
+      "sha": "bfa21eb04ddacc6fdb61dabfbb52c88fcb8bfb8c",
+      "size": 1429
+    },
+    {
+      "path": "docs/HOME_REDESIGN_APPROVED_20261024.md",
+      "sha": "a13ecd921e7ae4f64acba04b888edf84c08fb507",
+      "size": 4083
+    },
+    {
+      "path": "docs/INSTALL.md",
+      "sha": "9c8ab86225eace1c814336783df6447e5cdd1629",
+      "size": 3857
+    },
+    {
+      "path": "docs/INTERPRETATION_V14_ACCEPTANCE_20261026.md",
+      "sha": "36ec289ff92d7b879177030cff8f557f40ae5431",
+      "size": 3469
+    },
+    {
+      "path": "docs/LEARNING_EXPLORATION_DENSITY_20261111.md",
+      "sha": "12e17c88b9c69d8cc6fe6bc9e21821c427d5cb49",
+      "size": 3518
+    },
+    {
+      "path": "docs/LEARNING_SCREEN_DENSITY_REVIEW_20261111.md",
+      "sha": "0d13afd0fc3a8fc568bedc6e0914263bf4466a50",
+      "size": 2513
+    },
+    {
+      "path": "docs/MOBILE_BILINGUAL_BUTTON_CONSISTENCY_20261122.md",
+      "sha": "e9f057b091a942459b17208d0eede6214f326bb5",
+      "size": 5265
+    },
+    {
+      "path": "docs/OPTIONAL_RECORD_RETURN_FOOTER_20261122.md",
+      "sha": "47bc2b098768472d4e64dc421aacb59671b8f570",
+      "size": 5186
+    },
+    {
+      "path": "docs/P10_LEARNING_MOBILE_UI_CONTRACT_20261110.md",
+      "sha": "8f678619e19b0bab9ed4f2096e9fe2869eccd3a8",
+      "size": 3553
+    },
+    {
+      "path": "docs/P11_1_LEARNING_THEME_DEPLOYMENT_REAUDIT_20261110.md",
+      "sha": "c1ecfb6ea459e1d131f172aa1eda2f02a6dff19d",
+      "size": 3869
+    },
+    {
+      "path": "docs/P11_UNIFIED_LEARNING_NAV_AND_COPY_AUDIT_20261110.md",
+      "sha": "ae1f5648d9a516bdc361a97c8c335401ce8a48af",
+      "size": 3868
+    },
+    {
+      "path": "docs/P12_LEARNING_CARDS_HELP_HEADER_FOOTER_20261110.md",
+      "sha": "5a0dc6107e984d79cc8c2df5cc09d089576a9538",
+      "size": 4404
+    },
+    {
+      "path": "docs/P13_HISTORY_GPS_LEARNING_COMPACTNESS_AND_NOTICES_20261110.md",
+      "sha": "a583b15446afba109a5f9f4af1aac4606e41de68",
+      "size": 4760
+    },
+    {
+      "path": "docs/P14_5_HISTORY_HOME_VISUAL_ACCEPTANCE_20261110.md",
+      "sha": "970d0a829941efbf39747b7bf8824024fc07cdec",
+      "size": 2830
+    },
+    {
+      "path": "docs/P14_IPHONE_HISTORY_CONDITION_NAV_CONSISTENCY_20261110.md",
+      "sha": "c2bafacfb16f3f1af63b233d55445bff9ccc92b2",
+      "size": 4634
+    },
+    {
+      "path": "docs/PUBLIC_USER_COPY_TERMINOLOGY_AUDIT_20261110.md",
+      "sha": "d5f7439c4b52dda87876763ff54b8a10015166fa",
+      "size": 3299
+    },
+    {
+      "path": "docs/RECORD_INPUT_PARITY_20261024.md",
+      "sha": "e68194f023896bea81b901935c4a1b9ed3283786",
+      "size": 4254
+    },
+    {
+      "path": "docs/RECORD_REDESIGN_APPROVED_20261024.md",
+      "sha": "2ea67ac8e402e94ccd97b2be7d6dbe492e6879a6",
+      "size": 4831
+    },
+    {
+      "path": "docs/REPOSITORY_NEUTRAL_POLICY_AND_RELEASE_SCOPE_20261110.md",
+      "sha": "4920fe8abe4282b86525567b147241967934ff10",
+      "size": 2995
+    },
+    {
+      "path": "docs/RESEARCH_AND_MIXED_SCOPE_20261027.md",
+      "sha": "56e8d4fe6b76133ae5c1d8ff7b60d71ccdac3cf4",
+      "size": 2848
+    },
+    {
+      "path": "docs/RESEARCH_CORE_BATCH_20261030.md",
+      "sha": "39f090bddb4180b79f22dfd10a4ec9dd3283dcdb",
+      "size": 8394
+    },
+    {
+      "path": "docs/RESEARCH_INFORMATION_PRESENTATION_GATE_20261025.md",
+      "sha": "6538e671fd2153a1f2e7ff6507096b20ae91c5de",
+      "size": 3010
+    },
+    {
+      "path": "docs/RESEARCH_R09_F04_20261102_ADOPTED_PDF_INTEGRITY.md",
+      "sha": "aa729073fc4c615f7032147cfd43e21419bd5bfc",
+      "size": 4106
+    },
+    {
+      "path": "docs/RESULT_PNG_PROVENANCE_20261029.md",
+      "sha": "c5e62e377d3a8440621740d0cf46d9229ffb5a95",
+      "size": 1954
+    },
+    {
+      "path": "docs/RESULT_POSTHOC_BILINGUAL_VISUAL_REVIEW_20261111.md",
+      "sha": "c1ebcb4f51307d25ca3420b6e523d6c5510c9834",
+      "size": 3702
+    },
+    {
+      "path": "docs/ROF_J_V4_IMPLEMENTATION_HANDOFF_20261024.md",
+      "sha": "9d54ebd7f39bc2fac713825f5ad2499b60fa8eff",
+      "size": 4416
+    },
+    {
+      "path": "docs/ROF_RESULT_DISCLOSURE_CONSOLIDATION_20261102.md",
+      "sha": "0ea22d904ba8a605a3203dca8bb17057c3445e04",
+      "size": 3709
+    },
+    {
+      "path": "docs/ROF_RESULT_NO_DELTA_UI_AUDIT_20261102.md",
+      "sha": "ac2949d66cd7410519ef7de548b7db55e6124fc2",
+      "size": 3545
+    },
+    {
+      "path": "docs/ROF_RESULT_SUBTLE_CAPTION_20261102.md",
+      "sha": "e5cd5596529e0988b4b126235a221ce030d917fe",
+      "size": 2681
+    },
+    {
+      "path": "docs/RUN_APP_MIGRATION_MANIFEST_20261112.json",
+      "sha": "d9abe5175441a0839e781375d0528543db48119e",
+      "size": 69896
+    },
+    {
+      "path": "docs/RUN_APP_REPOSITORY_MIGRATION_20261112.md",
+      "sha": "ac19b9f997d0fdbc1f1c4a8a321d1bb068135595",
+      "size": 3600
+    },
+    {
+      "path": "docs/S02_CONDITION_ACHIEVEMENT_ADJUSTMENT_20261101.md",
+      "sha": "1e71b3f7b4e5bc7a3fee97de36cc36b318ead6b1",
+      "size": 3605
+    },
+    {
+      "path": "docs/S02_CONDITION_THEME_AUDIT_20261101.md",
+      "sha": "1138b78290021389a3e0f3d0c82a97fd329c95ef",
+      "size": 3313
+    },
+    {
+      "path": "docs/S02_DETAIL_COLORS_20261101.md",
+      "sha": "8c4019a2b46c576b7e2b5f8be2a41006e46b684a",
+      "size": 3883
+    },
+    {
+      "path": "docs/S02_DETAIL_FINAL_REVIEW_20261101.md",
+      "sha": "b42cdf79fd328c8df232dd531c45b77f6769d8ff",
+      "size": 3824
+    },
+    {
+      "path": "docs/S02_HOME_ADJUSTMENT_20261101.md",
+      "sha": "d98a5ca4a61f0a7a865a544cd1c9fb99326635d5",
+      "size": 1855
+    },
+    {
+      "path": "docs/S02_HOME_HEADER_BUTTONS_20261101.md",
+      "sha": "034639fe93d03af6e2e95d19d1b2d00c078c483b",
+      "size": 1460
+    },
+    {
+      "path": "docs/S02_HOME_SCREEN_GUIDE_IMPLEMENTATION_20261101.md",
+      "sha": "70f4c5b8127a033937c048146251457300b6078a",
+      "size": 2745
+    },
+    {
+      "path": "docs/S03_S04_REQUIRED_HEADER_AUDIT_20261101.md",
+      "sha": "a9cd16a0be1852e4e562d0a8e2bb606011aec23c",
+      "size": 6628
+    },
+    {
+      "path": "docs/S04_BODY_DENSITY_REFINEMENT_20261101.md",
+      "sha": "83112b4e45cc759623b4b6ca77f25057a29f7d2b",
+      "size": 4576
+    },
+    {
+      "path": "docs/S04_OPTIONAL_EMPTY_POPULATED_DENSITY_AUDIT_20261101.md",
+      "sha": "a37183bfa462c9aee10b8ce9cf4c29239d3ee9a0",
+      "size": 11015
+    },
+    {
+      "path": "docs/S04_S05_DEDUPLICATION_20261101.md",
+      "sha": "ce5787e7b3dbbeef26db341fbc56e1b283c7b9dd",
+      "size": 4658
+    },
+    {
+      "path": "docs/S06_ROF_ILLUSTRATION_DESCRIPTION_20261101.md",
+      "sha": "b8874f157b369b68a2d5016793c20720f5010cb1",
+      "size": 4841
+    },
+    {
+      "path": "docs/S07_S08_COURSE_BODY_UX_20261101.md",
+      "sha": "88cdafb1762a6aa0cd59e1e1ed0e1b0f46c7df95",
+      "size": 2919
+    },
+    {
+      "path": "docs/S08_COURSE_SAVE_SURFACE_SHARE_20261101.md",
+      "sha": "1a9c3b3607d22e0289167000c562e7632a738213",
+      "size": 4279
+    },
+    {
+      "path": "docs/S09_REVIEW_DENSITY_ICONS_20261101.md",
+      "sha": "25acae546beca949a4982e3340f606819f7d8d36",
+      "size": 4002
+    },
+    {
+      "path": "docs/SCIENCE_ENGINE_MIGRATION_20261027.md",
+      "sha": "65fc3423617e0d4b56a8cb83877e7408351c6d58",
+      "size": 4170
+    },
+    {
+      "path": "docs/SCIENTIFIC_R12_C12_20261102_4SOURCE_65POINT_REPLAY.md",
+      "sha": "907e77cf4eb748c26e86640c9b90b093a9271a56",
+      "size": 5722
+    },
+    {
+      "path": "docs/SETTINGS_MODAL_DENSITY_AND_CROSS_SCREEN_CHECK_20261111.md",
+      "sha": "ab46ead23a5b7f0009b79fbef99cf08a22052fb3",
+      "size": 2880
+    },
+    {
+      "path": "docs/SETTINGS_PROFILE_OPTIONAL_HEADING_20261121.md",
+      "sha": "76aab4e8c07294b71c58105c3568a3fb30f7892b",
+      "size": 2318
+    },
+    {
+      "path": "docs/SIMULATION_UI_V34.md",
+      "sha": "1bba1e93645437a1b0906ad93013f5d6a5610bcb",
+      "size": 2600
+    },
+    {
+      "path": "docs/SLEEP_INPUT_V2_IMPLEMENTATION_HANDOFF_20261024.md",
+      "sha": "4e79807eff6581b2d38d191ca8ee4a8c632718bd",
+      "size": 4621
+    },
+    {
+      "path": "docs/SLEEP_UX_PARITY_AND_GPS_V2_DESIGN_20261024.md",
+      "sha": "86e21ada24a8929b3dbf410fca710e1cdec83997",
+      "size": 4122
+    },
+    {
+      "path": "docs/STARTUP_LATENCY_AND_BOOT_RECOVERY_20261110.md",
+      "sha": "0aefd872ddd2f0367888ccd4077378c6bdf44928",
+      "size": 3745
+    },
+    {
+      "path": "docs/UIUX_20261101_S09_S05_S07_実装と受入記録.md",
+      "sha": "6885db64ac44c320b81e810d8e2cb430f82039dc",
+      "size": 16153
+    },
+    {
+      "path": "docs/UIUX_20261101_継続改修と検証記録.md",
+      "sha": "5433712ca38068927436105eb5a27b815ceafa48",
+      "size": 4189
+    },
+    {
+      "path": "docs/UIUX_20261102_UX023_学習カード_実画像受入.md",
+      "sha": "7eeff3dcca5c55a080993aad1e772dd6fffa4c1b",
+      "size": 8076
+    },
+    {
+      "path": "docs/UIUX_20261102_工程19_全20画面横断受入_実装検証記録.md",
+      "sha": "7ea116dbef012cf00c4d6562b17ccd66f398eef7",
+      "size": 10097
+    },
+    {
+      "path": "docs/UIUX_20261102_第2回工程04-06_S05-S08_改修と監査.md",
+      "sha": "c72bf2e9457201eed028467548f44910ed5d62e1",
+      "size": 6720
+    },
+    {
+      "path": "docs/UIUX_20261102_第3回工程07-09_S09-S11_実装検証記録.md",
+      "sha": "84be4b20b9a2fbfe3d0e4839826eb1be514ff710",
+      "size": 13315
+    },
+    {
+      "path": "docs/UIUX_20261102_第4回工程10-12_S12-S14_実装検証記録.md",
+      "sha": "3e8ca5930ade237c64c44955af923a0cb27f8a49",
+      "size": 10846
+    },
+    {
+      "path": "docs/UIUX_20261102_第5回工程13-15_S15-S17_実装検証記録.md",
+      "sha": "7fafa9cc38c50db59abc042d8fb84083d69a0ee5",
+      "size": 10394
+    },
+    {
+      "path": "docs/UIUX_20261102_第6回工程16-18_GPS_シミュレーション_出力オフライン_実装検証記録.md",
+      "sha": "feeb7dad71f4803a2c24d82112dd6f796d7f567c",
+      "size": 11004
+    },
+    {
+      "path": "docs/UIUX_20261102_結果画面3タブ_移動操作統合_監査記録.md",
+      "sha": "4c70ebdec8406ed461357020d5e3c741ed5ec1c9",
+      "size": 2524
+    },
+    {
+      "path": "docs/UIUX_20261102_結果画面_身体タブ追補_視認性改修.md",
+      "sha": "0ea8d088ae945ba3f5ddb68c27952d23afcf5aec",
+      "size": 2352
+    },
+    {
+      "path": "docs/UIUX_スクリーンショット目視受入ゲート_20261102.md",
+      "sha": "49fcc8ce6661947912e0800e5761640cf45c895c",
+      "size": 3614
+    },
+    {
+      "path": "docs/UX02_CONTRAST_SEMANTICS_AND_BILINGUAL_MATRIX_20261122.md",
+      "sha": "606b988483ef199382bd47533b93a8a364cffd80",
+      "size": 4327
+    },
+    {
+      "path": "docs/UX03_MOBILE_NAV_TEXT_ZOOM_AND_RESPONSIVE_GATE_20261122.md",
+      "sha": "9876eded3fbda59aed39672dc6b4560fd99a7bc3",
+      "size": 5361
+    },
+    {
+      "path": "docs/UX04_CROSS_SCREEN_TERMINOLOGY_AND_STABLE_KEYS_20261122.md",
+      "sha": "289af3e2f29eca35aede76398cb56d93a2309e1b",
+      "size": 4645
+    },
+    {
+      "path": "docs/UX05_ONBOARDING_HOME_PROGRESS_AND_FIRST_IMPRESSION_20261122.md",
+      "sha": "52c215333275d234d84f120e4607c64fadbcf24f",
+      "size": 8060
+    },
+    {
+      "path": "docs/UX06_MANUAL_ENTRY_DAY_ZERO_AND_SAVE_GATE_20261123.md",
+      "sha": "693f1c231fd097340589b349dde9201841446c9e",
+      "size": 3670
+    },
+    {
+      "path": "docs/UX07_COURSE_CONCEPTS_AND_FIVE_SECTIONS_20261123.md",
+      "sha": "f68851158afb296ff3623451898857dbe50b32d0",
+      "size": 5669
+    },
+    {
+      "path": "docs/UX08_ROF_J_BODY_EQUIPMENT_COHERENCE_20261123.md",
+      "sha": "ec966dab7f0c1e2965c46606e4b6a3b7695b5567",
+      "size": 6448
+    },
+    {
+      "path": "docs/UX09_ENVIRONMENT_STATES_AND_OPTIONAL_RETURN_20261123.md",
+      "sha": "7dcb2db3578549aad9654b72a78914d60c00165c",
+      "size": 5495
+    },
+    {
+      "path": "docs/UX10_PRESAVE_RETURN_TO_SCOPE_20261123.md",
+      "sha": "4acc3bd32bad70078d83256c50232ba16e899c6d",
+      "size": 6872
+    },
+    {
+      "path": "docs/VISUAL_ACCEPTANCE.md",
+      "sha": "fc8ea4effb8727a24d924d9466e51bd9c04d40dd",
+      "size": 4452
+    },
+    {
+      "path": "docs/VISUAL_QA_GATE_V28_20261026.md",
+      "sha": "a462e6802752d04b38a98ef125a139f55bef0545",
+      "size": 3327
+    },
+    {
+      "path": "docs/professor-m7-source-audit.json",
+      "sha": "a377c1d4adef3e21a9278c7f04b98f9af0726df3",
+      "size": 60274
+    },
+    {
+      "path": "icons/icon-192.png",
+      "sha": "9ace25991de63688001e1fd10a75b988d2de0433",
+      "size": 9500
+    },
+    {
+      "path": "icons/icon-512.png",
+      "sha": "5dd881705f9c511e543e4ef289bb533d135289a3",
+      "size": 66145
+    },
+    {
+      "path": "icons/icon.svg",
+      "sha": "97570fbcc15122794683221549c70e81314e2c00",
+      "size": 492
+    },
+    {
+      "path": "index.html",
+      "sha": "0fd09956dac94e4f35433935b48f1fb3f0e35e32",
+      "size": 7778
+    },
+    {
+      "path": "manifest.en.webmanifest",
+      "sha": "265d499bbe97423eca45ce71a546c76762511260",
+      "size": 1035
+    },
+    {
+      "path": "manifest.webmanifest",
+      "sha": "e90509d76157d2a8145bf1e145a91b8920b3f639",
+      "size": 1036
+    },
+    {
+      "path": "pwa.js",
+      "sha": "2ba85037a50c42f70002ae429ecaad3108e1b4e5",
+      "size": 9332
+    },
+    {
+      "path": "scripts/auditLocalDependencies.mjs",
+      "sha": "c574afdf4d2e6c41786e119205ca3caba7a77610",
+      "size": 3681
+    },
+    {
+      "path": "scripts/auditPublicTerminology.mjs",
+      "sha": "b89cbb7a28be20f1e56e49930fb50d2511fb9f8e",
+      "size": 4881
+    },
+    {
+      "path": "scripts/auditRepositoryBindings.mjs",
+      "sha": "d63b3fe35d2e6630fbd930da85ff0c7935907bbd",
+      "size": 1876
+    },
+    {
+      "path": "styles.css",
+      "sha": "84280cc9b0ba8a7356c1e6fd5f69408f033fccc6",
+      "size": 148041
+    },
+    {
+      "path": "sw.js",
+      "sha": "1ada36fee0dbac8ce1541961e4603a5dd39d0692",
+      "size": 12768
+    },
+    {
+      "path": "tests/activePrecacheContract.test.mjs",
+      "sha": "a7ca3cce6c66073638da071dc6243781ff0e17aa",
+      "size": 3609
+    },
+    {
+      "path": "tests/adoptedScienceSourceHashCurrentAudit.test.mjs",
+      "sha": "f1ecb18b5012916897b3a035e984d8374d92397d",
+      "size": 2165
+    },
+    {
+      "path": "tests/bGroupFirstUseResearchFlow.test.mjs",
+      "sha": "bd9c3beafb625cf8f5c809f8c6fae125fcff7fae",
+      "size": 1107
+    },
+    {
+      "path": "tests/bGroupLifeHistoryIntegrity.test.mjs",
+      "sha": "184cad06d6db10a2f0bf2333de0b43e694497df4",
+      "size": 3622
+    },
+    {
+      "path": "tests/bodyContextExperience.test.mjs",
+      "sha": "2f58e65f8d9e8d41ec859feab052d608a9dc8071",
+      "size": 6852
+    },
+    {
+      "path": "tests/bodyReferencePresentation.test.mjs",
+      "sha": "496802964a05f7e422849e25b8b12627bc69c5dd",
+      "size": 8357
+    },
+    {
+      "path": "tests/browserSmoke.mjs",
+      "sha": "3e6285a917775cdfab526da0b13293d38e103b79",
+      "size": 149425
+    },
+    {
+      "path": "tests/buttonContrastAuditBrowser.mjs",
+      "sha": "7483717498203e179bdfbc96a6d34e32bed68f64",
+      "size": 24276
+    },
+    {
+      "path": "tests/buttonContrastSystem.test.mjs",
+      "sha": "0ff93cabced3b37e9196a79e124182086231e871",
+      "size": 2963
+    },
+    {
+      "path": "tests/c09ReflowDiagnosticBrowser.mjs",
+      "sha": "2c3ab1c7b6b0e22c93d57d3cad344b7740663292",
+      "size": 7634
+    },
+    {
+      "path": "tests/cGroupTrendBrowserSmoke.mjs",
+      "sha": "2d7361a962bf98360c3645492f334565746437f0",
+      "size": 4617
+    },
+    {
+      "path": "tests/cGroupTrendIntegrity.test.mjs",
+      "sha": "1904e5206e662dec2c5baeac2981b215bdc15fe1",
+      "size": 1949
+    },
+    {
+      "path": "tests/conditionJourney.test.mjs",
+      "sha": "7ae2175e1cc4b8a425482489963e86a28e2ca886",
+      "size": 6147
+    },
+    {
+      "path": "tests/consultationBrowserSmoke.mjs",
+      "sha": "0954c9a94e2ab50e34fff76f0df403de022d4ad9",
+      "size": 16568
+    },
+    {
+      "path": "tests/consultationExperience.test.mjs",
+      "sha": "e637fbadbb04d5b62920015dc19eaf5c6bc87982",
+      "size": 10040
+    },
+    {
+      "path": "tests/contrastAccessibilityRegression.test.mjs",
+      "sha": "6a0eda087fdf17ce133d13e99aa4cc8d4af8d84b",
+      "size": 2189
+    },
+    {
+      "path": "tests/coursePresetStore.test.mjs",
+      "sha": "aee81a675456445c933ff012dd63c4547139e910",
+      "size": 5867
+    },
+    {
+      "path": "tests/currentMainWidthObservation.mjs",
+      "sha": "a840cbc99d5c11cd9c69f318a3940a541fefaae1",
+      "size": 6692
+    },
+    {
+      "path": "tests/dataManagement.test.mjs",
+      "sha": "7f6d12897bb6a20c7bae675b4ca73d4b07b05dd3",
+      "size": 19822
+    },
+    {
+      "path": "tests/dataManagementBrowserSmoke.mjs",
+      "sha": "a5fdd03cc3b70ff5340adb6acb38ba92736e1633",
+      "size": 12724
+    },
+    {
+      "path": "tests/englishExploreDynamic.test.mjs",
+      "sha": "281f94264cb0c8f8bf694b24b389d10f38c979d0",
+      "size": 3341
+    },
+    {
+      "path": "tests/englishResultExport.test.mjs",
+      "sha": "81658888422b82dccb7c8ebb35616c6cb1acfa52",
+      "size": 1599
+    },
+    {
+      "path": "tests/englishScienceAndConsentSemantics.test.mjs",
+      "sha": "ae6d5aa28ea75af635865fb46237a02e0a27342c",
+      "size": 5048
+    },
+    {
+      "path": "tests/englishSurfaceAuditBrowser.mjs",
+      "sha": "e440c7b85e90932069fb3c4091d226ac903cb085",
+      "size": 18273
+    },
+    {
+      "path": "tests/englishSurfaceRemainders.test.mjs",
+      "sha": "e00add03248d7ee8b80ba46a6cd7a658f7c390a4",
+      "size": 3404
+    },
+    {
+      "path": "tests/englishUi.test.mjs",
+      "sha": "5dcd1af494d1d7f7779fea7fbd7ed418fdc08e38",
+      "size": 23964
+    },
+    {
+      "path": "tests/englishUiBrowser.mjs",
+      "sha": "2211e520987bece333b2f1a87dd3bf74fbfd7156",
+      "size": 20413
+    },
+    {
+      "path": "tests/environmentExperience.test.mjs",
+      "sha": "f448b043f9207cf6ebee382f385e34f8e4b4ff09",
+      "size": 2415
+    },
+    {
+      "path": "tests/environmentReflectionBridge.test.mjs",
+      "sha": "a0adb315ee570158ae5997b450b64358cd9a40ea",
+      "size": 2597
+    },
+    {
+      "path": "tests/explorationBodyBrowser.mjs",
+      "sha": "d9b3b72faf696fc19dc4c983a3fdc4d30e9d64e6",
+      "size": 13888
+    },
+    {
+      "path": "tests/explorationBodyInquiry.test.mjs",
+      "sha": "4d7432e2b167ad7273f0a2da904afa4cf5a157c1",
+      "size": 4523
+    },
+    {
+      "path": "tests/explorationComparisonInquiry.test.mjs",
+      "sha": "39fea7ce32edfb461d52c332448fd8c51c7c7d1a",
+      "size": 3989
+    },
+    {
+      "path": "tests/explorationConditionBrowser.mjs",
+      "sha": "b184929405dc6ced6deca9ef22003cdcbe01aa82",
+      "size": 15143
+    },
+    {
+      "path": "tests/explorationConditionInquiry.test.mjs",
+      "sha": "30bb5bf8e438ddd772211471e274f2478403f269",
+      "size": 5361
+    },
+    {
+      "path": "tests/explorationEvidenceScope.test.mjs",
+      "sha": "0c1bd2533f0bdc1f7d474a4f4d789b5186fce09e",
+      "size": 3671
+    },
+    {
+      "path": "tests/explorationExperience.test.mjs",
+      "sha": "67faea5c23e15177f5433762ee908b262e151d86",
+      "size": 16415
+    },
+    {
+      "path": "tests/explorationInquiry.test.mjs",
+      "sha": "b0b8557d9c19d41ab36c4e67fa56733705859220",
+      "size": 3029
+    },
+    {
+      "path": "tests/explorationInquiryLayout.test.mjs",
+      "sha": "017d22b94f56c73877265082f1bdaa6dbbab8c43",
+      "size": 5219
+    },
+    {
+      "path": "tests/explorationLearning.test.mjs",
+      "sha": "30dca0f3819530ea52c8702c2d423af324164b76",
+      "size": 14426
+    },
+    {
+      "path": "tests/explorationLifeBrowser.mjs",
+      "sha": "6ed985f291788b965cd00365f744096dae86a384",
+      "size": 11240
+    },
+    {
+      "path": "tests/explorationLifeInquiry.test.mjs",
+      "sha": "d4430ef2138ac259b2a4de6147b90cab4faec08f",
+      "size": 4686
+    },
+    {
+      "path": "tests/explorationMentalBrowser.mjs",
+      "sha": "fdffa3699d3789e8094c78548ed78255d4239885",
+      "size": 12762
+    },
+    {
+      "path": "tests/explorationMentalInquiry.test.mjs",
+      "sha": "9346b2e79b9de2ba870ae59894dd6319f5dca34f",
+      "size": 3299
+    },
+    {
+      "path": "tests/explorationMergedCandidates.test.mjs",
+      "sha": "b74d677893f9de4499b3025082ad06ba181ba5cb",
+      "size": 4683
+    },
+    {
+      "path": "tests/explorationTopicBrowserSmoke.mjs",
+      "sha": "e8b1ebbee14a2047758bb06e93bc90f9d37702a2",
+      "size": 24339
+    },
+    {
+      "path": "tests/explorationTopicGuides.test.mjs",
+      "sha": "554a26fe8fb82b086d7368517998bf3b432c8c0f",
+      "size": 3542
+    },
+    {
+      "path": "tests/explorationWebkitSmoke.mjs",
+      "sha": "9eb9f28178f081a5e54eb534c51b168405e858fe",
+      "size": 8530
+    },
+    {
+      "path": "tests/exploreFullCopyBrowser.mjs",
+      "sha": "593b874c05433b17c47312fd2a0b969a908fe1cf",
+      "size": 8864
+    },
+    {
+      "path": "tests/firstUseBrowserSmoke.mjs",
+      "sha": "9b4c476d552a49b807d04332981f77939033bacb",
+      "size": 12670
+    },
+    {
+      "path": "tests/firstUseExperience.test.mjs",
+      "sha": "b13c3c3a2a2a17f2e73b8d5c06dd88795ac45cd2",
+      "size": 9597
+    },
+    {
+      "path": "tests/gaitExperience.test.mjs",
+      "sha": "44db9f27fceb76d9e460062a20ca36451b2b8822",
+      "size": 3838
+    },
+    {
+      "path": "tests/gaitLearningBodyLayout.test.mjs",
+      "sha": "b2df06e3d0ee9da03f031811530bcdca81171eb7",
+      "size": 4318
+    },
+    {
+      "path": "tests/gazendamSourceReconciliation.test.mjs",
+      "sha": "1881764ea0847141f52013435d70e25db221b872",
+      "size": 2595
+    },
+    {
+      "path": "tests/gpsAltitudeQuality.test.mjs",
+      "sha": "1f45dad1e5f495b7510c6a67237c52503f03ee57",
+      "size": 4149
+    },
+    {
+      "path": "tests/gpsDesignAssurance.test.mjs",
+      "sha": "75a283dee248698c4efd86d7f979df476172f118",
+      "size": 1942
+    },
+    {
+      "path": "tests/gpsDynamicBrowserSmoke.mjs",
+      "sha": "45090cee55c22e6443adcb6a66644c5cc0acd7f0",
+      "size": 18780
+    },
+    {
+      "path": "tests/gpsDynamicLongitude.test.mjs",
+      "sha": "27d3c72753d8cb93efb4de76b2ef01e0d9e7c586",
+      "size": 1663
+    },
+    {
+      "path": "tests/gpsLiveMap.test.mjs",
+      "sha": "eba0e6c05bd87b13c57df2c8aa6bc9aae26e9870",
+      "size": 2080
+    },
+    {
+      "path": "tests/gpsLongTrack.test.mjs",
+      "sha": "433956b827c41a410e4c025b6296e40f8519f3c9",
+      "size": 5453
+    },
+    {
+      "path": "tests/gpsMeasurementPolish.test.mjs",
+      "sha": "17f78080eeaaef7b1a70a1ea6b049fc84d925e7b",
+      "size": 3969
+    },
+    {
+      "path": "tests/gpsPostreviewZoomBrowser.mjs",
+      "sha": "a4bd693470a39b4a2d6528920e1bc50434725887",
+      "size": 8575
+    },
+    {
+      "path": "tests/gpsPrivateAtomicRestoreBrowser.mjs",
+      "sha": "a8713e730c823ac6d49969651ad6fde270f12a38",
+      "size": 17459
+    },
+    {
+      "path": "tests/gpsPrivatePortableUiFlow.test.mjs",
+      "sha": "7becb4fa9e4e4303d693b45c936fcbc2d811b815",
+      "size": 1838
+    },
+    {
+      "path": "tests/gpsReflectionAtomicSnapshotBrowser.mjs",
+      "sha": "3a7dd992398642db13be653275b1e79b03a17b97",
+      "size": 9364
+    },
+    {
+      "path": "tests/gpsReflectionAtomicWriterBrowser.mjs",
+      "sha": "59365874a211c841a4f45651c95749916e09e992",
+      "size": 10144
+    },
+    {
+      "path": "tests/gpsReflectionBackupScope.test.mjs",
+      "sha": "470d570780a49f9244c473875ea2623c755f468f",
+      "size": 6251
+    },
+    {
+      "path": "tests/gpsReflectionEventContract.test.mjs",
+      "sha": "a402ee82d01c6547448bf1fd085b5e7b4d9db9aa",
+      "size": 8903
+    },
+    {
+      "path": "tests/gpsReflectionPortableV3.test.mjs",
+      "sha": "604c3fbf007a744b97f9c69476d75362d43e271f",
+      "size": 9282
+    },
+    {
+      "path": "tests/gpsReflectionPreflight.test.mjs",
+      "sha": "22021d852c95195c31e3dc0b46479b95f4378a72",
+      "size": 5132
+    },
+    {
+      "path": "tests/gpsReflectionSchemaUpgradeBrowser.mjs",
+      "sha": "0a5624789a733444faf842c8929f0bd5ebf61763",
+      "size": 7472
+    },
+    {
+      "path": "tests/gpsReflectionScreen.test.mjs",
+      "sha": "39ef4d5273b8511c6a291fe2a4cecb480a6228ec",
+      "size": 1055
+    },
+    {
+      "path": "tests/gpsReplayIndexedDbStore.test.mjs",
+      "sha": "faa117fe6473ff768fff7dc3fc90f179fce6d415",
+      "size": 14186
+    },
+    {
+      "path": "tests/gpsReplayReference.test.mjs",
+      "sha": "28fd7536a0dd764916a57cd64e84d8833c350ab1",
+      "size": 6206
+    },
+    {
+      "path": "tests/gpsReviewReadability.test.mjs",
+      "sha": "a0e0bf392b14c85d80852f65d01075e7c487816d",
+      "size": 1323
+    },
+    {
+      "path": "tests/gpsRofReviewBrowser.mjs",
+      "sha": "5c56e9255f0e749a074d3dce864f615b2a6d5dac",
+      "size": 28845
+    },
+    {
+      "path": "tests/gpsSoftwareCloseout.test.mjs",
+      "sha": "cbe713de77d5b81a3293e8fa45468c60cd1f2cbb",
+      "size": 1520
+    },
+    {
+      "path": "tests/gpsStage4SaveContract.test.mjs",
+      "sha": "902a2465983c0957692a11f759638e63e1461f59",
+      "size": 4880
+    },
+    {
+      "path": "tests/gpsStage5HistoryContract.test.mjs",
+      "sha": "a07d821654ab359359cd7296f176bd92bf110a98",
+      "size": 7998
+    },
+    {
+      "path": "tests/gpsStage5HistoryResultBrowser.mjs",
+      "sha": "443d961d69e5e97e9b0f0c185ec541bf0758f571",
+      "size": 16814
+    },
+    {
+      "path": "tests/gpsStage6DynamicBrowser.mjs",
+      "sha": "0e39ff6152a3011433b277a9e31cca56135948dd",
+      "size": 13098
+    },
+    {
+      "path": "tests/gpsStage6ReplayEvidence.test.mjs",
+      "sha": "ba1e9a2ebad5b48840a06da068a4e6fa8cb76ec3",
+      "size": 3967
+    },
+    {
+      "path": "tests/gpsStorageHealth.test.mjs",
+      "sha": "49b5f9cbf70576b5539405b0b808e989929c3173",
+      "size": 1707
+    },
+    {
+      "path": "tests/historyDiscoveryBrowser.mjs",
+      "sha": "4b1852cad787a792cfdb339b2e90393c8172a234",
+      "size": 13190
+    },
+    {
+      "path": "tests/historyExperience.test.mjs",
+      "sha": "0a8493b26eceb5f9c047a22e41faddab20304b4c",
+      "size": 12694
+    },
+    {
+      "path": "tests/historyInputFocus.test.mjs",
+      "sha": "2db0d82ea290e21d287be4100688b00b287c603b",
+      "size": 1367
+    },
+    {
+      "path": "tests/historyPerformance.test.mjs",
+      "sha": "be0532f2158cab00f8a2fa00777c25e3376b3020",
+      "size": 1150
+    },
+    {
+      "path": "tests/homeCopyBilingualBrowser.mjs",
+      "sha": "d0aaafa643423045f8976716ef48604f1883f8f4",
+      "size": 12614
+    },
+    {
+      "path": "tests/homeDashboardLayout.test.mjs",
+      "sha": "04befb8aebf7937fd65cbcb5df34e3378637e2fb",
+      "size": 6013
+    },
+    {
+      "path": "tests/homeExperience.test.mjs",
+      "sha": "2d83ae2fe796089d86267498873b1262db63797e",
+      "size": 13247
+    },
+    {
+      "path": "tests/homeOptionalEnglish.test.mjs",
+      "sha": "2b7d9c2fb3762701fc8867a0457b4e039b08d707",
+      "size": 2584
+    },
+    {
+      "path": "tests/integrationGpsPosthocExportBrowser.mjs",
+      "sha": "ca365e1e576693f11fa51b06032b2966617082d3",
+      "size": 12440
+    },
+    {
+      "path": "tests/integrationI0Boundary.test.mjs",
+      "sha": "86643e9e99f4ab704c34878d507ba2cf6422e729",
+      "size": 2713
+    },
+    {
+      "path": "tests/integrationI1Contracts.test.mjs",
+      "sha": "bbadcffe0e10134bf69f7d2fb1c82bab00943375",
+      "size": 2152
+    },
+    {
+      "path": "tests/integrationI2Disclosure.test.mjs",
+      "sha": "0718fc0919d5f1a477a3596222ec26877d4abcae",
+      "size": 2637
+    },
+    {
+      "path": "tests/integrationI2PrivateExportBrowser.mjs",
+      "sha": "71d2c2e467fd93fe350e656a92d8fb4e35654f81",
+      "size": 14397
+    },
+    {
+      "path": "tests/integrationI3RoutePrivacy.test.mjs",
+      "sha": "2c464d208ea24c72d71168923ad69a627dce390b",
+      "size": 2497
+    },
+    {
+      "path": "tests/integrationLearningJourneyBrowser.mjs",
+      "sha": "e32c11bdaad03e4065df6a8f0e08d1840821a2fd",
+      "size": 11191
+    },
+    {
+      "path": "tests/interpretationBrowserSmoke.mjs",
+      "sha": "affeb0354cefa5237156c4d6c9a03f2a44925b01",
+      "size": 26351
+    },
+    {
+      "path": "tests/interpretationExperience.test.mjs",
+      "sha": "a19bc45381fba6d8af030e936b3a9d0d2e2f519a",
+      "size": 6062
+    },
+    {
+      "path": "tests/learningCrossCourse.test.mjs",
+      "sha": "47168fb4dcb654f2615517559e3f68d4fb45b358",
+      "size": 4238
+    },
+    {
+      "path": "tests/learningCrossCourseBrowser.mjs",
+      "sha": "f72f78c4ef7e693e97f69fd11f83f3d254b282cb",
+      "size": 7003
+    },
+    {
+      "path": "tests/learningFatigue.test.mjs",
+      "sha": "d0aeeb8782dfe5d1022e1eea68bac83ed782c5be",
+      "size": 3686
+    },
+    {
+      "path": "tests/learningFatigueBrowser.mjs",
+      "sha": "effca437f69f5a99d0badde995280bcbde88be44",
+      "size": 6286
+    },
+    {
+      "path": "tests/learningFoundation.test.mjs",
+      "sha": "6827a236c294445e0dc6e58817cffb66e9dc2dd9",
+      "size": 3698
+    },
+    {
+      "path": "tests/learningFoundationBrowser.mjs",
+      "sha": "411ace7ed292b62e39b7d813ea3769a2c2ca9764",
+      "size": 12567
+    },
+    {
+      "path": "tests/learningMotion.test.mjs",
+      "sha": "31906b2afe01dda11af6e5390b817fd55bcd68b4",
+      "size": 3634
+    },
+    {
+      "path": "tests/learningMotionBrowser.mjs",
+      "sha": "23efe5a4b600f0c92b63727dfc3f233650a4514f",
+      "size": 6618
+    },
+    {
+      "path": "tests/learningOfflineOriginDownBrowser.mjs",
+      "sha": "cd4c6eea34469f16efb296f2bfdd447a714aca78",
+      "size": 6637
+    },
+    {
+      "path": "tests/learningOrigin.test.mjs",
+      "sha": "cfac258424f0385a410544f48970ecf676c66872",
+      "size": 2612
+    },
+    {
+      "path": "tests/learningOriginBrowser.mjs",
+      "sha": "82fd6b85997ac07200fc9b5e6417173db43b887a",
+      "size": 6389
+    },
+    {
+      "path": "tests/learningRunningContent.test.mjs",
+      "sha": "2f2d2967a6721e0f90578a9d346b04aca4e1c5b5",
+      "size": 2540
+    },
+    {
+      "path": "tests/literatureDirectionAdoption.test.mjs",
+      "sha": "67968fb018be9922a2f000c09a314d64c2d5c148",
+      "size": 4886
+    },
+    {
+      "path": "tests/livePagesSmoke.mjs",
+      "sha": "e38c1b75304df9872d71bee1250f656391029b57",
+      "size": 6648
+    },
+    {
+      "path": "tests/manualRunLock.test.mjs",
+      "sha": "e2cfa880b6fdaa20e7681c91de132b75c2b5560a",
+      "size": 2862
+    },
+    {
+      "path": "tests/manualRunLockBrowserSmoke.mjs",
+      "sha": "8a82dfe1ba66b40e02fa65b63d05089478a65a6b",
+      "size": 8525
+    },
+    {
+      "path": "tests/manualRunStore.test.mjs",
+      "sha": "6ed735ab517a834026334e8be66491d8d3abc71b",
+      "size": 18158
+    },
+    {
+      "path": "tests/measurementExperience.test.mjs",
+      "sha": "2f071cc9c4cc595ea225ad2ff20c2ecc5f9b1890",
+      "size": 11579
+    },
+    {
+      "path": "tests/mobileBilingualControlConsistency.test.mjs",
+      "sha": "c6e6d5eaa91d41944720ba7dc07e75baa0da43ec",
+      "size": 5317
+    },
+    {
+      "path": "tests/mobileInputFocus.test.mjs",
+      "sha": "5e943e36d959f03808c51acc37f57e50962f7109",
+      "size": 1424
+    },
+    {
+      "path": "tests/noteRunLink.test.mjs",
+      "sha": "4894e664865d8f90e18324a3804224ef48641108",
+      "size": 2910
+    },
+    {
+      "path": "tests/offlineShellBrowserSmoke.mjs",
+      "sha": "fb03d80d93a315ecebdc2a0bfc8bf4e28e44e216",
+      "size": 12085
+    },
+    {
+      "path": "tests/onboardingBilingualLayoutBrowser.mjs",
+      "sha": "48450cba82f626bab35e756f0e07fb71a5962332",
+      "size": 7712
+    },
+    {
+      "path": "tests/p0Science65CurrentSourceSnapshot.test.mjs",
+      "sha": "c2af75bdbd3fdb26e3dfb6f3e67a93c12e48f8f0",
+      "size": 4137
+    },
+    {
+      "path": "tests/p10LearningCoherenceBrowser.mjs",
+      "sha": "1f79a60ffc0dfc3a807675ea2f3f06446158f6fe",
+      "size": 6280
+    },
+    {
+      "path": "tests/p10LearningUI.test.mjs",
+      "sha": "a0ceb24fbe4f0f6adf94d6c365c012cb2252560e",
+      "size": 1504
+    },
+    {
+      "path": "tests/p11NavLearningAudit.test.mjs",
+      "sha": "c326099121dd531b467864e08b385043fe37cd49",
+      "size": 3171
+    },
+    {
+      "path": "tests/p11UnifiedLearningBrowser.mjs",
+      "sha": "7028c5b480e869fcc86af9d69ee95d890e38306a",
+      "size": 11816
+    },
+    {
+      "path": "tests/p12ScreenCoherence.test.mjs",
+      "sha": "1c8e213848fda13b5f3773720238c2cfde175853",
+      "size": 3012
+    },
+    {
+      "path": "tests/p13ScreenRefinement.test.mjs",
+      "sha": "5b7ef6980671f28d7bc1123eaea6c1202472377d",
+      "size": 4782
+    },
+    {
+      "path": "tests/p14VisualCoherence.test.mjs",
+      "sha": "00094a44cbb5cfed7d6f3fcd1d2b50abe911c541",
+      "size": 4757
+    },
+    {
+      "path": "tests/p5NavigationAndContent.test.mjs",
+      "sha": "821f42e80843bc76f6fded1402134ca37daa967c",
+      "size": 2809
+    },
+    {
+      "path": "tests/p5VisualCaptureBrowser.mjs",
+      "sha": "054d9f64cb2d0538946b56da0739b53d94f3902f",
+      "size": 4589
+    },
+    {
+      "path": "tests/p6BResultVisualBrowser.mjs",
+      "sha": "e0720b54f04f6069681982818d2c3e4e29150d9d",
+      "size": 8338
+    },
+    {
+      "path": "tests/p6CRecordHistoryBrowser.mjs",
+      "sha": "45d91b3f6939238433aeb88eed83062ed454b179",
+      "size": 11258
+    },
+    {
+      "path": "tests/p6DRecordDetailsBrowser.mjs",
+      "sha": "50985e25120d69c6e749b488cb1a0b47be37f080",
+      "size": 10964
+    },
+    {
+      "path": "tests/p6ERemainingScreensBrowser.mjs",
+      "sha": "569c2e194e66a47d8883704dc1d158ae1c455bef",
+      "size": 8482
+    },
+    {
+      "path": "tests/p6IntegratedZoomDiagnostic.mjs",
+      "sha": "3342fdf17e79091f034304bcffa0fbc5b57eed53",
+      "size": 5669
+    },
+    {
+      "path": "tests/p6VisualAndCopyBrowser.mjs",
+      "sha": "34c2b826c99b62aab9d4750b72660df295495d25",
+      "size": 6986
+    },
+    {
+      "path": "tests/p7WordingBoundaries.test.mjs",
+      "sha": "7576d54fb5fa1edd6f184ed58bcfb72501f98a3e",
+      "size": 4470
+    },
+    {
+      "path": "tests/p8AbnormalStorageBrowser.mjs",
+      "sha": "a6984ed43328e1d0b0e1615e3d3d069754ad8433",
+      "size": 11408
+    },
+    {
+      "path": "tests/postHocBilingualCopy.test.mjs",
+      "sha": "07e44b3ac5024bcd15d3d3802b675d484752db44",
+      "size": 1494
+    },
+    {
+      "path": "tests/preregisteredPublishedReferenceAudit.test.mjs",
+      "sha": "fcbbbc82a60f923a0eb671ceab653a871b64611e",
+      "size": 4434
+    },
+    {
+      "path": "tests/professorAnnotationBrowser.mjs",
+      "sha": "1841d4e2d174a934629bfcf32058d4f02ea700cf",
+      "size": 18741
+    },
+    {
+      "path": "tests/professorAnnotationCapacity.test.mjs",
+      "sha": "2d50128f269a4d4b5a8cf69aeb56b52239ace3a7",
+      "size": 1036
+    },
+    {
+      "path": "tests/professorAnnotationSchema.test.mjs",
+      "sha": "4666c6f7b70341d8c7e71187010fb7e481d794f1",
+      "size": 12681
+    },
+    {
+      "path": "tests/professorM6Browser.mjs",
+      "sha": "518cb8016e14d0ce1f17984928e35ede75589c86",
+      "size": 12607
+    },
+    {
+      "path": "tests/professorM6Policies.test.mjs",
+      "sha": "6ca75e1b08e0ce5a5134126fb0aa8027030bbf50",
+      "size": 3891
+    },
+    {
+      "path": "tests/professorM7EvidenceGate.mjs",
+      "sha": "9fb00c8330d43ab60ed377943fe2f53ce45bd42f",
+      "size": 2993
+    },
+    {
+      "path": "tests/professorMentalBrowser.mjs",
+      "sha": "6b31ec2a8d1e7a3b1237089358ca5ff7c76a6e55",
+      "size": 29195
+    },
+    {
+      "path": "tests/professorMentalExperience.test.mjs",
+      "sha": "f80a1a7988565f37c80b6f506a5a904a5b30d2a0",
+      "size": 3735
+    },
+    {
+      "path": "tests/professorPortableV2.test.mjs",
+      "sha": "705c253cfce4c3a3efe7280ac9843211fbb49598",
+      "size": 4744
+    },
+    {
+      "path": "tests/professorPortableV2Browser.mjs",
+      "sha": "9aa302d038f6248f7336b5e67480368ee443524d",
+      "size": 29644
+    },
+    {
+      "path": "tests/professorPostHocBrowser.mjs",
+      "sha": "9cc0c8fef545747942ff5732be2064e97cf5a436",
+      "size": 31101
+    },
+    {
+      "path": "tests/professorPostHocCore.test.mjs",
+      "sha": "551ed9b3c5f072854cb096f0f8fd906dcddd28e4",
+      "size": 7548
+    },
+    {
+      "path": "tests/professorRecordRef.test.mjs",
+      "sha": "dc619efc839fb4ef5d98606efb93e64917b3aeeb",
+      "size": 8088
+    },
+    {
+      "path": "tests/professorRecordRefBrowser.mjs",
+      "sha": "55a66ba7c521efb78140a47902f7b0ec9fedd361",
+      "size": 6380
+    },
+    {
+      "path": "tests/publicTerminologyContract.test.mjs",
+      "sha": "f957fcb96257d317779bcaaeb7852efee17266d3",
+      "size": 5921
+    },
+    {
+      "path": "tests/pwaUpdateLifecycle.test.mjs",
+      "sha": "883672351559ca6070aaeba073c1945d06d77d18",
+      "size": 5201
+    },
+    {
+      "path": "tests/recordDraftReview.test.mjs",
+      "sha": "509eba6c9b10cee5b1f28ea2d8481c68c3dd01aa",
+      "size": 5870
+    },
+    {
+      "path": "tests/recordExperience.test.mjs",
+      "sha": "90bdad8cb4c61638d14c9269f756ba5a0d7944b3",
+      "size": 14368
+    },
+    {
+      "path": "tests/recordOptionalDensityAuditBrowser.mjs",
+      "sha": "d3aa9ccc877fe9e7d615f5d0372860e836341801",
+      "size": 21788
+    },
+    {
+      "path": "tests/recordPopulatedEnglish.test.mjs",
+      "sha": "847f44bfe2c4908e4ef915d01f67d744e7128f31",
+      "size": 5056
+    },
+    {
+      "path": "tests/recordReturnActions.test.mjs",
+      "sha": "4ba3389d53aae19433e0d85ed0e35bccbae51dd2",
+      "size": 6826
+    },
+    {
+      "path": "tests/recordReviewExperience.test.mjs",
+      "sha": "12359208e15b4bff275105f7b2d40352c4a926af",
+      "size": 11578
+    },
+    {
+      "path": "tests/recordReviewVisualBrowser.mjs",
+      "sha": "76d50197b0b80ccd95f06075832e5cbfbb468c24",
+      "size": 6548
+    },
+    {
+      "path": "tests/referenceEvidenceInfo.test.mjs",
+      "sha": "816ce4fdc1d50636d4dafb2a21f41660f7f8a0ed",
+      "size": 8972
+    },
+    {
+      "path": "tests/reflectionG0Integrity.test.mjs",
+      "sha": "e2e1e195adaa687b1b23b5ce303810b17f348bb1",
+      "size": 3970
+    },
+    {
+      "path": "tests/reflectionG3Browser.mjs",
+      "sha": "c21bd4fc2aa45b385d3048ff78142540d9a692cd",
+      "size": 9340
+    },
+    {
+      "path": "tests/reflectionG3Review.test.mjs",
+      "sha": "53f9d06474b6321cf9eaac7ee64d0f3fbb051634",
+      "size": 5318
+    },
+    {
+      "path": "tests/regionEvidenceBrowserSmoke.mjs",
+      "sha": "b6f9e16f7f1f114188590b675884fd1a46dcdc64",
+      "size": 14692
+    },
+    {
+      "path": "tests/regionReferenceComparison.test.mjs",
+      "sha": "b676fbfd45b8a92fd3f1acf93ee5d148cde6c172",
+      "size": 5172
+    },
+    {
+      "path": "tests/repositoryNeutralPolicy.test.mjs",
+      "sha": "36e4e2ac04261fcdbdd2b26815ff0805e7714859",
+      "size": 2727
+    },
+    {
+      "path": "tests/researchCoreIntegration.test.mjs",
+      "sha": "bae058359bdd946fe8ecf5ec906d1564db615498",
+      "size": 6405
+    },
+    {
+      "path": "tests/researchCoreLockWiring.test.mjs",
+      "sha": "d844fb9bbe7cce82572cdb9016e6cb3fd5920876",
+      "size": 2280
+    },
+    {
+      "path": "tests/researchCoreNoteEdit.test.mjs",
+      "sha": "25a9e34d0efa73f9411ae937d803247955656f87",
+      "size": 2802
+    },
+    {
+      "path": "tests/researchCoreNoteSafety.test.mjs",
+      "sha": "997e89bb30c345db4f8a1b5b8756599d21bda67d",
+      "size": 2137
+    },
+    {
+      "path": "tests/restAndRofMobileBrowser.mjs",
+      "sha": "6ecca49cf6b4c4a18aefad33765f01c8fb88e798",
+      "size": 7657
+    },
+    {
+      "path": "tests/restDayScreenContract.test.mjs",
+      "sha": "e59ae663aaa209c24338b8e80f5c877cddd55f98",
+      "size": 3755
+    },
+    {
+      "path": "tests/resultAnnotationBilingualVisualBrowser.mjs",
+      "sha": "cb81f8106c02cccc7f5ffcd6ea677a998b6034ea",
+      "size": 9867
+    },
+    {
+      "path": "tests/resultExperience.test.mjs",
+      "sha": "cdbd83eeb1fd707bc3dc7d15f0b58f1d547b6926",
+      "size": 21825
+    },
+    {
+      "path": "tests/resultReflectionEntry.test.mjs",
+      "sha": "6948754188f70e2850c03fc80ee84c67f23dfe04",
+      "size": 3034
+    },
+    {
+      "path": "tests/resultReflectionEntryBrowser.mjs",
+      "sha": "18c8b1080dfe73817654120cc76bcb8eb6a53782",
+      "size": 6169
+    },
+    {
+      "path": "tests/resultS09DeepBrowser.mjs",
+      "sha": "558b6d556320b352df143da327af19def63c72b1",
+      "size": 32216
+    },
+    {
+      "path": "tests/rofExperience.test.mjs",
+      "sha": "869570df4fa1025878e76e7a4aa13e1b33b548cf",
+      "size": 11007
+    },
+    {
+      "path": "tests/rofJScale.test.mjs",
+      "sha": "2a46677223a6b3adb6e3925d764528e5c6e6f575",
+      "size": 2521
+    },
+    {
+      "path": "tests/rofTimingLayoutBrowser.mjs",
+      "sha": "16e74bc5355e19e3eab3bb7b2508b214969029b0",
+      "size": 9266
+    },
+    {
+      "path": "tests/runQuestionContinuation.test.mjs",
+      "sha": "2e6d51a3ff51529889f12dc0e7f1c7c9780669cc",
+      "size": 4722
+    },
+    {
+      "path": "tests/runReflection.test.mjs",
+      "sha": "75cac2d09228c11f52692c1adc4b5262c11f4c79",
+      "size": 3688
+    },
+    {
+      "path": "tests/s02ConditionAchievementBrowser.mjs",
+      "sha": "423bb2361033db5dda6990117de9910f94a88403",
+      "size": 14865
+    },
+    {
+      "path": "tests/s02ConditionAchievementPresentation.test.mjs",
+      "sha": "62d587aeb055930d8db2c2a964552058e1185f81",
+      "size": 2909
+    },
+    {
+      "path": "tests/s02HomeGuideBrowser.mjs",
+      "sha": "7f9d86baf5463e31eaf2e21b7355287ffe5467fd",
+      "size": 11630
+    },
+    {
+      "path": "tests/s02HomePreviewRemoval.test.mjs",
+      "sha": "2dbdf2a1501e4c6719d250164f92596ed1e6618c",
+      "size": 1338
+    },
+    {
+      "path": "tests/s02HomeReadFailurePresentation.test.mjs",
+      "sha": "37641e1dcbdbf5145ba1cb3b16dc11320ca14e2e",
+      "size": 1568
+    },
+    {
+      "path": "tests/s02HomeScreenGuide.test.mjs",
+      "sha": "62d1831513b349e36de6ec839719be6f04ecd1f0",
+      "size": 2630
+    },
+    {
+      "path": "tests/s03s04RecordManualBrowser.mjs",
+      "sha": "dd9da44e944186036632d568c58bc3ce330e3c9d",
+      "size": 12208
+    },
+    {
+      "path": "tests/saveReviewStage4Browser.mjs",
+      "sha": "24e6f4a9f33e29c10eded98939980a5715117032",
+      "size": 14249
+    },
+    {
+      "path": "tests/scienceEngineParity.test.mjs",
+      "sha": "e34a4247953351eb2b3ec02ace8ee3dbc88ddc79",
+      "size": 6040
+    },
+    {
+      "path": "tests/scienceOutsideDomainCurrent24.test.mjs",
+      "sha": "5c26a953cc475ba5db6440cc24de747f2b643cac",
+      "size": 3845
+    },
+    {
+      "path": "tests/sciencePrimaryTables45SourceAudit.test.mjs",
+      "sha": "aebc44986d2cf4396bd4a6b04dec184e7d2139e2",
+      "size": 4150
+    },
+    {
+      "path": "tests/scienceReferenceBoundaryBatch.test.mjs",
+      "sha": "b36ad5a73da84afda29fe426fcdb7a1522b52d05",
+      "size": 2386
+    },
+    {
+      "path": "tests/screenDesign20PopulatedBrowser.mjs",
+      "sha": "c9ce5b2792098078a81205622edf3c57d83e6499",
+      "size": 19702
+    },
+    {
+      "path": "tests/screenHelpUnifiedBrowser.mjs",
+      "sha": "fd0005a977a5961e968f3d4f300b43295e1b967c",
+      "size": 9721
+    },
+    {
+      "path": "tests/settingsCompactBrowser.mjs",
+      "sha": "ceb966fcf81485c02618910bf8b85b7ad73026c5",
+      "size": 10372
+    },
+    {
+      "path": "tests/settingsExperience.test.mjs",
+      "sha": "2e64dff499efb9d5e3be524f6917f3ee61d48291",
+      "size": 10295
+    },
+    {
+      "path": "tests/settingsLegalLayoutBrowser.mjs",
+      "sha": "e08e3672b018155110a7e7eac8b4e479d0fe2780",
+      "size": 6516
+    },
+    {
+      "path": "tests/stage7IntegrationAudit.test.mjs",
+      "sha": "88bac031fc29fb7297a6a6e4c981c19f412507f6",
+      "size": 1732
+    },
+    {
+      "path": "tests/standaloneRuntime.test.mjs",
+      "sha": "8629b2318f233a09fb522de22b0439d45e2d8fca",
+      "size": 2971
+    },
+    {
+      "path": "tests/startupFast.test.mjs",
+      "sha": "d53ccebba15c347c8048a26e86fdbc417d2609ce",
+      "size": 3975
+    },
+    {
+      "path": "tests/startupFastBrowser.mjs",
+      "sha": "f28e4c5e3ef6eb7d9789ebfc28d45c0fc3ba88fa",
+      "size": 5566
+    },
+    {
+      "path": "tests/storageRaceAudit.test.mjs",
+      "sha": "76fd28455e37697cebed6c379f4ded809f61143e",
+      "size": 1616
+    },
+    {
+      "path": "tests/twoRunCycleBrowserSmoke.mjs",
+      "sha": "ad121284dc8ce8e98bd62b0538d022e0be6d1274",
+      "size": 37722
+    },
+    {
+      "path": "tests/uiContracts.test.mjs",
+      "sha": "7e6c41cb004d6bd5ced99adefc3f22cbd3328d20",
+      "size": 12769
+    },
+    {
+      "path": "tests/uiux02Stage0406Browser.mjs",
+      "sha": "ec2991ecf536a3d6343d000065a00fdcfb7f21df",
+      "size": 6908
+    },
+    {
+      "path": "tests/uiux03TargetBrowser.mjs",
+      "sha": "234d259594f353719e9f908cf8010ee431bb38f6",
+      "size": 13092
+    },
+    {
+      "path": "tests/uiux04TargetBrowser.mjs",
+      "sha": "3203e3f692277dee62e2cc0d6d2411736dc323b2",
+      "size": 9726
+    },
+    {
+      "path": "tests/uiux05Contracts.test.mjs",
+      "sha": "f780c1044b7be227cfc4ec533bf036c95f76b958",
+      "size": 2801
+    },
+    {
+      "path": "tests/uiux05TargetBrowser.mjs",
+      "sha": "73a98f5d8ffe7748e274b669157ca6b29161086c",
+      "size": 7534
+    },
+    {
+      "path": "tests/uiux06Contracts.test.mjs",
+      "sha": "e7dea0fab97e4bc3ca1aef8595ad39edaa029bf0",
+      "size": 3375
+    },
+    {
+      "path": "tests/uiux06TargetBrowser.mjs",
+      "sha": "3310bfadb826f5bf005941dc19b500bad4cd4beb",
+      "size": 7550
+    },
+    {
+      "path": "tests/uiuxFocusedScreensBrowser.mjs",
+      "sha": "eeca8bd31678e43718632ffa1dbde395095f6ebb",
+      "size": 12250
+    },
+    {
+      "path": "tests/ux02ContrastMatrixBrowser.mjs",
+      "sha": "86bfe7c0f48dcc0b823ad71f35995db1608d0387",
+      "size": 5220
+    },
+    {
+      "path": "tests/ux02ContrastSemantics.test.mjs",
+      "sha": "745004e41d40865aa3c23864dc5f694d4c626f80",
+      "size": 3053
+    },
+    {
+      "path": "tests/ux03MobileNavigationContract.test.mjs",
+      "sha": "716d2d842aa65ef9011f29a25d583160e494d17b",
+      "size": 3256
+    },
+    {
+      "path": "tests/ux03NavigationTextZoomBrowser.mjs",
+      "sha": "dc22f05f92fa75ef49241b0043a42b35e74692c4",
+      "size": 9168
+    },
+    {
+      "path": "tests/ux04ActionCopyKeys.test.mjs",
+      "sha": "a050994bf49012e9a5f999d12ca857035b587cd0",
+      "size": 4147
+    },
+    {
+      "path": "tests/ux04NavigationCopyBrowser.mjs",
+      "sha": "8a53ce5092195588b55d00b9e75d30870177f756",
+      "size": 5480
+    },
+    {
+      "path": "tests/ux05OnboardingHomeBrowser.mjs",
+      "sha": "1cecde9934e7d8253d1c4951eab8f2eadff0697f",
+      "size": 10694
+    },
+    {
+      "path": "tests/ux05OnboardingHomeContract.test.mjs",
+      "sha": "579e517a988b96f2307fc8ee047fd91186051fe7",
+      "size": 6334
+    },
+    {
+      "path": "tests/ux06ManualEntryBrowser.mjs",
+      "sha": "2be1913c04b5b89fcc354b64518576aa74e38ebf",
+      "size": 10035
+    },
+    {
+      "path": "tests/ux06ManualEntryContract.test.mjs",
+      "sha": "265576f7c1b8c4c58a4d434eea517e07b44a914a",
+      "size": 4235
+    },
+    {
+      "path": "tests/ux07CourseBrowser.mjs",
+      "sha": "78966431fab6ac8be6559ec7f4ab2036ffe3ae97",
+      "size": 11014
+    },
+    {
+      "path": "tests/ux07CourseConceptContract.test.mjs",
+      "sha": "10321b432d1bec8455041738f366d4777c88bbdf",
+      "size": 6011
+    },
+    {
+      "path": "tests/ux08RofBodyBrowser.mjs",
+      "sha": "0e70bbcf5f0bcfea8b56224522d9e1b6ff3a12f0",
+      "size": 11756
+    },
+    {
+      "path": "tests/ux08RofBodyContract.test.mjs",
+      "sha": "6485d7f216618055590eba1c87a00cc66efca79b",
+      "size": 5603
+    },
+    {
+      "path": "tests/ux09EnvironmentReturnBrowser.mjs",
+      "sha": "60afa30f114ce03da10c9103f6cca784b92a3152",
+      "size": 12861
+    },
+    {
+      "path": "tests/ux09EnvironmentReturnContract.test.mjs",
+      "sha": "130f1c756ab3df0089f046cbabc842b188d40560",
+      "size": 6350
+    },
+    {
+      "path": "tests/ux10PresaveScopeBrowser.mjs",
+      "sha": "9da7cb5a42b9f22e00f3ae59989b693a591b401f",
+      "size": 13022
+    },
+    {
+      "path": "tests/ux10PresaveScopeContract.test.mjs",
+      "sha": "298130836149cf0f4c41cb73c0ef1a6867ac8a9a",
+      "size": 6960
+    },
+    {
+      "path": "ui/actionCopyKeys.js",
+      "sha": "4162039992fc6970ec45f7811b8eb35505cab70d",
+      "size": 2450
+    },
+    {
+      "path": "ui/actionIntentStore.js",
+      "sha": "7208841e426739781a4d050de216a8a9ff9771ab",
+      "size": 2990
+    },
+    {
+      "path": "ui/annotationBackup.js",
+      "sha": "21e0e74dd565a77d52cb6ed47d89a2e95f434b09",
+      "size": 13650
+    },
+    {
+      "path": "ui/annotationEditor.css",
+      "sha": "fc8ec7b31accd75f35a264dbc15722d973be88ff",
+      "size": 7019
+    },
+    {
+      "path": "ui/annotationEditor.js",
+      "sha": "52a3b232a30af86312906f6420a155e44041cf26",
+      "size": 21064
+    },
+    {
+      "path": "ui/annotationEditorCore.js",
+      "sha": "9ff315339e90d470a376c9e7043e85e49d90037b",
+      "size": 13072
+    },
+    {
+      "path": "ui/annotationReadModel.js",
+      "sha": "e9e8e94d1ce148512f188bd6daffaec207d8a75a",
+      "size": 1584
+    },
+    {
+      "path": "ui/annotationSchema.js",
+      "sha": "bee248721e379ac41a8fe51ba4da1d544d70e44a",
+      "size": 12680
+    },
+    {
+      "path": "ui/annotationStore.js",
+      "sha": "6bad2bd663b90c2311c790742ef800890e59fb83",
+      "size": 14645
+    },
+    {
+      "path": "ui/bodyContextExperience.css",
+      "sha": "d2d7b6ef4221ef6cdd8e62e4dea5224dd807c13a",
+      "size": 19725
+    },
+    {
+      "path": "ui/bodyContextExperience.js",
+      "sha": "5b337cafcbc5eb49a2e2bf86ce75d86a72ecbd9b",
+      "size": 12095
+    },
+    {
+      "path": "ui/bodyReferencePresentation.js",
+      "sha": "deb03942faad583f567cfdea64fab01a0efb33b0",
+      "size": 6339
+    },
+    {
+      "path": "ui/buttonContrastSystem.css",
+      "sha": "4e91243f6ae975c924baa05fc0508bb6786d6332",
+      "size": 10630
+    },
+    {
+      "path": "ui/conditionInsights.js",
+      "sha": "fa22975b1cc13b3ffe38cb66d7a56d95a23766f5",
+      "size": 4328
+    },
+    {
+      "path": "ui/conditionJourney.css",
+      "sha": "caa03aaa2a9f790ba0b29782d094b85e01c66242",
+      "size": 11204
+    },
+    {
+      "path": "ui/conditionJourney.js",
+      "sha": "3057fb9afbf14fc45340069f01e7209c137c7e0b",
+      "size": 12258
+    },
+    {
+      "path": "ui/consultationExperience.css",
+      "sha": "763e8ee5caea544828eb03ef389b02ad5d67cefb",
+      "size": 23345
+    },
+    {
+      "path": "ui/consultationExperience.js",
+      "sha": "f40ce2f9678d89c0f1a6df9445981a50194299de",
+      "size": 35822
+    },
+    {
+      "path": "ui/coursePresetStore.js",
+      "sha": "420841c926f6590251bcbaa35a96db29f9e68332",
+      "size": 7457
+    },
+    {
+      "path": "ui/dataManagement.css",
+      "sha": "8216f8c6e40df3cac5a158d1f6e6bfdc5683fd42",
+      "size": 3384
+    },
+    {
+      "path": "ui/dataManagement.js",
+      "sha": "065281c43d6973be1c17dc0e8775eb5183cfb67d",
+      "size": 16028
+    },
+    {
+      "path": "ui/dataManagementUi.js",
+      "sha": "730039a1156729a8cce204599cc757d84e96c77c",
+      "size": 8461
+    },
+    {
+      "path": "ui/englishConsultationReport.js",
+      "sha": "a27edb350fec08689833a5df684b2c8c138df63c",
+      "size": 6827
+    },
+    {
+      "path": "ui/englishCurriculumCopy.js",
+      "sha": "2532320d5a8db81ce57d9da6de37b66cf0b88136",
+      "size": 21135
+    },
+    {
+      "path": "ui/englishCurriculumFatigue.js",
+      "sha": "7e261d73554dacc32e58fe450e4c3a607151451c",
+      "size": 21910
+    },
+    {
+      "path": "ui/englishCurriculumMotion.js",
+      "sha": "f177da15b1efb17cd5c2e82ec20fc7cc0ede8b50",
+      "size": 20785
+    },
+    {
+      "path": "ui/englishCurriculumPace.js",
+      "sha": "fe85127ea29001789f8fa7438514e895b45334c2",
+      "size": 22529
+    },
+    {
+      "path": "ui/englishErrorsCopy.js",
+      "sha": "2e063add1501c2af47fe8578cbd934626dc2a478",
+      "size": 9961
+    },
+    {
+      "path": "ui/englishExploreDynamic.js",
+      "sha": "18e9292400cff7be0f5f79240b7780357fccb898",
+      "size": 15575
+    },
+    {
+      "path": "ui/englishExploreKnowledge.js",
+      "sha": "fdad6cf38f6e5b95f7ec05e709b5d92027cb3e18",
+      "size": 17219
+    },
+    {
+      "path": "ui/englishFinalAnnotation.js",
+      "sha": "612a1522508773ee7cd29e74ef535abbdfff0efe",
+      "size": 11400
+    },
+    {
+      "path": "ui/englishFinalAppShell.js",
+      "sha": "aad7e21a293d2fd7f36ac9f13ff4fb18e0784d10",
+      "size": 19402
+    },
+    {
+      "path": "ui/englishFinalBackup.js",
+      "sha": "417948297920969304e8e66d17000082c2ce0295",
+      "size": 12465
+    },
+    {
+      "path": "ui/englishFinalConditions.js",
+      "sha": "22724f522a7a0b851ae21ab6eea82c810805f13b",
+      "size": 17537
+    },
+    {
+      "path": "ui/englishFinalGps.js",
+      "sha": "c0299fafb2c47b90ea87c4bf5f1dec9714655cbb",
+      "size": 23472
+    },
+    {
+      "path": "ui/englishFinalHomeData.js",
+      "sha": "02f4e3de913cd5e3a6db5ed896dba2815c2c1300",
+      "size": 9855
+    },
+    {
+      "path": "ui/englishFinalInquiry.js",
+      "sha": "0fb39a35e69bafb0c3bedbee444f805179063ceb",
+      "size": 19932
+    },
+    {
+      "path": "ui/englishFinalOnboarding.js",
+      "sha": "26b34cfdc06fabd3855471ad6cc85b80880a21d9",
+      "size": 9371
+    },
+    {
+      "path": "ui/englishFinalRecording.js",
+      "sha": "7f13b5c7f47b61e202e7c1f1607929706bc28e64",
+      "size": 17940
+    },
+    {
+      "path": "ui/englishGpsExplorationCopy.js",
+      "sha": "51a9955cdb88df703087aa2796c59795b5750399",
+      "size": 27477
+    },
+    {
+      "path": "ui/englishGuideCopy.js",
+      "sha": "3bc0d77f84e686c5816c569ddb469bffecf08936",
+      "size": 9162
+    },
+    {
+      "path": "ui/englishLearningCopy.js",
+      "sha": "f036c9392a717350a67a350644c1d0b6c738db75",
+      "size": 22712
+    },
+    {
+      "path": "ui/englishLegalDocuments.js",
+      "sha": "60fd233014ea1096f1c5ea4b18e5710ead600712",
+      "size": 17525
+    },
+    {
+      "path": "ui/englishRecordHistoryCopy.js",
+      "sha": "18a9e29b4832e4646fc1913da09c3f99cd94de58",
+      "size": 12598
+    },
+    {
+      "path": "ui/englishResultCopy.js",
+      "sha": "8e71ee18e90da2695596ff0e11f06fdd3556c43b",
+      "size": 16458
+    },
+    {
+      "path": "ui/englishResultExport.js",
+      "sha": "54ae3a6e4e3eb903a5f26ef77be22ad618a51d20",
+      "size": 3333
+    },
+    {
+      "path": "ui/englishSettingsCopy.js",
+      "sha": "64bb37b05d7a5d73b780bdc89b485d82804dcf4e",
+      "size": 5951
+    },
+    {
+      "path": "ui/englishSharingCopy.js",
+      "sha": "e75080ea6a53f1c5410526784be6ec1644a48a9f",
+      "size": 13922
+    },
+    {
+      "path": "ui/englishSurfaceRemainders.js",
+      "sha": "9702dc07f390d1dc7a9be5726093133dc7ac6cc4",
+      "size": 32712
+    },
+    {
+      "path": "ui/englishUi.js",
+      "sha": "16209a8f3d9f04cba3beedd061a02797ca706b79",
+      "size": 20752
+    },
+    {
+      "path": "ui/environmentExperience.css",
+      "sha": "87ab6b9dc3f169a60371d178dc7fe2cc33202719",
+      "size": 8538
+    },
+    {
+      "path": "ui/environmentExperience.js",
+      "sha": "45e35ef5e915d3679a270033a99e1427739536ab",
+      "size": 9629
+    },
+    {
+      "path": "ui/explorationBodyInquiry.js",
+      "sha": "8d3bb7e6a0bb336d677511578deb78409f54ade1",
+      "size": 6702
+    },
+    {
+      "path": "ui/explorationComparisonInquiry.js",
+      "sha": "dddc11a0de9db1ab7cb9b4b8977b8d4a3e39f95a",
+      "size": 5475
+    },
+    {
+      "path": "ui/explorationConditionInquiry.js",
+      "sha": "e29a903e450ecf1bee1c424bb1760ff714e9b34f",
+      "size": 8028
+    },
+    {
+      "path": "ui/explorationExperience.css",
+      "sha": "ae3b51e47096d8425113e0f071a18acc87fb541e",
+      "size": 54467
+    },
+    {
+      "path": "ui/explorationExperience.js",
+      "sha": "e60377054ea806b33046f8ff4d2ecb47b75cdf1c",
+      "size": 57245
+    },
+    {
+      "path": "ui/explorationInquiry.js",
+      "sha": "14abc414c2be4689e85f802226763ada71660393",
+      "size": 3405
+    },
+    {
+      "path": "ui/explorationLifeInquiry.js",
+      "sha": "280f3699069227ab00d2c779f6a5303ed58896b4",
+      "size": 7676
+    },
+    {
+      "path": "ui/explorationLinkPolicy.js",
+      "sha": "9358d7fe18a69a8b2c0580f6383078ae48fee4b1",
+      "size": 4721
+    },
+    {
+      "path": "ui/explorationMentalInquiry.js",
+      "sha": "a8a259122d35d8c7c0caf343e9b3af90e1b45671",
+      "size": 5646
+    },
+    {
+      "path": "ui/explorationReadAdapter.js",
+      "sha": "f03ce2a215295838ccf5e0d94151a89675ef8dd7",
+      "size": 6960
+    },
+    {
+      "path": "ui/explorationTopicGuides.js",
+      "sha": "c262efd7a10d7d12e9fc83bfe905eb73d74ab7eb",
+      "size": 13131
+    },
+    {
+      "path": "ui/explorationTopicView.js",
+      "sha": "c053990612b53279be1321124990cf7a02fd755f",
+      "size": 3011
+    },
+    {
+      "path": "ui/firstUseExperience.css",
+      "sha": "34963e2b6000cef397635d20c74e9eeb339947fb",
+      "size": 16911
+    },
+    {
+      "path": "ui/firstUseExperience.js",
+      "sha": "361ef80a770daae454699cc6fcaf135ddf64c6b2",
+      "size": 14141
+    },
+    {
+      "path": "ui/gaitExperience.css",
+      "sha": "e02665259c0a2b99d7da2dbd4bb8ca06ff44fdf4",
+      "size": 5477
+    },
+    {
+      "path": "ui/gaitExperience.js",
+      "sha": "6fd4d8f398c356cc8f25a2c4227da7b21e4fe036",
+      "size": 8790
+    },
+    {
+      "path": "ui/gpsDynamicResult.css",
+      "sha": "446970249ce842853201262b94c9f5b2f4939d52",
+      "size": 20568
+    },
+    {
+      "path": "ui/gpsDynamicResult.js",
+      "sha": "37da6cd6d3f9cad414df6adaa1911cab95a159be",
+      "size": 20387
+    },
+    {
+      "path": "ui/gpsEnergyDisplay.js",
+      "sha": "8ab82ea94518b9065a300a560d4444324af4294f",
+      "size": 1225
+    },
+    {
+      "path": "ui/gpsLiveMap.js",
+      "sha": "00d843aaa4e45261af0e050cb699d0ac12c572a4",
+      "size": 6252
+    },
+    {
+      "path": "ui/gpsMeasurementCore.js",
+      "sha": "083abaddd2222d3b0bb9d05564488e537bd4839c",
+      "size": 15414
+    },
+    {
+      "path": "ui/gpsMeasurementEnergy.js",
+      "sha": "bf82615b49535ea73464895327d773355fbfd57f",
+      "size": 5286
+    },
+    {
+      "path": "ui/gpsMeasurementValidation.js",
+      "sha": "a93af77802f1b4e216b54dffcf33e91e8d943bb3",
+      "size": 3768
+    },
+    {
+      "path": "ui/gpsPlatform.js",
+      "sha": "946f628b48dc04ba1d1ec524a8ef41943df29b9b",
+      "size": 456
+    },
+    {
+      "path": "ui/gpsPrivateAtomicRestore.js",
+      "sha": "5b51bc14ca81ccf698b1ee4221f1e4c9989cae91",
+      "size": 8864
+    },
+    {
+      "path": "ui/gpsPrivatePortableUiFlow.js",
+      "sha": "f2005b4a22d887af620d4cca14cf1a3766736ae9",
+      "size": 4983
+    },
+    {
+      "path": "ui/gpsReflectionBackupScope.js",
+      "sha": "a473b35407065de53011b263b801908d4829a428",
+      "size": 6113
+    },
+    {
+      "path": "ui/gpsReflectionBackupSnapshot.js",
+      "sha": "ed8e7f1d117a4e703c6e32f008d685f657d5a585",
+      "size": 5940
+    },
+    {
+      "path": "ui/gpsReflectionEventContract.js",
+      "sha": "e1edafdd46da7cc239dec66e066e16fc33348779",
+      "size": 7141
+    },
+    {
+      "path": "ui/gpsReflectionPortableV3.js",
+      "sha": "cf1db780258b83d8bd493ad81ce528a1cdd1cf56",
+      "size": 9743
+    },
+    {
+      "path": "ui/gpsReflectionPreflight.js",
+      "sha": "e6675a297f41cbbd92e18d0d4d0ea28132fb9146",
+      "size": 2597
+    },
+    {
+      "path": "ui/gpsReflectionScreen.js",
+      "sha": "abc2d511edbbf96f66b144b9dc030c4a4a23da4c",
+      "size": 5943
+    },
+    {
+      "path": "ui/gpsReplayIndexedDbStore.js",
+      "sha": "5a5c311d3a2389930e0b3708901c07545cd42945",
+      "size": 29450
+    },
+    {
+      "path": "ui/gpsReplayReference.js",
+      "sha": "a22d31be498fe8920aec1cfca09de24d2b88b70f",
+      "size": 5245
+    },
+    {
+      "path": "ui/gpsStorageHealth.js",
+      "sha": "64595af938e326567033157585fa1961b3547802",
+      "size": 2100
+    },
+    {
+      "path": "ui/historyExperience.js",
+      "sha": "c367622bd501dbe1d69187ef603b226c6f0a077a",
+      "size": 29794
+    },
+    {
+      "path": "ui/historyGpsAdapter.js",
+      "sha": "1b4c17ff86cccb913ff7c2d16796e061ab1a8cb9",
+      "size": 953
+    },
+    {
+      "path": "ui/historyInlineStyles.js",
+      "sha": "b442587d65f062bfbbca70929f827c38ba4e59b6",
+      "size": 30738
+    },
+    {
+      "path": "ui/homeDashboardDrag.js",
+      "sha": "aa530d7829e71a56f4e2039412995f85dcc15147",
+      "size": 5890
+    },
+    {
+      "path": "ui/homeDashboardLayout.js",
+      "sha": "d458531b2dd482451805c62f81fe5745c56ee59a",
+      "size": 5222
+    },
+    {
+      "path": "ui/homeExperience.css",
+      "sha": "fbbb1ab27f950a6352acd18dcf58bb8d3e5b1f8d",
+      "size": 55896
+    },
+    {
+      "path": "ui/homeExperience.js",
+      "sha": "3d73c5799c3f3d6c2ea5aea6d7b5ead36b2985a7",
+      "size": 30913
+    },
+    {
+      "path": "ui/interpretationExperience.css",
+      "sha": "ba18539a3786363f791236987e49c35ae3441aaa",
+      "size": 2792
+    },
+    {
+      "path": "ui/interpretationRules.js",
+      "sha": "6c3b04244f58118f4c033dbb8d84023880664cda",
+      "size": 4467
+    },
+    {
+      "path": "ui/interpretationView.js",
+      "sha": "d65fd1f175136a00cedf4a37e88317d1347434bb",
+      "size": 4617
+    },
+    {
+      "path": "ui/learningExperience.css",
+      "sha": "e406fbf4b691aeadeacaf9baa1032ef220c2df88",
+      "size": 20374
+    },
+    {
+      "path": "ui/learningExperience.js",
+      "sha": "c6405d79a68e8bec06d53fc0e7c00559497ff47c",
+      "size": 24655
+    },
+    {
+      "path": "ui/learningFatigueLesson.js",
+      "sha": "8ed30ede0f40244d21d8aa8bdcbb9df35c893bfd",
+      "size": 19202
+    },
+    {
+      "path": "ui/learningMotionLesson.js",
+      "sha": "95df01880da88d87202ce454a2dde4a860ee244c",
+      "size": 18282
+    },
+    {
+      "path": "ui/learningOriginLesson.js",
+      "sha": "55bdcda6a16d779b42be454694e1d875e9cadb19",
+      "size": 15163
+    },
+    {
+      "path": "ui/learningPresentation.js",
+      "sha": "cc142cd19c321bbff27883511863288e36c13e56",
+      "size": 3270
+    },
+    {
+      "path": "ui/legalDocuments.js",
+      "sha": "6e2a7f8c3d6190040e066d11f6bfa68675b50ef2",
+      "size": 19541
+    },
+    {
+      "path": "ui/manualRunCanonical.js",
+      "sha": "a46b04fc7932a97f222873f05b652b4d702df141",
+      "size": 8006
+    },
+    {
+      "path": "ui/manualRunLock.js",
+      "sha": "1c01c3cb5b4a2d39626e0d72dceb9e9c371b692f",
+      "size": 1065
+    },
+    {
+      "path": "ui/manualRunStore.js",
+      "sha": "a498a3a6e53eaf42c6b5a42bc784108aa54474f8",
+      "size": 15896
+    },
+    {
+      "path": "ui/measurementExperience.css",
+      "sha": "8d410a761437a953513d36819639ad16c971274b",
+      "size": 37362
+    },
+    {
+      "path": "ui/measurementExperience.js",
+      "sha": "7fae46510c6c1fbed980be1fe80e91b08e7786fd",
+      "size": 18455
+    },
+    {
+      "path": "ui/mentalExperience.css",
+      "sha": "acc72f4029e5c03063759c1a49e68f3fd80e8850",
+      "size": 2540
+    },
+    {
+      "path": "ui/mentalExperience.js",
+      "sha": "0ded2be1fa47d00c7f4d2626bd8b6da72a1d3db0",
+      "size": 6093
+    },
+    {
+      "path": "ui/mentalSaveFlow.js",
+      "sha": "fa8cfb5de58f786155bf9835b4dec418bfb1cef0",
+      "size": 2523
+    },
+    {
+      "path": "ui/mobileInputFocus.css",
+      "sha": "9fda32853e813df98c1d6c4d37116d8e597b91b5",
+      "size": 922
+    },
+    {
+      "path": "ui/noteRunLink.js",
+      "sha": "9cf968c782cd8f26308cbeddf10552c3c7d0a031",
+      "size": 2167
+    },
+    {
+      "path": "ui/portableDataV2.js",
+      "sha": "9dc5d0b7a8a087acf412a20508860d1b94a8cf9e",
+      "size": 9821
+    },
+    {
+      "path": "ui/recordDraftReview.js",
+      "sha": "5b0da9ae5f954466e96947486d343ac06b2939e4",
+      "size": 7833
+    },
+    {
+      "path": "ui/recordExperience.css",
+      "sha": "4ac147274629d448261182af257c245ae25a1fe2",
+      "size": 58696
+    },
+    {
+      "path": "ui/recordExperience.js",
+      "sha": "e5b0e4da0b0deb93efbd4a8334558511d5863f1d",
+      "size": 24963
+    },
+    {
+      "path": "ui/recordIcons.js",
+      "sha": "506f41c69d810666631cb1d68100a0e7adb78e55",
+      "size": 1204
+    },
+    {
+      "path": "ui/recordRef.js",
+      "sha": "018b9e958eedec03c82ea27a552c946526b072ca",
+      "size": 6029
+    },
+    {
+      "path": "ui/recordReturnActions.css",
+      "sha": "af6c4a111ceaa80f52587a93fb30eb26a0a5945a",
+      "size": 6525
+    },
+    {
+      "path": "ui/recordReviewExperience.css",
+      "sha": "f44cf9c4b725e0224d27766780e322b9c81600e5",
+      "size": 24056
+    },
+    {
+      "path": "ui/recordReviewExperience.js",
+      "sha": "7d76978a0622440aa16482b6f4c6b095fa2132cc",
+      "size": 14095
+    },
+    {
+      "path": "ui/referenceEvidenceInfo.js",
+      "sha": "c1520d2c8bc37c765c0a1b5036f47b68fe1403af",
+      "size": 7849
+    },
+    {
+      "path": "ui/regionReferenceComparison.js",
+      "sha": "d4abef97cd175745bdf97e0e6309a1b03ac26025",
+      "size": 3285
+    },
+    {
+      "path": "ui/restDayStore.js",
+      "sha": "49c6dc12f98613e7d0f70be8d7b81d8d8eb915d8",
+      "size": 3492
+    },
+    {
+      "path": "ui/resultExperience.css",
+      "sha": "45a37c30922cb481b5a21a67982f8f868ca88cc3",
+      "size": 29964
+    },
+    {
+      "path": "ui/resultExperience.js",
+      "sha": "af6c3adf78ee21dd66140adfd991d22600571fe6",
+      "size": 59993
+    },
+    {
+      "path": "ui/resultInlineStyles.js",
+      "sha": "c6fb947e480b24ccc08f4a6393ff671034380fc9",
+      "size": 53508
+    },
+    {
+      "path": "ui/resultSharingPolicy.js",
+      "sha": "13362090811ea6a9d1fab1784c43677e0b0a0b68",
+      "size": 1144
+    },
+    {
+      "path": "ui/rofExperience.css",
+      "sha": "e6e10609309821a201aa962795aa91c7d44e6e0e",
+      "size": 22118
+    },
+    {
+      "path": "ui/rofExperience.js",
+      "sha": "451c75fd8b8730a4ce6e83a5034d58d0d33e9b1f",
+      "size": 18267
+    },
+    {
+      "path": "ui/rofJScale.js",
+      "sha": "c0d7ad6824ff9baa02214c1418a4c5ce5f20e0bb",
+      "size": 1772
+    },
+    {
+      "path": "ui/runQuestionContinuation.js",
+      "sha": "46678c8c81aeaf8c0f3bff30200cce40f075a333",
+      "size": 3101
+    },
+    {
+      "path": "ui/runReflection.js",
+      "sha": "4700f7a1c9c3257af2076398c25207ff8e48bf0c",
+      "size": 3553
+    },
+    {
+      "path": "ui/saveReviewShared.css",
+      "sha": "cf7dfa702ae94664cbb1c5352f76ea167b86e804",
+      "size": 2564
+    },
+    {
+      "path": "ui/saveReviewShared.js",
+      "sha": "cb73a794fc21435ad5cde2db686fdd7815fb3e5f",
+      "size": 2730
+    },
+    {
+      "path": "ui/screenCoherenceP12.css",
+      "sha": "bdaecc5dfaf6bdd45669aab72f3188fa87e84538",
+      "size": 7330
+    },
+    {
+      "path": "ui/screenCoherenceP14.css",
+      "sha": "5a3f74d1b50189691c3dc2a1a8c98d8a77f9fab4",
+      "size": 9108
+    },
+    {
+      "path": "ui/screenHelpUnified.css",
+      "sha": "901d8a889592328e2204c02f6445d3ade1eaf1b7",
+      "size": 4352
+    },
+    {
+      "path": "ui/screenRefinementP13.css",
+      "sha": "7b43540f3fc71174d4c1a050c27bd8b18f7c8f4d",
+      "size": 5855
+    },
+    {
+      "path": "ui/settingsExperience.css",
+      "sha": "628cc90a5b174085e1c37adcc9b54b0947cced32",
+      "size": 18583
+    },
+    {
+      "path": "ui/settingsExperience.js",
+      "sha": "237a983f462bbe01763296b36c56f76e8c3b6a17",
+      "size": 13273
+    },
+    {
+      "path": "ui/unifiedLearningShell.css",
+      "sha": "da38e7f2a4a1acef0ca165f6c4d6d39739052542",
+      "size": 12693
+    }
+  ]
+}

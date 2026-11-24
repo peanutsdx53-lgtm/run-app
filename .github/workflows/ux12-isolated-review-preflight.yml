@@ -9,19 +9,33 @@ concurrency:
   cancel-in-progress: false
 jobs:
   static:
-    name: Candidate Node and scientific contracts
+    name: Verified candidate Node and scientific contracts
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: harness
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c5344685db1fb04a6546c04858ad19633bba932e
+          path: candidate
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify all candidate source blobs before Node tests
+        run: node harness/.github/diagnostics/ux12-verify-tree.mjs harness/.github/diagnostics/ux12-candidate-tree.json candidate c5344685db1fb04a6546c04858ad19633bba932e
       - run: node scripts/auditLocalDependencies.mjs
+        working-directory: candidate
       - run: node scripts/auditPublicTerminology.mjs
+        working-directory: candidate
       - run: node --test tests/*.test.mjs
+        working-directory: candidate
   browser:
-    name: ${{ matrix.engine }} isolated review and downstream regression
+    name: ${{ matrix.engine }} verified isolated review and downstream regression
     runs-on: ubuntu-24.04
     container:
       image: mcr.microsoft.com/playwright:v1.56.1-noble
@@ -36,65 +50,103 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: ${{ github.sha }}
+          path: harness
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 9393602f8f28955e111b4b313b7f84b09589ceab
+          path: baseline
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c5344685db1fb04a6546c04858ad19633bba932e
+          path: candidate
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install --no-save playwright@1.56.1
-      - name: Baseline reproduction (diagnostic outcome only; candidate must pass)
-        continue-on-error: true
+      - name: Install supported browser test tool in shared parent
+        run: npm install --no-save --no-package-lock playwright@1.56.1
+      - name: Verify both independent source trees before any browser test
+        id: identity
         shell: bash
         run: |
-          set -u
-          cp app.js /tmp/runload-candidate-app.js
-          trap 'cp /tmp/runload-candidate-app.js app.js' EXIT
-          git show 9393602f8f28955e111b4b313b7f84b09589ceab:app.js > app.js
-          node tests/saveReviewStage4Browser.mjs
+          mkdir -p identity-evidence
+          node harness/.github/diagnostics/ux12-verify-tree.mjs harness/.github/diagnostics/ux12-baseline-tree.json baseline 9393602f8f28955e111b4b313b7f84b09589ceab | tee identity-evidence/baseline-before.json
+          node harness/.github/diagnostics/ux12-verify-tree.mjs harness/.github/diagnostics/ux12-candidate-tree.json candidate c5344685db1fb04a6546c04858ad19633bba932e | tee identity-evidence/candidate-before.json
+          (cd baseline && node --input-type=module -e "import('playwright').then(()=>console.log('baseline Playwright resolved'))")
+          (cd candidate && node --input-type=module -e "import('playwright').then(()=>console.log('candidate Playwright resolved'))")
+      - name: Baseline original Stage4 diagnostic (record actual outcome)
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: baseline
+        shell: bash
+        run: |
+          mkdir -p audit-output/baseline-diagnostic
+          set +e
+          node tests/saveReviewStage4Browser.mjs > audit-output/baseline-diagnostic/stage4.log 2>&1
           code=$?
-          if [ -d audit-output/gps-stage4-save ]; then
-            mv audit-output/gps-stage4-save audit-output/gps-stage4-save-baseline
+          set -e
+          cat audit-output/baseline-diagnostic/stage4.log
+          if [ "$code" -eq 0 ]; then
+            outcome=NOT_REPRODUCED
+          elif grep -Fq 'saveReviewStage4Browser.mjs:116:' audit-output/baseline-diagnostic/stage4.log && grep -Fq "waiting for locator('#runload-result-v4')" audit-output/baseline-diagnostic/stage4.log; then
+            outcome=EXPECTED_RETRY_TIMEOUT_REPRODUCED
+          else
+            outcome=UNEXPECTED_FAILURE
           fi
-          echo "Baseline exit: $code"
-          exit "$code"
-      - name: Verify candidate restored exactly
-        if: ${{ !cancelled() }}
-        shell: bash
-        run: |
-          git diff --exit-code -- app.js
-          test "$(git hash-object app.js)" = "1c1ddbf148dde9b45777024525d3c5924182f104"
+          printf '{"exitCode":%s,"outcome":"%s"}\n' "$code" "$outcome" | tee audit-output/baseline-diagnostic/outcome.json
+          test "$outcome" != UNEXPECTED_FAILURE
       - name: Candidate save failure and exact retry with mouse
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: candidate
         run: node tests/saveReviewStage4Browser.mjs
       - name: Candidate save failure and exact retry with touch
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: candidate
         env:
           RUNLOAD_STAGE4_ACTIVATION: touch
         run: node tests/saveReviewStage4Browser.mjs
       - name: Candidate save failure and exact retry with keyboard
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: candidate
         env:
           RUNLOAD_STAGE4_ACTIVATION: keyboard
         run: node tests/saveReviewStage4Browser.mjs
       - name: UX06 manual validation and duplicate-click integrity
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: candidate
         run: node tests/ux06ManualEntryBrowser.mjs
       - name: UX10 bilingual 32-state focus and privacy clearance
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: candidate
         run: node tests/ux10PresaveScopeBrowser.mjs
       - name: UX12 history filters and exact record IDs
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: candidate
         run: node tests/historyDiscoveryBrowser.mjs
       - name: GPS fixed controls and saved record integrity
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: candidate
         run: node tests/gpsRofReviewBrowser.mjs
       - name: Unified GPS manual history and three result tabs
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        working-directory: candidate
         run: node tests/gpsStage5HistoryResultBrowser.mjs
-      - name: Preserve baseline and candidate evidence
-        if: always()
+      - name: Verify both source trees remain unchanged after tests
+        if: ${{ !cancelled() && steps.identity.outcome == 'success' }}
+        shell: bash
+        run: |
+          node harness/.github/diagnostics/ux12-verify-tree.mjs harness/.github/diagnostics/ux12-baseline-tree.json baseline 9393602f8f28955e111b4b313b7f84b09589ceab | tee identity-evidence/baseline-after.json
+          node harness/.github/diagnostics/ux12-verify-tree.mjs harness/.github/diagnostics/ux12-candidate-tree.json candidate c5344685db1fb04a6546c04858ad19633bba932e | tee identity-evidence/candidate-after.json
+      - name: Preserve independent baseline candidate and identity evidence
+        if: ${{ always() && steps.identity.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ux12-isolated-review-${{ matrix.engine }}
-          path: audit-output/
-          if-no-files-found: warn
+          name: ux12-verified-isolated-review-${{ matrix.engine }}
+          path: |
+            identity-evidence/
+            baseline/audit-output/
+            candidate/audit-output/
+          if-no-files-found: error
           retention-days: 7
