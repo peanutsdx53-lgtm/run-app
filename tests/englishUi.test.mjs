@@ -340,3 +340,27 @@ test('Course shortened text has descriptive aria labels and English percentage e
  assert.equal(translateUiText('上りを調整',{element:strong}),'Adjust Uphill');
  assert.equal(translateUiText('締まった土道を調整',{element:strong}),'Adjust Compacted Dirt');
 });
+
+
+test('UX12 generated history date accessible names preserve the exact activity or rest date',()=>{
+ const element=(iso,{authored=false,match=true}={})=>({
+  matches:selector=>match&&selector==='time.datebox[datetime]',
+  closest:selector=>authored&&selector==='[data-user-authored]'?{}:null,
+  getAttribute:name=>name==='datetime'?iso:null
+ });
+ for(const [ja,iso,en] of [
+  ['走行日：2026年11月11日','2026-11-11','Activity Date: 2026-11-11'],
+  ['休養日：2026年1月2日','2026-01-02','Rest Day Date: 2026-01-02'],
+  ['走行日：2024年2月29日','2024-02-29','Activity Date: 2024-02-29']
+ ]){
+  const context={element:element(iso),attribute:'aria-label'};
+  assert.equal(translateUiText(ja,context),en);
+  assert.equal(translateUiText(' '+ja+' ',context),' '+en+' ');
+  assert.equal(translateUiText(en,context),en);
+  assert.equal(translateUiText(ja,{...context,element:element('2026-01-01')}),ja,'mismatched dates not reinterpreted');
+  assert.equal(translateUiText(ja,{...context,element:element(iso,{authored:true})}),ja,'user text untouched');
+  assert.equal(translateUiText(ja,{...context,element:element(iso,{match:false})}),ja,'unrelated element untouched');
+  assert.equal(translateUiText(ja,{...context,attribute:'title'}),ja,'unrelated attribute untouched');
+ }
+ assert.equal(translateUiText('走行日：日付未取得',{element:element(''),attribute:'aria-label'}),'走行日：日付未取得');
+});

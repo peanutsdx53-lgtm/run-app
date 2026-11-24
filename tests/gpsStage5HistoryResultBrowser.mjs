@@ -127,6 +127,26 @@ try{
      return text.length===6&&text.every(el=>!/[ぁ-んァ-ン一-龯]/.test(el.textContent));
     },null,{timeout:12000});
    }
+   // UX12: verify the system-generated accessible date name, not only the
+   // visible weekday. The exact activity date remains the same in both languages.
+   const restDate=new Date(saved.date+'T12:00:00Z');restDate.setUTCDate(restDate.getUTCDate()-1);
+   const expectedDates=[{date:saved.date,rest:false},{date:saved.date,rest:false},
+    {date:restDate.toISOString().slice(0,10),rest:true}].map(({date,rest})=>{
+     const [y,m,d]=date.split('-');
+     return {date,label:language==='en'?(rest?'Rest Day Date: ':'Activity Date: ')+date:
+      (rest?'休養日':'走行日')+'：'+Number(y)+'年'+Number(m)+'月'+Number(d)+'日'};
+    }).sort((a,b)=>a.date.localeCompare(b.date)||a.label.localeCompare(b.label));
+   await page.waitForFunction(expected=>{
+    const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+    const actual=[...(root?.querySelectorAll('time.datebox[datetime]')||[])].map(el=>({
+     date:el.getAttribute('datetime'),label:el.getAttribute('aria-label')
+    })).sort((a,b)=>a.date.localeCompare(b.date)||String(a.label).localeCompare(String(b.label)));
+    return JSON.stringify(actual)===JSON.stringify(expected);
+   },expectedDates,{timeout:12000});
+   const dates=await history.locator('time.datebox[datetime]').evaluateAll(els=>els.map(el=>({
+    date:el.getAttribute('datetime'),label:el.getAttribute('aria-label')
+   })).sort((a,b)=>a.date.localeCompare(b.date)||String(a.label).localeCompare(String(b.label))));
+   assert.deepEqual(dates,expectedDates,'exact bilingual activity and rest date accessibility labels');
    assert.equal(await history.locator('[data-record-source]').count(),3,'source filter All/Manual/GPS');
    assert.match(await history.locator('.stats').innerText(),language==='en'?/(2|Two)/:/2/,'two runs included in monthly totals');
    assert.equal(await page.locator('.gps-history-item').count(),0,'old duplicate GPS list retired');

@@ -97,8 +97,11 @@ async function auditNavClearance(page,lang,width,zoom){
  const results=[];
  for(const [label,selector] of [['return-shortcut','[data-review-jump-scope]'],
                                  ['save-control','[data-manual-run-save]']]){
-  await page.locator(selector).focus();
-  const sample=await page.evaluate(selector=>{
+   await page.locator(selector).focus();
+   // Wait for the app's bounded post-focus layout correction, not a fixed
+   // delay. Keep the original full-visibility assertion and 4px clearance.
+   await page.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(done)))));
+   const sample=await page.evaluate(selector=>{
    const elem=document.querySelector(selector),nav=document.querySelector('.mobile-nav');
    if(!elem||!nav)throw new Error('missing focus or mobile nav');
    const r=elem.getBoundingClientRect(),n=nav.getBoundingClientRect();

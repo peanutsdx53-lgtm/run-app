@@ -1,6 +1,19 @@
 /* Reviewed English fixed UI copy for manual recording, review, and history.
  * Exact-match display translation only; stored records remain Japanese/user-authored. */
 export const ENGLISH_RECORD_HISTORY_COPY=Object.freeze({
+ "日付を指定して探す": "Find by Date",
+ "最近の記録を見る": "View Recent Records",
+ "表示中の条件": "Active Filters",
+ "全期間を表示": "All Dates",
+ "この月を表示": "This Month",
+ "日付": "Date",
+ "検索語": "Keyword",
+ "手入力のみ": "Manual Only",
+ "GPSのみ": "GPS Only",
+ "走行のみ": "Activities Only",
+ "休養のみ": "Rest Days Only",
+ "走行日": "Activity Date",
+ "休養日": "Rest Day Date",
  "この走行のメモを確認・修正": "Review or Edit Notes for This Activity",
  "保存した気づき：確認不可": "Saved Notes: Unavailable",
  "日付・距離・時間・活動種目を入力します。追加情報は任意です。入力後に内容を確認して保存します。": "Enter a date, distance, duration, and activity type. Other details are optional. Review the information before saving.",

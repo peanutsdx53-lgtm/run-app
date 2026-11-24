@@ -115,8 +115,31 @@ try{
    await page.screenshot({path:resolve(out,engine+'-'+lang+'-'+width+'-review.png'),
     fullPage:true,animations:'disabled'});
   if(lang==='ja'&&width===390&&zoom===100){
-   await save.evaluate(el=>{el.click();el.click()});
-   await page.waitForURL(/#\/result\?record=/,{timeout:20000});
+   // Resolve the live control in the same browser task as both clicks.
+   // Do not retry the save on timeout; capture the actual failure state.
+   await page.evaluate(()=>{
+    const button=document.querySelector('[data-manual-run-save]');
+    if(!button?.isConnected||button.disabled||location.hash!=='#/record-review')
+     throw Error('manual review is not ready for duplicate-click check');
+    button.click();button.click();
+   });
+   try{await page.waitForURL(/#\/result\?record=/,{timeout:20000});}
+   catch(error){
+    const diagnostic=await page.evaluate(async()=>{
+     const c=await import('/ui/manualRunCanonical.js'),stored=await c.readCanonical();
+     const btn=document.querySelector('[data-manual-run-save]');
+     return {hash:location.hash,savePresent:!!btn,disabled:btn?.disabled??null,
+      busy:btn?.getAttribute('aria-busy')??null,
+      notice:document.querySelector('[data-save-failure]')?.textContent??null,
+      canonicalOk:stored.ok,recordCount:stored.read?.records?.length??null,
+      pendingRequest:!!sessionStorage.getItem('runload-v2-pending-manual-commit-id')};
+    }).catch(e=>({diagnosticError:String(e)}));
+    const evidence={engine,lang,width,zoom,errors,diagnostic};
+    console.error('UX06 save failure evidence '+JSON.stringify(evidence));
+    await writeFile(resolve(out,'save-failure-'+lang+'-'+width+'-'+zoom+'.json'),JSON.stringify(evidence,null,2));
+    await page.screenshot({path:resolve(out,'save-failure-'+lang+'-'+width+'-'+zoom+'.png'),animations:'disabled'}).catch(()=>{});
+    throw error;
+   }
    const stored=await page.evaluate(async()=>{
     const c=await import('/ui/manualRunCanonical.js'),got=await c.readCanonical();
     return {ok:got.ok,records:got.read?.records?.map(a=>({

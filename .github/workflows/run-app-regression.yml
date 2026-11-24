@@ -140,6 +140,16 @@ jobs:
           path: audit-output/ux10-presave-${{ matrix.engine }}/
           if-no-files-found: warn
           retention-days: 7
+      - name: Verify UX12 mobile date disclosure, recent history, exact saved IDs and filter scopes
+        run: node tests/historyDiscoveryBrowser.mjs
+      - name: Preserve UX12 date-search and record-selection browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux12-history-${{ matrix.engine }}
+          path: audit-output/history-discovery-${{ matrix.engine }}/
+          if-no-files-found: error
+          retention-days: 7
       - name: Verify UX09 environment and optional return at 32 bilingual states
         run: node tests/ux09EnvironmentReturnBrowser.mjs
       - name: Preserve UX09 environment statuses and optional return screenshots

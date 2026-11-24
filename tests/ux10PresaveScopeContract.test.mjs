@@ -74,20 +74,47 @@ test('UX038 click action only focuses existing scope and leaves all save handler
  assert.match(app,/manualRunLock\.withManualRunWriteLock/);
  assert.match(app,/data-manual-run-save/);
 });
+test('review entry renders once after canonical refresh; focus correction is scoped and does not save',()=>{
+ const app=read('app.js');
+ const entry=app.slice(app.indexOf('if(event.target.closest("[data-demo-save]"))'),app.indexOf('if(event.target.closest(".rr-date-edit")'));
+ assert.ok(entry.includes('location.hash="#/record-review";return;'));
+ assert.doesNotMatch(entry,/\brender\(\)/);
+ const focus=app.slice(app.indexOf('function keepReviewControlVisible(target)'),app.indexOf('app.addEventListener("click",async(event)=>{'));
+ assert.match(focus,/currentPage\(\)!=='record-review'/);
+ assert.match(focus,/document.activeElement!==target/);
+ assert.match(focus,/getComputedStyle\(nav\).position!=='fixed'/);
+ assert.match(focus,/nav.getBoundingClientRect\(\)/);
+ assert.match(focus,/window.scrollBy/);
+ assert.doesNotMatch(focus,/\b(?:mutate|saveManualRun|render)\(/);
+});
 test('UX038 bilingual shortcut and active offline review assets match the current shell',()=>{
  assert.equal(translateUiText('保存する内容と出所を確認する'),'Review What Will Be Saved and Its Source');
  assert.equal(translateUiText('保存可否と出所を確認する'),'Review Save Availability and Source');
  assert.equal(translateUiText('端末内に保存'),'Save Destination: This Device');
- const ver='20261123-ux11-result-source-v1';
+ const ver='20261123-ux11-result-source-v1',shell='20261124-ux12-history-discovery-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
-  [app,'recordReviewExperience.js?v='+ver],[app,'englishUi.js?v='+ver],
-  [index,'recordReviewExperience.css?v='+ver],[index,'app.js?v='+ver],
-  [sw,'runload-ui-next-shell-'+ver],[sw,'recordReviewExperience.js?v='+ver],
+  [app,'recordReviewExperience.js?v='+ver],[app,'englishUi.js?v='+shell],
+  [index,'recordReviewExperience.css?v='+ver],[index,'app.js?v='+shell],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'recordReviewExperience.js?v='+ver],
   [sw,'recordReviewExperience.css?v='+ver],[sw,'englishFinalRecording.js?v='+ver],
   [en,'englishFinalRecording.js?v='+ver],
   [en,'englishFinalGps.js?v='+ver],[sw,'englishFinalGps.js?v='+ver]
  ];
  for(const [s,token] of items)assert.ok(s.includes(token),'missing active/offline URL '+token);
  assert.ok(app.includes('environmentExperience.js?v=20261123-ux09-environment-states-v1'));
+});
+
+
+test('review focus correction cannot scroll during pointer activation or stale animation frames',()=>{
+ const app=read('app.js');
+ const focus=app.slice(app.indexOf('const reviewPointers=new Set();'),app.indexOf('app.addEventListener("click",async(event)=>{'));
+ assert.ok(focus.includes("window.addEventListener('pointerdown'"));
+ assert.ok(focus.includes("window.addEventListener('pointerup'"));
+ assert.ok(focus.includes("window.addEventListener('pointercancel'"));
+ assert.ok(focus.includes("window.addEventListener('mousedown'"));
+ assert.ok(focus.includes("window.addEventListener('mouseup'"));
+ assert.ok(focus.includes("if(reviewPointerBusy()||currentPage()!=='record-review'"));
+ assert.ok(focus.includes('epoch===reviewFocusEpoch'));
+ assert.ok(focus.includes('reviewFocusEpoch++'));
 });

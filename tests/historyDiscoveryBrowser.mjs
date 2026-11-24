@@ -57,6 +57,12 @@ try{
   await rootSel.locator('.empty[data-history-unconnected="false"]').waitFor({state:'visible',timeout:12000});
   assert.match(await rootSel.locator('.empty').innerText(),/保存した記録はまだありません/);
   assert.equal(await rootSel.locator('[data-select-id]').count(),0,'never synthesize history');
+  const cal=rootSel.locator('.hx-calendar-fold');
+  assert.equal(await cal.evaluate(el=>el.open),width>870,'mobile calendar folded, desktop expanded');
+  if(width<=870){
+   assert.equal(await cal.locator('summary').isVisible(),true,'date search remains immediately available');
+   assert.ok(await cal.locator('summary').evaluate(el=>el.getBoundingClientRect().height)>=43.5);
+  }
   await capture(page,width,'01-no-saved-records');
   await page.goto(host+'record',{waitUntil:'networkidle'});
   await page.locator('[data-draft="date"]').fill(date);
@@ -81,7 +87,14 @@ try{
   assert.match(await rootSel.locator('.empty').innerText(),/この月の記録はありません/);
   assert.match(await rootSel.locator('.empty').innerText(),/別の月に保存済み/);
   await capture(page,width,'02-other-month-exists');
-  await rootSel.locator('[data-history-scope="all"]').first().click();
+  const recent=rootSel.locator('.hx-recent-shortcut[data-history-recent]');
+  assert.equal(await recent.count(),1,'recent records remain reachable above the large calendar');
+  assert.equal(await recent.getAttribute('data-history-scope'),null,'shortcut is not a period-filter option');
+  assert.equal(await rootSel.locator('.hx-scope [data-history-scope]').count(),2,'exactly two period filters remain');
+  await recent.click();
+  assert.match(await rootSel.locator('.hx-active-conditions').innerText(),/全期間を表示/);
+  assert.equal(await rootSel.locator('[data-open-record]').count(),0,'recent shortcut must not select a run implicitly');
+  await rootSel.locator('.hx-scope [data-history-scope="all"]').click();
   await rootSel.locator('[data-select-id="'+runId+'"]').waitFor({state:'visible'});
   assert.match(await rootSel.locator('.hx-entry-month').innerText(),new RegExp(String(old.getFullYear())+'年'));
   await capture(page,width,'03-all-months');
@@ -89,6 +102,8 @@ try{
   await input.fill('月をまたぐ検索用');
   assert.equal(await input.evaluate(el=>el===el.getRootNode().activeElement),true,'search input should retain keyboard focus');
   assert.equal(await rootSel.locator('[data-select-id]').count(),1);
+  assert.match(await rootSel.locator('.hx-active-conditions').innerText(),/検索語/);
+  assert.match(await rootSel.locator('.hx-active-conditions').innerText(),/月をまたぐ検索用/);
   await capture(page,width,'04-search-match');
   await input.fill('存在しない文字列');
   assert.equal(await rootSel.locator('[data-select-id]').count(),0);
@@ -107,6 +122,15 @@ try{
   await page.goto(host+'history',{waitUntil:'networkidle'});
   await rootSel.locator('[data-history-scope="month"]').click();
   await rootSel.locator('[data-jump-month="'+month+'"]').click();
+  if(width<=870){
+   const fold=rootSel.locator('.hx-calendar-fold');
+   await fold.locator('summary').click();
+   assert.equal(await fold.evaluate(el=>el.open),true,'date-search disclosure can open');
+   await rootSel.locator('[data-day="15"]').click();
+   assert.equal(await fold.evaluate(el=>el.open),true,'calendar stays expanded after day filter');
+   assert.equal(await rootSel.locator('[data-select-id="'+runId+'"]').count(),1,'selected ISO day retains exact record');
+   assert.equal(await rootSel.locator('[data-open-record]').count(),0,'calendar day must not select run implicitly');
+  }
   assert.match(await rootSel.locator('.month-nav').innerText(),new RegExp(String(old.getFullYear())+'年'));
   assert.equal(await rootSel.locator('[data-select-id="'+runId+'"]').count(),1);
   assert.equal(await rootSel.locator('[data-history-scope="month"]').getAttribute('aria-pressed'),'true');

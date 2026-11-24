@@ -162,3 +162,34 @@ test('Find Records prioritizes keyword and period; advanced source/type stay fol
  assert.ok(style.includes('.hx-find-help-body{position:static;top:auto;right:auto'), 'help takes normal space and cannot sit behind period');
  assert.ok(style.includes('hx-advanced-body .hx-source-controls{background:#071e2e;border:1px'), 'method matches boxed filter styling');
 });
+
+test('UX12 mobile calendar is optional, keeps an ISO day filter and never selects a run implicitly',()=>{
+ const ui=createHistoryUi();ui.month='2026-10';
+ assert.equal(ui.calendarOpen,null);
+ let html=renderHistory(ui,fixtures,{connected:true,onOpen(){}});
+ assert.match(html,/<details class="hx-calendar-fold" data-history-calendar open><summary>日付を指定して探す<\/summary>/);
+ ui.calendarOpen=false;html=renderHistory(ui,fixtures,{connected:true,onOpen(){}});
+ assert.match(html,/<details class="hx-calendar-fold" data-history-calendar ><summary>/);
+ assert.match(html,/data-day="21"/);
+ assert.match(html,/<button type="button" class="hx-recent-shortcut" data-history-recent>/);
+ assert.equal((html.match(/data-history-scope=/g)||[]).length,2,'recent shortcut is not a third period filter');
+ assert.match(html,/data-history-scope="all"/);
+ assert.equal(filterRecords(normalizeRecords(fixtures),ui).length,3);
+ assert.doesNotMatch(html,/data-open-record/);
+ ui.day=21;ui.calendarOpen=true;html=renderHistory(ui,fixtures,{connected:true,onOpen(){}});
+ assert.match(html,/data-history-calendar open/);
+ assert.equal(filterRecords(normalizeRecords(fixtures),ui).length,1);
+});
+test('UX12 filter summary reflects scope, method, kind and query; dates are labeled without rewriting their source',()=>{
+ const ui=createHistoryUi();ui.month='2026-10';ui.allMonths=true;ui.query='公園';ui.source='MANUAL';ui.type='run';
+ let html=renderHistory(ui,fixtures,{connected:true,onOpen(){}});
+ assert.match(html,/data-history-active-conditions/);
+ for(const label of ['全期間を表示','検索語','手入力のみ','走行のみ'])assert.ok(html.includes(label));
+ assert.match(html,/datetime="2026-10-18"/);
+ assert.match(html,/aria-label="走行日：2026年10月18日"/);
+ ui.query='<script>alert(1)</script>';
+ html=renderHistory(ui,fixtures,{connected:true,onOpen(){}});
+ assert.doesNotMatch(html,/<script>/);
+ assert.match(html,/&lt;script&gt;/);
+ assert.equal(filterRecords(normalizeRecords(fixtures),ui).length,0);
+});

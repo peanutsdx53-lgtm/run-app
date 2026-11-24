@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261123-ux11-result-source-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261124-ux12-history-discovery-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -77,7 +77,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
     import("./ui/resultExperience.js?v=20261123-ux11-result-source-v1"),
     import("./ui/runQuestionContinuation.js"),
-    import("./ui/historyExperience.js?v=20261122-mobile-controls-v1"),
+    import("./ui/historyExperience.js?v=20261124-ux12-history-discovery-v1"),
     import("./ui/settingsExperience.js?v=20261121-profile-optional-right-v1"),
     import("./ui/portableDataV2.js?v=20261108-professor-m3-v1"),
     import("./ui/mentalExperience.js?v=20261108-professor-m4-v1"),
@@ -1265,6 +1265,49 @@ function recordExtras(){
     homeUi.conditionOpen=false;homeUi.deletePendingDate=null;
     render();app.querySelector("[data-condition-open]")?.focus({preventScroll:true});
   });
+  // Native focus scrolling is not consistent across engines after a viewport
+  // resize. Keep only the review controls clear of the measured fixed nav.
+  // Never change the selected control, draft, validation or save state.
+  // A pointer press (including a synthesized mouse press after touch) can
+  // focus a button before click dispatch. Scrolling during that sequence can
+  // move the target out from under the pointer and cancel the save/retry.
+  const reviewPointers=new Set();
+  let reviewMousePressed=false,reviewFocusEpoch=0;
+  const reviewPointerBusy=()=>reviewPointers.size>0||reviewMousePressed;
+  window.addEventListener('pointerdown',event=>{
+    reviewPointers.add(event.pointerId);reviewFocusEpoch++;
+  },true);
+  const releaseReviewPointer=event=>reviewPointers.delete(event.pointerId);
+  window.addEventListener('pointerup',releaseReviewPointer,true);
+  window.addEventListener('pointercancel',releaseReviewPointer,true);
+  window.addEventListener('mousedown',()=>{reviewMousePressed=true;reviewFocusEpoch++;},true);
+  window.addEventListener('mouseup',()=>{reviewMousePressed=false;},true);
+  window.addEventListener('blur',()=>{reviewPointers.clear();reviewMousePressed=false;reviewFocusEpoch++;});
+  function keepReviewControlVisible(target){
+    if(reviewPointerBusy()||currentPage()!=='record-review'||!target?.isConnected||document.activeElement!==target||
+       !matchMedia('(max-width:800px)').matches)return;
+    const nav=app.querySelector('.mobile-nav');
+    if(!nav||getComputedStyle(nav).position!=='fixed')return;
+    const r=target.getBoundingClientRect(),n=nav.getBoundingClientRect();
+    if(r.height<=0||n.height<=0)return;
+    const top=8,bottom=Math.min(innerHeight,n.top)-8;
+    if(bottom<=top)return;
+    const delta=r.height>bottom-top||r.top<top?r.top-top:r.bottom>bottom?r.bottom-bottom:0;
+    if(Math.abs(delta)>1)window.scrollBy({top:delta,behavior:'instant'});
+  }
+  app.addEventListener('focusin',event=>{
+    const target=event.target;
+    if(reviewPointerBusy()||!target?.matches?.('.rr-page [data-review-jump-scope],.rr-page [data-manual-run-save],.rr-page [data-rest-day-save]'))return;
+    const epoch=reviewFocusEpoch;
+    const correct=()=>{if(epoch===reviewFocusEpoch)keepReviewControlVisible(target);};
+    correct();
+    // Native focus scrolling may finish later. A new pointer press invalidates
+    // all scheduled corrections, even if released before the next frame.
+    requestAnimationFrame(()=>{
+      correct();
+      requestAnimationFrame(correct);
+    });
+  });
   app.addEventListener("click",async(event)=>{
     const noteAction=event.target.closest('[data-gps-n-open],[data-gps-n-select],[data-gps-n-new],[data-gps-n-save],[data-gps-n-delete],[data-gps-n-close]');
     if(noteAction){
@@ -2231,8 +2274,10 @@ function recordExtras(){
     if(event.target.closest("[data-demo-save]")){
       state.recordReviewSource="manual";
       state.recordReviewReturn=false;manualSaveNotice="";
-      location.hash="#/record-review";
-      render();window.scrollTo(0,0);return;
+      // The hashchange handler refreshes the canonical store and renders the
+      // review. Do not mount a transient first copy whose save button can be
+      // detached during the asynchronous refresh.
+      location.hash="#/record-review";return;
     }
     if(event.target.closest(".rr-date-edit")&&state.recordReviewSource==="gps"){
       state.recordReviewSource="manual";
