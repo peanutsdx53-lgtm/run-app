@@ -53,10 +53,11 @@ test('field terminology names seven fields and makes relevance explicit without 
  assert.doesNotMatch(sourceHelp,/分野の強調表示は、入力・保存記録との関連を示す目印です/);assert.match(sourceHelp,/参考知識は一般的な情報です/);
  assert.doesNotMatch(sourceHelp,/星/);
 });
-test('purpose label wraps only between semantic words without changing its accessible name',()=>{
+test('purpose label is one translatable text node with its full accessible name',()=>{
  const html=render(makeUi(memory()),{categories,draft:{},conditions:{entries:[]}});
- assert.match(html,/<strong class="ex-node-title">目的と<wbr>楽しみ方<\/strong>/);
+ assert.match(html,/<strong class="ex-node-title">目的と楽しみ方<\/strong>/);
  assert.match(html,/aria-label="目的と楽しみ方"/);
+ assert.doesNotMatch(html,/目的と<wbr>楽しみ方/);
  assert.doesNotMatch(html,/好きな星|どの星|光る星/);
 });
 test('exploration versioned assets agree across HTML, app and service worker',()=>{

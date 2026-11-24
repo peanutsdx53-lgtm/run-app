@@ -44,3 +44,29 @@ test('new modal help, research sources and state captions have exact English equ
  assert.equal(ENGLISH_EXPLORE_UI['自分の情報と照らす'],'Review Your Information');
  assert.equal(translateUiText('強調表示の意味',{element:english}),'Meaning of Highlighting');
 });
+
+// UX14: the same full category name must appear in visible titles and
+// accessible names, including the real draft/saved/example provenance suffixes.
+test('UX14 category names agree across plain and related accessible labels',()=>{
+ const node={...english,matches:selector=>selector==='.ex-node'};
+ const ctx={element:node,attribute:'aria-label'};
+ for(const [ja,en] of [['走りの記録','Your Running Records'],['身体のしくみ','How the Body Works'],['コースと環境','Course & Environment'],['疲れと回復','Fatigue & Recovery'],['暮らしと気持ち','Life & Feelings'],['走る前後の工夫','Before & After Runs'],['目的と楽しみ方','Goals & Enjoyment']]){
+  assert.equal(translateUiText(ja,{element:node}),en);
+  assert.equal(translateUiText(ja,ctx),en);
+  assert.equal(translateUiText(ja,{element:el(true,true)}),ja);
+ }
+ for(const [ja,en,reason,description] of [
+  ['走りの記録','Your Running Records','入力中の走行距離・時間などに関連','Related to Unsaved Running Distance and Duration'],
+  ['身体のしくみ','How the Body Works','入力中の身体に関するメモに関連','Related to Unsaved Body Notes'],
+  ['コースと環境','Course & Environment','入力中の上り坂・下り坂の情報に関連','Related to Unsaved Uphill and Downhill Data'],
+  ['疲れと回復','Fatigue & Recovery','入力中の運動前後の疲れに関連','Related to Unsaved Perceived Fatigue'],
+  ['疲れと回復','Fatigue & Recovery','2026-11-11 に保存したROF-Jの入力に関連','Related to self-reported ROF-J saved on 2026-11-11'],
+  ['暮らしと気持ち','Life & Feelings','2026-11-20 の生活コンディション記録に関連','Related to the Daily Condition Entry on 2026-11-20'],
+  ['走りの記録','Your Running Records','表示例：走行距離の入力','Example: Running Distance Entry'],
+  ['コースと環境','Course & Environment','表示例：上り坂の入力','Example: Uphill Entry']
+ ])assert.equal(translateUiText(ja+'、'+reason,ctx),en+', '+description);
+ const authored='走りの記録、入力中の走行距離・時間などに関連';
+ assert.equal(translateUiText(authored,{element:el(true,true),attribute:'aria-label'}),authored);
+ assert.equal(translateUiText('目的と楽しみ方、不明な説明',ctx),'目的と楽しみ方、不明な説明');
+ assert.equal(translateExploreDynamic('目的と楽しみ方、入力中の身体に関するメモに関連',{element:node}),'Goals & Enjoyment, Related to Unsaved Body Notes');
+});

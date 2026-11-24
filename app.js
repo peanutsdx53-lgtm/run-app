@@ -2141,8 +2141,12 @@ function recordExtras(){
     const exploreSelect=event.target.closest("[data-ex-category]");
     if(exploreSelect){
       const id=exploreSelect.dataset.exCategory,c=CATEGORIES.find(c=>c.id===id);
-      if(c){explorationUi.selected=id;explorationUi.topic=exploreSelect.dataset.exPickTopic||c.topics[0]||"";explorationUi.tab="field";explorationUi.notice="";render();
-        if(matchMedia("(max-width:900px)").matches)app.querySelector(".ex-focus")?.scrollIntoView({block:"start",behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"instant":"smooth"});}
+      if(c){explorationUi.selected=id;explorationUi.topic=exploreSelect.dataset.exPickTopic||c.topics[0]||"";explorationUi.tab="field";explorationUi.notice="";explorationUi.mapExpanded=true;render();
+        const heading=app.querySelector(".ex-focus h2"),map=app.querySelector(".ex-map-card");
+        heading?.focus({preventScroll:true});
+        // In a stacked layout the selected content follows the map; do not infer
+        // columns from viewport width alone (root-font enlargement can reflow desktop).
+        if(heading&&map&&(heading.getBoundingClientRect().top>=map.getBoundingClientRect().bottom-1||heading.getBoundingClientRect().top<0||heading.getBoundingClientRect().bottom>innerHeight))heading.scrollIntoView({block:"start",behavior:"instant"});}
       return;
     }
     const exploreTopicStep=event.target.closest("[data-ex-topic-step]");
@@ -2180,6 +2184,14 @@ function recordExtras(){
     const exploreAction=event.target.closest("[data-ex-action]");
     if(exploreAction){
       const action=exploreAction.dataset.exAction;
+      if(action==="toggle-map"){
+        explorationUi.mapExpanded=explorationUi.mapExpanded===false;render();
+        app.querySelector('[data-ex-action="toggle-map"]')?.focus();return;
+      }
+      if(action==="change-area"){
+        explorationUi.mapExpanded=true;render();
+        app.querySelector('.ex-node[aria-pressed="true"]')?.focus();return;
+      }
       if(action==="close"){const deleting=explorationUi.modal==="delete-note";const id=explorationUi.deletingNoteId;explorationUi.modal=deleting?"memories":"";explorationUi.editingNoteId=null;explorationUi.deletingNoteId=null;render();if(deleting)[...app.querySelectorAll('[data-ex-delete]')].find(el=>el.dataset.exDelete===id)?.focus({preventScroll:true});else restoreExplorationFocus();return;}
       if(action==="cancel-delete-note"){const id=explorationUi.deletingNoteId;explorationUi.deletingNoteId=null;explorationUi.modal="memories";render();[...app.querySelectorAll('[data-ex-delete]')].find(el=>el.dataset.exDelete===id)?.focus({preventScroll:true});return;}
       if(action==="confirm-delete-note"){
