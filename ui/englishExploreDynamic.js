@@ -124,7 +124,7 @@ export function translateExploreDynamic(raw,{element=null}={}){
  const areas={'走りの記録':'Your Running Records','身体のしくみ':'How the Body Works',
   'コースと環境':'Course & Environment','疲れと回復':'Fatigue & Recovery',
   '暮らしと気持ち':'Life & Feelings','走る前後の工夫':'Before & After Runs',
-  '目的と楽しみ方':'Goals & Enjoying Running'};
+  '目的と楽しみ方':'Goals & Enjoyment'};
  if(element.matches?.('.ex-node')&&(m=s.match(/^([^、]+)、(.+)$/))&&areas[m[1]]){
   const description=translateExploreDynamic(m[2],{element});
   if(description)return areas[m[1]]+', '+description;
