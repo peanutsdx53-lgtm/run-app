@@ -1265,6 +1265,32 @@ function recordExtras(){
     homeUi.conditionOpen=false;homeUi.deletePendingDate=null;
     render();app.querySelector("[data-condition-open]")?.focus({preventScroll:true});
   });
+  // Native focus scrolling is not consistent across engines after a viewport
+  // resize. Keep only the review controls clear of the measured fixed nav.
+  // Never change the selected control, draft, validation or save state.
+  function keepReviewControlVisible(target){
+    if(currentPage()!=='record-review'||!target?.isConnected||document.activeElement!==target||
+       !matchMedia('(max-width:800px)').matches)return;
+    const nav=app.querySelector('.mobile-nav');
+    if(!nav||getComputedStyle(nav).position!=='fixed')return;
+    const r=target.getBoundingClientRect(),n=nav.getBoundingClientRect();
+    if(r.height<=0||n.height<=0)return;
+    const top=8,bottom=Math.min(innerHeight,n.top)-8;
+    if(bottom<=top)return;
+    const delta=r.height>bottom-top||r.top<top?r.top-top:r.bottom>bottom?r.bottom-bottom:0;
+    if(Math.abs(delta)>1)window.scrollBy({top:delta,behavior:'instant'});
+  }
+  app.addEventListener('focusin',event=>{
+    const target=event.target;
+    if(!target?.matches?.('.rr-page [data-review-jump-scope],.rr-page [data-manual-run-save],.rr-page [data-rest-day-save]'))return;
+    keepReviewControlVisible(target);
+    // A later native scroll may supersede the first correction; recheck after
+    // layout, but never move the page if the user has changed focus.
+    requestAnimationFrame(()=>{
+      keepReviewControlVisible(target);
+      requestAnimationFrame(()=>keepReviewControlVisible(target));
+    });
+  });
   app.addEventListener("click",async(event)=>{
     const noteAction=event.target.closest('[data-gps-n-open],[data-gps-n-select],[data-gps-n-new],[data-gps-n-save],[data-gps-n-delete],[data-gps-n-close]');
     if(noteAction){
@@ -2231,8 +2257,10 @@ function recordExtras(){
     if(event.target.closest("[data-demo-save]")){
       state.recordReviewSource="manual";
       state.recordReviewReturn=false;manualSaveNotice="";
-      location.hash="#/record-review";
-      render();window.scrollTo(0,0);return;
+      // The hashchange handler refreshes the canonical store and renders the
+      // review. Do not mount a transient first copy whose save button can be
+      // detached during the asynchronous refresh.
+      location.hash="#/record-review";return;
     }
     if(event.target.closest(".rr-date-edit")&&state.recordReviewSource==="gps"){
       state.recordReviewSource="manual";

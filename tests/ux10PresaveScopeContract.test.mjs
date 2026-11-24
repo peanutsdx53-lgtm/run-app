@@ -74,6 +74,19 @@ test('UX038 click action only focuses existing scope and leaves all save handler
  assert.match(app,/manualRunLock\.withManualRunWriteLock/);
  assert.match(app,/data-manual-run-save/);
 });
+test('review entry renders once after canonical refresh; focus correction is scoped and does not save',()=>{
+ const app=read('app.js');
+ const entry=app.slice(app.indexOf('if(event.target.closest("[data-demo-save]"))'),app.indexOf('if(event.target.closest(".rr-date-edit")'));
+ assert.ok(entry.includes('location.hash="#/record-review";return;'));
+ assert.doesNotMatch(entry,/\brender\(\)/);
+ const focus=app.slice(app.indexOf('function keepReviewControlVisible(target)'),app.indexOf('app.addEventListener("click",async(event)=>{'));
+ assert.match(focus,/currentPage\(\)!=='record-review'/);
+ assert.match(focus,/document.activeElement!==target/);
+ assert.match(focus,/getComputedStyle\(nav\).position!=='fixed'/);
+ assert.match(focus,/nav.getBoundingClientRect\(\)/);
+ assert.match(focus,/window.scrollBy/);
+ assert.doesNotMatch(focus,/\b(?:mutate|saveManualRun|render)\(/);
+});
 test('UX038 bilingual shortcut and active offline review assets match the current shell',()=>{
  assert.equal(translateUiText('保存する内容と出所を確認する'),'Review What Will Be Saved and Its Source');
  assert.equal(translateUiText('保存可否と出所を確認する'),'Review Save Availability and Source');
