@@ -231,6 +231,16 @@ export function translateUiText(text,context={}){
  if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
  // Only on Course editor: preserve long wording elsewhere and full surface aria-labels.
  const e=context.element;
+ // History dates combine a fixed UI label with the exact stored calendar date.
+ // Translate only the accessible name; never reinterpret or rewrite the date.
+ if(context.attribute==='aria-label'&&e?.matches?.('time.datebox[datetime]')){
+  const dateLabel=trimmed.match(/^(走行日|休養日)：(\d{4})年(\d{1,2})月(\d{1,2})日$/);
+  if(dateLabel){
+   const iso=dateLabel[2]+'-'+dateLabel[3].padStart(2,'0')+'-'+dateLabel[4].padStart(2,'0');
+   if(e.getAttribute('datetime')===iso)
+    return raw.replace(trimmed,(dateLabel[1]==='走行日'?'Activity Date':'Rest Day Date')+': '+iso);
+  }
+ }
  if(context.attribute==='aria-label'&&e?.matches?.('.rv-course [data-rv-grade],.rv-course [data-rv-surface-mode]')){
   const full={'上り・下りの距離割合を設定':'Set Uphill and Downhill Distance Shares',
    '区間ごとの坂道を設定':'Set Gradients by Segments',
