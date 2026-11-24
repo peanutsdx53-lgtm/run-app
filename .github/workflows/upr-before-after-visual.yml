@@ -1,0 +1,70 @@
+name: UPR before-after visual verification
+on:
+  push:
+    branches: [diagnostics/upr-visual-20261124]
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bd56214e8e204b8b0d587f035182d37f580cec6a
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/auditLocalDependencies.mjs
+      - run: node scripts/auditPublicTerminology.mjs
+      - run: node --test tests/*.test.mjs
+  visual:
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: bd56214e8e204b8b0d587f035182d37f580cec6a
+          path: candidate
+      - uses: actions/checkout@v4
+        with:
+          ref: d578082e09659f5f7bcd2b0c15605a71bcf11543
+          path: baseline
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact candidate and baseline
+        run: |
+          test "$(git -c safe.directory="$PWD/candidate" -C candidate rev-parse HEAD)" = "bd56214e8e204b8b0d587f035182d37f580cec6a"
+          test "$(git -c safe.directory="$PWD/baseline" -C baseline rev-parse HEAD)" = "d578082e09659f5f7bcd2b0c15605a71bcf11543"
+      - name: Install pinned browser test tool
+        working-directory: candidate
+        run: npm install --no-save playwright@1.56.1
+      - name: Capture original behavior
+        working-directory: candidate
+        run: RUNLOAD_UPR_ROOT="$PWD/../baseline" RUNLOAD_UPR_BASELINE=1 RUNLOAD_UPR_OUTPUT="$PWD/audit-output/before" node tests/uprVisualBrowser.mjs
+      - name: Verify changed behavior
+        working-directory: candidate
+        run: RUNLOAD_UPR_OUTPUT="$PWD/audit-output/after" node tests/uprVisualBrowser.mjs
+      - name: Verify real saved-record highlights and Explore regression
+        if: always()
+        working-directory: candidate
+        run: RUNLOAD_EXPLORE_STRICT=1 node tests/exploreFullCopyBrowser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: upr-before-after-${{ matrix.engine }}
+          path: |
+            candidate/audit-output/before
+            candidate/audit-output/after
+            candidate/audit-output/explore-copy-${{ matrix.engine }}
+          if-no-files-found: error
