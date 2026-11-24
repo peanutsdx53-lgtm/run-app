@@ -805,3 +805,83 @@
  .ex-page .ex-map-help{width:38px;height:38px}
  .ex-page .ex-focus-help{width:35px;height:35px}
 }
+
+.ex-page .ex-orbit-workspace {
+ grid-template-columns:minmax(0,1fr);
+ align-items:start;gap:16px;
+}
+.ex-page .ex-constellation .ex-map {
+ display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));
+ grid-template-rows:repeat(3,minmax(5.8rem,1fr));
+ gap:0!important;height:auto!important;min-height:0!important;
+ margin:0 auto!important;width:calc(100% - 12px);max-width:42rem;
+ padding:0!important;overflow:visible!important;align-items:center;
+}
+.ex-page .ex-constellation .ex-node,
+.ex-page .ex-constellation .ex-node:last-child:nth-child(odd) {
+ position:relative!important;left:auto!important;top:auto!important;transform:none!important;
+ width:100%!important;min-width:0!important;min-height:44px!important;
+ padding:5px 3px!important;gap:4px!important;align-self:stretch;justify-content:center!important;
+}
+.ex-page .ex-constellation .ex-node:active{transform:none!important}
+.ex-page .ex-constellation .ex-node[data-ex-category="01"]{grid-row:1;grid-column:1/span 2!important}
+.ex-page .ex-constellation .ex-node[data-ex-category="02"]{grid-row:1;grid-column:3/span 2!important}
+.ex-page .ex-constellation .ex-node[data-ex-category="03"]{grid-row:1;grid-column:5/span 2!important}
+.ex-page .ex-constellation .ex-node[data-ex-category="04"]{grid-row:2;grid-column:5/span 2!important}
+.ex-page .ex-constellation .ex-node[data-ex-category="05"]{grid-row:3;grid-column:4/span 2!important}
+.ex-page .ex-constellation .ex-node[data-ex-category="06"]{grid-row:3;grid-column:2/span 2!important}
+.ex-page .ex-constellation .ex-node[data-ex-category="07"]{grid-row:2;grid-column:1/span 2!important}
+.ex-page .ex-constellation .ex-node-orb,
+.ex-page .ex-constellation .ex-node:last-child:nth-child(odd) .ex-node-orb {
+ width:clamp(44px,3rem,70px)!important;height:clamp(44px,3rem,70px)!important;
+}
+.ex-page .ex-constellation .ex-node-icon{font-size:1.1rem}
+.ex-page .ex-constellation .ex-node-copy,
+.ex-page .ex-constellation .ex-node:last-child:nth-child(odd) .ex-node-copy{width:100%;padding:0!important;min-width:0}
+.ex-page .ex-constellation .ex-node-title,
+.ex-page .ex-constellation .ex-node[data-ex-category="07"] .ex-node-title{
+ font-size:.8rem!important;line-height:1.3;letter-spacing:0;word-break:normal!important;
+ overflow-wrap:normal!important;text-align:center;
+}
+.ex-page .ex-constellation .ex-core {
+ grid-row:2;grid-column:3/span 2;position:relative;left:auto;top:auto;transform:none;
+ justify-self:center;width:min(100%,7rem);height:auto;aspect-ratio:1;
+ padding:4px;min-width:0;
+}
+.ex-page .ex-constellation .ex-core span{font-size:.6rem;letter-spacing:0;overflow-wrap:anywhere}
+.ex-page .ex-constellation .ex-core strong{font-size:.8rem;letter-spacing:0;overflow-wrap:anywhere;text-align:center}
+.ex-page .ex-constellation .ex-map-help,.ex-page .ex-focus-help{min-width:44px;min-height:44px}
+.ex-page .ex-constellation .ex-map-foot .ex-action{min-height:44px}
+@media(min-width:801px){.ex-page .ex-constellation .ex-core strong{font-size:1rem}}
+
+/* UX14 C: font-relative container thresholds, full names in a narrow one-column
+   fallback, explicit optional map disclosure. All seven controls and source
+   signals stay the same; the fallback suppresses only decorative paths. */
+.ex-page{container:ex-page / inline-size;width:100%}
+.ex-page .ex-constellation{container:ex-map / inline-size}
+@container ex-page (min-width:56rem){
+ .ex-page .ex-orbit-workspace{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+}
+.ex-page .ex-constellation .ex-map[hidden]{display:none!important}
+.ex-page .ex-constellation .ex-node-compact{display:none;color:#e5f2f6;font-size:.8rem;line-height:1.3;font-weight:850;text-align:center}
+@container ex-map (min-width:16rem) and (max-width:25rem){
+ :lang(en) .ex-page .ex-constellation .ex-node-title{display:none}
+ :lang(en) .ex-page .ex-constellation .ex-node-compact{display:block}
+}
+@container ex-map (max-width:15.999rem){
+ .ex-page .ex-constellation .ex-map{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;gap:8px!important;padding:8px!important}
+ .ex-page .ex-constellation .ex-art{display:none}
+ .ex-page .ex-constellation .ex-core{grid-column:1;grid-row:1;aspect-ratio:auto;width:100%;border-radius:14px;min-height:44px;box-shadow:none;flex-direction:row;gap:8px;flex-wrap:wrap}
+ .ex-page .ex-constellation .ex-core>span{width:auto}
+ .ex-page .ex-constellation .ex-node[data-ex-category]{grid-column:1!important;grid-row:auto;flex-direction:row!important;text-align:left!important;justify-content:flex-start!important;gap:12px!important;padding:8px!important;border:1px solid #518497!important;background:#0d3042!important;border-radius:14px!important}
+ .ex-page .ex-constellation .ex-node.is-selected{border:2px solid #e7fffa!important;background:#155563!important}
+ .ex-page .ex-constellation .ex-node-copy{flex:1;min-width:0}
+ .ex-page .ex-constellation .ex-node-title,.ex-page .ex-constellation .ex-node[data-ex-category="07"] .ex-node-title{text-align:left;overflow-wrap:anywhere!important}
+ .ex-page .ex-constellation .ex-node-orb,.ex-page .ex-constellation .ex-node:last-child:nth-child(odd) .ex-node-orb{width:44px!important;height:44px!important}
+ .ex-page .ex-constellation .ex-node-icon{font-size:.9rem}
+ .ex-page .ex-constellation .ex-memory-count{position:static;flex:none;width:auto;height:auto;min-width:22px;min-height:22px;padding:3px;line-height:1.2}
+}
+.ex-page .ex-focus h2[tabindex="-1"]{scroll-margin-top:80px;overflow-wrap:anywhere}
+.ex-page .ex-focus h2:focus-visible{outline:3px solid #87f1e8;outline-offset:4px;border-radius:4px}
+.ex-page .ex-change-area{min-height:44px;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.ex-page .ex-constellation .ex-map-foot .ex-action{white-space:normal;overflow-wrap:anywhere;max-width:100%}

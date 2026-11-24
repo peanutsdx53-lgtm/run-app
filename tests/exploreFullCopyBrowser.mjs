@@ -14,7 +14,22 @@ const engine=process.env.RUNLOAD_BROWSER_ENGINE==='webkit'?'webkit':'chromium';
 const out=resolve(root,'audit-output','explore-copy-'+engine);
 await mkdir(out,{recursive:true});
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml'};
-const server=createServer(async(req,res)=>{try{
+async function ux14Geometry(page){return page.evaluate(()=>{
+ const map=document.querySelector('.ex-map'), focus=document.querySelector('.ex-focus');
+ const rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}};
+ const m=rect(map),c=rect(map.querySelector('.ex-core')),f=rect(focus);
+ const rangeRects=e=>{const range=document.createRange();range.selectNodeContents(e);return [...range.getClientRects()].filter(r=>r.width>0&&r.height>0).map(r=>({x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}))};
+ const nodes=[...map.querySelectorAll('.ex-node')].map(el=>{const full=el.querySelector('.ex-node-title'),compact=el.querySelector('.ex-node-compact'),label=compact&&getComputedStyle(compact).display!=='none'?compact:full;const brokenWords=[];const walk=document.createTreeWalker(label,NodeFilter.SHOW_TEXT);for(let node=walk.nextNode();node;node=walk.nextNode()){for(const match of node.textContent.matchAll(/[A-Za-z]+/g)){const r=document.createRange();r.setStart(node,match.index);r.setEnd(node,match.index+match[0].length);if([...r.getClientRects()].filter(x=>x.width>0&&x.height>0).length>1)brokenWords.push(match[0]);}}return {id:el.dataset.exCategory,aria:el.getAttribute('aria-label'),title:label.textContent,fullTitle:full.textContent,source:el.dataset.exSource,pressed:el.getAttribute('aria-pressed'),box:rect(el),orb:rect(el.querySelector('.ex-node-orb')),text:rangeRects(label),brokenWords};});
+ const inside=(a,b,t=1)=>a.x>=b.x-t&&a.y>=b.y-t&&a.right<=b.right+t&&a.bottom<=b.bottom+t;
+ const overlap=(a,b)=>Math.min(a.right,b.right)-Math.max(a.x,b.x)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y)>1;
+ const clipped=[],collisions=[];
+ for(const n of nodes){if(!inside(n.box,m,1))clipped.push(n.id+':button');for(const t of n.text)if(!inside(t,n.box,1)||!inside(t,m,1))clipped.push(n.id+':text');if(overlap(n.box,c))collisions.push(n.id+':core');}
+ for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++)if(overlap(nodes[i].box,nodes[j].box))collisions.push(nodes[i].id+':'+nodes[j].id);
+ const coreText=[...map.querySelectorAll('.ex-core span,.ex-core strong')].flatMap(rangeRects);for(const t of coreText)if(!inside(t,c,1))clipped.push('core:text');
+ return {viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,rootFont:parseFloat(getComputedStyle(document.documentElement).fontSize),map:m,core:c,focus:f,documentHeight:document.documentElement.scrollHeight,focusOffset:Math.round(f.y-m.y),columns: getComputedStyle(map.closest('.ex-orbit-workspace')).gridTemplateColumns, nodes,clipped:[...new Set(clipped)],collisions,questionCount:focus.querySelectorAll('.ex-inquiry-start h3').length,stages:focus.querySelectorAll('.ex-inquiry-stage').length,linkCount:map.querySelectorAll('.ex-constellation-link').length,relatedCount:map.querySelectorAll('.ex-node.is-related').length,artVisible:getComputedStyle(map.querySelector('.ex-art')).display!=='none',brokenWords:nodes.flatMap(n=>n.brokenWords.map(w=>n.id+':'+w))};
+})}
+const server=createServer(async(req,res)=>{
+try{
  const path=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname));
  if(path!==root&&!path.startsWith(root+sep))throw Error('blocked');
  const file=path===root?resolve(root,'index.html'):path;
@@ -135,7 +150,7 @@ try{
  }
  // UX13: all 16 language/width/root-font states per engine, with the same
  // general slope topic, no saved run, and exact semantic labels (not just no Japanese).
- const ux13Matrix=[];
+ const ux13Matrix=[],ux14Matrix=[];
  for(const language of ['ja','en'])for(const width of [320,390,768,1440])for(const percent of [100,200]){
   const ctx=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce',serviceWorkers:'block'});
   try{
@@ -160,10 +175,49 @@ try{
    const filename='ux13-'+language+'-'+width+'-'+percent+'.png';
    await page.screenshot({path:resolve(out,filename),fullPage:true,animations:'disabled',timeout:20000});
    ux13Matrix.push({engine,language,width,percent,filename,expected,...geometry});
+   const g=await ux14Geometry(page);
+   const actions=[];
+   // Test the exact same seven actual controls using real pointer clicks, not synthetic dispatch.
+   // Failed/occluded targets are observations, not silently bypassed with force clicks.
+   for(const id of ['01','02','03','04','05','06','07']){
+    const n=page.locator('.ex-node[data-ex-category="'+id+'"]');
+    try{await n.click({timeout:2200});await page.locator('.ex-node[data-ex-category="'+id+'"][aria-pressed="true"]').waitFor({timeout:2200});const state=await page.evaluate(()=>({active:document.activeElement?.getAttribute('data-ex-category')||document.activeElement?.tagName,activeIsHeading:document.activeElement===document.querySelector('.ex-focus h2'),heading:document.querySelector('.ex-focus h2')?.textContent,focusTop:document.querySelector('.ex-focus')?.getBoundingClientRect().top,scrollY:scrollY,selected:document.querySelector('.ex-node[aria-pressed="true"]')?.dataset.exCategory}));actions.push({id,ok:state.selected===id,...state});}catch(e){actions.push({id,ok:false,error:String(e).split('\n')[0].slice(0,300)})}
+   }
+   const keyboard=[];
+   for(const id of ['03','07']){const n=page.locator('.ex-node[data-ex-category="'+id+'"]');await n.focus();await page.keyboard.press('Enter');keyboard.push(await page.evaluate(id=>({id,selected:document.querySelector('.ex-node[aria-pressed="true"]')?.dataset.exCategory,activeTag:document.activeElement?.tagName,activeIsHeading:document.activeElement===document.querySelector('.ex-focus h2'),headingTop:document.querySelector('.ex-focus h2')?.getBoundingClientRect().top,headingBottom:document.querySelector('.ex-focus h2')?.getBoundingClientRect().bottom,activeCategory:document.activeElement?.dataset?.exCategory||null,focusTop:document.querySelector('.ex-focus')?.getBoundingClientRect().top}),id))}
+   let disclosure=null;
+   {
+    const toggle=page.locator('[data-ex-action="toggle-map"]'),map=page.locator('.ex-map'),before=await ux14Geometry(page);
+    await toggle.click();const closed=await map.isHidden(),expandedClosed=await toggle.getAttribute('aria-expanded'),focusClosed=await toggle.evaluate(e=>e===document.activeElement);
+    await page.locator('[data-ex-action="change-area"]').click();const open=await map.isVisible(),expandedOpen=await toggle.getAttribute('aria-expanded'),active=await page.evaluate(()=>document.activeElement?.dataset?.exCategory),selected=await page.locator('.ex-node[aria-pressed="true"]').getAttribute('data-ex-category');
+    disclosure={closed,expandedClosed,focusClosed,open,expandedOpen,active,selected,initialArt:before.artVisible};
+   }
+   // Verify the help text and sample highlighting remain reachable; it is not a danger ranking.
+   await page.locator('.ex-heading [data-ex-action="field-help"]').click();const help=await page.locator('.ex-dialog').innerText();await page.keyboard.press('Escape');
+   const sample=page.locator('.ex-map-foot [data-ex-action="sample"]');let sampleGeometry=null;
+   if(await sample.count()){await sample.click();sampleGeometry=await ux14Geometry(page);await page.locator('.ex-map-card').screenshot({path:resolve(out,'ux14-'+language+'-'+width+'-'+percent+'-sample.png'),animations:'disabled',timeout:20000});}
+    const label=JSON.stringify({language,width,percent});
+    assert.deepEqual(g.clipped,[],'C clipped '+label);assert.deepEqual(g.collisions,[],'C collision '+label);assert.deepEqual(g.brokenWords,[],'C mid-word wrap '+label);
+    assert.ok(g.scrollWidth<=width+3,'C page overflow '+label);
+    assert.ok(g.nodes.every(n=>n.box.w>=44&&n.box.h>=44&&n.aria&&n.aria.includes(n.fullTitle)),'C control geometry or full accessible label '+label);
+    assert.equal(actions.filter(x=>x.ok&&x.activeIsHeading).length,7,'C pointer focus '+label);
+    assert.equal(keyboard.filter(x=>x.selected===x.id&&x.activeIsHeading&&x.headingTop>=-1&&x.headingBottom<=900).length,2,'C keyboard focus '+label);
+    assert.ok(disclosure.closed&&disclosure.expandedClosed==='false'&&disclosure.focusClosed&&disclosure.open&&disclosure.expandedOpen==='true'&&disclosure.active===disclosure.selected,'C map disclosure '+label);
+    assert.ok(sampleGeometry&&sampleGeometry.relatedCount===2&&sampleGeometry.clipped.length===0&&sampleGeometry.collisions.length===0&&sampleGeometry.brokenWords.length===0,'C sample geometry '+label);
+    assert.ok(sampleGeometry.nodes.every(n=>n.aria&&n.aria.includes(n.fullTitle)),'C sample accessible names '+label);
+    assert.ok(sampleGeometry.nodes.filter(n=>n.source==='sample').every(n=>language==='en'?n.aria.includes('Example:'):n.aria.includes('表示例：')),'C sample provenance '+label);
+    assert.ok(language==='en'?/not.*(priority|ranking|burden)|not indicate|not.*load/i.test(help):help.includes('優先順位や身体への負担の大きさを示すものではありません'),'C relevance explanation '+label);
+    assert.equal(g.columns.trim().split(/\s+/).length,width===1440&&percent===100?2:1,'C width/font column contract '+label);
+
+   ux14Matrix.push({engine,language,width,percent,...g,actions,keyboard,disclosure,sampleGeometry});
+
   }finally{await ctx.close();}
  }
  assert.equal(ux13Matrix.length,16,'UX13 complete per-engine matrix');
  await writeFile(resolve(out,'ux13-matrix.json'),JSON.stringify(ux13Matrix,null,2));
+ assert.equal(ux14Matrix.length,16);
+ await writeFile(resolve(out,'ux14-matrix.json'),JSON.stringify(ux14Matrix,null,2));
+ console.log('UX14-MATRIX '+engine+' '+ux14Matrix.length+' states');
  console.log('UX13-MATRIX '+engine+' '+ux13Matrix.length+' states');
  const untranslated=reports.flatMap(r=>[...r.out,...r.attrs].map(x=>({...x,category:r.category,topic:r.topic,mode:r.mode,state:r.state})));
  const grouped=Object.create(null);

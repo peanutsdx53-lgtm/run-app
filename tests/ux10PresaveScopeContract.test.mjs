@@ -91,7 +91,7 @@ test('UX038 bilingual shortcut and active offline review assets match the curren
  assert.equal(translateUiText('保存する内容と出所を確認する'),'Review What Will Be Saved and Its Source');
  assert.equal(translateUiText('保存可否と出所を確認する'),'Review Save Availability and Source');
  assert.equal(translateUiText('端末内に保存'),'Save Destination: This Device');
- const ver='20261123-ux11-result-source-v1',shell='20261124-ux13-explore-copy-v1';
+ const ver='20261123-ux11-result-source-v1',shell='20261124-ux14-explore-responsive-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
   [app,'recordReviewExperience.js?v='+ver],[app,'englishUi.js?v='+shell],

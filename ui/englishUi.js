@@ -1,7 +1,7 @@
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
-import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261124-ux13-explore-copy-v1';
+import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261124-ux14-explore-responsive-v1';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1';
-import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261124-ux13-explore-copy-v1';
+import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261124-ux14-explore-responsive-v1';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261121-profile-optional-right-v1';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js';
 import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js';
@@ -20,14 +20,17 @@ import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261123-ux11-result-sou
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
-import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261124-ux13-explore-copy-v1';
+import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261124-ux14-explore-responsive-v1';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261124-ux13-explore-copy-v1';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261124-ux14-explore-responsive-v1';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
  * The Japanese app remains the canonical source of UI behavior and evidence. */
 export const ENGLISH_UI_TEXT=Object.freeze({
+ "分野図を閉じる": "Hide Area Map",
+ "分野図を開く": "Show Area Map",
+ "分野を変更": "Change Area",
  "この走行の気づきだけを表示しています。": "Showing Notes Linked to This Activity Only.",
  "すべてのメモを表示しています。記録に結びついた文章は、その記録と区別して扱います。": "Showing All Notes. Each Activity-Linked Note Retains Its Original Activity.",
  "元の走行が見つかりません。以前に結びつけたメモは残っています。": "The Original Activity Is Missing. Its Notes Remain Available.",
@@ -231,6 +234,20 @@ export function translateUiText(text,context={}){
  if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
  // Only on Course editor: preserve long wording elsewhere and full surface aria-labels.
  const e=context.element;
+ // UX14: the seven full category names have one canonical display spelling.
+ // Prefer that spelling for composed node names, even when a legacy exact
+ // phrase contains an older category label. Preserve the provenance suffix.
+ if(context.attribute==='aria-label'&&e?.matches?.('.ex-node')&&e?.closest?.('.ex-page')){
+  const separator=trimmed.indexOf('、');
+  if(separator>0){
+   const area=trimmed.slice(0,separator),reason=trimmed.slice(separator+1);
+   const categories=['走りの記録','身体のしくみ','コースと環境','疲れと回復','暮らしと気持ち','走る前後の工夫','目的と楽しみ方'];
+   if(categories.includes(area)){
+    const description=translateUiText(reason,{element:e});
+    if(description!==reason)return raw.replace(trimmed,ENGLISH_UI_TEXT[area]+', '+description);
+   }
+  }
+ }
  // History dates combine a fixed UI label with the exact stored calendar date.
  // Translate only the accessible name; never reinterpret or rewrite the date.
  if(context.attribute==='aria-label'&&e?.matches?.('time.datebox[datetime]')){
