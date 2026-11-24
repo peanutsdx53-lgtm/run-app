@@ -1,0 +1,100 @@
+name: UX12 isolated review preflight
+on:
+  push:
+    branches: [diagnostics/ux12-review-pointer-20261124]
+permissions:
+  contents: read
+concurrency:
+  group: ux12-isolated-review-preflight
+  cancel-in-progress: false
+jobs:
+  static:
+    name: Candidate Node and scientific contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/auditLocalDependencies.mjs
+      - run: node scripts/auditPublicTerminology.mjs
+      - run: node --test tests/*.test.mjs
+  browser:
+    name: ${{ matrix.engine }} isolated review and downstream regression
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - name: Baseline reproduction (diagnostic outcome only; candidate must pass)
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -u
+          cp app.js /tmp/runload-candidate-app.js
+          trap 'cp /tmp/runload-candidate-app.js app.js' EXIT
+          git show 9393602f8f28955e111b4b313b7f84b09589ceab:app.js > app.js
+          node tests/saveReviewStage4Browser.mjs
+          code=$?
+          if [ -d audit-output/gps-stage4-save ]; then
+            mv audit-output/gps-stage4-save audit-output/gps-stage4-save-baseline
+          fi
+          echo "Baseline exit: $code"
+          exit "$code"
+      - name: Verify candidate restored exactly
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          git diff --exit-code -- app.js
+          test "$(git hash-object app.js)" = "1c1ddbf148dde9b45777024525d3c5924182f104"
+      - name: Candidate save failure and exact retry with mouse
+        if: ${{ !cancelled() }}
+        run: node tests/saveReviewStage4Browser.mjs
+      - name: Candidate save failure and exact retry with touch
+        if: ${{ !cancelled() }}
+        env:
+          RUNLOAD_STAGE4_ACTIVATION: touch
+        run: node tests/saveReviewStage4Browser.mjs
+      - name: Candidate save failure and exact retry with keyboard
+        if: ${{ !cancelled() }}
+        env:
+          RUNLOAD_STAGE4_ACTIVATION: keyboard
+        run: node tests/saveReviewStage4Browser.mjs
+      - name: UX06 manual validation and duplicate-click integrity
+        if: ${{ !cancelled() }}
+        run: node tests/ux06ManualEntryBrowser.mjs
+      - name: UX10 bilingual 32-state focus and privacy clearance
+        if: ${{ !cancelled() }}
+        run: node tests/ux10PresaveScopeBrowser.mjs
+      - name: UX12 history filters and exact record IDs
+        if: ${{ !cancelled() }}
+        run: node tests/historyDiscoveryBrowser.mjs
+      - name: GPS fixed controls and saved record integrity
+        if: ${{ !cancelled() }}
+        run: node tests/gpsRofReviewBrowser.mjs
+      - name: Unified GPS manual history and three result tabs
+        if: ${{ !cancelled() }}
+        run: node tests/gpsStage5HistoryResultBrowser.mjs
+      - name: Preserve baseline and candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux12-isolated-review-${{ matrix.engine }}
+          path: audit-output/
+          if-no-files-found: warn
+          retention-days: 7
