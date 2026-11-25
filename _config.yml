@@ -1,0 +1,14 @@
+# The website contains the application, not development and validation materials.
+exclude:
+  - README.md
+  - docs
+  - audit
+  - tests
+  - scripts
+  - assets/ASSET_REGISTER.md
+  - audit-artifacts
+  - test-results
+  - node_modules
+  - vendor
+  - Gemfile
+  - Gemfile.lock
