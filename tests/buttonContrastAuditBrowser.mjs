@@ -272,6 +272,24 @@ try{
       geometry.title.x+geometry.title.w<=geometry.help.x+2,
       'Learning header must have left back, title, right help with no overlaps');
      await snap(page,name,language,width,'back-to-home');
+     // UX20: keep the ordinary header contract above, and independently
+     // require a full-width heading at root 200% on the narrowest screen.
+     if(width===320){
+      const zoom=await page.addStyleTag({content:'html{font-size:200%!important}'});
+      try{
+       const enlarged=await page.locator('.lr-page-heading').evaluate(root=>{
+        const b=root.querySelector('.lr-page-back').getBoundingClientRect(),
+         t=root.querySelector('h1').getBoundingClientRect(),
+         h=root.querySelector('.lr-screen-help').getBoundingClientRect();
+        return {back:{left:b.left,right:b.right,bottom:b.bottom},title:{left:t.left,right:t.right,top:t.top},help:{left:h.left,right:h.right,bottom:h.bottom},doc:document.documentElement.scrollWidth,width:innerWidth};
+       });
+       assert.ok(enlarged.title.top>=Math.max(enlarged.back.bottom,enlarged.help.bottom)-1&&
+        enlarged.back.right<=enlarged.help.left&&enlarged.title.left>=-1&&
+        enlarged.title.right<=enlarged.width+1&&enlarged.doc<=enlarged.width+3,
+        'Learning 200% heading and both controls remain visible in separate rows: '+JSON.stringify(enlarged));
+       await snap(page,name,language,width,'header-font200');
+      }finally{await zoom.evaluate(e=>e.remove());}
+     }
      await page.goto(base+'#/learning?lesson=pace-basics',{waitUntil:'networkidle'});
      await page.locator('.lr-lesson .lr-page-heading .lr-page-back').waitFor({state:'visible'});
      assert.equal(await page.locator('.lr-page-heading .lr-page-back').getAttribute('href'),'#/learning',

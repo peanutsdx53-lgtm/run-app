@@ -37,9 +37,17 @@
  .record-v3 .rv-head>.rv-back{font-size:28px;line-height:1;padding:0;place-items:center}
  .ex-dialog-head button{line-height:1}
 }
+/* Keep the approved one-row header at ordinary text size. At narrow
+ * available width relative to root text, the heading needs its own row.
+ * A rem-based container query responds to text enlargement, unlike a
+ * viewport media query with a fixed pixel threshold. */
 @media screen and (max-width:355px){
+ .lr-root{container:ux20-learning / inline-size}
  .lr-root .lr-page-heading{display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px!important;align-items:center!important;gap:7px!important}
  .lr-root .lr-page-heading .lr-page-back{grid-column:1;grid-row:1}
  .lr-root .lr-page-heading .lr-screen-help{grid-column:3;grid-row:1;justify-self:end}
- .lr-root .lr-page-heading h1{grid-column:1/-1;grid-row:2;min-width:0;max-width:100%;overflow-wrap:normal}
+ .lr-root .lr-page-heading h1{grid-column:2;grid-row:1;min-width:0;max-width:100%;overflow-wrap:normal}
+ @container ux20-learning (max-width:15rem){
+  .lr-root .lr-page-heading h1{grid-column:1/-1;grid-row:2}
+ }
 }
