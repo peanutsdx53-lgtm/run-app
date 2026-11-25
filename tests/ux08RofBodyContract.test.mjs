@@ -80,7 +80,7 @@ test('UX08: five new display phrases have explicit English counterparts, not imp
 });
 test('UX08: the live ROF and body modules, styles, English dictionary and PWA shell share their active versions',()=>{
  const version='20261123-ux08-rof-body-clarity-v1';
- const shell='20261124-upr-explore-gps-v1',resultVersion='20261123-ux11-result-source-v1';
+ const shell='20261125-ux15-condition-v1',resultVersion='20261123-ux11-result-source-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
   [app,'rofExperience.js?v='+version],[app,'bodyContextExperience.js?v='+version],

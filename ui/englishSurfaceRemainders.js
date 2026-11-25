@@ -203,6 +203,24 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  // course names, notes, dates, region annotations, or saved record bodies.
  const inView=selector=>!!element?.closest?.(selector);
 
+ // UX15: translate only generated condition-history labels, never the user's notes.
+ if(inView('.cj-panel')&&!inView('[data-user-authored]')){
+  const moods={'とても良い':'Very Good','良い':'Good','ふつう':'Normal','疲れ気味':'Somewhat Tired','良くない':'Not Good','未入力':'Not Entered'};
+  const sources={'本人申告の睡眠時間':'Self-Reported Sleep Duration','申告した睡眠時間':'Self-Reported Sleep Duration','就床から起床までの経過時間':'Elapsed Time in Bed','就寝から起床までの経過時間':'Elapsed Time in Bed'};
+  const copy={'履歴 / 生活記録':'History / Daily Records','気になったことを書いて残せます':'Write down anything you noticed','気づいたことを自分の言葉で残せます':'Write your observations in your own words','方法不明':'Method Unknown'};
+  if(Object.hasOwn(moods,s))return moods[s];
+  if(Object.hasOwn(copy,s))return copy[s];
+  if((m=s.match(/^([☀☺◐☁☂·]) (とても良い|良い|ふつう|疲れ気味|良くない|未入力)$/u)))return m[1]+' '+moods[m[2]];
+  if((m=s.match(/^(\d{4}-\d{2}-\d{2})の記録$/)))return 'Record for '+m[1];
+  if((m=s.match(/^(\d+)時間(\d{2})分$/)))return m[1]+' h '+m[2]+' min';
+  if((m=s.match(/^(\d{4}-\d{2}-\d{2}) (本人申告の睡眠時間|就床から起床までの経過時間) (\d+)時間(\d{2})分、調子 (とても良い|良い|ふつう|疲れ気味|良くない|未入力)$/)))return m[1]+' '+sources[m[2]]+' '+m[3]+' h '+m[4]+' min, condition: '+moods[m[5]];
+  if((m=s.match(/^(\d{4}-\d{2}-\d{2})と(\d{4}-\d{2}-\d{2})で、(申告した睡眠時間|就寝から起床までの経過時間)に(\d+)時間(\d{2})分の差があります。$/)))return 'Between '+m[1]+' and '+m[2]+', '+sources[m[3]]+' differs by '+m[4]+' h '+m[5]+' min.';
+  if((m=s.match(/^本人の調子：(とても良い|良い|ふつう|疲れ気味|良くない|未入力) ／ (とても良い|良い|ふつう|疲れ気味|良くない|未入力)$/)))return 'Self-reported condition: '+moods[m[1]]+' / '+moods[m[2]];
+  if((m=s.match(/^(\d{4}-\d{2}-\d{2})に記録した気づき$/)))return 'Observation recorded on '+m[1];
+  if((m=s.match(/^(\d{4}-\d{2}-\d{2})の気づきを削除$/)))return 'Delete observation for '+m[1];
+ }
+
+
  // S09: generated labels concatenate immutable record metadata and an activity
  // code's display name. Translate only these exact system-generated surfaces.
  // Never rewrite record dates, distances, source objects, or user-entered notes.
@@ -415,8 +433,9 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  if((m=s.match(/^(\d+)\s*分$/)))return m[1]+' min';
  if((m=s.match(/^（目安：(.+)）$/)))return '(Anchor: '+m[1]+')';
  if((m=s.match(/^尺度：(.+)。図：(.+)。$/)))return 'Scale Source: '+m[1]+'. Illustration Source: '+m[2]+'.';
- if((m=s.match(/^本人申告の睡眠時間：(\d+)日分 ／ 棒の基準：最大(\d+)時間(\d{2})分$/)))
-  return 'Self-Reported Sleep Duration: '+m[1]+' Days / Chart Maximum: '+m[2]+' h '+m[3]+' min';
+ if((m=s.match(/^(本人申告の睡眠時間|就床から起床までの経過時間)：(\d+)日分(?: ／ 棒の基準：最大(\d+)時間(\d{2})分)?$/)))
+  return (m[1]==='本人申告の睡眠時間'?'Self-Reported Sleep Duration':'Elapsed Time in Bed')+': '+m[2]+' Days'+(m[3]?' / Chart Maximum: '+m[3]+' h '+m[4]+' min':'');
+ if((m=s.match(/^(\d{4}-\d{2}-\d{2}) (記録なし|選択した方法の記録なし)$/)))return m[1]+' '+(m[2]==='記録なし'?'No Record':'No Record for the Selected Method');
  if((m=s.match(/^(\d+)分の時間枠 · ([\d.]+)分\/km$/)))return 'Time Budget '+m[1]+' min · '+m[2]+' min/km';
  if((m=s.match(/^(\d+)分走る（一定ペース）$/)))return 'Run for '+m[1]+' min (Constant Pace)';
  if((m=s.match(/^(\d+)分走る → (\d+)分歩く · (\d+)分サイクル$/)))

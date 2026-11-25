@@ -14,7 +14,7 @@ import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js';
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js';
 import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1';
 import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261123-ux09-environment-states-v1';
-import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261121-home-core-i18n-v2';
+import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1';
 import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261111-settings-dialog-v1';
 import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261123-ux11-result-source-v1';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
@@ -22,7 +22,7 @@ import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
 import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261124-upr-explore-gps-v1';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261124-upr-explore-gps-v1';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux15-condition-v1';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.

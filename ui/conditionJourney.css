@@ -136,3 +136,14 @@
  .app-shell:has(.cj-screen){overflow-x:clip}
  .app-shell:has(.cj-screen) .main-frame{min-width:0;overflow-x:clip}
 }
+
+/* UX15: compact period controls, explicit missing state, non-evaluative mood key. */
+.cj-screen .cj-range-field{display:grid;gap:5px;flex:1 1 100%;min-width:0;max-width:100%;font-size:.85rem;color:#d8d0ed}
+.cj-screen .cj-range{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;max-width:100%}
+.cj-screen .cj-range button{padding:8px 2px;white-space:nowrap;min-width:0;min-height:44px;line-height:1.2;font-variant-numeric:tabular-nums}
+.cj-screen .cj-empty{display:grid;gap:8px;padding:14px;border:1px solid #746b9b;border-radius:14px;background:#272842;overflow-wrap:anywhere}
+.cj-screen .cj-empty p{margin:0;color:#e0d9ee}.cj-screen .cj-empty a{color:#e0d4ff;min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:3px}
+.cj-screen .cj-mood-legend{display:grid;gap:6px;margin-top:10px;color:#e0d9ee;font-size:.82rem}
+.cj-screen .cj-mood-legend>div{display:flex;flex-wrap:wrap;gap:6px 12px}.cj-screen .cj-mood-legend small{font-size:inherit}
+.cj-screen .cj-day .cj-mood,.cj-screen .cj-detail-head .cj-mood{color:#e1dbf1}
+@media(max-width:480px){.cj-screen .cj-controls{display:grid;grid-template-columns:minmax(0,1fr)}.cj-screen .cj-range-field{grid-column:1/-1}}
