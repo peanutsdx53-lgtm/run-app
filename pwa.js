@@ -60,35 +60,32 @@ async function workerRelease(worker){
   catch{finish(null)}
  });
 }
+async function inspectWorkerRelease(worker){
+ const observed=await workerRelease(worker);
+ // Only a confirmed different release may request a reload.
+ if(observed&&PAGE_RELEASE&&observed!==PAGE_RELEASE)showAppUpdateNotice();
+}
 async function inspectCurrentRelease(){
- const controller=navigator.serviceWorker.controller;
- const observed=await workerRelease(controller);
- if(observed&&PAGE_RELEASE&&observed!==PAGE_RELEASE)showAppUpdateNotice(observed);
+ await inspectWorkerRelease(navigator.serviceWorker.controller);
 }
 // HTTPS Pages and trustworthy localhost/127.0.0.1 HTTP can register; ordinary HTTP cannot.
 if("serviceWorker" in navigator&&window.isSecureContext&&/^https?:$/.test(location.protocol)){
  let registration=null;
  let started=false;
  let priorRegistration=false;
- let previousController=navigator.serviceWorker.controller;
  let lastChecked=0;
  let pendingCheck=null;
  const observeInstalling=worker=>{
   if(!worker)return;
   const inspectState=()=>{
    if(worker.state==="installed"&&(priorRegistration||navigator.serviceWorker.controller)){
-    showAppUpdateNotice();
+    void inspectWorkerRelease(worker);
    }
   };
   worker.addEventListener("statechange",inspectState);
   inspectState();
  };
  navigator.serviceWorker.addEventListener("controllerchange",()=>{
-  const next=navigator.serviceWorker.controller;
-  if(next&&next!==previousController&&(previousController||priorRegistration)){
-   showAppUpdateNotice();
-  }
-  previousController=next;
   void inspectCurrentRelease();
  });
  async function checkForUpdates(force=false){
@@ -108,7 +105,7 @@ if("serviceWorker" in navigator&&window.isSecureContext&&/^https?:$/.test(locati
    try{await registration.update()}
    catch(error){console.warn("Offline cache update:",error)}
    if(registration.waiting&&(priorRegistration||navigator.serviceWorker.controller)){
-    showAppUpdateNotice();
+    await inspectWorkerRelease(registration.waiting);
    }
    await inspectCurrentRelease();
   })().finally(()=>{pendingCheck=null});
@@ -123,7 +120,7 @@ if("serviceWorker" in navigator&&window.isSecureContext&&/^https?:$/.test(locati
    registration=await navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"});
    registration.addEventListener("updatefound",()=>observeInstalling(registration.installing));
    observeInstalling(registration.installing);
-   if(registration.waiting&&priorRegistration)showAppUpdateNotice();
+   if(registration.waiting&&priorRegistration)await inspectWorkerRelease(registration.waiting);
    await checkForUpdates(true);
   }catch(error){console.warn("Offline cache:",error)}
  }

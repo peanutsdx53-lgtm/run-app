@@ -56,7 +56,7 @@ test('Body button family uses the shared typeface and intentional weight hierarc
 test('current bilingual mobile assets are versioned and cached consistently',()=>{
  const index=read('index.html'),app=read('app.js'),sw=read('sw.js'),
   english=read('ui/englishUi.js');
- const v='20261122-record-return-v1',previous='20261122-gait-learning-type-v1',shell='20261125-ux20-final-v1',cacheGeneration='20261125-ux20-final-v1',resultVersion='20261123-ux11-result-source-v1';
+ const v='20261122-record-return-v1',previous='20261122-gait-learning-type-v1',shell='20261125-ux20-final-v2',cacheGeneration='20261125-ux20-final-v2',resultVersion='20261123-ux11-result-source-v1';
  for(const [content,asset] of [
   [index,'buttonContrastSystem.css?v='+previous],
   [index,'app.js?v='+shell],

@@ -75,7 +75,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/gpsReplayIndexedDbStore.js?v=20261118-g4b2-atomic-writer-v1"),
     import("./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261125-ux20-final-v1"),
+    import("./ui/resultExperience.js?v=20261125-ux20-final-v2"),
     import("./ui/runQuestionContinuation.js"),
     import("./ui/historyExperience.js?v=20261124-upr-explore-gps-v1"),
     import("./ui/settingsExperience.js?v=20261125-ux16-19-batch-v1"),

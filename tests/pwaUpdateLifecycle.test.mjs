@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
 const source=readFileSync(new URL('../pwa.js',import.meta.url),'utf8');
-const release='20261125-ux20-final-v1';
+const release='20261125-ux20-final-v2';
 
 class Emitter{
  constructor(){this.listeners=new Map()}
@@ -125,4 +125,36 @@ test('foreground return checks for an update without requiring a fresh launch',a
  await tick();
  assert.equal(app.registration.updateCalls,3);
  assert.equal(app.banner(),null,'no notice if nothing changed');
+});
+
+test('first install claim before the installed callback does not cover the record controls',async()=>{
+ const app=mockApp({installed:false});
+ await app.boot();
+ const installing=app.worker(release);
+ installing.state='installing';
+ app.registration.installing=installing;
+ app.registration.fire('updatefound');
+ app.navigator.serviceWorker.controller=installing;
+ app.navigator.serviceWorker.fire('controllerchange');
+ installing.state='installed';
+ installing.fire('statechange');
+ await tick();
+ assert.equal(app.banner(),null,'late installed callback for the same release is not an upgrade');
+ assert.equal(app.reloads(),0);
+});
+test('an existing registration reporting the same release never announces an upgrade',async()=>{
+ const app=mockApp({installed:true});
+ await app.boot();
+ const same=app.worker(release);
+ same.state='installed';
+ app.registration.installing=same;
+ app.registration.waiting=same;
+ app.registration.fire('updatefound');
+ app.navigator.serviceWorker.controller=same;
+ app.navigator.serviceWorker.fire('controllerchange');
+ app.setNow(240001);
+ app.window.fire('focus');
+ await tick();
+ assert.equal(app.banner(),null,'identical release does not obstruct the page');
+ assert.equal(app.reloads(),0);
 });
