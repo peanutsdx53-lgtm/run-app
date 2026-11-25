@@ -98,3 +98,19 @@ test('UX15 missing method is distinct from an absent date, and self-report symbo
  assert.match(html,new RegExp(b+' 選択した方法の記録なし'));assert.match(html,new RegExp(c+' 記録なし'));
  assert.match(html,/色や記号は健康状態や走行能力の評価ではありません/);assert.match(html,/本人が入力した調子/);
 });
+
+
+test('UX15 composed condition labels translate only generated display text',async()=>{
+ const {translateResidualDynamic}=await import('../ui/englishSurfaceRemainders.js');
+ const element={closest:s=>s==='.cj-panel'?{}:null};
+ const tr=s=>translateResidualDynamic(s,{element});
+ assert.equal(tr('良い'),'Good');
+ assert.equal(tr('◐ ふつう'),'◐ Normal');
+ assert.equal(tr('2026-11-23の記録'),'Record for 2026-11-23');
+ assert.equal(tr('6時間30分'),'6 h 30 min');
+ assert.equal(tr('2026-11-21 就床から起床までの経過時間 8時間00分、調子 良い'),'2026-11-21 Elapsed Time in Bed 8 h 00 min, condition: Good');
+ assert.equal(tr('2026-11-14と2026-11-23で、申告した睡眠時間に1時間00分の差があります。'),'Between 2026-11-14 and 2026-11-23, Self-Reported Sleep Duration differs by 1 h 00 min.');
+ assert.equal(tr('本人の調子：ふつう ／ 疲れ気味'),'Self-reported condition: Normal / Somewhat Tired');
+ assert.equal(translateResidualDynamic('良い',{element:{closest:s=>s==='.cj-panel'||s==='[data-user-authored]'?{}:null}}),null);
+ assert.equal(translateResidualDynamic('良い'),null);
+});
