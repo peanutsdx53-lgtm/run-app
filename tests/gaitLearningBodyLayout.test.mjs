@@ -56,7 +56,7 @@ test('Body button family uses the shared typeface and intentional weight hierarc
 test('current bilingual mobile assets are versioned and cached consistently',()=>{
  const index=read('index.html'),app=read('app.js'),sw=read('sw.js'),
   english=read('ui/englishUi.js');
- const v='20261122-record-return-v1',previous='20261122-gait-learning-type-v1',shell='20261125-ux16-19-batch-v1',cacheGeneration='20261125-ux16-19-batch-v1',resultVersion='20261123-ux11-result-source-v1';
+ const v='20261122-record-return-v1',previous='20261122-gait-learning-type-v1',shell='20261125-ux20-final-v1',cacheGeneration='20261125-ux20-final-v1',resultVersion='20261123-ux11-result-source-v1';
  for(const [content,asset] of [
   [index,'buttonContrastSystem.css?v='+previous],
   [index,'app.js?v='+shell],
@@ -64,7 +64,7 @@ test('current bilingual mobile assets are versioned and cached consistently',()=
   [app,'gaitExperience.js?v='+v],
   [app,'learningExperience.js?v='+previous],
   [app,'englishUi.js?v=20261125-ux16-19-batch-v1'],
-  [english,'englishSurfaceRemainders.js?v='+shell],
+  [english,'englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1'],
   [sw,'runload-ui-next-shell-'+cacheGeneration],
   [sw,'ui/learningExperience.js?v='+previous],
   [sw,'ui/gaitExperience.js?v='+v],

@@ -31,3 +31,15 @@
  .s2-page .s2-item:not(:has(.s3-profile-form)) .s2-indicator{grid-column:2;grid-row:2;justify-self:start;white-space:normal;max-width:100%}
  .s2-page .s2-item-copy small{overflow-wrap:break-word;word-break:normal}
 }
+
+/* UX20: icon and heading reflow, verified at 320px / enlarged text. */
+@media screen and (max-width:430px){
+ .record-v3 .rv-head>.rv-back{font-size:28px;line-height:1;padding:0;place-items:center}
+ .ex-dialog-head button{line-height:1}
+}
+@media screen and (max-width:355px){
+ .lr-root .lr-page-heading{display:grid!important;grid-template-columns:44px minmax(0,1fr) 44px!important;align-items:center!important;gap:7px!important}
+ .lr-root .lr-page-heading .lr-page-back{grid-column:1;grid-row:1}
+ .lr-root .lr-page-heading .lr-screen-help{grid-column:3;grid-row:1;justify-self:end}
+ .lr-root .lr-page-heading h1{grid-column:1/-1;grid-row:2;min-width:0;max-width:100%;overflow-wrap:normal}
+}

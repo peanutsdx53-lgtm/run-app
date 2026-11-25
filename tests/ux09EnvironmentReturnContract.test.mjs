@@ -71,9 +71,9 @@ test('UX037 status, warning and save-boundary interface have explicit offline En
  for(const [jp,en] of pairs)assert.equal(translateUiText(jp),en,jp);
 });
 test('UX09 versioned environment modules and dictionary are precached without overriding other modules',()=>{
- const v='20261123-ux09-environment-states-v1',shell='20261125-ux16-19-batch-v1',resultVersion='20261123-ux11-result-source-v1';
+ const v='20261123-ux09-environment-states-v1',shell='20261125-ux20-final-v1',resultVersion='20261123-ux11-result-source-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
- for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v='+shell],
+ for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v=20261125-ux16-19-batch-v1'],
   [index,'environmentExperience.css?v='+v],[index,'app.js?v='+shell],
   [sw,'runload-ui-next-shell-'+shell],[sw,'environmentExperience.js?v='+v],
   [sw,'environmentExperience.css?v='+v],[sw,'englishFinalRecording.js?v='+resultVersion],

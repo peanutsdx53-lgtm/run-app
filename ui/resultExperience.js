@@ -114,6 +114,14 @@ const RESULT_BUTTON_CONTRAST_STYLES=String.raw`
  -webkit-text-fill-color:inherit;
 }
 `;
+const RESULT_UX20_MENU_STYLES=String.raw`
+/* Anchor the menu to the entire header rather than the center action button. */
+@media screen and (max-width:800px){
+ .rv4-header{position:relative}
+ .rv4-actions,.rv4-export-menu{position:static}
+ .rv4-export-options{left:auto;right:0;top:calc(100% + 6px);width:min(330px,100%);min-width:0;max-width:100%}
+}
+`;
 const RESULT_T01_READABILITY_STYLES=String.raw`
 .rv4-app .rv4-card-heading p,
 .rv4-app .rv4-date,
@@ -591,7 +599,7 @@ export function mountResult(host,inputDraft={},options={}){
    },'image/png');
   }catch{exportNotice(failText,true);}
  }
- if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BUTTON_CONTRAST_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_REFLECTION_ENTRY_STYLES+RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES+'</style><div class="rv4-app"></div>';
+ if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BUTTON_CONTRAST_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_REFLECTION_ENTRY_STYLES+RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES+RESULT_UX20_MENU_STYLES+'</style><div class="rv4-app"></div>';
  // Keep the visible label in sync when the user changes document font scale
  // while the result is open. Disconnect a previous observer on remount.
  host._runloadResultFontObserver?.disconnect();
