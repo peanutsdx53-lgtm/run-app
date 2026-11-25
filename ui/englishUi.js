@@ -9,20 +9,20 @@ import {ENGLISH_CURRICULUM_ORIGIN} from './englishCurriculumCopy.js';
 import {ENGLISH_CURRICULUM_PACE} from './englishCurriculumPace.js';
 import {ENGLISH_CURRICULUM_MOTION} from './englishCurriculumMotion.js';
 import {ENGLISH_CURRICULUM_FATIGUE} from './englishCurriculumFatigue.js';
-import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js';
+import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js?v=20261125-ux16-19-batch-v1';
 import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js';
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js';
 import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1';
 import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261123-ux09-environment-states-v1';
 import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1';
-import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261111-settings-dialog-v1';
+import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261125-ux16-19-batch-v1';
 import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261123-ux11-result-source-v1';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
 import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261124-upr-explore-gps-v1';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux15-condition-v1';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
@@ -234,6 +234,7 @@ export function translateUiText(text,context={}){
  if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
  // Only on Course editor: preserve long wording elsewhere and full surface aria-labels.
  const e=context.element;
+ if(trimmed==='GPS測定はスマートフォン専用です'&&e?.closest?.('.gps-platform-unavailable'))return raw.replace(trimmed,'GPS: Smartphones Only');
  // UX14: the seven full category names have one canonical display spelling.
  // Prefer that spelling for composed node names, even when a legacy exact
  // phrase contains an older category label. Preserve the provenance suffix.

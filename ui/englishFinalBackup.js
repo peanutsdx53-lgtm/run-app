@@ -20,6 +20,7 @@ export const ENGLISH_FINAL_BACKUP=Object.freeze({
 "本文を削除": "Delete Current Text",
 "変更を保存": "Save Changes",
 "記述を保存": "Save Reflection",
+ "記録はこの端末に保存され、他の端末と自動同期しません。機種変更や端末の保存領域の消去に備え、必要な記録を別の場所にバックアップしてください。": "Records are saved on this device and do not sync automatically with other devices. Back up important records elsewhere before changing devices or clearing device storage.",
  "運動記録・体調・メモ・設定などをJSONファイルに保存します。外部へ自動送信されません。": "Save activity records, conditions, notes and settings as a JSON file. Nothing is sent automatically.",
  "個人情報を含み、暗号化されません。": "Contains personal information and is not encrypted.",
  "第三者と共有せず、安全な場所に保管してください。": "Do not share this file with others. Store it securely.",
