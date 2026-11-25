@@ -1,4 +1,4 @@
-// RunLoad v2 record presentation validation — UI advice only.
+// application v2 record presentation validation — UI advice only.
 // The authoritative runload-app scientific engine and record schema are NOT replaced.
 // Empty strings are missing values, never coerced to observed zero.
 const nonblank=value=>value!==null&&value!==undefined&&String(value).trim()!=="";

@@ -1,4 +1,4 @@
-/* RunLoad v2 record experience – approved manual/course UI, isolated from other screens. */
+/* application v2 record experience – approved manual/course UI, isolated from other screens. */
 .app-shell:has(.record-v3){--rv-ink:#f0fafc;--rv-muted:#b3cfdb;--rv-cyan:#57e3df;--rv-border:#456d7e}
 .app-shell:has(.record-v3) .main-frame{background:radial-gradient(ellipse at 90% 0%,#1c657277,transparent 49%),linear-gradient(140deg,#0b2735,#081923 78%);min-height:100vh}
 .app-shell:has(.record-v3) .main-content{width:100%;max-width:1470px;margin:0 auto;color:#f0fafc;background:transparent}

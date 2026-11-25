@@ -300,7 +300,7 @@
 #app .hx-dialog .hx-dialog-head{gap:12px;min-width:0}
 #app .hx-dialog .hx-dialog-head h2{font-size:1.28rem;min-width:0}
 #app .hx-dialog .hx-dialog-foot{flex-wrap:wrap}
-body.runload-dialog-open{overflow:hidden;overscroll-behavior:none}
+body.app-dialog-open{overflow:hidden;overscroll-behavior:none}
 @media(max-width:360px){
  #app .hx-dialog{padding:14px}
  #app .hx-dialog .hx-date-row{gap:9px}

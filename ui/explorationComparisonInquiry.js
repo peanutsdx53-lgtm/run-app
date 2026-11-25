@@ -22,7 +22,7 @@ export function comparisonInquiryModel({currentRef=null,current=null,previousRef
  if(duplicate||!readable)return state('UNVERIFIED','比較相手の指定または保存元を確認できません',{current});
  const otherRef=normalizeRecordRef(previousRef);
  if(!otherRef.ok||otherRef.value.sourceType!=='MANUAL')
-  return state('INVALID_SELECTION','比較相手の記録ID・出所が正しくありません',{current});
+  return state('INVALID_SELECTION','比較相手の記録または情報の出所を確認できません',{current});
  if(!previous||previous.id!==otherRef.value.recordId||!isComparableManualRun(previous))
   return state('MISSING','指定された比較相手が保存済みの手入力走行として見つかりません',{current});
  const comparison=compareSavedRuns(current,previous);

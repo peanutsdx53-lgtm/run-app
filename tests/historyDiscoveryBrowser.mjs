@@ -23,7 +23,7 @@ const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true,..
 const host='http://127.0.0.1:4316/#/',results=[];
 async function capture(page,width,label){
  const metrics=await page.evaluate(()=>{
- const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+ const root=document.querySelector('#activity-history')?.shadowRoot;
  const controls=[...(root?.querySelectorAll('.hx-scope button')||[])];
  const bounds=[...(root?.querySelectorAll('.hx-scope,.list-panel,.timeline,.selected-footer')||[])].map(el=>{
   const r=el.getBoundingClientRect();return {className:el.className,left:r.left,right:r.right};
@@ -52,7 +52,7 @@ try{
   const thisMonth=new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
   assert.notEqual(month,thisMonth);
   await page.goto(host+'history',{waitUntil:'networkidle'});
-  const rootSel=page.locator('#runload-history-v2');
+  const rootSel=page.locator('#activity-history');
   await rootSel.waitFor();
   await rootSel.locator('.empty[data-history-unconnected="false"]').waitFor({state:'visible',timeout:12000});
   assert.match(await rootSel.locator('.empty').innerText(),/保存した記録はまだありません/);
@@ -117,7 +117,7 @@ try{
   await capture(page,width,'06-selected-run');
   await rootSel.locator('[data-open-record]').click();
   await page.waitForFunction((id)=>location.hash.includes(encodeURIComponent(id)),runId);
-  await page.locator('#runload-result-v4').waitFor({state:'visible'});
+  await page.locator('#activity-result').waitFor({state:'visible'});
   await capture(page,width,'07-selected-result');
   await page.goto(host+'history',{waitUntil:'networkidle'});
   await rootSel.locator('[data-history-scope="month"]').click();
@@ -154,7 +154,7 @@ try{
   await restPage.locator('[data-record-review]').waitFor();
   assert.match(await restPage.locator('[data-record-review]').innerText(),/走行の結果画面は表示しません/);
   await restPage.locator('[data-rest-day-save]').click();
-  const restHistory=restPage.locator('#runload-history-v2');await restHistory.waitFor();
+  const restHistory=restPage.locator('#activity-history');await restHistory.waitFor();
   await restHistory.locator('.hx-scope [data-history-scope="all"]').click();
   await restHistory.locator('[data-history-advanced]').click();
   await restHistory.locator('[data-record-kind="rest"]').click();

@@ -34,7 +34,7 @@ async function layout(page,scene,name,locale){
  const metrics=await page.evaluate(()=>{
   const style=getComputedStyle(document.querySelector('.main-content'));
   const root=document.querySelector('[data-ax-editor]');
-  const result=document.querySelector('#runload-result-v4')?.shadowRoot;
+  const result=document.querySelector('#activity-result')?.shadowRoot;
   const get=el=>el?(()=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};})():null;
   const hero=result?.querySelector('.rv4-hero'),notice=result?.querySelector('.rv4-notice');
   const hdr=result?.querySelector('.rv4-header'),tabs=result?.querySelector('.rv4-mobile-tabs');
@@ -94,11 +94,11 @@ try{
      return saved.record.id;
     });
     await page.goto(origin+'#/result?record='+encodeURIComponent(id),{waitUntil:'networkidle'});
-    const result=page.locator('#runload-result-v4');
+    const result=page.locator('#activity-result');
     await result.locator('.rv4-hero').waitFor({state:'visible',timeout:20000});
     await page.waitForFunction(l=>document.documentElement.lang===l,language,{timeout:20000});
     if(zoom)await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
-    if(language==='en')await page.waitForFunction(()=>document.querySelector('#runload-result-v4')?.shadowRoot?.querySelector('.rv4-header h1')?.textContent==='Results',null,{timeout:20000});
+    if(language==='en')await page.waitForFunction(()=>document.querySelector('#activity-result')?.shadowRoot?.querySelector('.rv4-header h1')?.textContent==='Results',null,{timeout:20000});
     assert.equal(await result.locator('[data-tab]').count(),3,'preserve the original three result tabs');
     assert.deepEqual(await result.locator('.rv4-mobile-tabs [data-tab]').allTextContents(),language==='en'?['Body','Fatigue','Compare']:['身体','疲労感','過去と比較'],'three balanced localized tab titles');
     assert.equal(await result.locator('.rv4-next-path').count(),0,'remove large duplicate Explore CTA');

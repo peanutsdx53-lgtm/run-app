@@ -62,7 +62,7 @@ export function inspectGpsPrivateBackupSnapshot(choice,untrustedSnapshot){
  const parents=new Map(),contentById=new Map(),groups=new Map();
  for(const x of untrustedSnapshot.parents){
   const n=normalizedRef(x);
-  if(!n||parents.has(n.recordId))return fail('BAD_PARENT','GPS元記録の識別子が不正・重複しています');
+  if(!n||parents.has(n.recordId))return fail('BAD_PARENT','元のGPS記録の指定に不整合または重複があります');
   parents.set(n.recordId,n);
  }
  for(const x of untrustedSnapshot.contents){

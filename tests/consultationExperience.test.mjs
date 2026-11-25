@@ -103,7 +103,7 @@ test('consultation resize listener is aborted before old report host is replaced
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  const consultation=readFileSync(new URL('../ui/consultationExperience.js',import.meta.url),'utf8');
  assert.match(consultation,/window\.addEventListener\('resize',updateScale,\{signal:hostSignal\(host\)\}\)/);
- assert.match(app,/app\.querySelector\('#runload-consultation'\)\?\._consultationAbort\?\.abort\(\)/);
+ assert.match(app,/app\.querySelector\('#consultation-root'\)\?\._consultationAbort\?\.abort\(\)/);
  assert.match(app,/consultationExperience\.mountConsultation/);
 });
 

@@ -54,7 +54,7 @@ try{
    if(!saved.ok)throw Error('first save: '+saved.reason);return saved.record.id;
   });
   await page.goto(base+'result?record='+encodeURIComponent(firstId),{waitUntil:'networkidle'});
-  const result=page.locator('#runload-result-v4');await result.locator('.rv4-hero').waitFor();
+  const result=page.locator('#activity-result');await result.locator('.rv4-hero').waitFor();
   assert.equal(await result.locator('[data-tab]').count(),3,'three result tabs retained');
   assert.match(await result.locator('.rv4-hero').innerText(),/運動前[\s\S]*0/,'ROF-J zero is real, not missing');
   await inspect(page,width,'S09-one-saved');
@@ -102,7 +102,7 @@ try{
   });
   await page.goto(base+'result?record='+encodeURIComponent(firstId)+'&compare='+encodeURIComponent(incompatibleReferenceId)+'&view=compare',{waitUntil:'networkidle'});
   await result.locator('.rv4-compare-summary').waitFor();
-  await page.waitForFunction(id=>document.querySelector('#runload-result-v4')?.shadowRoot?.querySelector('[data-compare-select]')?.value===id,incompatibleReferenceId,{timeout:20000});
+  await page.waitForFunction(id=>document.querySelector('#activity-result')?.shadowRoot?.querySelector('[data-compare-select]')?.value===id,incompatibleReferenceId,{timeout:20000});
   assert.equal(await result.locator('.rv4-region-compare-unavailable').count(),1,'saved facts can compare even when same-region scientific reference cannot');
   assert.equal(await result.locator('.rv4-comparison-table').count(),1,'fact-level comparison remains available');
   await shot(page,width,'S09-scientific-reference-ineligible',true);
@@ -124,13 +124,13 @@ try{
   await result.locator('.rv4-history').waitFor();
   // WebKit may still be painting the previous, activity-incompatible comparison.
   // Require the explicit unknown-record rejection before checking its wording.
-  await page.waitForFunction(()=>document.querySelector('#runload-result-v4')?.shadowRoot?.querySelector('.rv4-comparison-empty')?.textContent?.includes('指定された比較相手は保存記録にありません'),null,{timeout:20000});
+  await page.waitForFunction(()=>document.querySelector('#activity-result')?.shadowRoot?.querySelector('.rv4-comparison-empty')?.textContent?.includes('指定された比較相手は保存記録にありません'),null,{timeout:20000});
   assert.match(await result.locator('.rv4-comparison-empty').innerText(),/指定された比較相手は保存記録にありません/);
   await shot(page,width,'S09-invalid-comparison',true);
   // History preserves the exact selected record while keeping its internal
   // technical ID out of user-facing copy.
   await page.goto(base+'history',{waitUntil:'networkidle'});
-  const history=page.locator('#runload-history-v2');await history.locator('.stage').waitFor();
+  const history=page.locator('#activity-history');await history.locator('.stage').waitFor();
   await history.locator('.hx-scope [data-history-scope="all"]').click();
   await history.locator('[data-select-id="'+firstId+'"]').click();
   assert.equal(await history.locator('[data-select-id="'+firstId+'"]').count(),1);
@@ -166,8 +166,8 @@ try{
   await inspect(emptyPage,width,'S11-no-saved-records');
   await shot(emptyPage,width,'S11-no-saved-records',true);
   await emptyPage.goto(base+'result',{waitUntil:'networkidle'});
-  await emptyPage.locator('#runload-result-v4 .rv4-empty-card').first().waitFor();
-  assert.equal(await emptyPage.locator('#runload-result-v4 .rv4-hero').count(),0);
+  await emptyPage.locator('#activity-result .rv4-empty-card').first().waitFor();
+  assert.equal(await emptyPage.locator('#activity-result .rv4-hero').count(),0);
   await shot(emptyPage,width,'S09-no-record',true);
   await empty.close();
  }

@@ -1,4 +1,4 @@
-/* RunLoad GPS map: optional OpenStreetMap tile backdrop around accepted GPS samples.
+/* application GPS map: optional OpenStreetMap tile backdrop around accepted GPS samples.
  * Never requests a tile before a position is accepted. No map library, external
  * telemetry, or changes to measurement/record storage. Map tile requests reveal
  * the approximate displayed geographic area to tile.openstreetmap.org.

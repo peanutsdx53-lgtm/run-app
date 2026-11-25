@@ -1,4 +1,4 @@
-// RunLoad v2 — Home dashboard visual preferences, stage 1.
+// application v2 — Home dashboard visual preferences, stage 1.
 // This module never reads/writes the authoritative app's original preference keys,
 // scientific values, personal records, or GPS information.
 export const HOME_DASHBOARD_KEY="runload-v2-home-dashboard-layout-v1";

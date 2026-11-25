@@ -96,13 +96,13 @@ try{
   // Manual save is an asynchronous canonical transaction and redirects to its saved result.
   // Await that transaction before navigating: otherwise the late redirect overwrites History.
   await page.waitForURL(/#\/result\?record=/,{timeout:20000});
-  await page.locator('#runload-result-v4 .rv4-app').waitFor({state:'attached',timeout:20000});
+  await page.locator('#activity-result .rv4-app').waitFor({state:'attached',timeout:20000});
   await go('#/history');
-  await page.locator('#runload-history-v2').waitFor();
+  await page.locator('#activity-history').waitFor();
   await page.locator('.stage .topline').waitFor();
   await page.locator('.hx-screen-help summary').waitFor({state:'attached',timeout:15000}).catch(async err=>{
     const snapshot=await page.evaluate(()=>{
-      const host=document.querySelector('#runload-history-v2');
+      const host=document.querySelector('#activity-history');
       return {url:location.href,markup:host?.shadowRoot?.querySelector('#hx-view')?.innerHTML?.slice(0,900)};
     });
     throw new Error('history help failed to mount '+JSON.stringify(snapshot)+' '+err.message);
@@ -113,7 +113,7 @@ try{
   await page.locator('.hx-scope [data-history-scope="all"]').click();
   await page.locator('.entry').first().waitFor({state:'visible'});
   await page.locator('.entry').first().click();
-  const history=page.locator('#runload-history-v2');
+  const history=page.locator('#activity-history');
   await history.locator('.selected-footer').waitFor({state:'visible'});
   assert.equal(await history.locator('.hx-record-id').count(),0,'no visible ID widgets');
   assert.equal(await history.locator('[data-open-record]').count(),1,'explicit result link retained');
@@ -129,7 +129,7 @@ try{
    await assertExpandedNav(page,width,'history-selected');
    await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
    const days=await page.evaluate(()=>{
-    const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+    const root=document.querySelector('#activity-history')?.shadowRoot;
     return [...(root?.querySelectorAll('.day-grid button')||[])].map(btn=>{
      const b=btn.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(btn);
      const r=range.getBoundingClientRect();
@@ -155,8 +155,8 @@ try{
   await page.locator('.entry').first().waitFor();
   await page.locator('.entry').first().click();
   await page.locator('[data-open-record]').click();
-  await page.locator('#runload-result-v4 .rv4-app').waitFor({state:'attached'});
-  assert.equal(await page.locator('#runload-result-v4 [data-tab]').count(),3,'history-to-result and all three result tabs');
+  await page.locator('#activity-result .rv4-app').waitFor({state:'attached'});
+  assert.equal(await page.locator('#activity-result [data-tab]').count(),3,'history-to-result and all three result tabs');
   assert.deepEqual(errors,[],'no uncaught script errors at '+width);
   evidence.push({width,height,method:true,manual:true,review:true,history:true,result:true,privateIds:true,errors:0});
   await ctx.close();

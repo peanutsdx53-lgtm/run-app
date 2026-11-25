@@ -1,8 +1,8 @@
-// RunLoad v2 visual dashboard drag adapter.
+// application v2 visual dashboard drag adapter.
 // Pointer gestures edit only the in-memory v2 layout; Save remains an explicit action.
 // Touch: hold the dedicated handle, then move. Ordinary card scroll/taps are unaffected.
 // Mouse/pen: start dragging the handle after moving 6px.
-// No writes to old RunLoad localStorage keys or running data.
+// No writes to old application localStorage keys or running data.
 export function bindHomeDashboardDrag(root,{onDrop}={}){
  if(!root||typeof onDrop!=="function")return ()=>{};
  const win=root.ownerDocument.defaultView;

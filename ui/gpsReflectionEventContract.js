@@ -39,7 +39,7 @@ export function validateGpsReflectionEvent(event){
     !ACTIONS.has(event.action)||
     !Number.isSafeInteger(event.revision)||event.revision<1||
     event.revision>GPS_REFLECTION_MAX_REVISIONS+(event.action==='DELETE'?1:0)||
-    !validDate(event.savedAt))return fail('BAD_EVENT','記述履歴のID・版・日時が不正です');
+    !validDate(event.savedAt))return fail('BAD_EVENT','自由記述の履歴情報が正しくありません');
  if(event.action==='CREATE'){
   if(event.revision!==1||event.predecessorEventId!==null)return fail('BAD_EVENT','新規作成は改訂1から開始します');
  }else if(typeof event.predecessorEventId!=='string'||!EVENT.test(event.predecessorEventId)||event.revision===1)
@@ -64,14 +64,14 @@ export function inspectGpsReflectionContent(input){
 export function inspectGpsReflectionThread(recordRef,noteId,events){
  const ref=normalizeRecordRef(recordRef);
  if(!ref.ok||ref.value.sourceType!=='GPS_V2')return fail('SOURCE_MISMATCH','GPS V2記録を指定してください');
- if(typeof noteId!=='string'||!NOTE.test(noteId))return fail('BAD_NOTE_ID','自由記述IDが不正です');
+ if(typeof noteId!=='string'||!NOTE.test(noteId))return fail('BAD_NOTE_ID','対象の自由記述を確認できません');
  if(!Array.isArray(events)||events.length>GPS_REFLECTION_MAX_EVENTS)return fail('BAD_THREAD','改訂履歴を検証できません');
  const ids=new Set(),requests=new Set();let last=null,deleted=false,firstAt=null;
  for(const [i,event] of events.entries()){
   const v=validateGpsReflectionEvent(event);
   if(!v.ok)return v;
   if(event.noteId!==noteId||!sameRef(event.recordRef,ref.value))return fail('SOURCE_MISMATCH','別記録の改訂履歴が混入しています');
-  if(ids.has(event.eventId)||requests.has(event.requestId))return fail('DUPLICATE_EVENT','操作IDが重複しています');
+  if(ids.has(event.eventId)||requests.has(event.requestId))return fail('DUPLICATE_EVENT','同じ保存操作が重複しています');
   if(event.revision!==i+1||event.predecessorEventId!==(last?.eventId??null))
    return fail('BROKEN_CHAIN','改訂番号または前のイベントとの関係が不正です');
   if(i===0&&event.action!=='CREATE'||i>0&&event.action==='CREATE'||deleted)

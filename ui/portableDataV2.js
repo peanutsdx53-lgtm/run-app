@@ -67,7 +67,7 @@ function parentResolver(plan){
   const matched=rows.filter(x=>x?.id===n.value.recordId);
   if(!matched.length)return fail('親記録が見つかりません','NOT_FOUND');
   if(matched.length>1&&!matched.every(x=>JSON.stringify(x)===JSON.stringify(matched[0])))
-   return fail('同一IDの親記録が衝突しています','SOURCE_MISMATCH');
+   return fail('同じ元の記録に異なる内容があります','SOURCE_MISMATCH');
   const record=matched[0];
   if(n.value.sourceType==='MANUAL'&&(record.schema!==2||record.source!=='manual')||
    n.value.sourceType==='GPS_V2'&&!gps2.validGpsV2Summary(record))

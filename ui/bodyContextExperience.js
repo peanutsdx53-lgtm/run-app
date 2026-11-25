@@ -1,4 +1,4 @@
-/* RunLoad Body Context v8 — unapproved presentation-layer prototype.
+/* application Body Context v8 — presentation-layer rendering.
  * Production integration must import existing v2 BODY_REGION_VIEWS without modifications.
  * No scientific comparison values, injury interpretations or persistent region flags. */
 import { BODY_REGION_VIEWS } from '../assets/bodyRegionVisuals.js';

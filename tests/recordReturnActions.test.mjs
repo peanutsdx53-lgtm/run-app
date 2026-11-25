@@ -98,12 +98,12 @@ test('Body-like accent button is shared, responsive, and translated in both lang
  assert.equal(ENGLISH_FINAL_RECORDING['反映して戻る'],'Apply & Return');
  assert.equal(ENGLISH_FINAL_RECORDING['反映せず戻る'],'Return Without Applying');
  const idx=read('index.html'),sw=read('sw.js'),app=read('app.js');
- const ver='20261122-record-return-v1',shell='20261126-copy-v1';
+ const ver='20261122-record-return-v1',shell='20261126-cleanup-v1';
  assert.ok(idx.includes('ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'));
  assert.ok(sw.includes('ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'));
  assert.ok(sw.includes('runload-ui-next-shell-'+shell));
  assert.ok(app.includes('recordExperience.js?v=20261123-ux07-course-clarity-v1'),'active manual entry module');
- assert.ok(app.includes('gaitExperience.js?v='+ver),'gait module remains unchanged');
+ assert.ok(app.includes('gaitExperience.js?v=20261126-cleanup-v1'),'active gait module is loaded');
  for(const module of ['rofExperience','bodyContextExperience'])
-  assert.ok(app.includes(module+'.js?v=20261123-ux08-rof-body-clarity-v1'),'app must load active '+module);
+  assert.ok(app.includes(module+'.js?v=20261126-cleanup-v1'),'app must load active '+module);
 });

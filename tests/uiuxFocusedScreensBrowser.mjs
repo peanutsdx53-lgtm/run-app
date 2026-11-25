@@ -150,12 +150,12 @@ try{
     await capture(page,'course-help',lang,width);
    }
    await page.goto(origin+'/#/learning',{waitUntil:'networkidle'});
-   const learning=page.locator('#runload-learning .lr-catalog');await learning.waitFor();
+   const learning=page.locator('#learning-root .lr-catalog');await learning.waitFor();
    assert.equal(await learning.locator('.lr-course').count(),3,'three approved core lessons remain');
    await capture(page,'learning',lang,width);
    if(width===390){
     await page.goto(origin+'/#/learning?lesson=pace-basics',{waitUntil:'networkidle'});
-    await page.locator('#runload-learning .lr-lesson').waitFor();
+    await page.locator('#learning-root .lr-lesson').waitFor();
     await capture(page,'learning-lesson',lang,width);
    }
    await page.goto(origin+'/#/simulation',{waitUntil:'networkidle'});

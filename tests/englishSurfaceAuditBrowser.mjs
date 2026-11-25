@@ -220,26 +220,26 @@ try{
  await page.locator('[data-manual-gait="RUNNING"]').click();
  await page.locator('[data-demo-save]').click();
  await record(page,'S08','', '[data-record-review]');
- await record(page,'S09','result?record='+encodeURIComponent(id),'#runload-result-v4');
- await record(page,'S10','history','#runload-history-v2');
+ await record(page,'S09','result?record='+encodeURIComponent(id),'#activity-result');
+ await record(page,'S10','history','#activity-history');
  await record(page,'S11','exploration-tree','[data-experience-v3]');
  await record(page,'S12','exploration-tree?category=06&topic='+encodeURIComponent('ウォームアップ'),'.ex-observation-guide');
  await page.locator('.ex-learning [data-ex-action="note"]').click();
  await record(page,'S13','', '.ex-dialog');
  await record(page,'S14','condition','#condition-journey');
- await record(page,'S15','consultation','#runload-consultation');
+ await record(page,'S15','consultation','#consultation-root');
  await record(page,'S16','settings','[data-settings-v2]');
  await record(page,'S17','measurement','[data-measurement-v2],.gps-platform-unavailable');
  await page.goto(host+'result?record='+encodeURIComponent(id),{waitUntil:'networkidle'});
- await page.locator('#runload-result-v4 .rv4-export-menu summary').click();
- await record(page,'S19','', '#runload-result-v4 .rv4-export-menu');
+ await page.locator('#activity-result .rv4-export-menu summary').click();
+ await record(page,'S19','', '#activity-result .rv4-export-menu');
  await page.goto(host+'settings',{waitUntil:'networkidle'});
  await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
  await record(page,'S20','', '[data-settings-v2]');
  await page.evaluate(()=>{document.documentElement.style.fontSize='';});
  // The previous screen audit omitted the learning CATALOGUE, where
  // generated checklist counts and course-number subtitles were left in Japanese.
- await record(page,'LEARNING-CATALOG','learning','#runload-learning .lr-catalog');
+ await record(page,'LEARNING-CATALOG','learning','#learning-root .lr-catalog');
  await record(page,'LEARNING-LESSON','learning?lesson=pace-basics','.lr-lesson');
  await ctx.close();
  const mainReports=reports.filter(x=>/^S\d\d$/.test(x.screen));

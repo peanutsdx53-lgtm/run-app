@@ -1,4 +1,4 @@
-/* RunLoad v2 reusable course templates v1. Independent from saved runs / GPS tracks.
+/* application v2 reusable course templates v1. Independent from saved runs / GPS tracks.
  * The source-of-truth for a recording stays the recording's own snapshot.
  */
 import {SURFACES,courseReadiness,initialCourseUi} from './recordExperience.js';

@@ -1,4 +1,4 @@
-/** Cross-tab serialization for current RunLoad manual-run writes.
+/** Cross-tab serialization for current application manual-run writes.
  * All participating v2 tabs must use this lock. No claim about older tabs,
  * external storage editors, quota failures or power-loss durability.
  */

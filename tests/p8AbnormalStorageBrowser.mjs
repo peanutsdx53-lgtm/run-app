@@ -53,7 +53,7 @@ try{
  }
  // 1. Empty authoritative store: absence is verified, not a storage failure.
  await go('history');
- const history=page.locator('#runload-history-v2');
+ const history=page.locator('#activity-history');
  await history.locator('.stage').waitFor();
  assert.match(await history.locator('.stage').innerText(),/保存した記録はまだありません/);
  assert.equal(await history.locator('[data-history-unconnected="false"]').count(),1);
@@ -75,7 +75,7 @@ try{
  });
  assert.equal(saved.ok,true,saved.reason);
  await go('result?record='+encodeURIComponent(saved.id));
- const result=page.locator('#runload-result-v4');
+ const result=page.locator('#activity-result');
  await result.locator('[data-tab]').first().waitFor({state:'attached'});
  assert.equal(await result.locator('[data-tab]').count(),3);
  assert.equal(await result.locator('.rv4-mobile-tabs').isVisible(),width<=800,

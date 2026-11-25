@@ -135,7 +135,7 @@
 /* Consultation is a secondary screen: its global install action stays hidden. */
 @media screen{.cp-app .topbar{display:none!important}}
 
-/* Approved compact consultation header, aligned with other RunLoad screens. */
+/* Approved compact consultation header, aligned with other application screens. */
 .cp-app .cp-breadcrumb{display:none!important}
 .cp-app .cp-head{display:flex;align-items:center;justify-content:flex-start;gap:12px;min-height:46px;padding:1px 2px;margin:0 0 15px}
 .cp-app .cp-back{height:42px;width:42px;flex:none;display:grid;place-items:center;border:1px solid #5c8492;background:#1b4152;border-radius:11px;color:#ebfcff;font-size:28px;font-weight:550;line-height:1;text-decoration:none}
@@ -170,8 +170,8 @@
 
 /* C09 / layer-2 reflow: source-preserving report controls on a very
  * narrow effective CSS viewport under 200% CSS zoom. */
-.cp-app .main-content{container-name:runload-cp-narrow;container-type:inline-size}
-@container runload-cp-narrow (max-width:250px){
+.cp-app .main-content{container-name:consultation-narrow;container-type:inline-size}
+@container consultation-narrow (max-width:250px){
  .cp-workspace,.cp-edit{display:grid;grid-template-columns:minmax(0,1fr);min-width:0}
  .cp-panel,.cp-preview-panel{min-width:0;width:100%;padding:8px}
  .cp-mode-grid,.cp-item-grid{grid-template-columns:minmax(0,1fr)}

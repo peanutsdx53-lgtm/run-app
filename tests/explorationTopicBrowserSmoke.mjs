@@ -266,13 +266,13 @@ try{
   const topic=encodeURIComponent('過去の走りとの比較');
   // Prior pair must be user-selected in the result: no default picker inference.
   await page.goto(base+'#/result?record='+encodeURIComponent(saved.current)+'&view=compare',{waitUntil:'networkidle'});
-  assert.equal(await page.locator('#runload-result-v4 .rv4-next-path').count(),0,
+  assert.equal(await page.locator('#activity-result .rv4-next-path').count(),0,
    'results no longer duplicate the permanent Explore navigation');
   await page.goto(base+'#/result?record='+encodeURIComponent(saved.current)+
    '&compare='+encodeURIComponent(saved.earlier)+'&view=compare',{waitUntil:'networkidle'});
   // T08 still requires an explicitly chosen earlier record. Never infer it
   // from the result tab merely because the separate Explore CTA was removed.
-  assert.equal(await page.locator('#runload-result-v4 .rv4-history .rv4-learn-link').count(),0);
+  assert.equal(await page.locator('#activity-result .rv4-history .rv4-learn-link').count(),0);
   await page.goto(base+'#/exploration-tree?source=manual&record='+encodeURIComponent(saved.current)+
    '&category=01&topic='+topic+'&compare='+encodeURIComponent(saved.earlier),{waitUntil:'networkidle'});
   const q=page.locator('[data-e-inquiry="T08"]');

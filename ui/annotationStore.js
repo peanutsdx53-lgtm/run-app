@@ -102,14 +102,14 @@ export async function appendAnnotation(db,input,resolveParent=baseParent){
    const match=valid.ok&&prev.requestDigest===digest&&prev.eventId===input.eventId;
    // IDB transaction with no writes finishes normally; it never mutates duplicate events.
    await done;
-   return match?ok({event:prev,duplicate:true}):fail('REQUEST_CONFLICT','同じ操作IDに異なる内容が保存されています');
+   return match?ok({event:prev,duplicate:true}):fail('REQUEST_CONFLICT','前回の操作に異なる内容が保存されています');
   }
   const [meta,head,eventExists]=await Promise.all([request(ms.get('root')),
    request(hs.get(streamKeyOf(nr.value,input.fieldKey))),request(es.get(input.eventId))]);
   if(!validMeta(meta)){
    tx.abort();await done.catch(()=>{});return fail('READ_FAILED','追記の保存元情報が不正です');
   }
-  if(eventExists){tx.abort();await done.catch(()=>{});return fail('REQUEST_CONFLICT','イベントIDが既に使われています');}
+  if(eventExists){tx.abort();await done.catch(()=>{});return fail('REQUEST_CONFLICT','同じ追記の履歴がすでに存在します');}
   const currentHead=head?.headEventId??null,revision=head?.revision??0;
   if(head&&!validHead(head)){
    tx.abort();await done.catch(()=>{});return fail('READ_FAILED','追記履歴の最新情報が不正です');
@@ -155,17 +155,17 @@ export async function appendAnnotation(db,input,resolveParent=baseParent){
   return ok({event,duplicate:false});
  }catch(e){
   try{tx?.abort();}catch{}
-  return fail(quota(e)?'QUOTA':'WRITE_FAILED','追記の保存を確認できません。操作IDで再読込してから再試行してください');
+  return fail(quota(e)?'QUOTA':'WRITE_FAILED','追記の保存を確認できません。前回の保存結果を読み直してから再試行してください');
  }
 }
 
 /** Internal readback for ambiguous commits, without writing or inventing a new ID. */
 export async function findAnnotationByRequestId(db,requestId){
- if(typeof requestId!=='string'||requestId.length<8||requestId.length>96)return fail('BAD_EVENT','操作IDが不正です');
+ if(typeof requestId!=='string'||requestId.length<8||requestId.length>96)return fail('BAD_EVENT','対象の保存操作を確認できません');
  try{
   const tx=db.transaction('events','readonly'),done=finished(tx);
   const event=await request(tx.objectStore('events').index('byRequestId').get(requestId));await done;
-  if(event&&!validateAnnotationEvent(event).ok)return fail('READ_FAILED','操作IDの履歴が壊れています');
+  if(event&&!validateAnnotationEvent(event).ok)return fail('READ_FAILED','保存操作の履歴を読み取れません');
   return ok(event||null);
  }catch(e){return issue(e);}
 }

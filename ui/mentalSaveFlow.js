@@ -24,7 +24,7 @@ export async function saveMentalOnly(pending,{resolveParent=resolveRecord,openSt
   }
   const verified=await read(db,n.value,'mentalExperience',resolveParent);
   if(!verified.ok||verified.value.status!=='ACTIVE'||verified.value.latest.eventId!==q.eventId)
-   return err('READ_FAILED','任意回答の保存後照合ができませんでした。操作IDを変えずに再確認してください');
+   return err('READ_FAILED','任意回答が保存されたか確認できませんでした。新しく保存せず、前回の保存結果を確認してください');
   return {ok:true,status:'SAVED',ref:n.value,eventId:q.eventId};
  }finally{try{db.close?.()}catch{}}
 }

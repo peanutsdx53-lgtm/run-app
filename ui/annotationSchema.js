@@ -122,7 +122,7 @@ export function validateAppendRequest(request,{record}={}){
   !idPattern.test(request.eventId)||!idPattern.test(request.clientRequestId)||
   !PHASES.includes(request.declaredPhase)||!TIMES.includes(request.timeBasis)||!iso(request.enteredAt)||
   !(request.assessedAt===null||iso(request.assessedAt)))
-  return fail('BAD_EVENT','操作・版・時点・識別子が不正です');
+  return fail('BAD_EVENT','追記の履歴情報が正しくありません');
  if(request.timeBasis==='UNKNOWN'&&request.assessedAt!==null||
     request.timeBasis==='AT_ENTRY'&&request.assessedAt!==request.enteredAt||
     request.timeBasis==='RECALLED'&&request.assessedAt!==null)

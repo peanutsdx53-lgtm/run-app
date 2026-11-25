@@ -28,7 +28,7 @@ try{
  await mkdir(resolve(root,'screenshots'),{recursive:true});
  const screenRoutes=[
   ['S08','record-review','.rr-page'],
-  ['S15','consultation','#runload-consultation'],
+  ['S15','consultation','#consultation-root'],
   ['S17','measurement','.gps-v2'],
   ['S18','simulation','.sm-page']
  ];

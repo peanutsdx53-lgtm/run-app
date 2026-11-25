@@ -38,7 +38,7 @@ try{
   });
   const url=base+'#/result?record='+encodeURIComponent(ids.current);
   await p.goto(url,{waitUntil:'networkidle'});
-  const host=p.locator('#runload-result-v4');
+  const host=p.locator('#activity-result');
   await host.locator('.rv4-body .rv4-reading').waitFor({timeout:20000});
   assert.equal(await host.locator('.rv4-mobile-tabs [data-tab]').count(),3,'all three approved result views persist');
   assert.equal(await host.locator('.rv4-header-help summary').count(),1,'one guidance affordance near heading');
@@ -49,7 +49,7 @@ try{
   assert.equal(await host.locator('.rv4-export-menu').count(),1,'export choice remains optional');
   assert.equal(await host.locator('.rv4-body [data-view]').count(),3,'three anatomy views remain');
   const measure=()=>p.evaluate(()=>{
-    const host=document.querySelector('#runload-result-v4');
+    const host=document.querySelector('#activity-result');
     const sr=host.shadowRoot, w=innerWidth;
     const get=(sel)=>{const e=sr.querySelector(sel);if(!e)return null;const r=e.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
     const check=['.rv4-header','.rv4-hero','.rv4-method-disclosure','.rv4-mobile-tabs','.rv4-grid','.rv4-body','.rv4-body-content','.rv4-reading','.rv4-next-path','.rv4-region-compare'];

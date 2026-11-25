@@ -77,8 +77,8 @@ try{
   await page.locator('#lr-first').waitFor();
   await page.goto(host+'#/learning?lesson=unpublished-future',{waitUntil:'networkidle'});
   // SPA hashchange awaits canonical.refresh(): do not read the preceding lesson DOM.
-  await page.locator('#runload-learning h1').getByText('この授業はまだ利用できません').waitFor({timeout:15000});
-  assert.match(await page.locator('#runload-learning').innerText(),/まだ利用できません/);
+  await page.locator('#learning-root h1').getByText('この授業はまだ利用できません').waitFor({timeout:15000});
+  assert.match(await page.locator('#learning-root').innerText(),/まだ利用できません/);
   assert.deepEqual(errors,[],'L2 browser errors at '+width);
   await context.close();
   console.log(JSON.stringify({gate:'L2-K04-K05',browser:engineName,width,status:'PASS',noMutation:true}));

@@ -214,7 +214,7 @@ try{
   }
   await safe('populated review');await shot('03-review-filled');
   await page.locator('[data-gps-action="save"]').click();
-  await page.locator('#runload-result-v4').waitFor();
+  await page.locator('#activity-result').waitFor();
   const id=new URLSearchParams(page.url().split('?')[1]).get('gps');
   const stored=await page.evaluate(async()=>{const g=await import('/ui/gpsReplayIndexedDbStore.js');return g.readGpsV2Summaries();});
   assert.equal(stored.ok,true,stored.reason);
@@ -226,7 +226,7 @@ try{
   assert.ok(saved.experience.beforeCapturedAt&&saved.experience.afterCapturedAt);
   assert.equal(saved.activity,selectedActivity,'saved activity matches the user selection');
   assert.equal(saved.detailSaved,saveDetails,'route storage is opt-in, never implicit');
-  const dynamicGate=page.locator('#runload-result-v4 [data-gps-dynamic-gate]');
+  const dynamicGate=page.locator('#activity-result [data-gps-dynamic-gate]');
   assert.equal(await dynamicGate.count(),saveDetails?1:0,'single-activity dynamic gate depends on route consent');
   if(saveDetails){
    const restored=await page.evaluate(async id=>{
@@ -238,7 +238,7 @@ try{
    assert.equal(restored.detail.flags[0].note,'保存する地点の気づき');
   }
   await page.reload({waitUntil:'networkidle'});
-  const result=page.locator('#runload-result-v4');
+  const result=page.locator('#activity-result');
   if(!(await result.locator('[data-pane="fatigue"]').isVisible()))await result.locator('[data-tab="fatigue"]').click();
   await result.locator('[data-pane="fatigue"]').waitFor({state:'visible'});
   const fatigue=await result.locator('[data-pane="fatigue"]').innerText();
@@ -275,7 +275,7 @@ try{
    assert.equal(legacy.state,'MIXED_NOT_SUPPORTED','old scientific refusal remains intact');
    await page.goto(host+'history',{waitUntil:'networkidle'});
    await page.reload({waitUntil:'networkidle'});
-   const history=page.locator('#runload-history-v2');await history.waitFor();
+   const history=page.locator('#activity-history');await history.waitFor();
    await history.locator('.hx-scope [data-history-scope="all"]').click();
    await history.locator('[data-history-advanced]').click();
    await history.locator('[data-record-source="GPS_V2"]').click();
@@ -287,7 +287,7 @@ try{
    await shot('stage1-legacy-mixed-history');
    await oldItem.click();
    await history.locator('[data-open-record]').click();
-   await page.locator('#runload-result-v4 .rv4-header').waitFor();
+   await page.locator('#activity-result .rv4-header').waitFor();
    assert.equal(await page.locator('[data-gps-dynamic-gate]').count(),0,'legacy mixed must not be misrepresented as dynamic reference');
    await shot('stage1-legacy-mixed-result');
   }

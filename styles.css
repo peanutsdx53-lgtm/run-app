@@ -76,7 +76,7 @@
  .install-settings-icon{width:48px;height:48px;font-size:1.5rem}
 }
 
-/* RunLoad visual reconciliation — screen references October 2026 */
+/* application visual reconciliation — screen references October 2026 */
 :root{
  --ink:#1b2f4b;--muted:#657a91;--bg:#f2f7fb;--line:#e1eaf1;--card:#fff;
  --teal:#008aab;--teal-dark:#067c97;--blue:#287add;--shadow:0 6px 24px rgba(33,64,111,.07);
@@ -1337,7 +1337,7 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
   .explore-topic-detail .topic-choice .topic-index{min-width:22px;font-size:.88rem}
 }
 
-/* Home dashboard stage 1: independent RunLoad v2 layout control.
+/* Home dashboard stage 1: independent application v2 layout control.
    Defaults match the existing two-column home presentation.
    Data values, recordings and authoritative mobile-home keys are never changed. */
 .home-heading-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
@@ -1675,7 +1675,7 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
  .record-rof-j .rof-anchor-card{flex-basis:91px}
 }
 
-/* Original RunLoad record UX: a compact fatigue summary that expands into
+/* Original application record UX: a compact fatigue summary that expands into
    the approved five illustrations and independent 0-10 selectors only on demand. */
 .record-rof-j{padding:11px 12px;gap:7px}
 .rof-editor-details{min-width:0;border:1px solid #d2e7ef;border-radius:12px;background:#fff;overflow:hidden}
@@ -1709,72 +1709,72 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
 }
 
 /* Result Ver4: premium dark app chrome; scoped exclusively to the result route. */
-body:has(#runload-result-v4){background:#051923}
-.app-shell:has(#runload-result-v4){background:linear-gradient(155deg,#071f30,#051521);min-height:100vh}
-.app-shell:has(#runload-result-v4) .main-frame{background:radial-gradient(ellipse at 60% -8%,#13536e58,transparent 40%),#061925}
-.app-shell:has(#runload-result-v4) .main-content{max-width:none;width:100%;padding:16px clamp(12px,2.4vw,28px) 75px}
-.app-shell:has(#runload-result-v4) .sidebar{background:linear-gradient(165deg,#0b3448,#061724 90%);border-right:1px solid #216078}
-.app-shell:has(#runload-result-v4) .side-link{color:#b4d7e1}
-.app-shell:has(#runload-result-v4) .side-link:hover{background:#154b5b;color:#fff}
-.app-shell:has(#runload-result-v4) .side-link.is-active{background:linear-gradient(100deg,#10718c,#0c3d56);border:1px solid #2aa1b4;box-shadow:inset 3px 0 #41ede1}
-.app-shell:has(#runload-result-v4) .topbar{background:#071f30;color:#ddf7f8;border-bottom:1px solid #28576c}
+body:has(#activity-result){background:#051923}
+.app-shell:has(#activity-result){background:linear-gradient(155deg,#071f30,#051521);min-height:100vh}
+.app-shell:has(#activity-result) .main-frame{background:radial-gradient(ellipse at 60% -8%,#13536e58,transparent 40%),#061925}
+.app-shell:has(#activity-result) .main-content{max-width:none;width:100%;padding:16px clamp(12px,2.4vw,28px) 75px}
+.app-shell:has(#activity-result) .sidebar{background:linear-gradient(165deg,#0b3448,#061724 90%);border-right:1px solid #216078}
+.app-shell:has(#activity-result) .side-link{color:#b4d7e1}
+.app-shell:has(#activity-result) .side-link:hover{background:#154b5b;color:#fff}
+.app-shell:has(#activity-result) .side-link.is-active{background:linear-gradient(100deg,#10718c,#0c3d56);border:1px solid #2aa1b4;box-shadow:inset 3px 0 #41ede1}
+.app-shell:has(#activity-result) .topbar{background:#071f30;color:#ddf7f8;border-bottom:1px solid #28576c}
 @media(max-width:800px){
- .app-shell:has(#runload-result-v4) .main-content{padding:0 0 calc(80px + env(safe-area-inset-bottom))}
- .app-shell:has(#runload-result-v4) .mobile-nav{background:#082638f5;border-top:1px solid #27778a}
- .app-shell:has(#runload-result-v4) .mobile-link{color:#a7cbda}
- .app-shell:has(#runload-result-v4) .mobile-link.is-active{color:#32e8e1}
+ .app-shell:has(#activity-result) .main-content{padding:0 0 calc(80px + env(safe-area-inset-bottom))}
+ .app-shell:has(#activity-result) .mobile-nav{background:#082638f5;border-top:1px solid #27778a}
+ .app-shell:has(#activity-result) .mobile-link{color:#a7cbda}
+ .app-shell:has(#activity-result) .mobile-link.is-active{color:#32e8e1}
 }
 
 /* History Ver.2 -- reuse the already approved dark navigation; UI body is Shadow DOM isolated. */
-body:has(#runload-history-v2){background:#061725}
-.app-shell:has(#runload-history-v2){background:#061725;min-height:100vh}
-.app-shell:has(#runload-history-v2) .main-frame{background:radial-gradient(ellipse at 70% -10%,#15536b33,transparent 43%),#061725}
-.app-shell:has(#runload-history-v2) .main-content{max-width:none;width:100%;padding:0 0 66px}
-.app-shell:has(#runload-history-v2) .sidebar{background:linear-gradient(165deg,#0b3448,#061724 90%);border-right:1px solid #216078}
-.app-shell:has(#runload-history-v2) .side-link{color:#b4d7e1}
-.app-shell:has(#runload-history-v2) .side-link.is-active{background:linear-gradient(100deg,#10718c,#0c3d56);border:1px solid #2aa1b4;box-shadow:inset 3px 0 #41ede1}
-.app-shell:has(#runload-history-v2) .topbar{background:#071f30;color:#ddf7f8;border-bottom:1px solid #28576c}
-@media(max-width:870px){.app-shell:has(#runload-history-v2) .main-content{padding:0 0 calc(80px + env(safe-area-inset-bottom))}.app-shell:has(#runload-history-v2) .mobile-nav{background:#082638f5;border-top:1px solid #27778a}.app-shell:has(#runload-history-v2) .mobile-link{color:#a7cbda}.app-shell:has(#runload-history-v2) .mobile-link.is-active{color:#32e8e1}}
+body:has(#activity-history){background:#061725}
+.app-shell:has(#activity-history){background:#061725;min-height:100vh}
+.app-shell:has(#activity-history) .main-frame{background:radial-gradient(ellipse at 70% -10%,#15536b33,transparent 43%),#061725}
+.app-shell:has(#activity-history) .main-content{max-width:none;width:100%;padding:0 0 66px}
+.app-shell:has(#activity-history) .sidebar{background:linear-gradient(165deg,#0b3448,#061724 90%);border-right:1px solid #216078}
+.app-shell:has(#activity-history) .side-link{color:#b4d7e1}
+.app-shell:has(#activity-history) .side-link.is-active{background:linear-gradient(100deg,#10718c,#0c3d56);border:1px solid #2aa1b4;box-shadow:inset 3px 0 #41ede1}
+.app-shell:has(#activity-history) .topbar{background:#071f30;color:#ddf7f8;border-bottom:1px solid #28576c}
+@media(max-width:870px){.app-shell:has(#activity-history) .main-content{padding:0 0 calc(80px + env(safe-area-inset-bottom))}.app-shell:has(#activity-history) .mobile-nav{background:#082638f5;border-top:1px solid #27778a}.app-shell:has(#activity-history) .mobile-link{color:#a7cbda}.app-shell:has(#activity-history) .mobile-link.is-active{color:#32e8e1}}
 
 /* The embedded history surface must cover all remaining shell/padding space. */
-.app-shell:has(#runload-history-v2) .main-frame{min-height:100vh}
-.app-shell:has(#runload-history-v2) .main-content{background:#061725;min-height:calc(100vh - 58px)}
+.app-shell:has(#activity-history) .main-frame{min-height:100vh}
+.app-shell:has(#activity-history) .main-content{background:#061725;min-height:calc(100vh - 58px)}
 
-/* Use one dark canvas behind the iPhone safe area in every RunLoad screen.
+/* Use one dark canvas behind the iPhone safe area in every application screen.
    Only installed PWAs use overlay status bars; keep content below their inset. */
 html, body { background-color:#061725; }
 @media (display-mode:standalone) {
   body { padding-top: env(safe-area-inset-top, 0px); }
 }
 
-/* RunLoad v2 shared headerless history shell — 2026-10-25.
+/* application v2 shared headerless history shell — 2026-10-25.
    The OS safe area belongs to the viewport, not an empty app topbar. */
-.app-shell:has(#runload-history-v2){background:#061725;min-height:100dvh}
-.app-shell:has(#runload-history-v2) .topbar{display:none}
-.app-shell:has(#runload-history-v2) .main-frame{
+.app-shell:has(#activity-history){background:#061725;min-height:100dvh}
+.app-shell:has(#activity-history) .topbar{display:none}
+.app-shell:has(#activity-history) .main-frame{
   min-height:100dvh;
   background:radial-gradient(ellipse at 88% 0%,#17556b70,transparent 43%),linear-gradient(145deg,#091824,#0c2635 54%,#091620);
 }
-.app-shell:has(#runload-history-v2) .main-content{
+.app-shell:has(#activity-history) .main-content{
   box-sizing:border-box;max-width:none;width:100%;margin:0;padding:0;
   background:transparent;color:#f1f9fc;min-width:0;
 }
-.app-shell:has(#runload-history-v2) .sidebar{
+.app-shell:has(#activity-history) .sidebar{
   background:linear-gradient(180deg,#0c2533,#071923);border-right-color:#254655;
 }
-.app-shell:has(#runload-history-v2) .side-link{color:#b8d5df}
-.app-shell:has(#runload-history-v2) .side-link:hover,
-.app-shell:has(#runload-history-v2) .side-link.is-active{color:#85eff0;background:#1e5666}
+.app-shell:has(#activity-history) .side-link{color:#b8d5df}
+.app-shell:has(#activity-history) .side-link:hover,
+.app-shell:has(#activity-history) .side-link.is-active{color:#85eff0;background:#1e5666}
 @media(max-width:800px){
- .app-shell:has(#runload-history-v2) .mobile-nav{background:#0c1d2bef;border-top-color:#2e5263}
- .app-shell:has(#runload-history-v2) .mobile-link{color:#c0cbd5}
- .app-shell:has(#runload-history-v2) .mobile-link.is-active{color:#55dce3;background:#174353}
+ .app-shell:has(#activity-history) .mobile-nav{background:#0c1d2bef;border-top-color:#2e5263}
+ .app-shell:has(#activity-history) .mobile-link{color:#c0cbd5}
+ .app-shell:has(#activity-history) .mobile-link.is-active{color:#55dce3;background:#174353}
 }
 
 /* Restore the bottom clearance for History after the headerless shell reset.
    The fixed five-item nav must never cover the final search/history panel. */
 @media(max-width:800px){
-  .app-shell:has(#runload-history-v2) .main-content{
+  .app-shell:has(#activity-history) .main-content{
     padding-bottom:calc(80px + env(safe-area-inset-bottom, 0px));
   }
 }
@@ -1789,16 +1789,16 @@ a,button,input,select,textarea,summary,label,[role="button"],[tabindex]{touch-ac
 
 /* Result screen V20: use the same headerless navy shell as Home/History.
    Keep the page and iOS safe-area background dark, including rubber-band overscroll. */
-html:has(#runload-result-v4),body:has(#runload-result-v4),body:has(#runload-result-v4) #app{background:#061725;color:#effbff}
-.app-shell:has(#runload-result-v4){min-height:100dvh;background:#061725}
-.app-shell:has(#runload-result-v4) .topbar{display:none}
-.app-shell:has(#runload-result-v4) .main-frame{min-height:100dvh;background:radial-gradient(ellipse at 60% -8%,#13536e58,transparent 40%),#061925}
-.app-shell:has(#runload-result-v4) .main-content{background:transparent;min-height:100dvh;box-sizing:border-box}
+html:has(#activity-result),body:has(#activity-result),body:has(#activity-result) #app{background:#061725;color:#effbff}
+.app-shell:has(#activity-result){min-height:100dvh;background:#061725}
+.app-shell:has(#activity-result) .topbar{display:none}
+.app-shell:has(#activity-result) .main-frame{min-height:100dvh;background:radial-gradient(ellipse at 60% -8%,#13536e58,transparent 40%),#061925}
+.app-shell:has(#activity-result) .main-content{background:transparent;min-height:100dvh;box-sizing:border-box}
 @media(max-width:800px){
- .app-shell:has(#runload-result-v4) .main-content{padding-top:0;padding-bottom:calc(95px + env(safe-area-inset-bottom,0px))}
- .app-shell:has(#runload-result-v4) .mobile-nav{background:#0c1d2bef;border-top-color:#2e5263}
- .app-shell:has(#runload-result-v4) .mobile-link{color:#c0cbd5}
- .app-shell:has(#runload-result-v4) .mobile-link.is-active{color:#55dce3}
+ .app-shell:has(#activity-result) .main-content{padding-top:0;padding-bottom:calc(95px + env(safe-area-inset-bottom,0px))}
+ .app-shell:has(#activity-result) .mobile-nav{background:#0c1d2bef;border-top-color:#2e5263}
+ .app-shell:has(#activity-result) .mobile-link{color:#c0cbd5}
+ .app-shell:has(#activity-result) .mobile-link.is-active{color:#55dce3}
 }
 
 /* P5: auxiliary menu on narrow displays, keeping the approved five lower tabs. */
@@ -1814,15 +1814,15 @@ html:has(#runload-result-v4),body:has(#runload-result-v4),body:has(#runload-resu
 
 /* P6-B S09: keep the five navigation labels within the viewport at 200% text. */
 @media(max-width:800px){
- .app-shell:has(#runload-result-v4) .mobile-nav{
+ .app-shell:has(#activity-result) .mobile-nav{
   height:auto;min-height:63px;grid-auto-rows:minmax(45px,auto);
   align-items:stretch;
  }
- .app-shell:has(#runload-result-v4) .mobile-link{
+ .app-shell:has(#activity-result) .mobile-link{
   height:auto;min-height:45px;align-content:center;
   line-height:1.25;white-space:normal;overflow-wrap:anywhere;
  }
- .app-shell:has(#runload-result-v4) .main-content{
+ .app-shell:has(#activity-result) .main-content{
   padding-bottom:max(calc(106px + env(safe-area-inset-bottom,0px)),
                      calc(6rem + env(safe-area-inset-bottom,0px)));
  }
@@ -1833,17 +1833,17 @@ html:has(#runload-result-v4),body:has(#runload-result-v4),body:has(#runload-resu
 @media(max-width:800px){
  .app-shell:has(.record-v3) .mobile-nav,
  .app-shell:has(.rr-page) .mobile-nav,
- .app-shell:has(#runload-history-v2) .mobile-nav{
+ .app-shell:has(#activity-history) .mobile-nav{
   height:auto;min-height:63px;grid-auto-rows:minmax(45px,auto);align-items:stretch;
  }
  .app-shell:has(.record-v3) .mobile-link,
  .app-shell:has(.rr-page) .mobile-link,
- .app-shell:has(#runload-history-v2) .mobile-link{
+ .app-shell:has(#activity-history) .mobile-link{
   height:auto;min-height:45px;align-content:center;line-height:1.25;white-space:normal;overflow-wrap:anywhere;
  }
  .app-shell:has(.record-v3) .main-content,
  .app-shell:has(.rr-page) .main-content,
- .app-shell:has(#runload-history-v2) .main-content{
+ .app-shell:has(#activity-history) .main-content{
   padding-bottom:max(calc(110px + env(safe-area-inset-bottom,0px)),calc(6rem + env(safe-area-inset-bottom,0px)));
  }
 }
@@ -1866,15 +1866,15 @@ html:has(#runload-result-v4),body:has(#runload-result-v4),body:has(#runload-resu
 .rl-screen-help>p{position:absolute;top:calc(100% + 8px);right:0;width:min(320px,calc(100vw - 38px));padding:13px 15px;margin:0;border:1px solid #5399aa;border-radius:12px;background:#0b3447;color:#e9fbff;box-shadow:0 15px 32px #001522c4;font-size:13px;line-height:1.75;z-index:41;overflow-wrap:anywhere;font-weight:450;letter-spacing:normal;text-align:left}
 @media(max-width:800px){
  .app-shell:has(.cj-screen) .mobile-nav,
- .app-shell:has(#runload-consultation) .mobile-nav,
+ .app-shell:has(#consultation-root) .mobile-nav,
  .app-shell:has([data-settings-v2]) .mobile-nav,
  .app-shell:has([data-measurement-v2]) .mobile-nav{height:auto;min-height:63px;grid-auto-rows:minmax(45px,auto);align-items:stretch}
  .app-shell:has(.cj-screen) .mobile-link,
- .app-shell:has(#runload-consultation) .mobile-link,
+ .app-shell:has(#consultation-root) .mobile-link,
  .app-shell:has([data-settings-v2]) .mobile-link,
  .app-shell:has([data-measurement-v2]) .mobile-link{height:auto;min-height:45px;align-content:center;line-height:1.25;white-space:normal;overflow-wrap:anywhere}
  .app-shell:has(.cj-screen) .main-content,
- .app-shell:has(#runload-consultation) .main-content,
+ .app-shell:has(#consultation-root) .main-content,
  .app-shell:has([data-settings-v2]) .main-content,
  .app-shell:has([data-measurement-v2]) .main-content,
  .app-shell:has(.sm-page) .main-content{padding-bottom:max(calc(110px + env(safe-area-inset-bottom,0px)),calc(6rem + env(safe-area-inset-bottom,0px)))}
@@ -1910,22 +1910,22 @@ html:has(#runload-result-v4),body:has(#runload-result-v4),body:has(#runload-resu
  * Override just those competing properties, preserving every labeled destination.
  * No horizontal clipping, no icon-only replacement and 44px+ tap areas. */
 @media(max-width:800px){
- #app .app-shell:has(#runload-result-v4) .mobile-nav{
+ #app .app-shell:has(#activity-result) .mobile-nav{
   display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
   grid-auto-rows:minmax(52px,auto)!important;height:auto!important;
   align-items:stretch;gap:0;padding:6px 2px calc(7px + env(safe-area-inset-bottom))!important
  }
- #app .app-shell:has(#runload-result-v4) .mobile-link{
+ #app .app-shell:has(#activity-result) .mobile-link{
   display:grid!important;align-content:center;justify-items:center;
   min-width:0;min-height:52px!important;height:auto!important;
   padding:5px 1px!important;gap:3px!important;
   font-size:clamp(12px,2.9vw,13px)!important;line-height:1.25!important;
   white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important
  }
- #app .app-shell:has(#runload-result-v4) .mobile-link .nav-icon{
+ #app .app-shell:has(#activity-result) .mobile-link .nav-icon{
   display:grid;place-items:center;width:23px;height:23px;line-height:1
  }
- #app .app-shell:has(#runload-result-v4) .main-content{
+ #app .app-shell:has(#activity-result) .main-content{
   padding-bottom:calc(95px + env(safe-area-inset-bottom))
  }
 }

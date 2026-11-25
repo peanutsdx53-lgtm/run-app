@@ -70,7 +70,7 @@ try{
    'webkit '+width+' explicit activity choice unlocks save');
   await page.locator('[data-manual-run-save]').click();
   await page.waitForURL(/#\/result\?record=run-v1-/);
-   const referenceBody=page.locator('#runload-result-v4 .rv4-body');
+   const referenceBody=page.locator('#activity-result .rv4-body');
    await referenceBody.waitFor();
    assert.equal(await referenceBody.locator('[data-body-reference-label]').count(),0,'WebKit clean body');
    assert.notEqual((await referenceBody.locator('.rv4-big-score').innerText()).trim(),'—');

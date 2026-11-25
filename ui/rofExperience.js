@@ -1,4 +1,4 @@
-// Approved RunLoad v2 ROF-J Ver.4 interface.
+// Approved application v2 ROF-J Ver.4 interface.
 // The authoritative 0..10 integer scale and original 5-image anchor descriptors
 // remain in rofJScale.js. This module never invents 2.5/7.5 scores.
 import {ROF_J_ANCHORS, ROF_J_RIGHTS, isValidRofJ, guidanceForRofJ, referenceImageUrl} from './rofJScale.js';

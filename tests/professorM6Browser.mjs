@@ -20,7 +20,7 @@ try{
  await page.locator('[data-draft="distance"]').first().fill('6');await page.locator('[data-draft="minutes"]').first().fill('33');await page.locator('[data-manual-gait="RUNNING"]').click();
  await page.goto(base+'#/record-review',{waitUntil:'networkidle'});
  await page.locator('[data-manual-run-save]').click();await page.waitForURL(/#\/result\?record=run-v1-/,{timeout:20000});
- const id=decodeURIComponent(new URL(page.url()).hash.split('record=')[1]),result=page.locator('#runload-result-v4');
+ const id=decodeURIComponent(new URL(page.url()).hash.split('record=')[1]),result=page.locator('#activity-result');
  // M7 T-058: no Learning PR dependency or professor answer is needed.
  // Every top-level tab and each of the three body views must really switch.
  await result.locator('[data-source-distance]').waitFor({timeout:20000});

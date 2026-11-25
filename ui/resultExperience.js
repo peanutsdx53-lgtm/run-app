@@ -62,7 +62,7 @@ const RESULT_REFLECTION_ENTRY_STYLES=String.raw`
 @media print{.rv4-reflection-next{display:none!important}}
 `;
 const RESULT_HELP_RIGHT_STYLES=String.raw`
-/* S17 screen help: identical control to all ordinary RunLoad screen headers. */
+/* S17 screen help: identical control to all ordinary application screen headers. */
 .rv4-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:9px}
 .rv4-header-left{min-width:0;flex:1 1 auto}
 .rv4-actions{min-width:0;flex:0 1 auto}
@@ -601,12 +601,12 @@ export function mountResult(host,inputDraft={},options={}){
  if(!root.querySelector('.rv4-app'))root.innerHTML='<style data-result-inline-styles>'+RESULT_STYLES+RESULT_GAIT_STYLES+RESULT_VISUAL_STYLES+RESULT_ANATOMY_RELIEF_STYLES+RESULT_GPS_GATE_STYLES+RESULT_REFLECTION_STYLES+RESULT_ROF_AUDIT_STYLES+RESULT_QUESTION_STYLES+RESULT_UI_CLEAN_STYLES+RESULT_P6B_STYLES+M6_PRIVATE_PRINT_STYLES+RESULT_ACTIONS_V2_STYLES+RESULT_BUTTON_CONTRAST_STYLES+RESULT_BODY_LAYOUT_STYLES+RESULT_REFLECTION_ENTRY_STYLES+RESULT_HELP_RIGHT_STYLES+RESULT_T01_READABILITY_STYLES+'</style><div class="rv4-app"></div>';
  // Keep the visible label in sync when the user changes document font scale
  // while the result is open. Disconnect a previous observer on remount.
- host._runloadResultFontObserver?.disconnect();
+ host._resultFontObserver?.disconnect();
  const rootFontObserver=new MutationObserver(()=>{
   if(!host.isConnected){rootFontObserver.disconnect();return;}
   syncReferenceLabelFont();
  });
  rootFontObserver.observe(document.documentElement,{attributes:true,attributeFilter:['style','class']});
- host._runloadResultFontObserver=rootFontObserver;
+ host._resultFontObserver=rootFontObserver;
  draw();
 }

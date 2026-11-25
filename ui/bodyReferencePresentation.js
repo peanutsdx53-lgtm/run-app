@@ -19,7 +19,7 @@ export const bodyReferenceRow=(rows,bodyId)=>Array.isArray(rows)?
  rows.find(r=>r.regionId===bodyReferenceEngineId(bodyId))||null:null;
 export const calculatedReference=(row)=>row?.calculationState==='CALCULATED'&&
  typeof row.value==='number'&&Number.isFinite(row.value);
-/* Seven continuous blue–teal–orange stops on the existing RunLoad navy surface.
+/* Seven continuous blue–teal–orange stops on the existing application navy surface.
  * The display color shows the magnitude/direction of deviation from
  * EACH body's own reference 100; it is never a risk or clinical ranking.
  * Endpoints are display caps, NOT validity limits of any scientific model.

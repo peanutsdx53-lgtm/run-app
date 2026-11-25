@@ -292,7 +292,7 @@ try{
   assert.ok(saved.id.startsWith('run-v1-'));
   await take(page,w,'RESULT-environment-saved');
   await page.reload({waitUntil:'networkidle'});
-  await page.locator('#runload-result-v4').waitFor();
+  await page.locator('#activity-result').waitFor();
   assert.equal((await getSaved())?.id,saved.id,'reloading retains the same record identity');
   assert.equal((await getSaved())?.draft.environmentNote,saved.draft.environmentNote,'reloading retains the personally asserted context');
   await take(page,w,'RESULT-environment-reloaded');

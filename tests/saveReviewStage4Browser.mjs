@@ -152,7 +152,7 @@ try{
     await beginManualTrace(page);
     try{
      await activateManual(page.locator('[data-manual-run-save]'));
-     await page.locator('#runload-result-v4').waitFor({timeout:15000});
+     await page.locator('#activity-result').waitFor({timeout:15000});
     }catch(error){
      const trace=await manualTrace(page).catch(e=>({diagnosticError:String(e)}));
      await writeFile(resolve(out,engine+'-'+language+'-manual-retry-failure.json'),JSON.stringify({engine,language,width,manualActivation,trace,errors},null,2));
@@ -216,7 +216,7 @@ try{
   assert.match(operation?.id||'',/^gps-v2-/,'same retry ID must persist');
   await capture(page,language,width,'gps-save-failure');
   await page.locator('[data-gps-action="save"]').click();
-  await page.locator('#runload-result-v4').waitFor({timeout:15000});
+  await page.locator('#activity-result').waitFor({timeout:15000});
   const id=new URLSearchParams(page.url().split('?')[1]).get('gps');
   assert.equal(id,operation.id,'result uses exact previously failed ID');
   const stored=await page.evaluate(async()=>{
@@ -231,7 +231,7 @@ try{
    await page.waitForFunction(()=>document.querySelector('.toast-notice')?.textContent.includes('GPS Activity'),
     null,{timeout:10000});
    await page.waitForFunction(()=>{
-    const root=document.querySelector('#runload-result-v4')?.shadowRoot;
+    const root=document.querySelector('#activity-result')?.shadowRoot;
     return root?.querySelector('.rv4-notice')?.textContent.includes('GPS Record')&&
       root?.querySelector('[data-source-distance]')?.textContent.includes('Source: GPS Measurement');
    },null,{timeout:10000});
@@ -248,7 +248,7 @@ try{
   await recovery.waitFor({timeout:15000});
   await capture(page,language,width,'gps-reload-recovery');
   await recovery.locator('[data-gps-action="recover"]').click();
-  await page.locator('#runload-result-v4').waitFor({timeout:15000});
+  await page.locator('#activity-result').waitFor({timeout:15000});
   assert.equal(new URLSearchParams(page.url().split('?')[1]).get('gps'),id,'recovered original saved run');
   assert.equal(await page.evaluate(()=>sessionStorage.getItem('runload-v2-pending-gps-operation-v1')),null);
   // Storage-level uncertain acknowledgment: the same ID and identical payload

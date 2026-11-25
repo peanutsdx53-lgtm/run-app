@@ -1,5 +1,5 @@
 /**
- * RunLoad L2 candidate: K04/K05 provenance and missingness.
+ * application L2 candidate: K04/K05 provenance and missingness.
  * Only authored, hypothetical examples; no store access, health classification,
  * hidden RecordRef selection, saved answers, or personal measurements.
  * Basis: Current/App_Design/07 (D0), 39 (L2), Current source/provenance contracts.

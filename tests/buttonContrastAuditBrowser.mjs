@@ -34,10 +34,10 @@ const paths=[
  ['body','record-reflection','.cx-page'],
  ['more','record-more','.rv-aux'],
  ['settings','settings','[data-settings-v2]'],
- ['history','history','#runload-history-v2 .stage'],
+ ['history','history','#activity-history .stage'],
  ['explore','exploration-tree','[data-experience-v3]'],
  ['condition','condition','#condition-journey'],
- ['consultation','consultation','#runload-consultation'],
+ ['consultation','consultation','#consultation-root'],
  ['learning','learning','.lr-root'],
  ['measurement','measurement','[data-measurement-v2]']
 ];
@@ -129,7 +129,7 @@ try{
    if(!x.ok)throw Error('audit record: '+x.reason);
    return x.record.id;
   });
-  const scenarios=width>430?paths.filter(([name])=>['course','rof','gait','environment','body'].includes(name)):[...paths,['result','result?record='+encodeURIComponent(savedId),'#runload-result-v4']];
+  const scenarios=width>430?paths.filter(([name])=>['course','rof','gait','environment','body'].includes(name)):[...paths,['result','result?record='+encodeURIComponent(savedId),'#activity-result']];
    for(const [name,path,selector] of scenarios){
    try{
     await page.goto(base+'#/'+path,{waitUntil:'networkidle'});
@@ -340,7 +340,7 @@ try{
      if(await first.count()){await first.click();await snap(page,name,language,width,'selected');}
     }
     if(name==='result'){
-     const tabs=page.locator('#runload-result-v4 [data-tab]');
+     const tabs=page.locator('#activity-result [data-tab]');
      if(await tabs.count()===3){await tabs.nth(1).click();await snap(page,name,language,width,'fatigue');}
     }
     console.log('CONTRAST AUDIT '+name+' '+language+' '+width+': '+entries.length+' visible actions');

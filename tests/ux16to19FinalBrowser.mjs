@@ -21,9 +21,9 @@ try{for(const lang of ['ja','en'])for(const width of [320,390,768,1440])for(cons
  const capture=async(p,round,state,variant)=>{await p.waitForTimeout(80);const m=await geometry(p);assert.ok(m.doc<=m.width+3,round+' '+state+' viewport overflow '+JSON.stringify({key,doc:m.doc,width:m.width}));rows.push({key,engine,round,state,variant:'candidate',...m});await p.screenshot({path:resolve(out,key+'-'+round+'-'+state+'-'+variant+'.png'),fullPage:true,animations:'disabled',timeout:18000});return m};
  const check=async(round,fn)=>{try{await fn()}catch(e){failures.push({key,round,error:String(e)})}};
  await check('ux16',async()=>{
-  await go('consultation','#runload-consultation');await capture(page,'ux16','empty','A');assert.ok((await page.locator('[data-cp-scope="edit"]').innerText()).includes(lang==='en'?'No saved record':'対象となる保存済み記録はありません'));
+  await go('consultation','#consultation-root');await capture(page,'ux16','empty','A');assert.ok((await page.locator('[data-cp-scope="edit"]').innerText()).includes(lang==='en'?'No saved record':'対象となる保存済み記録はありません'));
   const record=await page.evaluate(async()=>{const c=await import('./ui/manualRunCanonical.js'),m=await import('./ui/manualRunStore.js');await c.refresh();const d=new Date(),date=[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');const x=await c.mutate(s=>m.saveManualRun(s,{date,distance:'5',hours:'',minutes:'30',seconds:'',rofBefore:0,rofAfter:4,steps:'',stepsProvenance:'UNKNOWN',activityGait:'RUNNING',runningFormat:'UNKNOWN',memo:'本人原文'}));return x.ok;});assert.equal(record,true);
-  await page.reload({waitUntil:'networkidle'});await page.locator('#runload-consultation').waitFor();await zoom(page);
+  await page.reload({waitUntil:'networkidle'});await page.locator('#consultation-root').waitFor();await zoom(page);
   for(const k of ['rof','condition','course','notes'])assert.equal(await page.locator('[data-share="'+k+'"]').isChecked(),false,k+' must default off');
   assert.equal(await page.locator('#cp-target option').count()>0,true);
   const chosenScope=await page.locator('[data-cp-scope="edit"]').innerText();assert.match(chosenScope,/\d{4}[-/]\d{2}[-/]\d{2}/);assert.ok(chosenScope.includes(lang==='en'?'Manual Entry':'手入力'));assert.equal(await page.locator('[data-cp-scope="print"]').innerText(),chosenScope);

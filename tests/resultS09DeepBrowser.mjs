@@ -24,7 +24,7 @@ const report=[],failures=[];
 async function capture(page,meta){
  await page.waitForTimeout(140);
  const m=await page.evaluate(()=>{
-  const shadow=document.querySelector('#runload-result-v4')?.shadowRoot;
+  const shadow=document.querySelector('#activity-result')?.shadowRoot;
   const rect=e=>{if(!e)return null;const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
   const one=s=>shadow?.querySelector(s),doc=document.documentElement;
   const nav=document.querySelector('.mobile-nav');
@@ -49,7 +49,7 @@ async function capture(page,meta){
   return {viewport:innerWidth,documentWidth:doc.scrollWidth,bodyWidth:document.body.scrollWidth,rootFont:getComputedStyle(doc).fontSize,scrollHeight:doc.scrollHeight,
     nav:nav&&getComputedStyle(nav).display!=='none'?rect(nav):null,
     navComputed:nav?{height:getComputedStyle(nav).height,grid:getComputedStyle(nav).gridTemplateColumns,
-      resultSelectorMatches:!!document.querySelector('.app-shell:has(#runload-result-v4) .mobile-nav'),
+      resultSelectorMatches:!!document.querySelector('.app-shell:has(#activity-result) .mobile-nav'),
       firstLinkStyle:(()=>{const item=nav.querySelector('.mobile-link');return item?{fontSize:getComputedStyle(item).fontSize,display:getComputedStyle(item).display,whiteSpace:getComputedStyle(item).whiteSpace,rect:rect(item),html:item.outerHTML.slice(0,350)}:null;})()}:null,
     parts,controls,leaks,regions,typography};
  });
@@ -99,7 +99,7 @@ async function capture(page,meta){
   // position. Check the actual viewport after scrolling, not just document geometry.
   if(meta.zoom===200&&[375,390].includes(meta.width)){
    const visible=await page.evaluate(()=>{
-    const host=document.querySelector('#runload-result-v4'),shadow=host?.shadowRoot;
+    const host=document.querySelector('#activity-result'),shadow=host?.shadowRoot;
     const target=shadow?.querySelector('.rv4-body-content');
     const nav=document.querySelector('.mobile-nav');
     if(!target||!nav)return null;
@@ -267,7 +267,7 @@ try{
    });
    await page.reload({waitUntil:'networkidle'});
    await page.goto(base+'result?record='+encodeURIComponent(id),{waitUntil:'networkidle'});
-   const result=page.locator('#runload-result-v4');
+   const result=page.locator('#activity-result');
    await result.locator('[data-tab="body"]').waitFor({state:'attached',timeout:15000});
    if(zoom===200)await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
    await page.waitForFunction(lang=>document.documentElement.lang===lang,language,{timeout:12000});

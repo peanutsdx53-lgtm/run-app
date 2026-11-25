@@ -1,4 +1,4 @@
-/* RunLoad v2 body/equipment Ver.8 — isolated dark presentation, 2026-10-25.
+/* application v2 body/equipment Ver.8 — isolated dark presentation, 2026-10-25.
    Uses official BODY_REGION_VIEWS from assets/bodyRegionVisuals.js (unchanged).
    No persistent region flags, scientific calculations, or new fields. */
 .app-shell:has(.cx-page) .main-frame{min-height:100vh;background:radial-gradient(ellipse at 85% -5%,#166a7b5e,transparent 45%),linear-gradient(145deg,#0a2634,#061924 76%)}

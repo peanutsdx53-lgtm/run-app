@@ -1,6 +1,6 @@
 /**
- * RunLoad L5 running-learning candidate: exertion, perceived fatigue and recovery.
- * Source-bounded education, not training guidance, diagnostics or a RunLoad tutorial.
+ * application L5 running-learning candidate: exertion, perceived fatigue and recovery.
+ * Source-bounded education, not training guidance, diagnostics or a application tutorial.
  * Hypothetical scenarios only: no saved run, app records, RPE, ROF-J, sleep diary,
  * wellness or health state is read/written. No score persistence.
  *

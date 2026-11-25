@@ -1,4 +1,4 @@
-/** RunLoad V14: pure, fail-closed descriptive interpretation. Never diagnoses. */
+/** application V14: pure, fail-closed descriptive interpretation. Never diagnoses. */
 import {readLifeEntries, compareLifeDays} from './explorationReadAdapter.js';
 export const INTERPRETATION_RULE_VERSION='14.1';
 const LABEL=Object.freeze({'self-reported':'申告した睡眠時間','time-in-bed':'就寝から起床までの経過時間'});

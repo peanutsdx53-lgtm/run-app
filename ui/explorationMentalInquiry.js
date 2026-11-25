@@ -15,7 +15,7 @@ export function mentalInquiryModel({ref=null,record=null,read=null}={}){
  const verified=fatigueInquiryModel({ref,record});
  if(verified.state==='NO_RECORD')return fail('NO_RECORD','走行記録を指定していません');
  if(verified.state!=='VERIFIED')return fail('UNVERIFIED','元の走行記録を照合できません');
- const nr=normalizeRecordRef(ref);if(!nr.ok)return fail('UNVERIFIED','記録のIDと出所を確認できません');
+ const nr=normalizeRecordRef(ref);if(!nr.ok)return fail('UNVERIFIED','対象の記録と情報の出所を確認できません');
  if(read===null)return Object.freeze({status:'NOT_REQUESTED',ref:nr.value});
  if(read?.ok!==true)return fail('READ_ERROR','任意申告の保存状態を安全に読み取れません');
  const status=read.value?.status;

@@ -1,4 +1,4 @@
-/* Companion to original RunLoad running energy model.
+/* Companion to original application running energy model.
  * GPS RUNNING/JOGGING only; never infer a mass or a walking/mixed MET.
  * Active duration excludes explicitly paused periods.
  */

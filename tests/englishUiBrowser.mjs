@@ -67,11 +67,11 @@ try{
   await page.waitForFunction(()=>document.querySelector('.rv-manual h1')?.textContent==='Enter a Record Manually');
   await page.waitForFunction(()=>document.querySelector('.rv-manual .rv-screen-help p')?.textContent?.includes('Enter a date, distance'));
   await page.goto(origin+'history',{waitUntil:'networkidle'});
-  await page.waitForFunction(()=>document.querySelector('#runload-history-v2')?.shadowRoot?.querySelector('.calendar-panel')?.getAttribute('aria-label')==='Record Calendar');
-  assert.ok((await page.locator('#runload-history-v2').evaluate(host=>[...host.shadowRoot.querySelectorAll('.entry-title')].map(el=>el.textContent))).includes('記録'),'user-entered course title matching a UI label must stay unchanged');
+  await page.waitForFunction(()=>document.querySelector('#activity-history')?.shadowRoot?.querySelector('.calendar-panel')?.getAttribute('aria-label')==='Record Calendar');
+  assert.ok((await page.locator('#activity-history').evaluate(host=>[...host.shadowRoot.querySelectorAll('.entry-title')].map(el=>el.textContent))).includes('記録'),'user-entered course title matching a UI label must stay unchanged');
   await page.screenshot({path:resolve(out,width+'-english-history.png'),fullPage:true});
   await page.goto(origin+'result?record='+encodeURIComponent(starting.id),{waitUntil:'networkidle'});
-  const result=page.locator('#runload-result-v4');
+  const result=page.locator('#activity-result');
   await result.locator('.rv4-mobile-tabs [data-tab]').first().waitFor({state:'attached',timeout:20000});
   assert.equal(await result.locator('.rv4-mobile-tabs [data-tab]').count(),3);
   assert.ok((await result.locator('.rv4-note p').allTextContents()).includes('記録'),'saved user-authored memo identical to a UI label must not be translated');

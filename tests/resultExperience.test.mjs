@@ -108,9 +108,9 @@ test('Result and manual-save surfaces use the approved dark chrome and button st
  const review=read('ui/recordReviewExperience.css');
  const html=read('index.html');
  for(const style of [
-  '.app-shell:has(#runload-result-v4) .topbar{display:none}',
-  '.app-shell:has(#runload-result-v4) .main-content{background:transparent;',
-  'body:has(#runload-result-v4) #app{background:#061725',
+  '.app-shell:has(#activity-result) .topbar{display:none}',
+  '.app-shell:has(#activity-result) .main-content{background:transparent;',
+  'body:has(#activity-result) #app{background:#061725',
   'padding-bottom:calc(95px + env(safe-area-inset-bottom',
  ]) assert.ok(styles.includes(style),style);
  for(const style of [
@@ -118,8 +118,8 @@ test('Result and manual-save surfaces use the approved dark chrome and button st
   '.rr-page .rr-foot-actions .rr-save:disabled{background:#1e4859',
   '.rr-page .rr-foot-actions .rr-save:focus-visible{outline:3px',
  ]) assert.ok(review.includes(style),style);
- assert.match(html,/homeExperience\.css\?v=20261122-ux05-firstuse-home-v1/);
- assert.match(html,/recordReviewExperience\.css\?v=20261123-ux11-result-source-v1/);
+ assert.match(html,/homeExperience\.css\?v=20261126-cleanup-v1/);
+ assert.match(html,/recordReviewExperience\.css\?v=20261126-cleanup-v1/);
 });
 
 test('public-facing result copy omits internal branding and preserves formal names',()=>{
@@ -204,7 +204,7 @@ test('S09 T02/T06: source facts are disclosure-only and summary is readable at r
  assert.ok(html.includes("label.style.setProperty('font-size',size+'px','important')"));
  assert.ok(html.includes("new MutationObserver("));
  assert.ok(html.includes("attributeFilter:['style','class']"));
- assert.ok(html.includes("host._runloadResultFontObserver?.disconnect()"));
+ assert.ok(html.includes("host._resultFontObserver?.disconnect()"));
  const js=read('ui/resultExperience.js'),tr=read('ui/englishResultCopy.js');
  assert.match(js,/<details class="rv4-hero-sources"><summary>記録の出所を確認<\/summary>/);
  for(const id of ['data-source-distance','data-source-duration','data-source-pace','data-source-rof-detail'])

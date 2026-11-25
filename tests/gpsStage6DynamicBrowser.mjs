@@ -106,7 +106,7 @@ try{
   // Reload to reproduce opening a stored record after the normal save flow.
   await page.reload({waitUntil:'networkidle'});
   await page.goto(base+'result?gps='+encodeURIComponent(saved.id),{waitUntil:'networkidle'});
-  const rootResult=page.locator('#runload-result-v4');
+  const rootResult=page.locator('#activity-result');
   await rootResult.locator('[data-gps-dynamic-gate]').waitFor({timeout:15000});
   assert.equal(await rootResult.locator('[data-tab]').count(),3,'shared result must retain three panels');
   await rootResult.locator('[data-gps-dynamic-gate]').click();

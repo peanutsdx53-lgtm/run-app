@@ -1,4 +1,4 @@
-/* RunLoad GPS dynamic result: approved parallel body/route layout.
+/* application GPS dynamic result: approved parallel body/route layout.
  * Reproduces only available literature speed references (never measured tissue loads).
  * Does not change the manual/static result screen or scientific source files.
  */

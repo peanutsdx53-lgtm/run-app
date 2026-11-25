@@ -73,7 +73,7 @@ export const ENGLISH_FINAL_ANNOTATION=Object.freeze({
  "この記録を補う（任意）": "Add Information to This Record (Optional)",
  "選択した記録": "Selected Record",
  "距離と時間": "Distance and Duration",
- "記録IDと情報の出所": "Record ID and Data Source",
+ "対象の記録と情報の出所": "Selected Record and Data Source",
  "後から補う項目": "Items to Add Later",
  "入力する項目": "Item to Enter",
  "本人の任意申告です。未入力のまま戻れます。": "This is optional self-reporting; you may leave without entering anything.",
@@ -95,7 +95,7 @@ export const ENGLISH_FINAL_ANNOTATION=Object.freeze({
  "後日申告（科学計算に未使用）": "Retrospective Report (Not Used in Scientific Calculations)",
  "後日申告は本人が書いた内容です。記録時の計測値・ROF-Jの正本・12部位の文献参考値・過去比較は変更しません。申告時刻は端末の操作時刻で、体験が生じた時刻を保証しません。": "Retrospective entries are user-authored. They do not change original measurements, canonical ROF-J responses, 12 regional references or past comparisons. The operation timestamp does not establish when the experience occurred.",
  "以前の申告を取り消す": "Withdraw Previous Report",
- "保存結果が不明です。元の走行記録には変更を加えていません。新しいIDで重複送信せず、同じ操作IDで追記だけを確認します。": "The save outcome is unknown. The original run is unchanged. Do not send duplicate operations; verify this note using the same operation ID.",
+ "保存結果が不明です。元の走行記録は変更していません。重複して保存せず、前回の追記の保存結果だけを確認します。": "The save result is unknown. The original run is unchanged. Check the previous additional information save without saving it again.",
  "同じ操作を再確認・再試行": "Check or Retry the Same Operation",
  "後日補完のリンク形式が正しくありません": "The Link to the Retrospective Entry Is Invalid.",
  "リンクの文字列が不正です": "Invalid Link Text.",
@@ -119,9 +119,9 @@ export const ENGLISH_FINAL_ANNOTATION=Object.freeze({
  "走った区間の距離（km）": "Running Portion Distance (km)",
  "走った区間の時間（分）": "Running Portion Duration (min)",
  "元の保存済み走行を再確認できません": "Original Saved Run Cannot Be Verified.",
- "同じ操作IDに異なる内容が保存されています": "Different Content Was Saved Under the Same Operation ID.",
+ "前回の操作に異なる内容が保存されています": "Different content was saved by the previous operation.",
  "別の操作が先に記録を更新しました。再読込してください": "Another Operation Updated the Record First. Reload Before Continuing.",
- "追記の保存を確認できません。同じ操作IDで再確認してください": "Cannot Verify the Saved Note. Check Again Using the Same Operation ID.",
+ "追記の保存を確認できません。新しく保存せず、前回の保存結果を確認してください": "The additional information save could not be verified. Check the previous save instead of saving again.",
  "追記の読み取りに失敗しました": "The Retrospective Note Could Not Be Read.",
  "後から思い出して申告": "Report a Recalled Past Experience",
  "入力時点の感覚": "Report a Current Sensation",
@@ -137,5 +137,5 @@ export const ENGLISH_FINAL_ANNOTATION=Object.freeze({
  "後日申告を保存": "Save Retrospective Report",
  "保存不明の操作を再確認してください": "Check the Operation With an Unknown Save Result.",
  "後日申告の保存と原本照合を確認しています…": "Verifying the Retrospective Report and Original Record…",
- "他の画面で同じ項目が更新された可能性があります。操作IDを保ったまま確認し、必要なら再読込してください。": "This Item May Have Been Updated in Another Screen. Keep the Same Operation ID While Checking, and Reload if Needed."
+ "他の画面で同じ項目が更新された可能性があります。前回の保存結果を確認し、必要なら再読込してください。": "This item may have been updated on another screen. Check the previous save and reload if necessary."
 });

@@ -30,14 +30,14 @@ async function mount(page,{speed=3,activity='RUNNING',mixed=false}={}){
  // mountResult() contract used by the application's saved/manual route.
  const distanceKm=Number((speed*1.8).toFixed(6)); // 30 minutes
  return page.evaluate(async({distanceKm,activity,mixed})=>{
-  const {mountResult}=await import('/ui/resultExperience.js?v=20261029-region-evidence-v1');
+  const {mountResult}=await import('/ui/resultExperience.js?v=20261126-cleanup-v1');
   const id='run-v1-11111111-1111-4111-8111-111111111111';
   const draft={date:'2026-10-25',distance:String(distanceKm),minutes:'30',activityGait:activity,
    runningFormat:mixed?'RUN_WALK':'CONTINUOUS_RUN',rofBefore:0,rofAfter:4,
    shoeName:'QA',memo:'検証用の記録',courseName:'QA'};
   const record={schema:2,source:'manual',type:'run',id,date:'2026-10-25',
    distanceKm,durationSeconds:1800,rofBefore:0,rofAfter:4,draft};
-  const host=document.querySelector('#runload-result-v4');
+  const host=document.querySelector('#activity-result');
   if(!host)throw Error('Result host is absent');
   const baseline=await import('/core/activity/activityReference.js');
   const before=baseline.calculateActivityReference(record);
@@ -49,7 +49,7 @@ async function mount(page,{speed=3,activity='RUNNING',mixed=false}={}){
 }
 const fit=async(page,label)=>{
  const g=await page.evaluate(()=>{
-  const target=document.querySelector('#runload-result-v4');
+  const target=document.querySelector('#activity-result');
   return {viewport:innerWidth,outer:document.documentElement.scrollWidth,
    inner:target.shadowRoot.querySelector('.rv4-app').scrollWidth,
    box:target.shadowRoot.querySelector('.rv4-app').getBoundingClientRect().width};
@@ -66,7 +66,7 @@ try{
   page.on('pageerror',err=>errors.push(err.message));
   const prefix='region-source-'+(engine===webkit?'webkit':'chromium')+'-'+width;
   await page.goto(host+'#/result',{waitUntil:'domcontentloaded'});
-  const result=page.locator('#runload-result-v4');
+  const result=page.locator('#activity-result');
   await result.waitFor();
   const initial=await mount(page,{speed:3});
   assert.equal(initial.count,12,'3m/s running reference count');
@@ -104,7 +104,7 @@ try{
   assert.match(await panel.innerText(),/本人の身体負荷・傷害危険度/);
   assert.match(await panel.locator('a').getAttribute('href'),/^https:\/\/doi\.org\//);
   const sourceSwitch=await page.evaluate(()=>{
-   const p=document.querySelector('#runload-result-v4').shadowRoot;
+   const p=document.querySelector('#activity-result').shadowRoot;
    const summaries=p.querySelectorAll('.rv4-region-evidence');
    return {count:summaries.length,title:summaries[0].querySelector('summary')?.innerText};
   });
@@ -181,7 +181,7 @@ try{
   await page.screenshot({path:resolve(root,'screenshots',prefix+'-missing-activity.png'),fullPage:true,animations:'disabled'});
   await page.evaluate(async()=>{
    const {mountResult}=await import('/ui/resultExperience.js');
-   mountResult(document.querySelector('#runload-result-v4'),{},{});
+   mountResult(document.querySelector('#activity-result'),{},{});
   });
   assert.match(await result.locator('.rv4-notice').innerText(),/記録なし/);
   assert.equal(await result.locator('.rv4-scale').count(),0,'empty result must not show color scale');

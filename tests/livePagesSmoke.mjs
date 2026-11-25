@@ -64,7 +64,7 @@ try{
  await asReturningUser(resultCheck);
  await resultCheck.goto(root+'?check='+tag+'#/result',{waitUntil:'networkidle'});
  if(await resultCheck.locator('[data-onboard-close]').count())await resultCheck.locator('[data-onboard-close]').click();
- const report=resultCheck.locator('#runload-result-v4');
+ const report=resultCheck.locator('#activity-result');
  await report.locator('.rv4-empty-card[data-pane="body"]').waitFor({timeout:15000});
  assert.match(await report.locator('.rv4-card-heading').first().innerText(),/部位の参考値/);
  assert.match(await report.locator('.rv4-notice').innerText(),/記録なし/);

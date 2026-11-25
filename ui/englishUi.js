@@ -13,10 +13,10 @@ import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js?v=20261125-ux16-19-b
 import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js';
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js';
 import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1';
-import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261123-ux09-environment-states-v1';
+import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261126-cleanup-v1';
 import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1';
-import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261125-ux16-19-batch-v1';
-import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261123-ux11-result-source-v1';
+import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261126-cleanup-v1';
+import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v1';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
@@ -28,6 +28,42 @@ import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurf
  * user text, record IDs, scientific numbers, consent or legal document bodies.
  * The Japanese app remains the canonical source of UI behavior and evidence. */
 export const ENGLISH_UI_TEXT=Object.freeze({
+ "追記の内容に不正な値または重複があります": "The additional information contains invalid or duplicate entries.",
+ "追記の履歴が既存の記録と一致しません": "The additional information history conflicts with existing records.",
+ "追記が既存の記録と重複しています": "The additional information conflicts with an existing entry.",
+ "保存操作または本人が申告した時点を確認できません": "The save operation or reported time could not be verified.",
+ "追記の履歴情報が正しくありません": "The additional information history is invalid.",
+ "同じ追記の履歴がすでに存在します": "The same additional information entry already exists.",
+ "追記の保存を確認できません。前回の保存結果を読み直してから再試行してください": "The additional information save could not be verified. Recheck the previous save before retrying.",
+ "対象の保存操作を確認できません": "The save operation could not be verified.",
+ "保存操作の履歴を読み取れません": "The save history could not be read.",
+ "同じ記録または日付に異なる内容があります。現在の記録を保護しました": "Different content exists for the same record or date. Your current records are protected.",
+ "同じGPS記録に異なる内容があります": "The same GPS record contains different content.",
+ "対象の記録と情報の出所を確認できません": "The selected record and its source could not be verified.",
+ "元のGPS記録の指定に不整合または重複があります": "The original GPS record selection is inconsistent or duplicated.",
+ "自由記述の履歴情報が正しくありません": "The note history is invalid.",
+ "対象の自由記述を確認できません": "The selected note could not be verified.",
+ "同じ保存操作が重複しています": "The same save operation is duplicated.",
+ "同じ元のGPS記録に異なる内容があります": "Different content exists for the same original GPS record.",
+ "別の自由記述と保存履歴が重複しています": "The save history overlaps with a different note.",
+ "対象の保存済みGPS記録を確認できません": "The selected saved GPS record could not be verified.",
+ "GPS記録の保存操作が正しくありません": "The GPS save operation is invalid.",
+ "前回の保存操作の記録が見つかりません": "No record was found for the previous save.",
+ "前回の保存内容またはコース詳細の保存選択が一致しません。履歴を確認してください": "The previous save content or route detail choice does not match. Check your history.",
+ "バックアップ内の記録に重複または不整合があります": "Records in the backup are duplicated or inconsistent.",
+ "記録数の上限を超えるか、同じ記録に異なる内容があります": "The record limit is exceeded or the same record contains different content.",
+ "自由記述の保存操作を確認できません": "The note save operation could not be verified.",
+ "保存操作を安全に準備できません": "The save operation could not be prepared safely.",
+ "同じ保存操作がすでに行われています": "The same save operation has already been performed.",
+ "保存操作の内容を確認できません": "The save operation could not be verified.",
+ "前回の保存操作と入力内容が一致しません。履歴を確認してください": "The entry does not match the previous save. Check your history.",
+ "記録の保存を安全に準備できないため保存を中止しました": "Saving was stopped because the record could not be prepared safely.",
+ "対象の記録を確認できません": "The selected record could not be verified.",
+ "任意回答が保存されたか確認できませんでした。新しく保存せず、前回の保存結果を確認してください": "The optional response save could not be verified. Check the previous save instead of saving again.",
+ "同じ元の記録に異なる内容があります": "Different content exists for the same original record.",
+ "対象の記録またはその種類が正しくありません": "The selected record or its type is invalid.",
+ "対象の記録とその種類が一致しません": "The selected record does not match its type.",
+ "対象の記録が指定されていません": "No record was selected.",
  "以前の文章を保持し、本人の言葉だけを修正します。元の走行との関連は変更しません。": "Previous text is kept. Editing your note does not change its link to the original activity.",
  "関連する走行記録：": "Linked activity:",
  "関連する走行記録あり": "Linked to an activity",

@@ -235,7 +235,7 @@ try{
       font:parseFloat(getComputedStyle(el).fontSize)
     }));
     return {dateRight:ir.right,dialogRight:dr.right,dialogScroll:dlg.scrollWidth-dlg.clientWidth,
-      bodyLocked:document.body.classList.contains('runload-dialog-open'), background:bg,timeOverflow};
+      bodyLocked:document.body.classList.contains('app-dialog-open'), background:bg,timeOverflow};
   });
   assert.ok(modalGeometry.dateRight<=modalGeometry.dialogRight-4,"date stays inside modal: "+JSON.stringify(modalGeometry));
   assert.ok(modalGeometry.dialogScroll<=1,"modal has no horizontal scrolling: "+JSON.stringify(modalGeometry));
@@ -270,7 +270,7 @@ try{
   assert.match(await page.locator('[data-sleep-result-note]').innerText(),/前日に就寝/);
   await page.screenshot({path:resolve(root,"screenshots",mode.name+"-home-sleep-clock-filled-v2.png"),fullPage:false});
   await page.locator("[data-home-close]").first().click();
-  assert.equal(await page.evaluate(()=>document.body.classList.contains("runload-dialog-open")),false,"background unlocks");
+  assert.equal(await page.evaluate(()=>document.body.classList.contains("app-dialog-open")),false,"background unlocks");
   assert.equal(await page.locator("[data-home-preview]").count(),0,"sample-data switch remains absent");
   await page.locator("[data-condition-open]").click();
   await page.locator('[name="bedTime"]').fill("23:20");
@@ -359,7 +359,7 @@ try{
     assert.ok(await page.locator('[data-gps-action="start"]').isEnabled(),"GPS requires a user action before activation");
   }
   await page.goto(host+"#/result",{waitUntil:"networkidle"});
-  const report=page.locator('#runload-result-v4');
+  const report=page.locator('#activity-result');
   await report.locator('.rv4-empty-card[data-pane="body"]').waitFor({timeout:15000});
   assert.match(await report.locator('.rv4-empty-card[data-pane="body"]').innerText(),/記録後に参考値を表示/);
   assert.match(await report.locator('.rv4-notice').innerText(),/記録なし/);
@@ -381,7 +381,7 @@ try{
   // Result must match the headerless dark chrome and never expose the old ⇩ toolbar or white strip.
   const resultChrome=await page.evaluate(()=>{
     const css=el=>getComputedStyle(el);
-    const result=document.querySelector('#runload-result-v4'),shell=result?.closest('.app-shell');
+    const result=document.querySelector('#activity-result'),shell=result?.closest('.app-shell');
     const top=shell?.querySelector('.topbar'),main=shell?.querySelector('.main-content'),nav=shell?.querySelector('.mobile-nav');
     const rgb=css(document.body).backgroundColor;
     return {toolbarHidden:css(top).display==='none',noExtraTop:result.getBoundingClientRect().top,
@@ -398,7 +398,7 @@ try{
     await page.evaluate(()=>window.scrollTo(0,document.scrollingElement.scrollHeight));
     const bottom=await page.evaluate(()=>{
       const rect=document.querySelector('.mobile-nav').getBoundingClientRect();
-      const rectMain=document.querySelector('#runload-result-v4').getBoundingClientRect();
+      const rectMain=document.querySelector('#activity-result').getBoundingClientRect();
       return {navTop:rect.top,scroll:document.scrollingElement.scrollTop,resultBottom:rectMain.bottom,
       bodyBg:getComputedStyle(document.body).backgroundColor,
       mainBg:getComputedStyle(document.querySelector('.main-content')).backgroundImage};
@@ -570,7 +570,7 @@ try{
   console.log('PASS',mode.name,'exploration beginner: categories / topics / opt-in notes / grouped catalog');
   // Remove the global arrow; installation guidance is still reachable in Settings.
   await page.goto(host+"#/consultation",{waitUntil:"networkidle"});
-  await page.locator("#runload-consultation").waitFor({state:"visible"});
+  await page.locator("#consultation-root").waitFor({state:"visible"});
   assert.equal(await page.locator("[data-install-app]").first().isVisible(),false,"consultation does not show the install arrow");
   await page.goto(host+"#/body-part-detail",{waitUntil:"networkidle"});
   // Hash navigation can outlive networkidle while the async IDB route refresh finishes.
@@ -1023,7 +1023,7 @@ try{
   assert.ok(layout.bodyWidth-layout.viewport<=3,"record UI horizontal overflow");
   // Navigate through the actual UI, rather than navigating the whole document.
   await page.locator(mode.name==="desktop"?'.side-nav a[href="#/history"]':'.mobile-nav a[href="#/history"]').click();
-  const historyRoot=page.locator('#runload-history-v2');
+  const historyRoot=page.locator('#activity-history');
   assert.equal(await page.locator('.topbar').isVisible(),false,'history must not keep the empty top header');
   const historyHeadingTop=await historyRoot.locator('.topline h1').evaluate(el=>el.getBoundingClientRect().top);
   assert.ok(Math.abs(historyHeadingTop-homeHeadingTop)<=8,'history title matches home: '+JSON.stringify({homeHeadingTop,historyHeadingTop}));
@@ -1044,7 +1044,7 @@ try{
   if(mode.name!=="desktop") {
     await page.evaluate(()=>window.scrollTo({top:document.scrollingElement.scrollHeight,behavior:'instant'}));
     const historyBottom=await page.evaluate(()=>{
-      const lastCard=document.querySelector('#runload-history-v2')?.shadowRoot?.querySelector('.list-panel');
+      const lastCard=document.querySelector('#activity-history')?.shadowRoot?.querySelector('.list-panel');
       const nav=document.querySelector('.mobile-nav');
       const main=document.querySelector('.main-content');
       return {
@@ -1154,7 +1154,7 @@ try{
     {sidebarBg:homeNavStyle.sidebarBg,sidebarSelected:homeNavStyle.sidebarSelected},
     'desktop Home/condition visible sidebar must match; hidden mobile nav is irrelevant');
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-condition-nav-parity-v17.png'),fullPage:false});
-  assert.equal(await page.locator('#runload-history-v2').count(),0,'condition detail must not mount the running history');
+  assert.equal(await page.locator('#activity-history').count(),0,'condition detail must not mount the running history');
   assert.equal(await page.locator('.cj-back').count(),1,'return home is available');
   const journey=page.locator('[data-condition-journey]');await journey.waitFor();
   assert.match(await journey.locator('h2').first().innerText(),/睡眠と、その日の調子/);
@@ -1179,7 +1179,7 @@ try{
   assert.match(await journey.locator('.cj-saved').innerText(),/朝は調子が良かった/);
   await journey.locator('[data-cj-create-intent]').click();
   assert.match(await journey.locator('[role="status"]').last().innerText(),/ホームに保存しました/);
-  assert.equal(await page.locator('#runload-history-v2').count(),0,'condition detail uses its own screen');
+  assert.equal(await page.locator('#activity-history').count(),0,'condition detail uses its own screen');
   await page.goto(host+'#/home',{waitUntil:'networkidle'});
   const followup=page.locator('.cj-home-panel');
   assert.match(await followup.innerText(),/次の記録を待っています/);
@@ -1203,14 +1203,14 @@ try{
   await page.goto(host+'#/history',{waitUntil:'networkidle'});
   assert.equal(await page.locator('[data-condition-journey]').count(),0);
   assert.equal(await page.locator('[data-interpret-toggle]').count(),0);
-  assert.equal(await page.locator('#runload-history-v2').count(),1);
+  assert.equal(await page.locator('#activity-history').count(),1);
   await page.goto(host+'#/condition',{waitUntil:'networkidle'});
   await page.locator('[data-condition-journey]').waitFor({state:'visible'});
   assert.equal(await page.locator('[data-condition-journey]').count(),1);
   assert.equal(await page.evaluate(()=>localStorage.getItem('runload-v2-exploration-notes-v1')!==null),true,'old exploration notes kept');
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-v15-condition-journey.png'),fullPage:false});
   await page.goto(host+"#/result",{waitUntil:"networkidle"});
-  const historicalReport=page.locator("#runload-result-v4");
+  const historicalReport=page.locator("#activity-result");
   assert.match(await historicalReport.locator(".rv4-notice").innerText(),/記録なし/);
   assert.equal(await historicalReport.locator(".rv4-distance strong").count(),0,"unsaved input must not create a fictitious result card");
     for(const route of ["record","history","settings","measurement","course","simulation","consultation","body-part-detail"]){
@@ -1245,7 +1245,7 @@ try{
    if(mode.name!=="desktop")await page.locator(".mobile-nav").evaluate(el=>{el.style.position="static";el.style.width="100%"});
    await page.screenshot({path:resolve(root,"screenshots",mode.name+"-"+route+".png"),fullPage:true});
    if(mode.name!=="desktop")await page.locator(".mobile-nav").evaluate(el=>{el.style.position="";el.style.width=""});
-   const visibleArea=route==="history"?page.locator("#runload-history-v2").locator(".stage"):page.locator("main");
+   const visibleArea=route==="history"?page.locator("#activity-history").locator(".stage"):page.locator("main");
    const textContent=await visibleArea.innerText();
    if(route==='measurement'&&mode.name==='desktop'){
      assert.match(textContent,/GPS測定はスマートフォン専用です/);
@@ -1378,11 +1378,11 @@ try{
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-gps-v35-finished.png'),fullPage:true});
   await page.locator('[data-gps-save-route]').check();
   await page.locator('[data-gps-action="save"]').click();
-  await page.locator('#runload-result-v4 .rv4-hero').waitFor();
-  assert.match(await page.locator('#runload-result-v4 .rv4-header').innerText(),/結果/);
-  assert.equal(await page.locator('#runload-result-v4 .rv4-mobile-tabs button').count(),3);
+  await page.locator('#activity-result .rv4-hero').waitFor();
+  assert.match(await page.locator('#activity-result .rv4-header').innerText(),/結果/);
+  assert.equal(await page.locator('#activity-result .rv4-mobile-tabs button').count(),3);
   // A single-activity GPS record with explicitly saved details may open dynamic results.
-  assert.equal(await page.locator('#runload-result-v4 [data-gps-dynamic-gate]').count(),1,
+  assert.equal(await page.locator('#activity-result [data-gps-dynamic-gate]').count(),1,
     'opted-in JOGGING details retain access to GPS dynamic replay');
   await page.goto(host+'#/history',{waitUntil:'networkidle'});
   await page.locator('.gps-history-disclosure>summary').click();
@@ -1537,7 +1537,7 @@ try{
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-manual-review-save-v18.png'),fullPage:false});
   await review.locator('[data-manual-run-save]').click();
   await page.waitForURL(/#\/result\?record=run-v1-/);
-  const savedResult=page.locator('#runload-result-v4');
+  const savedResult=page.locator('#activity-result');
   assert.match(await savedResult.locator('.rv4-notice').innerText(),/保存した手入力記録/);
   assert.equal(await savedResult.locator('style[data-result-inline-styles]').count(),1,'result shadow styles are available immediately');
   const savedTheme=await savedResult.locator('.rv4-app').evaluate(el=>getComputedStyle(el).backgroundImage);
@@ -1644,11 +1644,11 @@ try{
   const recordIds=await page.evaluate(async()=>JSON.parse((await (await import('/ui/manualRunCanonical.js')).readCanonical()).raw).records.map(r=>r.id));
   assert.equal(recordIds.length,1);
   await page.reload({waitUntil:'networkidle'});
-  assert.match(await page.locator('#runload-result-v4 .rv4-notice').innerText(),/保存した手入力記録/);
-  assert.equal(await page.locator('#runload-result-v4 [data-result-gait]').count(),0);
-  assert.equal(await page.locator('#runload-result-v4 [data-body-reference-label]').count(),0,
+  assert.match(await page.locator('#activity-result .rv4-notice').innerText(),/保存した手入力記録/);
+  assert.equal(await page.locator('#activity-result [data-result-gait]').count(),0);
+  assert.equal(await page.locator('#activity-result [data-body-reference-label]').count(),0,
    'body stays uncluttered by default after reload');
-  assert.notEqual((await page.locator('#runload-result-v4 .rv4-big-score').innerText()).trim(),'—',
+  assert.notEqual((await page.locator('#activity-result .rv4-big-score').innerText()).trim(),'—',
    'saved activity correction and a readable side-panel scientific value persist');
   await page.goto(host+'#/home',{waitUntil:'networkidle'});
   assert.match(await page.locator('.hx-latest').innerText(),/5.00/);
@@ -1693,23 +1693,23 @@ try{
    await page.screenshot({path:resolve(root,'screenshots',mode.name+'-explore-pace-saved-v27.png'),fullPage:false});
    await page.goto(host+'#/home',{waitUntil:'networkidle'});
   await page.locator('.hx-latest a[href^="#/result?record="]').click();
-  assert.match(await page.locator('#runload-result-v4 .rv4-notice').innerText(),/保存した手入力記録/);
+  assert.match(await page.locator('#activity-result .rv4-notice').innerText(),/保存した手入力記録/);
   await page.goto(host+'#/result',{waitUntil:'networkidle'});
-  assert.match(await page.locator('#runload-result-v4 .rv4-notice').innerText(),/保存した手入力記録/,'result navigation defaults to latest saved run');
+  assert.match(await page.locator('#activity-result .rv4-notice').innerText(),/保存した手入力記録/,'result navigation defaults to latest saved run');
   await page.goto(host+'#/result?record=missing-record',{waitUntil:'networkidle'});
   // Await the new route's direct-child error; the previous saved result can remain until hash rendering finishes.
-  await page.locator('#runload-result-v4 > [role="status"]').waitFor({state:'visible',timeout:15000});
-  assert.match(await page.locator('#runload-result-v4 > [role="status"]').innerText(),/指定された保存済み走行記録が見つかりません/,'invalid explicit ID is explicitly rejected');
-  assert.equal(await page.locator('#runload-result-v4 .rv4-notice').count(),0,'invalid ID cannot alias a valid result');
-  assert.equal(await page.locator('#runload-result-v4 a[href="#/history"]').count(),1,'missing record offers history navigation');
+  await page.locator('#activity-result > [role="status"]').waitFor({state:'visible',timeout:15000});
+  assert.match(await page.locator('#activity-result > [role="status"]').innerText(),/指定された保存済み走行記録が見つかりません/,'invalid explicit ID is explicitly rejected');
+  assert.equal(await page.locator('#activity-result .rv4-notice').count(),0,'invalid ID cannot alias a valid result');
+  assert.equal(await page.locator('#activity-result a[href="#/history"]').count(),1,'missing record offers history navigation');
   await page.goto(host+'#/history',{waitUntil:'networkidle'});
-  const savedHistory=page.locator('#runload-history-v2');
+  const savedHistory=page.locator('#activity-history');
   await savedHistory.locator('.entry').first().waitFor({state:'visible',timeout:18000});
   assert.equal(await savedHistory.locator('.entry').count(),1);
   await savedHistory.locator('.entry').first().click();
   if(mode.name!=="desktop"){
    const selectedPlacement=await page.evaluate(()=>{
-    const footer=document.querySelector('#runload-history-v2')?.shadowRoot?.querySelector('.selected-footer');
+    const footer=document.querySelector('#activity-history')?.shadowRoot?.querySelector('.selected-footer');
     const nav=document.querySelector('.mobile-nav');
     return {footerBottom:footer?.getBoundingClientRect().bottom,navTop:nav?.getBoundingClientRect().top};
    });
@@ -1718,9 +1718,9 @@ try{
   }
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-manual-history-v18.png'),fullPage:false});
   await savedHistory.locator('[data-open-record]').click();
-  await page.locator('#runload-result-v4 style[data-result-inline-styles]').waitFor({state:'attached',timeout:12000}); // hashchange navigation completes asynchronously
+  await page.locator('#activity-result style[data-result-inline-styles]').waitFor({state:'attached',timeout:12000}); // hashchange navigation completes asynchronously
   await page.waitForFunction(()=>{
-    const host=document.querySelector('#runload-result-v4');
+    const host=document.querySelector('#activity-result');
     const root=host?.shadowRoot,el=root?.querySelector('.rv4-app');
     return !!el&&el.isConnected&&!!root.querySelector('style[data-result-inline-styles]')&&getComputedStyle(el).backgroundImage.includes('radial-gradient');
   },null,{timeout:12000});
@@ -1774,7 +1774,7 @@ try{
     // Saving is asynchronous; wait for navigation to the newly saved record
     // before reading the result. A previous result may still be rendering.
     await page.waitForURL(/#\/result\?record=run-v1-/, {timeout:20000});
-    const output=page.locator('#runload-result-v4');
+    const output=page.locator('#activity-result');
     await output.locator('.rv4-notice').waitFor({state:'visible',timeout:20000});
     await output.locator('.rv4-mini').waitFor();
     const notice=await output.locator('.rv4-notice').innerText();
@@ -1805,19 +1805,19 @@ try{
     const actualId=new URLSearchParams(page.url().split('?')[1]||'').get('record');
     assert.ok(actualId?.startsWith('run-v1-'));
     await page.reload({waitUntil:'networkidle'});
-    const reloadedNotice=page.locator('#runload-result-v4 .rv4-notice');
+    const reloadedNotice=page.locator('#activity-result .rv4-notice');
     try{
       await reloadedNotice.waitFor({state:'visible',timeout:15000});
     }catch(error){
       const state=await page.evaluate(()=>{
-        const result=document.querySelector('#runload-result-v4');
+        const result=document.querySelector('#activity-result');
         return {hash:location.hash,rootPresent:!!result,rootText:(result?.textContent||'').slice(0,450),mainText:(document.querySelector('main')?.textContent||'').slice(0,450)};
       });
       console.error('SAVED_RESULT_RELOAD_DIAGNOSTIC',JSON.stringify({mode:mode.name,activity:example.activity,actualId,state}));
       throw error;
     }
     assert.match(await reloadedNotice.innerText(),/参考値/,'calculation survives saved-ID reload');
-    assert.match(await page.locator('#runload-result-v4 .rv4-mini').innerText(),/\/12 算出/);
+    assert.match(await page.locator('#activity-result .rv4-mini').innerText(),/\/12 算出/);
   }
   await page.close();
   console.log("PASS",mode.name,"manual save / reload / result / home / history / three science engines");

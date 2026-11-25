@@ -46,7 +46,7 @@ try{
    // result; wait for the actual active view before measuring any controls.
    const ready={
     home:'.home-v3',record:'.record-v3',body:'.cx-page',
-    history:'#runload-history-v2',explore:'[data-experience-v3]',
+    history:'#activity-history',explore:'[data-experience-v3]',
     settings:'[data-settings-v2]'
    };
    await page.locator(ready[screen]).first().waitFor({state:'visible',timeout:18000});

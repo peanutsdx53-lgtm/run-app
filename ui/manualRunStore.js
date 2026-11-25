@@ -146,16 +146,16 @@ export function saveManualRun(storage,draft,options={}){
  // Stable ID replays resolve uncertain writes; different payloads are never substituted.
  const requestId=options?.requestId??null;
  if(requestId!==null&&!/^run-v1-[0-9a-f-]{36}$/.test(requestId))
-  return {ok:false,code:'BAD_REQUEST_ID',reason:'保存操作IDの形式を確認できません'};
+  return {ok:false,code:'BAD_REQUEST_ID',reason:'保存操作の内容を確認できません'};
  const existing=requestId?previous.records.find(r=>r.id===requestId):null;
  if(existing){
   const identical=Object.entries(checked.value).every(([key,value])=>JSON.stringify(existing[key])===JSON.stringify(value));
   return identical?{ok:true,record:existing,duplicate:true}:
-   {ok:false,code:'REQUEST_CONFLICT',reason:'保存操作IDの内容が一致しません。履歴を確認してください'};
+   {ok:false,code:'REQUEST_CONFLICT',reason:'前回の保存操作と入力内容が一致しません。履歴を確認してください'};
  }
  if(previous.records.length>=MAX_RECORDS)return {ok:false,reason:'この端末の保存件数の上限に達しました'};
  const uuid=requestId?requestId.slice('run-v1-'.length):globalThis.crypto?.randomUUID?.();
- if(!uuid)return {ok:false,reason:'安全な記録IDを生成できないため保存を中止しました'};
+ if(!uuid)return {ok:false,reason:'記録の保存を安全に準備できないため保存を中止しました'};
  const createdAt=new Date().toISOString();
  const item={...checked.value,id:'run-v1-'+uuid,source:'manual',type:'run',schema:2,createdAt};
  try{
@@ -176,7 +176,7 @@ export function saveManualRun(storage,draft,options={}){
  */
 export function classifySavedManualRun(storage,id,activityGait){
  if(!['RUNNING','JOGGING','WALK'].includes(activityGait))return {ok:false,reason:'活動種別を選択してください'};
- if(typeof id!=='string'||!/^run-v1-[0-9a-f-]{36}$/.test(id))return {ok:false,reason:'記録IDが正しくありません'};
+ if(typeof id!=='string'||!/^run-v1-[0-9a-f-]{36}$/.test(id))return {ok:false,reason:'対象の記録を確認できません'};
  const before=readManualRuns(storage);
  if(!before.ok)return before;
  const original=before.records.find(r=>r.id===id);

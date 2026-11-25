@@ -150,9 +150,9 @@ export function prepareGpsV2Run(session,{saveDetails=false,date=new Date().toISO
  if(!checked.ok)return checked;
  const data=checked.measurement;
  if(requestId!==null&&!validNewGpsRequestId(requestId))
-  return {ok:false,code:'BAD_REQUEST_ID',reason:'GPS保存操作IDの形式を確認できません'};
+  return {ok:false,code:'BAD_REQUEST_ID',reason:'GPS記録の保存操作を確認できません'};
  const id=requestId||('gps-v2-'+(globalThis.crypto?.randomUUID?.()||''));
- if(!validNewGpsRequestId(id))return {ok:false,code:'ID_UNAVAILABLE',reason:'安全なGPS保存操作IDを生成できません'};
+ if(!validNewGpsRequestId(id))return {ok:false,code:'ID_UNAVAILABLE',reason:'GPS記録の保存を安全に準備できません'};
  const avg=data.distanceKm*1000/data.activeSeconds;
  const ref=evaluateGpsReplayReference({activity:data.activity,speedMps:avg});
  const energy=estimateGpsEnergy(session);
@@ -219,7 +219,7 @@ export function sameGpsSaveCandidate(candidate,storedSummary,storedDetail=null){
   JSON.stringify(candidate.detail)===JSON.stringify(storedDetail??null);
 }
 export async function readGpsV2RunById(id){
- if(!validNewGpsRequestId(id))return {ok:false,code:'BAD_REQUEST_ID',reason:'GPS保存操作IDが正しくありません'};
+ if(!validNewGpsRequestId(id))return {ok:false,code:'BAD_REQUEST_ID',reason:'GPS記録の保存操作が正しくありません'};
  try{
   const db=await database(),tx=db.transaction([GPS_V2_SUMMARIES,GPS_V2_DETAILS],'readonly'),done=completion(tx);
   const summary=await result(tx.objectStore(GPS_V2_SUMMARIES).get(id));
@@ -237,10 +237,10 @@ export async function verifyGpsV2Commit(session,options){
  if(!candidate.ok)return candidate;
  const read=await readGpsV2RunById(candidate.summary.id);
  if(!read.ok)return read;
- if(!read.found)return {ok:false,code:'NOT_FOUND',reason:'同じ保存操作IDの記録が見つかりません'};
+ if(!read.found)return {ok:false,code:'NOT_FOUND',reason:'前回の保存操作の記録が見つかりません'};
  return sameGpsSaveCandidate(candidate,read.summary,read.detail)
   ?{ok:true,summary:read.summary,duplicate:true}
-  :{ok:false,code:'REQUEST_CONFLICT',reason:'同じ保存操作IDに異なる記録が存在します。履歴を確認してください'};
+  :{ok:false,code:'REQUEST_CONFLICT',reason:'前回の保存操作に異なる記録があります。履歴を確認してください'};
 }
 export async function saveGpsV2Run(session,options={}){
  const candidate=prepareGpsV2Run(session,options);
@@ -253,7 +253,7 @@ export async function saveGpsV2Run(session,options={}){
    const oldDetails=await result(details.get(candidate.summary.id));await done;
    return sameGpsSaveCandidate(candidate,prior,oldDetails)
     ?{ok:true,summary:prior,duplicate:true}
-    :{ok:false,code:'REQUEST_CONFLICT',reason:'保存操作IDの内容または軌跡保存の選択が一致しません。履歴を確認してください'};
+    :{ok:false,code:'REQUEST_CONFLICT',reason:'前回の保存内容またはコース詳細の保存選択が一致しません。履歴を確認してください'};
   }
   const count=await result(store.count());
   if(count>=GPS_RECORD_LIMIT){tx.abort();await done.catch(()=>{});return {ok:false,code:'LIMIT',reason:'GPS記録の上限（2000件）に達しました'};}
@@ -317,7 +317,7 @@ export function inspectGpsV2Backup(text){
  if(keys.size!==data.summaries.length||dkeys.size!==data.details.length||
     !data.details.every(d=>keys.has(d.id))||!data.summaries.every(s=>s.detailSaved===dkeys.has(s.id))||
     !data.summaries.filter(s=>s.detailSaved).every(s=>validGpsV2Pair(s,data.details.find(d=>d.id===s.id))))
-  return {ok:false,reason:'バックアップ内の記録IDに重複・不整合があります'};
+  return {ok:false,reason:'バックアップ内の記録に重複または不整合があります'};
  return {ok:true,summaries:data.summaries,details:data.details,count:data.summaries.length,detailCount:data.details.length};
 }
 export async function importGpsV2Backup(text){
@@ -332,7 +332,7 @@ export async function importGpsV2Backup(text){
   if(existing.length+added.length>RESULT_LIMIT||data.summaries.some(x=>prior.has(x.id)&&(
      JSON.stringify(prior.get(x.id))!==JSON.stringify(x)||
      (x.detailSaved&&JSON.stringify(priorD.get(x.id))!==JSON.stringify(incoming.get(x.id)))))){
-   tx.abort();await done.catch(()=>{});return {ok:false,reason:'件数上限または同一IDの内容競合があります'};
+   tx.abort();await done.catch(()=>{});return {ok:false,reason:'記録数の上限を超えるか、同じ記録に異なる内容があります'};
   }
   for(const x of added){s.add(x);if(x.detailSaved)d.add(incoming.get(x.id));}
   await done;return {ok:true,added:added.length,skipped:data.summaries.length-added.length};
@@ -402,9 +402,9 @@ export async function commitGpsV2ReflectionChange(input){
   });
   if(noteContent&&!noteContent.ok)return noteContent;
   if(typeof input.requestId!=='string'||!/^gps-refrequest-[a-z0-9-]{8,64}$/.test(input.requestId))
-   return fail('BAD_REQUEST_ID','自由記述の操作IDが正しくありません');
+   return fail('BAD_REQUEST_ID','自由記述の保存操作を確認できません');
   if(typeof globalThis.crypto?.randomUUID!=='function')
-   return fail('ID_UNAVAILABLE','安全な操作識別子を生成できません');
+   return fail('ID_UNAVAILABLE','保存操作を安全に準備できません');
   // Reject invalid CAS values before opening a write transaction.
   if(!Number.isSafeInteger(input.expectedRevision)||input.expectedRevision<0||
      !(input.expectedLastEventId===null||
@@ -448,7 +448,7 @@ export async function commitGpsV2ReflectionChange(input){
     result(eventStore.index('byRequestId').get(input.requestId))
    ]);
    if(priorRequest!==undefined)
-    return reject('REQUEST_CONFLICT','操作IDはすでに使用されています');
+    return reject('REQUEST_CONFLICT','同じ保存操作がすでに行われています');
    const inspected=inspectGpsReflectionThread(ref,input.noteId,events);
    if(!inspected.ok)return reject(inspected.code,inspected.reason);
    const active=inspected.value.status==='ACTIVE';

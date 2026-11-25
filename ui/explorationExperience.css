@@ -1,4 +1,4 @@
-/* RunLoad exploration: constellation-led field, terrain contours and opt-in memories.
+/* application exploration: constellation-led field, terrain contours and opt-in memories.
    Scoped styling intentionally does not alter other routes. */
 .app-shell:has(.ex-page){background:#061725;color:#ecf8fb}
 .app-shell:has(.ex-page) .topbar{display:none}
@@ -472,7 +472,7 @@
 .ex-record-return a:focus-visible{outline:3px solid #8ffff3;outline-offset:3px}
 @media(max-width:650px){.ex-record-return{flex-direction:column;align-items:stretch;padding:11px}.ex-record-return a{width:100%}}
 
-/* Editorial stage-1 observation guides: stay within the existing deep-blue/teal RunLoad visual system. */
+/* Editorial stage-1 observation guides: stay within the existing deep-blue/teal application visual system. */
 .ex-observation-guide .ex-guide-status{font-size:.79rem;color:#b4d6dd;background:rgba(41,118,133,.12);border:1px solid rgba(110,188,191,.23);border-radius:11px;padding:9px 12px;margin:14px 0 12px;line-height:1.6}
 .ex-observation-guide .ex-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 16px}
 .ex-observation-guide .ex-guide-grid section{min-width:0;border:1px solid rgba(115,184,194,.19);border-radius:13px;padding:12px 13px;background:rgba(6,28,45,.33)}

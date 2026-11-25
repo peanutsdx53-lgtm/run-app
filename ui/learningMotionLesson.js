@@ -1,5 +1,5 @@
 /**
- * RunLoad L4 isolated running-motion learning candidate.
+ * application L4 isolated running-motion learning candidate.
  * Generic running education with source-conditional research facts.
  * This module contains only authored hypothetical scenarios and never reads/saves user runs.
  * Text sources: Fukuchi et al. (2017) PeerJ e3298, pages 3–5/14–16;

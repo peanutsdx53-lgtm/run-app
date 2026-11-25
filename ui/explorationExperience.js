@@ -8,7 +8,7 @@ import {renderMentalInquiry} from "./explorationMentalInquiry.js";
 import {renderBodyInquiry} from "./explorationBodyInquiry.js";
 import {renderConditionInquiry} from "./explorationConditionInquiry.js";
 import {renderLifeInquiry} from "./explorationLifeInquiry.js";
-// RunLoad exploration field v3. Relevance is a traceable link to available data,
+// application exploration field v3. Relevance is a traceable link to available data,
 // not a diagnosis, performance ranking, inferred cause, or physiological score.
 // Separate opt-in exploration notes never mutate or read the run history store.
 export const EXPLORATION_NOTE_KEY="runload-v2-exploration-notes-v1";

@@ -47,7 +47,7 @@ const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
 const shell=readFileSync(new URL('../sw.js',import.meta.url),'utf8');
 const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 assert.match(app,/learning:"学習"/);
-assert.match(app,/mountLearning\(app\.querySelector\("#runload-learning"\)/);
+assert.match(app,/mountLearning\(app\.querySelector\("#learning-root"\)/);
 assert.match(app,/href="#\/\$\{path\}"/);
 assert.match(shell,/"\.\/ui\/learningExperience\.js"/);
 assert.match(shell,/"\.\/ui\/learningExperience\.css"/);

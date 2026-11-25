@@ -56,19 +56,19 @@ test('Body button family uses the shared typeface and intentional weight hierarc
 test('current bilingual mobile assets are versioned and cached consistently',()=>{
  const index=read('index.html'),app=read('app.js'),sw=read('sw.js'),
   english=read('ui/englishUi.js');
- const v='20261122-record-return-v1',previous='20261122-gait-learning-type-v1',shell='20261126-copy-v1',cacheGeneration='20261126-copy-v1',resultVersion='20261123-ux11-result-source-v1';
+ const v='20261122-record-return-v1',previous='20261122-gait-learning-type-v1',shell='20261126-cleanup-v1',cacheGeneration='20261126-cleanup-v1',resultVersion='20261123-ux11-result-source-v1';
  for(const [content,asset] of [
-  [index,'buttonContrastSystem.css?v='+previous],
-  [index,'app.js?v='+shell],
+  [index,'buttonContrastSystem.css?v=20261126-cleanup-v1'],
+  [index,'app.js?v=20261126-cleanup-v1'],
   [index,'ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'],
-  [app,'gaitExperience.js?v='+v],
-  [app,'learningExperience.js?v='+previous],
-  [app,'englishUi.js?v=20261126-copy-v1'],
+  [app,'gaitExperience.js?v=20261126-cleanup-v1'],
+  [app,'learningExperience.js?v=20261126-cleanup-v1'],
+  [app,'englishUi.js?v=20261126-cleanup-v1'],
   [english,'englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1'],
   [sw,'runload-ui-next-shell-'+cacheGeneration],
-  [sw,'ui/learningExperience.js?v='+previous],
-  [sw,'ui/gaitExperience.js?v='+v],
-  [sw,'ui/buttonContrastSystem.css?v='+previous]
+  [sw,'ui/learningExperience.js?v=20261126-cleanup-v1'],
+  [sw,'ui/gaitExperience.js?v=20261126-cleanup-v1'],
+  [sw,'ui/buttonContrastSystem.css?v=20261126-cleanup-v1']
  ])assert.ok(content.includes(asset),'missing current version '+asset);
  assert.doesNotMatch(app,/localStorage\.clear\(\)/);
 });

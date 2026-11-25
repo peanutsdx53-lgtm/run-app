@@ -40,7 +40,7 @@ try{
  page.on('request',req=>{if(/\/sw\.js(?:\?|$)/.test(req.url())&&!page.isClosed()){workerBeforeReady=true;}});
  await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
  await page.locator('.app-shell').waitFor({timeout:18000});
- const startup=await page.evaluate(()=>({ready:window.runloadBoot?.isReady,loading:!!document.querySelector('#boot-screen'),timing:performance.now(),onboarding:!!document.querySelector('[data-onboard-overlay]')}));
+ const startup=await page.evaluate(()=>({ready:window.appBoot?.isReady,loading:!!document.querySelector('#boot-screen'),timing:performance.now(),onboarding:!!document.querySelector('[data-onboard-overlay]')}));
  assert.equal(startup.ready,true,'boot must settle only after first real screen');
  assert.equal(startup.loading,false,'loading screen must disappear after ready');
  assert.equal(startup.onboarding,true,'first-use flow remains available');
@@ -75,7 +75,7 @@ try{
  assert.equal(await sp.locator('#boot-retry').isVisible(),false);
  assert.equal(await sp.locator('#boot-status').innerText(),'画面の準備を続けています');
  await sp.locator('.app-shell').waitFor({timeout:18000});
- assert.equal(await sp.evaluate(()=>window.runloadBoot.isReady),true);
+ assert.equal(await sp.evaluate(()=>window.appBoot.isReady),true);
  evidence.push({scenario:'4-second-honest-slow-status',engine:engineName,passed:true});
  await slow.close();
  await writeFile(resolve(root,'screenshots','startup-'+engineName+'-evidence.json'),JSON.stringify(evidence,null,2)+'\n');

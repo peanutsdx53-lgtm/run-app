@@ -120,7 +120,7 @@ try{
   const noMutation=await page.evaluate(()=>({notes:localStorage.getItem('runload-v2-exploration-notes-v1'),manual:localStorage.getItem('runload-v2-manual-runs-v2')}));
   assert.deepEqual(noMutation,previousStore,'learning and discovery must not mutate saved runs or old notes');
   await page.goto('http://127.0.0.1:4333/#/learning?lesson=unknown',{waitUntil:'networkidle'});
-  assert.match(await page.locator('#runload-learning').innerText(),/この授業はまだ利用できません/);
+  assert.match(await page.locator('#learning-root').innerText(),/この授業はまだ利用できません/);
   assert.deepEqual(errors,[],'browser errors '+width+' '+JSON.stringify(errors));
   if(width===390){
    await page.goto('http://127.0.0.1:4333/#/learning?lesson=pace-basics',{waitUntil:'networkidle'});
@@ -129,7 +129,7 @@ try{
     const reg=await navigator.serviceWorker.ready;
     const cache=await caches.open('runload-ui-next-shell-20261111-explore-controls-v1');
     const base=location.origin+'/';
-    return {registered:!!reg.active,js:!!(await cache.match(base+'ui/learningExperience.js?v=20261111-explore-controls-v1')),css:!!(await cache.match(base+'ui/learningExperience.css?v=20261111-learning-density-v1'))};
+    return {registered:!!reg.active,js:!!(await cache.match(base+'ui/learningExperience.js?v=20261126-cleanup-v1')),css:!!(await cache.match(base+'ui/learningExperience.css?v=20261126-cleanup-v1'))};
    });
    assert.deepEqual(cached,{registered:true,js:true,css:true},'learning assets cached for offline');
    await context.setOffline(true);
@@ -140,8 +140,8 @@ try{
     const retainedCache=await page.evaluate(async()=>{
      const cache=await caches.open('runload-ui-next-shell-20261111-explore-controls-v1');
      return await Promise.all([
-      './ui/learningExperience.js?v=20261111-explore-controls-v1',
-      './ui/learningExperience.css?v=20261111-learning-density-v1'
+      './ui/learningExperience.js?v=20261126-cleanup-v1',
+      './ui/learningExperience.css?v=20261126-cleanup-v1'
      ].map(async url=>!!(await cache.match(new URL(url,location.href)))));
     });
     assert.deepEqual(retainedCache,[true,true],
