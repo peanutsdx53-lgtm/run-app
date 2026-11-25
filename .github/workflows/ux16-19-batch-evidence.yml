@@ -1,0 +1,49 @@
+name: UX16-19 combined exact candidate evidence
+on:
+  push:
+    branches: [diagnostics/ux16-19-batch-20261125]
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ae9916b37c80e0b032a8d0580a60438b8d8ea307
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/auditLocalDependencies.mjs
+      - run: node scripts/auditPublicTerminology.mjs
+      - run: node --test tests/*.test.mjs
+  visual:
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+      RUNLOAD_BROWSER: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ae9916b37c80e0b032a8d0580a60438b8d8ea307
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - name: Verify actual candidate screens and scope safety
+        run: node tests/ux16to19FinalBrowser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ux16-19-final-${{ matrix.engine }}
+          path: audit-output/ux16-19-final
+          if-no-files-found: error
