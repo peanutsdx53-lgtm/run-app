@@ -1,0 +1,48 @@
+name: UX15 condition candidate evidence
+on:
+  push:
+    branches: [diagnostics/ux15-condition-final-20261125]
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fdd484fdf3902f23737f081cb4bee5ce641cb08f
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/auditLocalDependencies.mjs
+      - run: node scripts/auditPublicTerminology.mjs
+      - run: node --test tests/*.test.mjs
+  visual:
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fdd484fdf3902f23737f081cb4bee5ce641cb08f
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - name: Verify candidate visual matrix and saved record integrity
+        run: node tests/ux15ConditionBrowser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ux15-candidate-${{ matrix.engine }}
+          path: audit-output/ux15-condition
+          if-no-files-found: error
