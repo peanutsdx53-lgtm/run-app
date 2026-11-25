@@ -1,0 +1,38 @@
+name: UX16-19 combined baseline and comparison
+on:
+  push:
+    branches: [diagnostics/ux16-19-batch-20261125]
+permissions:
+  contents: read
+jobs:
+  batch:
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+      RUNLOAD_BROWSER: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: a25d1514880660de9f598c49af7f2d87860f544c
+          path: baseline
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - name: Compare independent screen prototypes against exact main
+        run: RUNLOAD_BATCH_ROOT="$PWD/baseline" node tests/ux16to19BatchBrowser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ux16-19-batch-${{ matrix.engine }}
+          path: audit-output/ux16-19-batch
+          if-no-files-found: error
