@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261125-ux15-condition-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261125-ux16-19-batch-v1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -70,7 +70,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/environmentExperience.js?v=20261123-ux09-environment-states-v1"),
     import("./ui/bodyContextExperience.js?v=20261123-ux08-rof-body-clarity-v1"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
-    import("./ui/measurementExperience.js?v=20261117-record-stage4-v1"),
+    import("./ui/measurementExperience.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/gpsMeasurementCore.js?v=20261116-gps-stage2-controls-v1"),
     import("./ui/gpsReplayIndexedDbStore.js?v=20261118-g4b2-atomic-writer-v1"),
     import("./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1"),
@@ -89,10 +89,10 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/recordRef.js"),
     import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1"),
     import("./ui/annotationEditor.js?v=20261108-professor-m5-v1"),
-    import("./ui/dataManagementUi.js?v=20261117-s16-settings-v1"),
+    import("./ui/dataManagementUi.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/firstUseExperience.js?v=20261122-ux05-firstuse-home-v1"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
-    import("./ui/consultationExperience.js?v=20261122-mobile-controls-v1"),
+    import("./ui/consultationExperience.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/explorationExperience.js?v=20261124-upr-explore-gps-v1"),
     import("./ui/learningExperience.js?v=20261122-gait-learning-type-v1"),
     import("./ui/interpretationView.js?v=20261026-interpret-v14"),

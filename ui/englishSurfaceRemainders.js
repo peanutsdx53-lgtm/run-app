@@ -182,6 +182,9 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  '歩く時間':'Walking Duration',
  '走るペース':'Running Pace',
  'GPS測定はスマートフォン専用':'GPS Measurement Is Available Only on Smartphones',
+ '測定前に確認':'Before Measurement',
+ '位置情報の許可が必要です。測定した距離・時間は終了後に確認して保存し、詳細な軌跡は本人が選択した場合だけ保存します。':'Location permission is required. Review measured distance and duration before saving; detailed routes are saved only if you choose to include them.',
+ '未保存の測定は再読み込み・強制終了で失われます。':'Unsaved measurements are lost after reloading or force-closing the app.',
  '03 比較結果':'03 Comparison Results',
  'GPS実走履歴':'Saved GPS Activity History',
  'GPX読込':'Import GPX'
@@ -434,7 +437,7 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  if((m=s.match(/^（目安：(.+)）$/)))return '(Anchor: '+m[1]+')';
  if((m=s.match(/^尺度：(.+)。図：(.+)。$/)))return 'Scale Source: '+m[1]+'. Illustration Source: '+m[2]+'.';
  if((m=s.match(/^(本人申告の睡眠時間|就床から起床までの経過時間)：(\d+)日分(?: ／ 棒の基準：最大(\d+)時間(\d{2})分)?$/)))
-  return (m[1]==='本人申告の睡眠時間'?'Self-Reported Sleep Duration':'Elapsed Time in Bed')+': '+m[2]+' Days'+(m[3]?' / Chart Maximum: '+m[3]+' h '+m[4]+' min':'');
+  return (m[1]==='本人申告の睡眠時間'?'Self-Reported Sleep Duration':'Elapsed Time in Bed') +': '+m[2]+(m[2]==='1'?' Day':' Days')+(m[3]?' / Chart Maximum: '+m[3]+' h '+m[4]+' min':'');
  if((m=s.match(/^(\d{4}-\d{2}-\d{2}) (記録なし|選択した方法の記録なし)$/)))return m[1]+' '+(m[2]==='記録なし'?'No Record':'No Record for the Selected Method');
  if((m=s.match(/^(\d+)分の時間枠 · ([\d.]+)分\/km$/)))return 'Time Budget '+m[1]+' min · '+m[2]+' min/km';
  if((m=s.match(/^(\d+)分走る（一定ペース）$/)))return 'Run for '+m[1]+' min (Constant Pace)';

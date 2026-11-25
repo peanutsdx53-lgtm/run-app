@@ -1,0 +1,33 @@
+/* UX16–19: scoped screen-only reflow. Export/measurement/storage semantics unchanged. */
+@media screen{
+ .cp-app .cp-panel h2,.cp-app .cp-preview-top h2{font-size:max(15px,.9rem);line-height:1.4}
+ .cp-app .cp-panel p.cp-description,.cp-app .cp-label,.cp-app .cp-sensitive,.cp-app .cp-note,.cp-app .cp-preview-top p,.cp-app .cp-demo-banner{font-size:max(12px,.76rem);line-height:1.5}
+ .cp-app .cp-sensitive strong{font-size:inherit;line-height:inherit}
+ .cp-app .cp-mode-button span,.cp-app .cp-check{font-size:max(13px,.82rem);line-height:1.45}
+ .cp-app .cp-mode-button small{font-size:max(12px,.73rem);line-height:1.45}
+ .cp-app .cp-mobile-switch button,.cp-app .cp-button{font-size:max(13px,.82rem);min-height:44px}
+ .cp-app .cp-select,.cp-app .cp-field{font-size:max(16px,.85rem)!important}
+ .cp-app .cp-check{min-width:0;overflow-wrap:anywhere;opacity:1}
+ .cp-app .cp-check.is-off{opacity:1}
+ .cp-app .cp-item-grid,.cp-app .cp-mode-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr))}
+ .cp-app .cp-active-scope{margin:8px 0 10px;padding:9px 10px;border:1px solid #416776;border-radius:9px;color:#dceff4;background:#102937;font-size:max(12px,.76rem);line-height:1.5;overflow-wrap:anywhere}
+ .cp-app .cp-step{flex:none}
+ .cp-app .cp-preview-actions{max-width:100%}
+ .gps-v35 .gps-prestart-scope{padding:12px;border:1px solid #518494;border-radius:12px;background:#092c3a;color:#e1f0f3;display:grid;gap:6px;font-size:.82rem;line-height:1.55}
+ .gps-v35 .gps-prestart-scope p{margin:0;line-height:inherit}
+ .gps-v35 .gps-prestart-scope strong{color:#eaffff}
+}
+@media screen and (max-width:480px){
+ .lr-root .lr-course{padding:12px;gap:7px}
+ .lr-root .lr-course-top{gap:8px;align-items:center}
+ .lr-root .lr-course-meta{min-width:0}
+ .lr-root .lr-course .lr-number{overflow-wrap:break-word}
+ .lr-root .lr-course p{line-height:1.45}
+ .lr-root .lr-formula{padding:10px;overflow-wrap:break-word}
+ .s2-page .s2-item:not(:has(.s3-profile-form))>summary{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px 9px}
+ .s2-page .s2-item:not(:has(.s3-profile-form)) .s2-item-copy{grid-column:2;grid-row:1;min-width:0}
+ .s2-page .s2-item:not(:has(.s3-profile-form)) .s2-item-icon{grid-column:1;grid-row:1;align-self:start}
+ .s2-page .s2-item:not(:has(.s3-profile-form)) .s2-chevron{grid-column:3;grid-row:1}
+ .s2-page .s2-item:not(:has(.s3-profile-form)) .s2-indicator{grid-column:2;grid-row:2;justify-self:start;white-space:normal;max-width:100%}
+ .s2-page .s2-item-copy small{overflow-wrap:break-word;word-break:normal}
+}
