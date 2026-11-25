@@ -364,3 +364,13 @@ test('UX12 generated history date accessible names preserve the exact activity o
  }
  assert.equal(translateUiText('走行日：日付未取得',{element:element(''),attribute:'aria-label'}),'走行日：日付未取得');
 });
+
+test('linked-note presentation translates without exposing machine terminology',()=>{
+ for(const [ja,en] of [
+ ['以前の文章を保持し、本人の言葉だけを修正します。元の走行との関連は変更しません。','Previous text is kept. Editing your note does not change its link to the original activity.'],
+ ['関連する走行記録：','Linked activity:'],
+ ['関連する走行記録あり','Linked to an activity'],
+ ['関連する走行記録を確認できません','The linked activity could not be verified'],
+ ['走行記録に関連づけていないメモ','Note not linked to an activity']
+ ])assert.equal(translateUiText(ja),en);
+});

@@ -28,6 +28,14 @@ import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurf
  * user text, record IDs, scientific numbers, consent or legal document bodies.
  * The Japanese app remains the canonical source of UI behavior and evidence. */
 export const ENGLISH_UI_TEXT=Object.freeze({
+ "以前の文章を保持し、本人の言葉だけを修正します。元の走行との関連は変更しません。": "Previous text is kept. Editing your note does not change its link to the original activity.",
+ "関連する走行記録：": "Linked activity:",
+ "関連する走行記録あり": "Linked to an activity",
+ "関連する走行記録を確認できません": "The linked activity could not be verified",
+ "走行記録に関連づけていないメモ": "Note not linked to an activity",
+ "修正後の文章（1〜500文字）": "Revised note (1–500 characters)",
+ "修正を保存する": "Save revision",
+ "メモを修正": "Edit note",
  "分野図を閉じる": "Hide Area Map",
  "分野図を開く": "Show Area Map",
  "分野を変更": "Change Area",
