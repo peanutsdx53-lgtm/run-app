@@ -78,7 +78,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/resultExperience.js?v=20261123-ux11-result-source-v1"),
     import("./ui/runQuestionContinuation.js"),
     import("./ui/historyExperience.js?v=20261124-upr-explore-gps-v1"),
-    import("./ui/settingsExperience.js?v=20261121-profile-optional-right-v1"),
+    import("./ui/settingsExperience.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/portableDataV2.js?v=20261108-professor-m3-v1"),
     import("./ui/mentalExperience.js?v=20261108-professor-m4-v1"),
     import("./ui/mentalSaveFlow.js?v=20261108-professor-m4-v1"),
