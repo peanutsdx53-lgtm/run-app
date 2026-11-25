@@ -1,0 +1,49 @@
+name: UX20 exact final candidate
+on:
+  push:
+    branches: [diagnostics/ux20-final-20261125]
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 97bf9e9cf85ece9c95193e1e10fbbb9a205bdb2c
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/auditLocalDependencies.mjs
+      - run: node scripts/auditPublicTerminology.mjs
+      - run: node --test tests/*.test.mjs
+  final-browser:
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    env:
+      RUNLOAD_BROWSER_ENGINE: ${{ matrix.engine }}
+      RUNLOAD_BROWSER: ${{ matrix.engine }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 97bf9e9cf85ece9c95193e1e10fbbb9a205bdb2c
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - name: Keyboard, original text, source change, motion, actual narrow menu and headers
+        run: node tests/ux20FinalBrowser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ux20-candidate-${{ matrix.engine }}
+          path: audit-output/ux20
+          if-no-files-found: error
