@@ -85,6 +85,13 @@ const RESULT_HELP_RIGHT_STYLES=String.raw`
 }
 @media(max-width:380px){.rv4-header{gap:6px}.rv4-actions{min-width:0}}
 @media print{.rv4-header-help{display:none!important}}
+
+/* Anchor the menu to the entire header rather than the center action button. */
+@media screen and (max-width:800px){
+ .rv4-header{position:relative}
+ .rv4-actions,.rv4-export-menu{position:static}
+ .rv4-export-options{left:auto;right:0;top:calc(100% + 6px);width:min(330px,100%);min-width:0;max-width:100%}
+}
 `;
 
 // T01: legible interpretation-supporting copy that scales with root text size.

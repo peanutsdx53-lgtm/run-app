@@ -75,7 +75,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/gpsReplayIndexedDbStore.js?v=20261118-g4b2-atomic-writer-v1"),
     import("./ui/gpsDynamicResult.js?v=20261116-gps-stage6-v1"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261123-ux11-result-source-v1"),
+    import("./ui/resultExperience.js?v=20261125-ux20-final-v1"),
     import("./ui/runQuestionContinuation.js"),
     import("./ui/historyExperience.js?v=20261124-upr-explore-gps-v1"),
     import("./ui/settingsExperience.js?v=20261125-ux16-19-batch-v1"),
@@ -670,6 +670,20 @@ function recordExtras(){
  return top+`<section class="card stack" data-body-detail-source="saved-only"><h2>部位ごとの参考値を確認する</h2>${label}<p>部位別の参考値・適用条件・文献の根拠は、保存済みの走行結果画面で確認できます。未保存の入力や活動種別が不明な記録からは、数値を推定しません。</p><p>文献由来の参考値は、本人の身体組織負荷・健康状態・傷害リスクの実測ではありません。</p><a class="btn primary" href="${esc(link)}">走行結果で確認する</a><a class="btn" href="#/history">保存済みの履歴を見る</a></section>`;
 }
     let stopHomeDrag=null;
+    let focusRenderedRoute=null,focusRenderedInputs=null;
+    function focusInputSnapshot(){
+      if(!['consultation','exploration-tree'].includes(currentPage()))return null;
+      try{
+        if(!nativeStorage)return null;
+        const local=[];
+        for(let i=0;i<nativeStorage.length;i++){
+          const key=nativeStorage.key(i);
+          if(key?.startsWith('runload-'))local.push([key,nativeStorage.getItem(key)]);
+        }
+        local.sort((a,b)=>a[0].localeCompare(b[0]));
+        return JSON.stringify([new Date().toDateString(),manualRunStore.readManualRuns(onboardStorage),gpsV2Cache,local]);
+      }catch{return null;}
+    }
     function render(){
       if(dynamicPlayback){dynamicPlayback.dispose?.();dynamicPlayback=null;}
       if(stopHomeDrag){stopHomeDrag();stopHomeDrag=null;}
@@ -901,6 +915,8 @@ function recordExtras(){
    }
   });
  }
+ focusRenderedRoute=location.hash;
+ focusRenderedInputs=focusInputSnapshot();
 }
   const refreshDataSettings=()=>{
     const openNames=[...app.querySelectorAll('.s2-item[open]')].map(node=>node.querySelector('summary strong')?.textContent);
@@ -2376,8 +2392,21 @@ function recordExtras(){
   };
   document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGpsOnHidden();});
   window.addEventListener('pagehide',pauseGpsOnHidden);
-  window.addEventListener("focus",async()=>{await canonical.refresh();gpsV2Cache=await gpsV2.readGpsV2Summaries();render();});
-  document.addEventListener("visibilitychange",async()=>{if(!document.hidden){await canonical.refresh();render();}});
+  // Returning from browser chrome (including a full Tab cycle) is not an
+  // instruction to discard a transient draft or keyboard focus. Still reread
+  // canonical records and GPS summaries; changed/unreadable inputs fail closed
+  // through the existing render path, and navigation cannot reuse an old view.
+  async function refreshForeground(){
+    const route=location.hash;
+    await canonical.refresh();
+    gpsV2Cache=await gpsV2.readGpsV2Summaries();
+    if(location.hash!==route)return;
+    const fresh=focusInputSnapshot();
+    if(fresh!==null&&focusRenderedRoute===route&&fresh===focusRenderedInputs)return;
+    render();
+  }
+  window.addEventListener("focus",refreshForeground);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)void refreshForeground();});
   window.addEventListener("hashchange",async()=>{
     dismissLegalDialog();
     // P8: even outside inquiry panels, the old exploration view can hold
