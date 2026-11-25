@@ -342,8 +342,11 @@ function modal(ui,ctx){if(!ui.modal)return "";const category=ctx.categories.find
  if(ui.modal==="note")body=`<p>「${esc(title)}」について、感じたことや次に試したいことを自由に書けます。あとから画面下部の「ふり返り」で読み返せます。</p>${ctx.focusRunId?(ctx.focusRun?"<p>この走行に関連づけて記録します。</p>":"<p>指定した走行が見つからず、関連づけた保存はできません。</p>"):"<p>走行記録には自動で関連づけません。</p>"}<label class="ex-form-label" for="ex-note">書き残す内容（500文字まで）</label><textarea id="ex-note" maxlength="500" rows="4" placeholder="例：上り坂は思っていたより息が上がった。次回はペースを意識してみたい。">${esc(ui.followup||"")}</textarea>${followups[LEARNING_TOPICS[category.id+"|"+title]]?.length?'<div class="ex-note-prompts"><small>書く内容に迷ったら</small>'+followups[LEARNING_TOPICS[category.id+"|"+title]].map((t,i)=>'<button type="button" data-ex-next="'+i+'">'+esc(t)+'</button>').join('')+'</div>':''}<div class="ex-dialog-actions"><button type="button" data-ex-action="save-note" ${!ui.canSave?"disabled":""}>保存する</button></div>${!ui.canSave?'<p class="ex-muted">保存されたメモを安全に読み取れないため、上書き防止のため保存を停止しています。</p>':""}`;
  if(ui.modal==="edit-note"){
   const current=ui.notes.find(n=>n.id===ui.editingNoteId);
-  body=current?'<p>以前の文章を保持し、本人の言葉だけを修正します。元の走行との関連・メモIDは変更しません。</p>'+
-   '<p class="ex-muted">記録への関連：'+(current.recordId?'元の走行ID '+esc(current.recordId):'単独メモ')+'</p>'+
+  const linked=current?noteRunBackLink(current,ctx.manualRuns):null;
+  const linkedDate=linked&&typeof linked.date==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(linked.date)?linked.date:null;
+  const relation=current?.recordId?(linked?(linkedDate?'<span>関連する走行記録：</span> <time datetime="'+esc(linkedDate)+'">'+esc(linkedDate)+'</time>':'関連する走行記録あり'):'関連する走行記録を確認できません'):'走行記録に関連づけていないメモ';
+  body=current?'<p>以前の文章を保持し、本人の言葉だけを修正します。元の走行との関連は変更しません。</p>'+
+   '<p class="ex-muted" data-ex-note-relation>'+relation+'</p>'+
    '<label class="ex-form-label" for="ex-note-edit">修正後の文章（1〜500文字）</label>'+
    '<textarea id="ex-note-edit" maxlength="500" rows="5">'+esc(current.text)+'</textarea>'+
    '<div class="ex-dialog-actions"><button type="button" data-ex-action="save-edited-note" '+(!ui.canSave?'disabled':'')+'>修正を保存する</button></div>'+

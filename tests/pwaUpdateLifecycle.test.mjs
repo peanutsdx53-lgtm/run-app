@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
 const source=readFileSync(new URL('../pwa.js',import.meta.url),'utf8');
-const release='20261125-ux20-final-v2';
+const release='20261126-copy-v1';
 
 class Emitter{
  constructor(){this.listeners=new Map()}

@@ -253,3 +253,25 @@ test('Selected-area topics have navigable previous/next controls without the obs
  assert.match(app,/preventScroll:true/);
  assert.doesNotMatch(html,/まずは知ってみよう|書き残した気づきや問いを、あとから確認できます|確定できる坂道の割合はありません/);
 });
+
+test('note edit presents the verified run date, never the internal identifier',()=>{
+ const u=makeUi(memory());
+ const id='run-v1-550e8400-e29b-41d4-a716-446655440000';
+ const original={id:'note-opaque-1234567890',category:'03',text:'本人の文章',createdAt:'2026-11-25T10:00:00Z',recordId:id};
+ u.notes=[original];u.modal='edit-note';u.editingNoteId=original.id;
+ const rec={id,source:'manual',type:'run',schema:2,date:'2026-11-25',distanceKm:6,durationSeconds:1980};
+ const ctx={categories,draft:{},conditions:{entries:[]},manualRuns:{ok:true,records:[rec]}};
+ const relation=html=>html.match(/<p class="ex-muted" data-ex-note-relation>(.*?)<\/p>/)?.[1];
+ const before=JSON.stringify(u.notes);
+ const verified=relation(render(u,ctx));
+ assert.match(verified,/関連する走行記録：/);
+ assert.match(verified,/<time datetime="2026-11-25">2026-11-25<\/time>/);
+ assert.doesNotMatch(verified,/550e8400|note-opaque|走行ID|メモID/);
+ const missing=relation(render(u,{...ctx,manualRuns:{ok:true,records:[]}}));
+ assert.equal(missing,'関連する走行記録を確認できません');
+ const invalidDate=relation(render(u,{...ctx,manualRuns:{ok:true,records:[{...rec,date:id}]}}));
+ assert.equal(invalidDate,'関連する走行記録あり');
+ assert.equal(JSON.stringify(u.notes),before,'display must not mutate the stored link or note');
+ u.notes=[{...original,recordId:undefined}];
+ assert.equal(relation(render(u,ctx)),'走行記録に関連づけていないメモ');
+});

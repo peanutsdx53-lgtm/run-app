@@ -79,6 +79,14 @@ try{
    assert.ok(!(await modal.innerText()).includes('ORPHAN_NO_PARENT'),'orphan must not be rebound to A');
    stage='edit same-run memo';
    await page.locator('[data-ex-edit="g3-note-a"]').click();
+   const relation=page.locator('[data-ex-note-relation]');
+   await relation.waitFor({state:'visible'});
+   await page.waitForFunction(lang=>document.querySelector('[data-ex-note-relation]')?.innerText.includes(lang==='en'?'Linked activity:':'関連する走行記録：'),language);
+   assert.equal(await relation.locator('time').innerText(),'2026-11-15');
+   const editText=await modal.innerText();
+   assert.ok(!editText.includes(savedId)&&!editText.includes(otherId)&&!editText.includes('g3-note-a'),'internal identifiers are never visible in note editor');
+   assert.doesNotMatch(editText,/元の走行ID|メモID|Original Run ID|Note ID/i);
+   await page.screenshot({path:resolve(out,engine+'-'+language+'-'+width+'-'+zoom+'-note-edit.png'),fullPage:true,animations:'disabled'});
    await page.locator('#ex-note-edit').fill('A_REVISED_BY_THE_USER');
    await page.locator('[data-ex-action="save-edited-note"]').click();
    await page.waitForFunction(id=>{
