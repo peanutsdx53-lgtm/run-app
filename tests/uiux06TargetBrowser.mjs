@@ -41,7 +41,7 @@ try{
   assert.equal(await quick.locator('a[href="#/simulation"]').count(),0,'retired entry removed');
   await shot(page,width,'S18-learning-entry');
   await quick.locator('a[href="#/learning"]').click();
-  await page.locator('#runload-learning .lr-catalog').waitFor();
+  await page.locator('#learning-root .lr-catalog').waitFor();
   await shot(page,width,'S18-learning-catalog');
   await page.goto(base+'simulation',{waitUntil:'networkidle'});
   await page.locator('.home-v3').waitFor();
@@ -60,7 +60,7 @@ try{
    if(!saved.ok)throw Error(saved.reason);return saved.record.id;
   });
   await page.goto(base+'result?record='+encodeURIComponent(id),{waitUntil:'networkidle'});
-  const result=page.locator('#runload-result-v4');await result.locator('.rv4-hero').waitFor();
+  const result=page.locator('#activity-result');await result.locator('.rv4-hero').waitFor();
   await shot(page,width,'S20-saved-result');
   await page.evaluate(()=>{
    const prototype=CanvasRenderingContext2D.prototype;

@@ -1,4 +1,4 @@
-/* RunLoad v2 — common record confirmation, presentation only.
+/* application v2 — common record confirmation, presentation only.
  * Both manual and GPS-unavailable paths use this view; no false GPS values.
  * The authoritative record validation remains in recordDraftReview.js.
  */

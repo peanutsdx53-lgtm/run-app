@@ -276,7 +276,7 @@ try{
  await page.goto(host+'#/result?record='+encodeURIComponent(walkId)+'&compare='+encodeURIComponent(sameDayA)+'&view=compare',{waitUntil:'networkidle'});
  // Explicit comparator identity must be committed by the asynchronous SPA
  // render before inspecting the scientific/measurement mismatch.
- await page.waitForFunction(id=>document.querySelector('#runload-result-v4')?.shadowRoot?.querySelector('[data-compare-select]')?.value===id,sameDayA,{timeout:20000});
+ await page.waitForFunction(id=>document.querySelector('#activity-result')?.shadowRoot?.querySelector('[data-compare-select]')?.value===id,sameDayA,{timeout:20000});
  assert.match(await page.locator('[data-compare-select] option[value="'+sameDayA+'"]').innerText(),/ランニング.*活動種別が異なる/);
  assert.equal(await page.locator('.rv4-comparison-table').count(),0,'cross gait factual comparisons must fail closed');
  assert.match(await page.locator('.rv4-comparison-empty').innerText(),/活動種別が不明または異なります/);

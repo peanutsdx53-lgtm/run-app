@@ -50,7 +50,7 @@ try{
  const beforePostHoc=await referenceSignature();
  assert.deepEqual(beforePostHoc.identity,[id,otherId]);
  const original=(await page.evaluate(async()=>{const c=await import('/ui/manualRunCanonical.js');return (await c.readCanonical()).raw;}));
- const sourceHost=page.locator('#runload-result-v4');await sourceHost.locator('.rv4-export-menu > summary').click();await sourceHost.locator('[data-posthoc-entry]').waitFor({timeout:20000});await sourceHost.locator('[data-posthoc-entry]').click();await page.locator('[data-ax-editor]').waitFor({timeout:20000});assert.match(page.url(),/#\/annotation\?source=manual&record=run-v1-/);
+ const sourceHost=page.locator('#activity-result');await sourceHost.locator('.rv4-export-menu > summary').click();await sourceHost.locator('[data-posthoc-entry]').waitFor({timeout:20000});await sourceHost.locator('[data-posthoc-entry]').click();await page.locator('[data-ax-editor]').waitFor({timeout:20000});assert.match(page.url(),/#\/annotation\?source=manual&record=run-v1-/);
  await choose(page,'stepsBundle');await page.locator('[data-ax-form] input[name="steps"]').fill('0');await page.locator('[data-ax-form] select[name="stepsProvenance"]').selectOption('DEVICE_MEASURED');await page.locator('[data-ax-save]').click();await page.locator('[data-ax-notice]').getByText('歩数・取得方法',{exact:false}).waitFor({timeout:20000});
  const first=await readThread(page,ref,'stepsBundle');assert.equal(first.status,'ACTIVE');assert.equal(first.thread.length,1);assert.equal(first.latest.payload.steps,0);assert.equal(first.raw,original,'original canonical source byte-identical');
  await page.locator('[data-ax-form] input[name="steps"]').fill('6300');await page.locator('[data-ax-save]').click();await page.waitForFunction(()=>document.querySelector('[data-ax-editor]')?.textContent?.includes('6300歩'),null,{timeout:20000});const second=await readThread(page,ref,'stepsBundle');assert.equal(second.thread.length,2);assert.equal(second.thread[1].operation,'CORRECT');assert.equal(second.raw,original);
@@ -68,8 +68,8 @@ try{
   comparisonBytes:afterPostHoc.comparison.length,sourceIds:afterPostHoc.identity}));
  await choose(page,'runWalkBundle');await page.locator('[data-ax-form] select[name="runningFormat"]').selectOption('RUN_WALK');await page.locator('[data-ax-form] input[name="runWalkRunningDistanceKm"]').fill('7');await page.locator('[data-ax-form] input[name="runWalkRunningDurationMinutes"]').fill('20');await page.locator('[data-ax-save]').click();assert.match(await page.locator('.ax-error').innerText(),/総距離・総時間/);await page.locator('[data-ax-form] input[name="runWalkRunningDistanceKm"]').fill('4');await page.locator('[data-ax-save]').click();await page.locator('[data-ax-notice]').getByText('走行と歩行',{exact:false}).waitFor({timeout:20000});assert.equal((await readThread(page,ref,'runWalkBundle')).latest.payload.runningFormat,'RUN_WALK');
  const options=await page.locator('[data-ax-field] option').allTextContents();assert.ok(!options.some(x=>x.includes('ROF-J')),'manual ROF is corrected through authoritative flow');assert.match(await page.locator('.ax-help').innerText(),/正式な訂正履歴/);
- await page.goto(base+'#/history',{waitUntil:'networkidle'});const hx=page.locator('#runload-history-v2');await hx.locator('[data-select-id="'+id+'"]').click();await hx.locator('[data-annotate-record]').click();await page.locator('[data-ax-editor]').waitFor({timeout:20000});assert.match(page.url(),new RegExp(id));
- await page.goto(base+'#/annotation?source=manual&record=run-v1-00000000-0000-0000-0000-000000000000',{waitUntil:'networkidle'});await page.locator('#runload-annotation-editor [role="alert"]').waitFor({timeout:20000});assert.equal(await page.locator('[data-ax-editor]').count(),0);assert.match(await page.locator('#runload-annotation-editor [role="alert"]').innerText(),/見つかりません/);
+ await page.goto(base+'#/history',{waitUntil:'networkidle'});const hx=page.locator('#activity-history');await hx.locator('[data-select-id="'+id+'"]').click();await hx.locator('[data-annotate-record]').click();await page.locator('[data-ax-editor]').waitFor({timeout:20000});assert.match(page.url(),new RegExp(id));
+ await page.goto(base+'#/annotation?source=manual&record=run-v1-00000000-0000-0000-0000-000000000000',{waitUntil:'networkidle'});await page.locator('#annotation-editor-root [role="alert"]').waitFor({timeout:20000});assert.equal(await page.locator('[data-ax-editor]').count(),0);assert.match(await page.locator('#annotation-editor-root [role="alert"]').innerText(),/見つかりません/);
  await openEditor(page,ref);await choose(page,'temperatureC');await page.context().setOffline(true);await page.locator('[data-ax-form] input[name="celsius"]').fill('18');await page.locator('[data-ax-save]').click();await page.locator('[data-ax-notice]').getByText('気温',{exact:false}).waitFor({timeout:20000});assert.equal((await readThread(page,ref,'temperatureC')).latest.payload.celsius,18);await page.context().setOffline(false);
  // Current GPS summary: location, fatigue and optional annotations have distinct sources.
  const gps=await page.evaluate(async()=>{
@@ -197,7 +197,7 @@ try{
  assert.equal(edit.next.timeBasis,'RECALLED');
  assert.equal(edit.next.assessedAt,null);
  await page.goto(base+'#/result?record='+encodeURIComponent(correction.id),{waitUntil:'networkidle'});
- const correctedResult=page.locator('#runload-result-v4');
+ const correctedResult=page.locator('#activity-result');
  await correctedResult.locator('[data-tab="fatigue"]').click();
  assert.match(await correctedResult.locator('.rv4-fatigue-numbers').innerText(),/3/);
  await correctedResult.locator('.rv4-fatigue-method > summary').click();
@@ -257,9 +257,9 @@ try{
  // M7 T-053: the result, not just the editor, presents original and post-hoc
  // side-by-side and leaves the original scientific computation byte-identical.
  await page.goto(base+'#/result?record='+encodeURIComponent(bodyRef29.recordId),{waitUntil:'networkidle'});
- await page.waitForFunction(()=>document.querySelector('#runload-result-v4')?.shadowRoot
+ await page.waitForFunction(()=>document.querySelector('#activity-result')?.shadowRoot
   ?.querySelector('[data-posthoc-summary]')?.textContent?.includes('M7-BODY-OBSERVATION-ONLY'),null,{timeout:20000});
- const visible53=await page.locator('#runload-result-v4 [data-posthoc-summary]').innerText();
+ const visible53=await page.locator('#activity-result [data-posthoc-summary]').innerText();
  assert.match(visible53,/記録時（原本）/);
  assert.match(visible53,/後日申告（科学計算に未使用）/);
  assert.match(visible53,/M7-BODY-OBSERVATION-ONLY/);
@@ -290,7 +290,7 @@ try{
  assert.equal(await meta.locator('summary').evaluate(el=>document.activeElement===el),true);
  await page.locator('.ax-back').focus();await page.keyboard.press('Enter');
  await page.waitForURL(/#\/history/,{timeout:20000});
- await page.locator('#runload-history-v2').waitFor({timeout:20000});
+ await page.locator('#activity-history').waitFor({timeout:20000});
  console.log(JSON.stringify({gate:'M7-exact-counterexample',caseId:'T-064',engine:engineName,status:'PASS',keyboard:true,restoredFocus:true}));
 
 

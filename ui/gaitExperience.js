@@ -1,5 +1,5 @@
 import {checkRunWalkBounds} from './recordDraftReview.js';
-// Approved candidate: RunLoad v2 gait / steps. Only edits state.recordDraft;
+// Approved candidate: application v2 gait / steps. Only edits state.recordDraft;
 // no run saving, pedometer calls, scientific calculation, or data migration.
 const clean=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const sourceOptions=Object.freeze([

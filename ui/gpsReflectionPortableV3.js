@@ -142,7 +142,7 @@ export function planPrivateGpsRestore(v3Text,currentGpsSnapshot){
   if(!old){gpsParentsToAdd++;continue;}
   if(!equal(old,item)||
      (item.detailSaved&&!equal(existingDetails.get(item.id),incomingDetails.get(item.id))))
-   return err('PARENT_CONFLICT','同一IDのGPS元記録の内容が異なります');
+   return err('PARENT_CONFLICT','同じ元のGPS記録に異なる内容があります');
  }
  const byId=new Map(),events=new Map();
  for(const item of currentNotes.bundle.contents)byId.set(item.noteId,item);
@@ -168,7 +168,7 @@ export function planPrivateGpsRestore(v3Text,currentGpsSnapshot){
    skippedExactNotes++;continue;
   }
   if(thread.some(e=>existingEventIds.has(e.eventId)||existingRequestIds.has(e.requestId)))
-   return err('EVENT_CONFLICT','別の自由記述とイベントID・操作IDが重複しています');
+   return err('EVENT_CONFLICT','別の自由記述と保存履歴が重複しています');
   privateNotesToAdd++;
  }
  return {ok:true,plan:{gpsParentsToAdd,privateNotesToAdd,skippedExactNotes,

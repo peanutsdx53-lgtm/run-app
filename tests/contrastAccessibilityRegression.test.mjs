@@ -32,5 +32,5 @@ test('six targeted declarations survive source refactoring and retain shadow and
 });
 test('out-of-scope claims are not inferred from static declarations',()=>{
  assert.ok(cases.some(x=>x[0].includes('assumption')),'eyebrow background is an assumption, not measured CSS cascade');
- assert.ok(css.includes('.app-shell:has(#runload-result-v4)'),'existing dark result shell stays in place');
+ assert.ok(css.includes('.app-shell:has(#activity-result)'),'existing dark result shell stays in place');
 });

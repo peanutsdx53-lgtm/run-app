@@ -29,7 +29,7 @@ export function makeMentalAppendRequest(ref,d,{now=()=>new Date().toISOString(),
  if(!checked.selected)return {ok:true,request:null};
  const id1=uuid(),id2=uuid(),enteredAt=now();
  if(!/^[0-9a-f-]{36}$/i.test(id1||'')||!/^[0-9a-f-]{36}$/i.test(id2||'')||!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(enteredAt))
-  return {ok:false,reason:'保存操作の識別子または時刻を取得できません'};
+  return {ok:false,reason:'保存の準備または保存時刻を確認できません'};
  return {ok:true,request:{recordRef:ref,fieldKey:'mentalExperience',operation:'ADD',
    payload:{answer:d.answer,...(d.freeText?{freeText:d.freeText}:{})},expectedHeadEventId:null,expectedRevision:0,
    clientRequestId:'mental_req_'+id1,eventId:'mental_evt_'+id2,declaredPhase:d.declaredPhase,

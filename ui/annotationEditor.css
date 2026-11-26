@@ -2,12 +2,12 @@
 
 /* Post-hoc screen visual integration: the parent app chrome must never turn pale
    while the nested cards remain dark. Scoped to the annotation route only. */
-body:has(#runload-annotation-editor),body:has(#runload-annotation-editor) #app,
-.app-shell:has(#runload-annotation-editor){background:#061725;color:#edf9fd;min-height:100dvh}
-.app-shell:has(#runload-annotation-editor) .main-frame,
-.app-shell:has(#runload-annotation-editor) .main-content{background:linear-gradient(160deg,#061725,#092737);color:#eaf8fc;min-width:0}
-.app-shell:has(#runload-annotation-editor) .main-content{padding-top:clamp(18px,3vw,34px);padding-bottom:calc(105px + env(safe-area-inset-bottom))}
-#runload-annotation-editor{display:block;min-width:0;min-height:80vh;color:#eaf8fc;color-scheme:dark;background:transparent}
+body:has(#annotation-editor-root),body:has(#annotation-editor-root) #app,
+.app-shell:has(#annotation-editor-root){background:#061725;color:#edf9fd;min-height:100dvh}
+.app-shell:has(#annotation-editor-root) .main-frame,
+.app-shell:has(#annotation-editor-root) .main-content{background:linear-gradient(160deg,#061725,#092737);color:#eaf8fc;min-width:0}
+.app-shell:has(#annotation-editor-root) .main-content{padding-top:clamp(18px,3vw,34px);padding-bottom:calc(105px + env(safe-area-inset-bottom))}
+#annotation-editor-root{display:block;min-width:0;min-height:80vh;color:#eaf8fc;color-scheme:dark;background:transparent}
 .ax-page{max-width:890px;margin:0 auto 24px;padding:clamp(12px,3vw,26px);color:#eaf8fc}
 .ax-header{display:grid;gap:4px;align-items:start;margin:0 0 20px}
 .ax-header .ax-back{display:inline-flex;align-items:center;width:fit-content;min-height:44px;padding:7px 4px;color:#9aede5;font-size:14px;font-weight:680;text-decoration:none}

@@ -127,7 +127,7 @@ export const ENGLISH_FINAL_CONDITIONS=Object.freeze({
  "（本人の任意申告）": "(Optional Self-report)",
  "任意回答の形式を確認してください": "Check the Optional Response Format.",
  "任意回答の内容を確認してください": "Check the Optional Response Content.",
- "保存操作の識別子または時刻を取得できません": "Could Not Obtain the Save Operation ID or Time.",
+ "保存の準備または保存時刻を確認できません": "The save could not be prepared or its time could not be verified.",
  "／申告の区分：": " / Response Category: ",
  "暗い画面": "Dark Appearance",
  "大きめ": "Larger",

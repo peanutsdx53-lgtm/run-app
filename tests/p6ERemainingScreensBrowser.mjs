@@ -85,7 +85,7 @@ try{
   await help(page,'condition',/本人の記録/);
   if(width===320||width===390)await zoom(page,'condition',width);
   // S15 consultation
-  await go('consultation','#runload-consultation .cp-head');
+  await go('consultation','#consultation-root .cp-head');
   assert.equal(await page.locator('#cp-target').count(),1);
   assert.equal(await page.locator('[data-share="notes"]').isChecked(),false,'private notes initially excluded');
   assert.equal(await page.locator('#cp-print').count(),1,'print action not removed');

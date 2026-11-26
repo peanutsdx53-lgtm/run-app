@@ -10,7 +10,7 @@ import {HOME_DASHBOARD_KEY,loadHomeDashboardLayout} from "./homeDashboardLayout.
 const PROFILE_KEY="runload-v2-user-profile-v1",DISPLAY_KEY="runload-v2-display-preferences-v1";
 import {LEGAL_CONSENT_KEY} from "./legalDocuments.js";
 import {LEARNING_PROGRESS_KEY} from "./learningPresentation.js";
-import * as gpsV2 from "./gpsReplayIndexedDbStore.js?v=20261118-g4b2-atomic-writer-v1";
+import * as gpsV2 from "./gpsReplayIndexedDbStore.js?v=20261126-cleanup-v1";
 
 export const PORTABLE_FORMAT="running-data-portable-backup";
 export const PORTABLE_VERSION=1;
@@ -148,7 +148,7 @@ function mergeLocal(key,oldRaw,incomingRaw){
  for(const item of incoming){
   const old=known.get(item[id]);
   if(old){
-   if(!same(old,item))return {ok:false,reason:"同じ記録ID又は日付に異なる内容があります。現在の記録を保護しました"};
+   if(!same(old,item))return {ok:false,reason:"同じ記録または日付に異なる内容があります。現在の記録を保護しました"};
   }else{known.set(item[id],item);add.push(item);}
  }
  if(known.size>limits[key])return {ok:false,reason:"復元後の記録件数が上限を超えます"};
@@ -181,7 +181,7 @@ const verifyGpsMerge=(incoming,prior,key,limit)=>{
  const existing=new Map(prior.map(x=>[x.id,x]));let added=0;
  for(const item of incoming){
   const old=existing.get(item.id);
-  if(old&&!same(old,item))return {ok:false,reason:"GPS記録の識別子と内容が一致しません"};
+  if(old&&!same(old,item))return {ok:false,reason:"同じGPS記録に異なる内容があります"};
   if(!old){existing.set(item.id,item);added++;}
  }
  if(existing.size>limit)return {ok:false,reason:"GPS記録の件数が上限を超えます"};

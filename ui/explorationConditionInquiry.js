@@ -31,7 +31,7 @@ export function conditionInquiryModel({ref=null,record=null,reads=null}={}){
  if(parent.state==='NO_RECORD')return err('NO_RECORD','本人の走行記録は指定されていません');
  if(parent.state!=='VERIFIED')return err('UNVERIFIED','指定した元の走行記録を安全に照合できません');
  const nr=normalizeRecordRef(ref);
- if(!nr.ok)return err('UNVERIFIED','記録のIDと出所が正しくありません');
+ if(!nr.ok)return err('UNVERIFIED','対象の記録と情報の出所を照合できません');
  if(reads===null)return err('NOT_REQUESTED','本人の条件申告はまだ開いていません',{ref:nr.value});
  if(!reads||typeof reads!=='object'||Array.isArray(reads))
   return err('READ_ERROR','保存領域の応答を照合できません',{ref:nr.value});

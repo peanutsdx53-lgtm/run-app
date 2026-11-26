@@ -1,4 +1,4 @@
-/* GPS dynamic replay — RunLoad v2 dark design vocabulary. Scoped; leaves manual results unchanged. */
+/* GPS dynamic replay — application v2 dark design vocabulary. Scoped; leaves manual results unchanged. */
 .app-shell:has(.gd-root) .main-content{max-width:none;min-height:100vh;background:radial-gradient(ellipse at 80% 0,#19526365,transparent 40%),linear-gradient(145deg,#092636,#061924);color:#effaff;padding:18px clamp(10px,2.2vw,26px) 90px}
 .app-shell:has(.gd-root) .topbar{display:none}
 .app-shell:has(.gd-root) .sidebar{background:linear-gradient(180deg,#0a2737,#071923);border-color:#2d5265}

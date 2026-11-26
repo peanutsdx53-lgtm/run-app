@@ -21,9 +21,9 @@ export function normalizeRecordRef(input){
   return failure('BAD_REF','記録参照の構造が正しくありません');
  const {sourceType,recordId}=input;
  if(typeof sourceType!=='string'||!own(ID_PATTERNS,sourceType)||typeof recordId!=='string')
-  return failure('BAD_REF','記録の種類またはIDが正しくありません');
+  return failure('BAD_REF','対象の記録またはその種類が正しくありません');
  if(!ID_PATTERNS[sourceType].test(recordId))
-  return failure(sourceOfId(recordId)?'SOURCE_MISMATCH':'BAD_REF','記録の種類とIDが一致しません');
+  return failure(sourceOfId(recordId)?'SOURCE_MISMATCH':'BAD_REF','対象の記録とその種類が一致しません');
  return success(Object.freeze({sourceType,recordId}));
 }
 
@@ -49,7 +49,7 @@ export function parseLegacyOrTypedLink(hash,context){
   return normalizeRecordRef({sourceType:'GPS_V2',recordId:params.get('gps')});
  }
  if(!has('source')&&!has('record'))return success(null);
- if(has('source')&&!has('record'))return failure('BAD_REF','記録IDが指定されていません');
+ if(has('source')&&!has('record'))return failure('BAD_REF','対象の記録が指定されていません');
  const declared=params.get('source');
  const sourceType=has('source')?Object.keys(URL_SOURCES).find(key=>URL_SOURCES[key]===declared):'MANUAL';
  if(!sourceType)return failure('BAD_REF','未知の記録種別です');

@@ -161,7 +161,7 @@ export function makePostHocRequest(ref,field,action,status,payload,{now=()=>new 
  const operation=operationForStatus(status,action);
  if(!operation)return fail('現在の状態ではこの操作を実行できません。保存状態を再読込してください');
  const eventId='posthoc_evt_'+uuid(),clientRequestId='posthoc_req_'+uuid(),enteredAt=now();
- if(!/^posthoc_(evt|req)_[0-9a-f-]{36}$/i.test(eventId)||!/^posthoc_(evt|req)_[0-9a-f-]{36}$/i.test(clientRequestId)||!dateTime(enteredAt)||!['BEFORE','DURING','AFTER','UNSPECIFIED'].includes(declaredPhase)||!['UNKNOWN','AT_ENTRY','RECALLED'].includes(timeBasis))return fail('操作識別子または本人申告時点が不正です');
+ if(!/^posthoc_(evt|req)_[0-9a-f-]{36}$/i.test(eventId)||!/^posthoc_(evt|req)_[0-9a-f-]{36}$/i.test(clientRequestId)||!dateTime(enteredAt)||!['BEFORE','DURING','AFTER','UNSPECIFIED'].includes(declaredPhase)||!['UNKNOWN','AT_ENTRY','RECALLED'].includes(timeBasis))return fail('保存操作または本人が申告した時点を確認できません');
  const expectedRevision=latest?.sequence??0,expectedHeadEventId=latest?.eventId??null;
  if((expectedRevision===0)!==(expectedHeadEventId===null))return fail('履歴の版を確認できません');
  return {ok:true,request:{recordRef:ref,fieldKey:field,operation,payload:operation==='RETRACT'?null:payload,expectedHeadEventId,expectedRevision,clientRequestId,eventId,declaredPhase,timeBasis,assessedAt:timeBasis==='AT_ENTRY'?enteredAt:null,enteredAt}};

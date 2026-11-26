@@ -17,7 +17,7 @@ export function bodyInquiryModel({ref=null,record=null,read=null}={}){
  const parent=fatigueInquiryModel({ref,record});
  if(parent.state==='NO_RECORD')return result('NO_RECORD','保存した走行記録を選んでいません');
  if(parent.state!=='VERIFIED')return result('UNVERIFIED','元の走行記録を安全に照合できません');
- const nr=normalizeRecordRef(ref);if(!nr.ok)return result('UNVERIFIED','記録の種類またはIDを確認できません');
+ const nr=normalizeRecordRef(ref);if(!nr.ok)return result('UNVERIFIED','対象の記録とその種類を確認できません');
  if(read===null)return result('NOT_REQUESTED','自分の身体についての記述はまだ開いていません',{ref:nr.value});
  if(read?.ok!==true)return result('READ_ERROR','保存済みの身体の追記状態を読み取れません',{ref:nr.value});
  const status=read.value?.status;

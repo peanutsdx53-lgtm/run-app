@@ -1,6 +1,6 @@
 import {HISTORY_STYLES} from "./historyInlineStyles.js?v=20261121-history-more-filters-v2";
 import {linkedReflectionNotes} from "./noteRunLink.js";
-/* RunLoad v2 / History Ver.2 (approved visual contract)
+/* application v2 / History Ver.2 (approved visual contract)
  * Presentation only: receives saved records explicitly from an authorised source.
  * No localStorage reads, no synthetic history, no draft fallback, no speculative results.
  */

@@ -30,8 +30,8 @@ async function revealAdvancedFilters(history){
 }
 async function capture(page,width,language,stage){
  const metrics=await page.evaluate(()=>{
-  const h=document.querySelector('#runload-history-v2')?.shadowRoot;
-  const panel=document.querySelector('#runload-result-v4')?.shadowRoot;
+  const h=document.querySelector('#activity-history')?.shadowRoot;
+  const panel=document.querySelector('#activity-result')?.shadowRoot;
   const measure=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width}};
   const controls=[...(h?.querySelectorAll('.hx-source-controls button')||[])];
   const filterGroups=['[data-history-scope]','[data-record-source]','[data-record-kind]'].map(selector=>[...(h?.querySelectorAll(selector)||[])].map(measure));
@@ -41,7 +41,7 @@ async function capture(page,width,language,stage){
   const tabs=[...(panel?.querySelectorAll('[data-tab]')||[])];
   return {viewport:innerWidth,scroll:document.documentElement.scrollWidth,body:document.body.scrollWidth,
    sources:source.length,sourceButtons:controls.map(measure),filterGroups,searchHelpClosed:!!searchHelp&&!searchHelp.open,advancedOpen:advanced?.getAttribute('aria-expanded')==='true',tabs:tabs.map(measure),
-   stage:measure(document.querySelector('#runload-history-v2')||document.querySelector('#runload-result-v4')||document.body),
+   stage:measure(document.querySelector('#activity-history')||document.querySelector('#activity-result')||document.body),
    selected:measure(h?.querySelector('.selected-footer')||document.body),
    bottomNav:document.querySelector('.mobile-nav')?.offsetParent?measure(document.querySelector('.mobile-nav')):null
   };
@@ -117,12 +117,12 @@ try{
    });
    await page.reload({waitUntil:'networkidle'});
    await page.goto(base+'history',{waitUntil:'networkidle'});
-   const history=page.locator('#runload-history-v2');await history.waitFor();
+   const history=page.locator('#activity-history');await history.waitFor();
    const rows=history.locator('[data-select-id]');
    assert.equal(await rows.count(),3,'one GPS, one manual run and one rest day in one history');
    if(language==='en'){
     await page.waitForFunction(()=>{
-     const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+     const root=document.querySelector('#activity-history')?.shadowRoot;
      const text=[...(root?.querySelectorAll('[data-history-system-caption],.datebox span')||[])];
      return text.length===6&&text.every(el=>!/[ぁ-んァ-ン一-龯]/.test(el.textContent));
     },null,{timeout:12000});
@@ -137,7 +137,7 @@ try{
       (rest?'休養日':'走行日')+'：'+Number(y)+'年'+Number(m)+'月'+Number(d)+'日'};
     }).sort((a,b)=>a.date.localeCompare(b.date)||a.label.localeCompare(b.label));
    await page.waitForFunction(expected=>{
-    const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+    const root=document.querySelector('#activity-history')?.shadowRoot;
     const actual=[...(root?.querySelectorAll('time.datebox[datetime]')||[])].map(el=>({
      date:el.getAttribute('datetime'),label:el.getAttribute('aria-label')
     })).sort((a,b)=>a.date.localeCompare(b.date)||String(a.label).localeCompare(String(b.label)));
@@ -185,7 +185,7 @@ try{
    await gpsItem.click();
    if(language==='en'){
     await page.waitForFunction(()=>{
-     const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+     const root=document.querySelector('#activity-history')?.shadowRoot;
      const title=root?.querySelector('.focus-panel h3')?.textContent||'';
      const chosen=root?.querySelector('.selected-footer strong')?.textContent||'';
      return title.includes('November')&&chosen.includes('November')&&
@@ -198,7 +198,7 @@ try{
    await capture(page,width,language,'02-history-gps-selected');
    await history.locator('[data-open-record]').click();
    await page.waitForFunction(id=>location.hash==='#/result?gps='+encodeURIComponent(id),saved.gpsId);
-   const result=page.locator('#runload-result-v4');await result.locator('[data-tab="body"]').waitFor({state:'attached',timeout:15000});
+   const result=page.locator('#activity-result');await result.locator('[data-tab="body"]').waitFor({state:'attached',timeout:15000});
    assert.equal(await result.locator('[data-tab]').count(),3,'existing result 3 tabs unchanged');
    assert.equal(await result.locator('[data-result-source]').getAttribute('data-result-source'),'GPS_V2');
    assert.equal(await result.locator('[data-gps-dynamic-gate]').count(),0,'no dynamic route when opt-out');
@@ -225,8 +225,8 @@ try{
    assert.equal(await result.locator('[data-pane="fatigue"]').isVisible(),true);
    await capture(page,width,language,'05-result-manual-fatigue');
    await page.goto(base+'result?gps=gps-v2-nonexistent-000001',{waitUntil:'networkidle'});
-   await page.locator('#runload-result-v4 .gd-empty').waitFor({state:'visible',timeout:15000});
-   assert.match(await page.locator('#runload-result-v4').innerText(),language==='en'?/(GPS|record)/:/指定されたGPS記録がありません/);
+   await page.locator('#activity-result .gd-empty').waitFor({state:'visible',timeout:15000});
+   assert.match(await page.locator('#activity-result').innerText(),language==='en'?/(GPS|record)/:/指定されたGPS記録がありません/);
    assert.equal(await result.locator('[data-result-source]').count(),0,'unknown GPS must not silently show manual result');
    await capture(page,width,language,'06-unknown-gps-fail-closed');
    if(width===390){
@@ -236,7 +236,7 @@ try{
     await history.locator('[data-select-id="'+saved.gpsId+'"]').click();
     page.once('dialog',async d=>d.accept());
     await history.locator('[data-delete-gps-record]').click();
-    await page.waitForFunction(id=>!document.querySelector('#runload-history-v2')?.shadowRoot?.querySelector('[data-select-id="'+id+'"]'),saved.gpsId);
+    await page.waitForFunction(id=>!document.querySelector('#activity-history')?.shadowRoot?.querySelector('[data-select-id="'+id+'"]'),saved.gpsId);
     await page.reload({waitUntil:'networkidle'});
     assert.equal(await history.locator('[data-select-id="'+saved.gpsId+'"]').count(),0,'deletion persisted');
     await revealAdvancedFilters(history);

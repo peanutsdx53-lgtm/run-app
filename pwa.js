@@ -24,8 +24,8 @@ const PAGE_RELEASE=new URL(document.querySelector('script[src*="pwa.js?v="]')?.s
 let updateNoticeDismissed=false;
 function showAppUpdateNotice(){
  if(updateNoticeDismissed)return;
- if(document.getElementById("runload-update-notice"))return;
- const banner=document.createElement("div");banner.id="runload-update-notice";banner.setAttribute("role","status");
+ if(document.getElementById("app-update-notice"))return;
+ const banner=document.createElement("div");banner.id="app-update-notice";banner.setAttribute("role","status");
  banner.style.cssText="position:fixed;z-index:100000;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));max-width:450px;margin:auto;background:#092e46;color:#f4fdff;border:1px solid #3bd5dc;border-radius:14px;box-shadow:0 10px 35px #001522bb;padding:12px 14px;display:flex;gap:12px;align-items:center;font:600 14px/1.5 system-ui,sans-serif";
  const label=document.createElement("span");label.textContent=document.documentElement.lang==='en'?"A new version is available. Save or finish any unsaved work before reloading.":"新しい版を利用できます。入力中の内容を確認してから更新してください。";label.style.flex="1";
  const refresh=document.createElement("button");refresh.type="button";refresh.textContent=document.documentElement.lang==='en'?"Reload":"更新する";
@@ -126,9 +126,9 @@ if("serviceWorker" in navigator&&window.isSecureContext&&/^https?:$/.test(locati
  }
  window.addEventListener("load",()=>{
   // A failed/stuck boot must not permanently block recovery of an old PWA.
-  if(!window.runloadBoot||window.runloadBoot.isReady)void registerAfterReady();
+  if(!window.appBoot||window.appBoot.isReady)void registerAfterReady();
   else{
-   window.addEventListener("runload:boot-ready",()=>void registerAfterReady(),{once:true});
+   window.addEventListener("app:boot-ready",()=>void registerAfterReady(),{once:true});
    setTimeout(()=>void registerAfterReady(),8000);
   }
  });

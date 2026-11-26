@@ -1,5 +1,5 @@
 /**
- * RunLoad exploratory READ CONTRACT candidate V8, intentionally decoupled from app stores.
+ * application exploratory READ CONTRACT candidate V8, intentionally decoupled from app stores.
  * No writes, no sample fallback, no scientific estimate, no synthetic join across calendars.
  * Inputs must be supplied by the calling authority after provenance checks.
  */

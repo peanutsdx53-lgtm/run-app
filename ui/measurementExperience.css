@@ -1,4 +1,4 @@
-/* RunLoad v2 GPS screen, intentionally isolated from scientific/GPS engines. */
+/* application v2 GPS screen, intentionally isolated from scientific/GPS engines. */
 .app-shell:has(.gps-v2) .topbar{display:none}
 .app-shell:has(.gps-v2) .main-content{
  background:radial-gradient(circle at 90% 0%,#174f61 0%,transparent 46%),linear-gradient(145deg,#0b2939,#071a27);
@@ -137,8 +137,8 @@
 .app-shell:has([data-gps-live-page]) .mobile-nav[hidden]{display:none!important}
 
 
-#runload-history-v2{display:block}
-#runload-history-v2 + .gps-history-section{scroll-margin-top:20px;margin-top:18px}
+#activity-history{display:block}
+#activity-history + .gps-history-section{scroll-margin-top:20px;margin-top:18px}
 
 /* Real street map (network optional). The SVG route preview remains an offline fallback. */
 .gps-live-map-box{margin-top:16px;background:#0b2c3a;border:1px solid #426e7d;border-radius:14px;padding:13px;overflow:hidden}
@@ -204,7 +204,7 @@
 .gps-screen-awake-pref{margin:0 0 15px}
 .gps-screen-awake-pref small{max-width:43ch}
 
-/* GPS measurement finishing and interaction polish — current RunLoad dark palette. */
+/* GPS measurement finishing and interaction polish — current application dark palette. */
 .gps-v35-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
 .gps-v35-metrics>div{display:block;min-width:0}
 .gps-v35-metrics span{font-size:.72rem;letter-spacing:-.015em}
@@ -275,8 +275,8 @@
 
 /* C09: container-width guard for CSS zoom:2. Ordinary mobile layouts
  * remain unchanged; the research measurement and save contracts remain intact. */
-.gps-v35{container-name:runload-gps-narrow;container-type:inline-size}
-@container runload-gps-narrow (max-width:250px){
+.gps-v35{container-name:gps-narrow;container-type:inline-size}
+@container gps-narrow (max-width:250px){
  .gps-v35-panel{padding:10px;min-width:0}
  .gps-live-steps,.gps-live-prep-grid,.gps-v35-metrics,.gps-live-actions{grid-template-columns:minmax(0,1fr)}
  .gps-v35-metrics>div:first-child,.gps-live-actions--measuring .gps-action-finish{grid-column:auto}

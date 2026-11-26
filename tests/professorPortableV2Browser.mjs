@@ -137,7 +137,7 @@ try{
   const oldData=await canonical.readCanonical();
   if(!oldData.ok)throw Error('T-046 cannot read existing parent');
   const rejected=await canonical.snapshotTask(localStorage,store=>portable.preflightPortableRestore(store,conflictText));
-  if(rejected.ok||!rejected.reason.includes('同じ記録ID'))throw Error('T-046 did not detect same-ID diff-content '+JSON.stringify(rejected));
+  if(rejected.ok||!rejected.reason.includes('同じ記録または日付'))throw Error('T-046 did not detect same-ID diff-content '+JSON.stringify(rejected));
   const attempted=await canonical.portableMutation(localStorage,store=>portable.restorePortableBase(store,conflictText));
   if(attempted.ok)throw Error('T-046 corrupted merge passed restore');
   const current=await canonical.readCanonical();

@@ -79,7 +79,7 @@ async function doManual(page,{fault=false}={}){
  assert.ok(record);assert.equal('mentalExperience' in record.draft,false,'strict original draft never receives mental answer');
  assert.equal(record.rofBefore,0,'explicit ROF-J zero is a reported score, independent of mental fatigue');
  assert.equal(record.rofAfter,null,'unanswered after score is not zero');
- const view=page.locator('#runload-result-v4').locator('[data-mental-result]');
+ const view=page.locator('#activity-result').locator('[data-mental-result]');
  await view.waitFor({state:'attached'});
  if(fault){
   await page.locator('[data-tab="fatigue"]').first().click();
@@ -87,7 +87,7 @@ async function doManual(page,{fault=false}={}){
   assert.match(await view.innerText(),/走行記録は保存できましたが/);
   await page.locator('[data-mental-retry]').click();
  }
- await page.waitForFunction(()=>document.querySelector('#runload-result-v4')?.shadowRoot?.querySelector('[data-mental-result]')?.textContent?.includes('走る前の経験を思い出して申告'),null,{timeout:20000});
+ await page.waitForFunction(()=>document.querySelector('#activity-result')?.shadowRoot?.querySelector('[data-mental-result]')?.textContent?.includes('走る前の経験を思い出して申告'),null,{timeout:20000});
  const read=await page.evaluate(async(id)=>{
   const [{readMental},canonical]=await Promise.all([import('/ui/mentalSaveFlow.js'),import('/ui/manualRunCanonical.js')]);
   const ref={sourceType:'MANUAL',recordId:id},mental=await readMental(ref),raw=(await canonical.readCanonical()).raw;
@@ -147,7 +147,7 @@ try{
     engine:engineName,status:'PASS',originalPreserved:true,states:'read-error distinct from unanswered'}));
    // T-084: real mental answer and actual private free text on the result,
    // while PNG canvas draw calls and print CSS exclude it by default.
-   const host=page.locator('#runload-result-v4');
+   const host=page.locator('#activity-result');
    await host.locator('[data-tab="fatigue"]').first().click();
    await host.locator('.mx-result-details > summary').click();
    assert.match(await host.locator('.mx-result-note').innerText(),/走る前の経験を思い出して申告/);
@@ -231,7 +231,7 @@ try{
   });
   await page.locator('[data-manual-run-save]').click();
   await page.waitForFunction(()=>window.__m7ParentIdFailure===true&&
-   document.querySelector('[data-record-review]')?.textContent?.includes('保存操作IDを作成できない'),
+   document.querySelector('[data-record-review]')?.textContent?.includes('保存の準備ができない'),
    null,{timeout:15000});
   assert.equal(await page.evaluate(()=>window.__m7ParentIdFailure),true);
   assert.match(page.url(),/#\/record-review/);
@@ -277,7 +277,7 @@ try{
   await page.goto(base+'#/record-review',{waitUntil:'networkidle'});
   await page.locator('[data-manual-run-save]').click();
   await page.waitForURL(/#\/result\?record=run-v1-/,{timeout:20000});
-  const result=page.locator('#runload-result-v4');
+  const result=page.locator('#activity-result');
   assert.match(await result.locator('[data-source-distance]').innerText(),/本人入力/);
   assert.match(await result.locator('[data-source-pace]').innerText(),/算出/);
   const parent=await page.evaluate(async()=>{
@@ -355,7 +355,7 @@ try{
   await page.locator('[data-manual-run-save]').click();
   await page.waitForURL(/#\/result\?record=run-v1-/,{timeout:20000});
   const id=decodeURIComponent(new URL(page.url()).hash.split('record=')[1]);
-  const result=page.locator('#runload-result-v4');
+  const result=page.locator('#activity-result');
   await result.locator('[data-tab="fatigue"]').first().click();
   const fatigue=await result.locator('.rv4-fatigue-numbers').innerText();
   assert.ok(fatigue.includes(String(t.before))&&fatigue.includes(String(t.after)),t.id+' both scores visible');
@@ -367,7 +367,7 @@ try{
    await result.locator('.rv4-details:not(.rv4-region-evidence) > summary').click();
    assert.match(await result.locator('.rv4-details:not(.rv4-region-evidence) .rv4-note').innerText(),new RegExp(t.memo));
   }
-  if(t.mental)await page.waitForFunction(()=>document.querySelector('#runload-result-v4')?.shadowRoot?.querySelector('[data-mental-result]')?.textContent?.includes('本人の任意申告'),null,{timeout:20000});
+  if(t.mental)await page.waitForFunction(()=>document.querySelector('#activity-result')?.shadowRoot?.querySelector('[data-mental-result]')?.textContent?.includes('本人の任意申告'),null,{timeout:20000});
   const saved=await page.evaluate(async recordId=>{
    const [canonical,flow]=await Promise.all([import('/ui/manualRunCanonical.js'),import('/ui/mentalSaveFlow.js')]);
    const data=await canonical.readCanonical();
@@ -434,7 +434,7 @@ try{
   assert.equal(e.assessedAt?.slice(0,10),runDate,'declared assessment date differs from input-operation date');
   assert.equal((Date.parse(e.assessedAt)-Date.parse(details.exerciseTiming.endedAt))/60000,10,'participant reports the assessment ten minutes after the declared finish');
   assert.notEqual(e.assessedAt,e.capturedAt,'assessment is not inferred from input timestamp');
-  const host=page.locator('#runload-result-v4');
+  const host=page.locator('#activity-result');
   await host.locator('[data-tab="fatigue"]').first().click();
   await host.locator('.rv4-fatigue-method > summary').click();
   const visible=await host.locator('.rv4-fatigue-method').innerText();

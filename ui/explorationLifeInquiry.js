@@ -23,9 +23,9 @@ const validDate=s=>{
 export function lifeInquiryModel({ref=null,record=null,conditions=null,rests=null,selection=null}={}){
  const parent=fatigueInquiryModel({ref,record});
  if(parent.state==='NO_RECORD')return result('NO_RUN','走行記録が指定されていません');
- if(parent.state!=='VERIFIED')return result('UNVERIFIED','走行記録の出所とIDを照合できません');
+ if(parent.state!=='VERIFIED')return result('UNVERIFIED','対象の走行記録と情報の出所を照合できません');
  const n=normalizeRecordRef(ref);
- if(!n.ok)return result('UNVERIFIED','走行記録のIDが正しくありません');
+ if(!n.ok)return result('UNVERIFIED','対象の走行記録を確認できません');
  const current={ref:n.value,date:record.date||'不明',kind:n.value.sourceType};
  if(selection===null)return result('NEED_SELECTION','比較する生活または休養の記録は、まだ本人が選んでいません',{current});
  if(selection?.duplicate===true||selection?.invalid===true||

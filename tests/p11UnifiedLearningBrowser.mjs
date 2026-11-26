@@ -121,15 +121,15 @@ try{
   await page.locator('.ex-dialog').waitFor();
   assert.match(await page.locator('.ex-dialog').innerText(),/ふり返りノート/);
   await page.locator('.ex-dialog [data-ex-action="close"]').click();
-  await audit('history','#runload-history-v2','history');
-  headingSizes.history=await recordScreenTitle('#runload-history-v2 .hx-title-line h1');
-  const historyHelp=page.locator('#runload-history-v2 .hx-title-line .rl-screen-help');
+  await audit('history','#activity-history','history');
+  headingSizes.history=await recordScreenTitle('#activity-history .hx-title-line h1');
+  const historyHelp=page.locator('#activity-history .hx-title-line .rl-screen-help');
   assert.equal(await page.locator('.gps-history-shortcut').count(),0);
   const gpsDetails=page.locator('[data-gps-history-disclosure]');
   assert.equal(await gpsDetails.count(),1);
   assert.equal(await gpsDetails.evaluate(el=>el.open),false);
   const helpBounds=await historyHelp.boundingBox();
-  const titleBounds=await page.locator('#runload-history-v2 .hx-title-line h1').boundingBox();
+  const titleBounds=await page.locator('#activity-history .hx-title-line h1').boundingBox();
   assert.ok(helpBounds.x>titleBounds.x+titleBounds.width+30,'History help must be right aligned');
   await gpsDetails.locator(':scope > summary').click();
   assert.equal(await page.locator('[data-gps-history-tools]').count(),1);
@@ -142,7 +142,7 @@ try{
   assert.equal(gpsSize.border,'0px','GPS disclosure must not be nested in a second bordered card');
   assert.equal(gpsSize.padding,'0px','GPS outer section should have no extra inset');
   assert.ok(gpsSize.height<=72,'GPS summary stays compact '+JSON.stringify(gpsSize));
-  assert.equal(await page.locator('#runload-history-v2 .hx-title-line .rl-screen-help').count(),1);
+  assert.equal(await page.locator('#activity-history .hx-title-line .rl-screen-help').count(),1);
   await audit('settings','[data-settings-v2]','settings');
   headingSizes.settings=await recordScreenTitle('.s2-page .s2-heading h1');
   await audit('record-start','.record-v3.rv-method','record');

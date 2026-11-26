@@ -9,7 +9,7 @@ const promiseRequest=req=>new Promise((resolve,reject)=>{req.onsuccess=()=>resol
 const promiseTx=tx=>new Promise((resolve,reject)=>{tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error||Error('TX'));tx.onabort=()=>reject(tx.error||Error('ABORT'));});
 /** The four stores are read as one generation, for only the requested GPS ID. */
 export async function readPrivateGpsRunNotes(recordId){
- if(!validId(recordId))return {ok:false,code:'BAD_REF',reason:'保存済みGPSのIDが不正です'};
+ if(!validId(recordId))return {ok:false,code:'BAD_REF',reason:'対象の保存済みGPS記録を確認できません'};
  const ready=await readGpsV2Summaries();
  if(!ready.ok)return {ok:false,code:'UNREADABLE_PARENT',reason:'GPS元記録を読み取れません'};
  let db;

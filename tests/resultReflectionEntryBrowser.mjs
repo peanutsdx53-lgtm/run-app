@@ -45,7 +45,7 @@ try{
    const btn=page.locator('[data-result-to-reflection]');await btn.waitFor({state:'visible'});
    if(zoom===200)await page.evaluate(()=>{document.documentElement.style.fontSize='200%'})
    await page.waitForFunction(lang=>document.documentElement.lang===lang,language);
-   assert.equal(await page.locator('#runload-result-v4 [data-tab]').count(),3,'result stays three tabs');
+   assert.equal(await page.locator('#activity-result [data-tab]').count(),3,'result stays three tabs');
    const label=await btn.innerText();
    assert.ok(label.includes(language==='en'?'Write a Note or Question':'気づき・次の問い'),language+' CTA must be translated');
    const bounds=await btn.boundingBox();assert.ok(bounds&&bounds.height>=43,'44px minimum tap target');

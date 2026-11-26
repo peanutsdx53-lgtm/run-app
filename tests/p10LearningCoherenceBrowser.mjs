@@ -38,7 +38,7 @@ try{
    reports.push({engine,width,name,ok:true,...x});
   }
   await page.goto(origin+'learning',{waitUntil:'networkidle'});
-  const rootUI=page.locator('#runload-learning');
+  const rootUI=page.locator('#learning-root');
   await rootUI.locator('.lr-catalog').waitFor();
   assert.equal(await rootUI.locator('.lr-course').count(),3);
   assert.equal(await rootUI.locator('.lr-hero,.lr-progress-panel').count(),0);

@@ -221,7 +221,7 @@ try{
     if(route==='#/history'){
      // History renders its calendar/list in a Shadow DOM, while the newly
      // collapsed GPS control keeps the light DOM intentionally brief.
-     const history=page.locator('#runload-history-v2');
+     const history=page.locator('#activity-history');
      await history.locator('.hx-title-line h1').waitFor();
      assert.equal((await history.locator('.hx-title-line h1').innerText()).trim(),'履歴');
      assert.equal(await page.locator('[data-gps-history-disclosure]').count(),1);
@@ -259,7 +259,7 @@ try{
    assert.match(offlineLabels,/2026-10-25/);
    assert.match(offlineComparison,/距離/);
    await page.locator('.rv4-export-menu summary').click();
-    const [offlineImage]=await Promise.all([page.waitForEvent('download'),page.locator('#runload-result-v4 [data-download]').click()]);
+    const [offlineImage]=await Promise.all([page.waitForEvent('download'),page.locator('#activity-result [data-download]').click()]);
    assert.equal(offlineImage.suggestedFilename(),'走行結果.png');
    const savedPng=resolve(root,'screenshots',prefix+'-offline-export.png');
    await offlineImage.saveAs(savedPng);

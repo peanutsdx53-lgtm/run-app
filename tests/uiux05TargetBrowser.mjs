@@ -35,7 +35,7 @@ try{
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   // S15: selected mode and screen switches are communicated to assistive technology.
   await page.goto(base+'consultation',{waitUntil:'networkidle'});
-  const c=page.locator('#runload-consultation');await c.waitFor();
+  const c=page.locator('#consultation-root');await c.waitFor();
   assert.equal(await c.locator('[data-mode-button="single"]').getAttribute('aria-pressed'),'true');
   assert.equal(await c.locator('[data-mode-button="period"]').getAttribute('aria-pressed'),'false');
   await c.locator('[data-mode-button="period"]').click();

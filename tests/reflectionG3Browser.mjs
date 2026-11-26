@@ -61,11 +61,11 @@ try{
    await summary.waitFor({state:'visible'});
    if(zoom===200)await page.evaluate(()=>{document.documentElement.style.fontSize='200%'})
    await page.waitForFunction(lang=>document.documentElement.lang===lang,language);
-   assert.equal(await page.locator('#runload-result-v4 [data-tab]').count(),3,'three result tabs unchanged');
+   assert.equal(await page.locator('#activity-result [data-tab]').count(),3,'three result tabs unchanged');
    assert.match(await summary.innerText(),/2/,'selected A has two linked notes including legacy');
    assert.ok(await review.isVisible(),'saved note link exists');
    const rect=await review.boundingBox();assert.ok(rect&&rect.height>=43&&rect.x>=-1&&rect.x+rect.width<=width+2,'revisit link reachable');
-   assert.ok(!(await page.locator('#runload-result-v4').innerText()).includes('OTHER_RUN_B_PRIVATE'),'no private note body in Result');
+   assert.ok(!(await page.locator('#activity-result').innerText()).includes('OTHER_RUN_B_PRIVATE'),'no private note body in Result');
    await page.screenshot({path:resolve(out,engine+'-'+language+'-'+width+'-'+zoom+'-result.png'),fullPage:true,animations:'disabled'});
    stage='open review from result';
    await review.click();
@@ -103,7 +103,7 @@ try{
    const chosen=page.locator('[data-select-id="'+savedId+'"]');await chosen.waitFor({state:'visible'});await chosen.click();
    const historyNotes=page.locator('[data-history-reflection-count]');await historyNotes.waitFor({state:'visible'});
    assert.match(await historyNotes.innerText(),/2/);
-   const historyText=await page.locator('#runload-history-v2').innerText();
+   const historyText=await page.locator('#activity-history').innerText();
    assert.ok(!historyText.includes('OTHER_RUN_B_PRIVATE')&&!historyText.includes('A_REVISED_BY_THE_USER'),'history never auto-discloses memo body');
    stage='open review from history';
    await page.locator('[data-open-reflections]').click();

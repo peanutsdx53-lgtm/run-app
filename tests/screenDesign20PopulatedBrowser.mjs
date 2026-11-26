@@ -167,7 +167,7 @@ if(extended&&(!widths.length||widths.length>3||
    assert.match(await t.innerText(),/記録内容の確認/);
    assert.equal(await t.locator('[data-manual-run-save]').count(),1);
   });
-  await verify('S09','result?record='+encodeURIComponent(run),'#runload-result-v4',async t=>{
+  await verify('S09','result?record='+encodeURIComponent(run),'#activity-result',async t=>{
    assert.equal(await t.locator('[data-view="front"]').count(),1);
    assert.equal(await t.locator('[data-view="back"]').count(),1);
    assert.equal(await t.locator('[data-view="sole"]').count(),1);
@@ -175,19 +175,19 @@ if(extended&&(!widths.length||widths.length>3||
    assert.match(await t.locator('.rv4-notice').innerText(),/参考値|文献|算出/);
   });
   await page.goto(host+'history',{waitUntil:'networkidle'});
-  await page.locator('#runload-history-v2 .stage').waitFor();
-  await page.locator('#runload-history-v2 .hx-scope [data-history-scope="all"]').click();
+  await page.locator('#activity-history .stage').waitFor();
+  await page.locator('#activity-history .hx-scope [data-history-scope="all"]').click();
   await page.locator('[data-select-id="'+run+'"]').click();
   const gpsCard=page.locator('.gps-history-disclosure');
   await gpsCard.waitFor();
   if(!await gpsCard.evaluate(el=>el.open))await gpsCard.locator('summary').first().click();
-  await verify('S10',null,'#runload-history-v2',async t=>{
+  await verify('S10',null,'#activity-history',async t=>{
    assert.equal(await t.locator('.stage').count(),1);
    assert.equal(await t.locator('.selected-footer').count(),1,'explicitly selected saved run is visible');
    assert.equal(await t.locator('.hx-record-id').count(),0,'internal record ID is never shown');
    assert.equal(await t.locator('[data-open-record]').isEnabled(),true,'selected running record has a results route');
    const geometry=await page.evaluate(()=>{
-    const root=document.querySelector('#runload-history-v2')?.shadowRoot;
+    const root=document.querySelector('#activity-history')?.shadowRoot;
     const upper=root?.querySelector('.stage .hero');
     const gps=document.querySelector('.gps-history-disclosure');
     const tools=document.querySelector('.gps-history-tools>summary');
@@ -230,7 +230,7 @@ if(extended&&(!widths.length||widths.length>3||
    await t.locator('[data-cj-day]:not([disabled])').first().click();
    assert.match(await t.locator('.cj-day-memo').innerText(),/本人による記録|前日の生活記録/);
   });
-  await verify('S15','consultation','#runload-consultation',async t=>{
+  await verify('S15','consultation','#consultation-root',async t=>{
    assert.equal(await t.locator('#cp-target').count(),1);
    assert.match(await t.innerText(),/相談|共有/);
   });
@@ -241,14 +241,14 @@ if(extended&&(!widths.length||widths.length>3||
    assert.match(await t.innerText(),smartphone?/GPS|測定/:/GPS測定はスマートフォン専用/);
    if(!smartphone)assert.equal(await page.locator('[data-gps-action="start"]').count(),0,'PC must not offer GPS start');
   });
-  await verify('S19','result?record='+encodeURIComponent(run),'#runload-result-v4',async t=>{
+  await verify('S19','result?record='+encodeURIComponent(run),'#activity-result',async t=>{
    const button=t.locator('[data-download]');
    assert.equal(await button.count(),1);
    assert.equal(await button.isEnabled(),true);
    assert.match(await t.locator('.rv4-notice').innerText(),/参考値|文献|算出/);
   });
   // S19 is not a decorative export button: create a real PNG from a persisted record.
-  const result=page.locator('#runload-result-v4');
+  const result=page.locator('#activity-result');
   await result.locator('.rv4-export-menu summary').click();
   const [download]=await Promise.all([page.waitForEvent('download',{timeout:10000}),result.locator('[data-download]').click()]);
   assert.equal(download.suggestedFilename(),'走行結果.png');

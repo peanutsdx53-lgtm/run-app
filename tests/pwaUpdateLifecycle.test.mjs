@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
 const source=readFileSync(new URL('../pwa.js',import.meta.url),'utf8');
-const release='20261126-copy-v1';
+const release='20261126-cleanup-v1';
 
 class Emitter{
  constructor(){this.listeners=new Map()}
@@ -34,7 +34,7 @@ function mockApp({installed,controllerVersion=release}={}){
  document.querySelector=selector=>selector.includes('pwa.js?v=')?{src:'https://example.test/run-app/pwa.js?v='+release}:null;
  const window=new Emitter();
  window.isSecureContext=true;
- window.runloadBoot={isReady:true};
+ window.appBoot={isReady:true};
  const location={protocol:'https:',href:'https://example.test/run-app/',reload(){reloads++}};
  class MessageChannel{
   constructor(){
@@ -67,7 +67,7 @@ function mockApp({installed,controllerVersion=release}={}){
   document,window,navigator,registration,
   worker,
   async boot(){window.fire('load');await tick()},
-  banner(){return document.getElementById('runload-update-notice')},
+  banner(){return document.getElementById('app-update-notice')},
   reloads:()=>reloads,
   setNow(value){now=value}
  };

@@ -8,7 +8,7 @@ export const ENGLISH_FINAL_BACKUP=Object.freeze({
 "自由記述を保存しました。": "Reflection Saved.",
 "読み取り中です。": "Reading Saved Reflections…",
 "保存中です。": "Saving…",
-"安全な操作IDを生成できません": "Could Not Generate a Safe Operation ID",
+"保存に必要な準備ができません。保存は行っていません": "Could not prepare the save safely. Nothing was saved.",
 "現在の本文を完全に削除します。取り消せません。削除しますか？": "Permanently delete current text? This cannot be undone. Delete?",
 "現在の本文を完全に削除します。元には戻せません。削除しますか？": "Permanently delete the current text? This cannot be undone. Delete?",
 "GPS走行後の自由記述も含める（初期OFF・別途明示選択）": "Include Post-Run GPS Reflections (Off by Default; Separate Opt-In)",

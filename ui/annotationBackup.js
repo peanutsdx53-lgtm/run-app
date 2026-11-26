@@ -45,7 +45,7 @@ export function inspectAnnotationBundleShape(bundle){
  for(const e of events){
   if(!validateAnnotationEvent(e).ok||ids.has(e.eventId)||requests.has(e.clientRequestId)||
    annotationUtf8Bytes(JSON.stringify(e))>ANNOTATION_MAX_EVENT_BYTES)
-   return fail('BAD_EVENT','追記に不正な値・識別子重複があります');
+   return fail('BAD_EVENT','追記の内容に不正な値または重複があります');
   const nr=normalizeRecordRef(e.recordRef);if(!nr.ok)return nr;
   ids.add(e.eventId);requests.add(e.clientRequestId);
   if(!groups.has(e.streamKey))groups.set(e.streamKey,[]);
@@ -129,7 +129,7 @@ export function planAnnotationMerge(existing,incoming){
    return fail('REQUEST_CONFLICT','同じ走行項目の追記履歴が異なります');
   for(const e of rows.slice(prior.length)){
    if(knownIds.has(e.eventId)||requests.has(e.clientRequestId))
-    return fail('REQUEST_CONFLICT','追記イベントまたは操作IDが既存データと衝突しています');
+    return fail('REQUEST_CONFLICT','追記の履歴が既存の記録と一致しません');
    knownIds.set(e.eventId,e);requests.set(e.clientRequestId,e);merged.push(e);
   }
  }
@@ -179,7 +179,7 @@ export async function importAnnotationBundle(incoming,{resolveParent}={}){
    // Preserving an existing stream prefix is safe; skip previously committed IDs.
    // Read in transaction to avoid overwriting a different event with the same id.
    const before=await get(es.get(e.eventId));
-   if(before){if(!identical(before,e)){tx.abort();await complete.catch(()=>{});return fail('REQUEST_CONFLICT','追記ID衝突');}}
+   if(before){if(!identical(before,e)){tx.abort();await complete.catch(()=>{});return fail('REQUEST_CONFLICT','追記が既存の記録と重複しています');}}
    else es.add(e);
   }
   for(const head of plan.value.bundle.heads)hs.put(head);

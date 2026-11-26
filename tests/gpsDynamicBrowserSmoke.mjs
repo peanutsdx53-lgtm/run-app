@@ -115,7 +115,7 @@ try{
    withDetail:true,backup:true,backupValidated:true},'IndexedDB v2 save and export: '+JSON.stringify(persisted));
   await page.reload({waitUntil:'networkidle'});
   await page.goto('http://127.0.0.1:4189/#/result?gps=gps-v2-00000000-0000-4000-8000-000000000001',{waitUntil:'networkidle'});
-  const sharedResult=page.locator('#runload-result-v4');
+  const sharedResult=page.locator('#activity-result');
   await sharedResult.locator('.rv4-mobile-tabs').waitFor({state:'attached'});
   assert.equal(await sharedResult.locator('[data-tab="body"]').count(),1);
   assert.equal(await sharedResult.locator('[data-tab="fatigue"]').count(),1);

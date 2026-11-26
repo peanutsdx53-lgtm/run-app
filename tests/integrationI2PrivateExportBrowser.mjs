@@ -146,7 +146,7 @@ try{
   }
   await goto('#/result?record='+encodeURIComponent(ids.manualId)+'&view=fatigue');
   await page.locator('.rv4-export-menu > summary').waitFor();
-  const result=page.locator('#runload-result-v4');
+  const result=page.locator('#activity-result');
   await result.locator('.rv4-export-menu > summary').click();
   assert.equal(await result.locator('[data-export-date]').isChecked(),false);
   assert.equal(await result.locator('[data-export-rof]').isChecked(),false);
@@ -175,7 +175,7 @@ try{
   // Switching result resets previous explicit disclosure permission.
   await goto('#/result?gps='+encodeURIComponent(ids.gpsId)+'&view=fatigue');
   await page.reload({waitUntil:'networkidle'});
-  const gpsResult=page.locator('#runload-result-v4');
+  const gpsResult=page.locator('#activity-result');
   await gpsResult.locator('.rv4-export-menu > summary').waitFor({timeout:20000});
   await gpsResult.locator('.rv4-export-menu > summary').click();
   assert.equal(await gpsResult.locator('[data-export-date]').isChecked(),false);

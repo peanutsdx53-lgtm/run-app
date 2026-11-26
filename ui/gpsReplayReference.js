@@ -1,4 +1,4 @@
-/* RunLoad GPS dynamic-reference adapter.
+/* application GPS dynamic-reference adapter.
  * Independent of storage, UI and the authoritative three activity engines.
  * References describe literature speed conditions, NOT measured body load.
  * Sparse points, pause/GPS gaps and mixed activity must never be interpolated.

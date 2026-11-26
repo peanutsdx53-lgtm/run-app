@@ -62,7 +62,7 @@ export function trendSvg(records){
  const dots=points.map(p=>'<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4.2" fill="#079cab" stroke="white" stroke-width="1.5"/><text text-anchor="middle" x="'+p.x.toFixed(1)+'" y="'+Math.max(26,p.y-9).toFixed(1)+'" font-size="10.5" font-weight="750" fill="#196b79">'+p.r.distanceKm.toFixed(1)+'</text>').join('');
  return '<svg class="cp-trend" viewBox="0 0 630 172" role="img" aria-label="保存済み運動記録の距離の推移。縦軸は距離km、横軸は記録日"><text x="24" y="19" class="cp-trend-axis-title">距離（km）</text>'+lines+'<path fill="none" stroke="#078f9f" stroke-width="3" d="'+points.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'"/>'+dots+xs+'</svg>';
 }
-export function renderConsultation(){return '<section id="runload-consultation" aria-label="相談・共有">'+MARKUP+'</section>';}
+export function renderConsultation(){return '<section id="consultation-root" aria-label="相談・共有">'+MARKUP+'</section>';}
 function figures(rows){return BODY_REGION_VIEWS.map((v,i)=>{
  const prefix='cpsvg'+i;
  const clip=bodyReferenceSilhouetteClipDef(v,prefix);

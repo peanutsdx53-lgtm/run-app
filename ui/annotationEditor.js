@@ -67,13 +67,13 @@ export async function commitPostHocRequest(q,{openStore=openAnnotationStore,appe
    const value=found.value;
    if(!value)return written;
    const digest=await digestAnnotationInput(q);
-   if(value.eventId!==q.eventId||value.requestDigest!==digest||value.recordRef.sourceType!==nr.value.sourceType||value.recordRef.recordId!==nr.value.recordId)return err('REQUEST_CONFLICT','同じ操作IDに異なる内容が保存されています');
+   if(value.eventId!==q.eventId||value.requestDigest!==digest||value.recordRef.sourceType!==nr.value.sourceType||value.recordRef.recordId!==nr.value.recordId)return err('REQUEST_CONFLICT','前回の操作に異なる内容が保存されています');
   }
   const current=await read(db,nr.value,q.fieldKey,resolveParent);
   if(!current.ok)return current;
   if(current.value.latest?.eventId!==q.eventId||current.value.status!==(q.operation==='RETRACT'?'RETRACTED':'ACTIVE'))return err('HEAD_CONFLICT','別の操作が先に記録を更新しました。再読込してください');
   return {ok:true,value:current.value};
- }catch{return err('WRITE_FAILED','追記の保存を確認できません。同じ操作IDで再確認してください')}
+ }catch{return err('WRITE_FAILED','追記の保存を確認できません。新しく保存せず、前回の保存結果を確認してください')}
  finally{try{db.close()}catch{}}
 }
 export async function inspectPostHoc(ref,fieldKey,{openStore=openAnnotationStore,read=readEffectiveAnnotation,resolveParent=resolveRecord}={}){
@@ -85,7 +85,7 @@ export async function inspectPostHoc(ref,fieldKey,{openStore=openAnnotationStore
 export async function mountAnnotationEditor(root,hash,services={}){
  if(!root)return;
  const parsed=parseEditorLink(hash);
- const style='<link rel="stylesheet" href="./ui/annotationEditor.css?v=20261111-posthoc-design-v2">';
+ const style='<link rel="stylesheet" href="./ui/annotationEditor.css?v=20261126-cleanup-v1">';
  if(!parsed.ok){root.innerHTML=style+'<section class="ax-page"><p role="alert">'+esc(parsed.reason)+'</p><a href="#/history">履歴へ戻る</a></section>';return;}
  const ref=parsed.value,record=await (services.resolveParent||resolveRecord)(ref);
  if(!root.isConnected)return;

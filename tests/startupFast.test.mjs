@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const source=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const version='20261126-copy-v1';
-const pwaVersion='20261126-copy-v1';
-const cacheVersion='20261126-copy-v1';
+const version='20261126-cleanup-v1';
+const pwaVersion='20261126-cleanup-v1';
+const cacheVersion='20261126-cleanup-v1';
 test('all 46 current startup modules load as one concurrent import batch',()=>{
  const app=source('app.js');
  const block=app.slice(app.indexOf('const ['),app.indexOf('const [initialGpsV2Cache,canonicalStartup]'));
@@ -26,9 +26,9 @@ test('boot shell has meaningful states and retry, never hides a permanent failur
  assert.match(html,/通常より時間がかかっています/);
  assert.match(html,/画面を開けませんでした/);
  assert.match(html,/画面の準備を続けています/);
- assert.match(app,/window\.runloadBoot\?\.ready\(\)/);
+ assert.match(app,/window\.appBoot\?\.ready\(\)/);
  assert.match(app,/\)\.catch\(error=>/);
- assert.match(app,/window\.runloadBoot\?\.fail\(\)/);
+ assert.match(app,/window\.appBoot\?\.fail\(\)/);
  assert.doesNotMatch(html,/RunLoad|ランロード/);
 });
 test('boot does not request blanket local data deletion, or force artificial delay',()=>{
@@ -40,11 +40,11 @@ test('boot does not request blanket local data deletion, or force artificial del
 });
 test('PWA precache registration runs after the real first view and keeps full offline assets',()=>{
  const pwa=source('pwa.js'),sw=source('sw.js'),html=source('index.html');
- assert.match(pwa,/runload:boot-ready/);
+ assert.match(pwa,/app:boot-ready/);
  assert.match(sw,/url\.searchParams\.has\("v"\)/);
  assert.match(sw,/activeCache\.match\(req\)/);
  assert.match(sw,/if\(cachedVersion\)return cachedVersion/);
- assert.match(pwa,/window\.runloadBoot\.isReady/);
+ assert.match(pwa,/window\.appBoot\.isReady/);
  assert.match(sw,new RegExp('runload-ui-next-shell-'+cacheVersion));
  assert.ok(sw.includes('app.js?v='+version));
  assert.ok(sw.includes('pwa.js?v='+pwaVersion));
@@ -60,7 +60,7 @@ test('PWA update notification checks release identity on foreground without forc
  assert.match(pwa,/visibilitychange/);
  assert.match(pwa,/pageshow/);
  assert.match(pwa,/controllerchange/);
- assert.match(pwa,/runload:boot-ready/);
+ assert.match(pwa,/app:boot-ready/);
  assert.match(pwa,/navigator\.serviceWorker\.getRegistration/);
  assert.match(pwa,/RUNLOAD_GET_RELEASE/);
  assert.match(sw,/RUNLOAD_RELEASE/);

@@ -25,7 +25,7 @@ try{
   const errs=[];page.on('pageerror',e=>errs.push(String(e)));
   await page.addInitScript(()=>localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:'ja'})));
   await page.goto('http://127.0.0.1:4181/#/consultation',{waitUntil:'networkidle'});
-  assert.equal(await page.locator('#runload-consultation').count(),1,`${name}: route`);
+  assert.equal(await page.locator('#consultation-root').count(),1,`${name}: route`);
   // WCAG 2.2 keyboard focus visibility (2.4.7) and browser text legibility.
   const chooser=page.locator('#cp-target');
   await chooser.focus();
@@ -156,7 +156,7 @@ try{
      contentOverflow:el.querySelector('.cp-paper').scrollHeight-el.querySelector('.cp-paper').clientHeight,
      wrapperHeight:el.getBoundingClientRect().height,
      textHeight:el.querySelector('.cp-paper').getBoundingClientRect().height,
-     scale:Number.parseFloat(getComputedStyle(document.querySelector('#runload-consultation')).getPropertyValue('--paper-scale'))||0
+     scale:Number.parseFloat(getComputedStyle(document.querySelector('#consultation-root')).getPropertyValue('--paper-scale'))||0
     })));
     assert.ok(preview.every(x=>x.contentOverflow<=3),'screen preview does not clip long user text: '+JSON.stringify(preview));
     await page.screenshot({path:resolve(out,'consultation-print-'+mode+'-long-screen-preview.png'),fullPage:true});

@@ -63,8 +63,8 @@ try{
   assert.equal(await restSave.isEnabled(),true);
   assert.match(await review.innerText(),/走行の結果画面は表示しません/);
   await restSave.click();
-  await page.locator('#runload-history-v2').waitFor();
-  const history=page.locator('#runload-history-v2');
+  await page.locator('#activity-history').waitFor();
+  const history=page.locator('#activity-history');
   const verifySavedRest=async()=>{
    // History defaults to the present month; the saved Oct 2026 entry may be outside it.
    // Navigate with the actual month control rather than assuming a test execution date.
@@ -99,7 +99,7 @@ try{
   assert.equal(record.run.length,0);
   assert.equal(record.rest.records[0].date,'2026-10-29');
   await page.reload({waitUntil:'networkidle'});
-  await page.locator('#runload-history-v2').waitFor();
+  await page.locator('#activity-history').waitFor();
   await verifySavedRest();
   await page.screenshot({path:resolve(shots,engine+'-'+width+'-rest-reloaded.png'),fullPage:true,animations:'disabled'});
   assert.deepEqual(errors,[],'real browser no errors');

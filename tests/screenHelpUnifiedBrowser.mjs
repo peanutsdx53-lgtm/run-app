@@ -42,8 +42,8 @@ const screenDefs=[
  ['condition','.cj-screen .cj-page-head','.cj-screen .cj-page-head .rl-screen-help>summary','details'],
  ['consultation','.cp-app .cp-head','.cp-app .cp-head .rl-screen-help>summary','details'],
  ['settings','.s2-page .s2-heading','.s2-page .s2-heading>.rl-screen-help>summary','details'],
- ['history','#runload-history-v2 .stage .hx-title-line','#runload-history-v2 .hx-title-line .rl-screen-help>summary','details'],
- ['result','#runload-result-v4 .rv4-header','#runload-result-v4 .rv4-header>.rv4-header-help>summary','details'],
+ ['history','#activity-history .stage .hx-title-line','#activity-history .hx-title-line .rl-screen-help>summary','details'],
+ ['result','#activity-result .rv4-header','#activity-result .rv4-header>.rv4-header-help>summary','details'],
  ['measurement','.gps-v2-header','.gps-v2-header .rl-screen-help>summary','details']
 ];
 const configs=[[320,'ja',200],[390,'en',200],[768,'ja',100],[1440,'en',100]];
