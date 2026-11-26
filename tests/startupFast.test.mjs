@@ -2,14 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const source=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const version='20261126-cleanup-v1';
-const pwaVersion='20261126-cleanup-v1';
-const cacheVersion='20261126-cleanup-v1';
-test('all 46 current startup modules load as one concurrent import batch',()=>{
+const version='20261126-cleanup-v2';
+const pwaVersion='20261126-cleanup-v2';
+const cacheVersion='20261126-cleanup-v2';
+test('all 45 current startup modules load as one concurrent import batch',()=>{
  const app=source('app.js');
  const block=app.slice(app.indexOf('const ['),app.indexOf('const [initialGpsV2Cache,canonicalStartup]'));
  assert.match(block,/await Promise\.all\(\[/);
- assert.equal([...block.matchAll(/import\(["']\.\/ui\//g)].length,46);
+ assert.equal([...block.matchAll(/import\(["']\.\/ui\//g)].length,45);
  assert.doesNotMatch(block,/=\s*await import\(/);
  assert.ok(block.includes('import("./ui/manualRunCanonical.js")'));
  assert.match(app,/const \[initialGpsV2Cache,canonicalStartup\]=await Promise\.all\(\[/);

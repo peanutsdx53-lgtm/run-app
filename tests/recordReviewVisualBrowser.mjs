@@ -44,7 +44,7 @@ try{
   assert.equal(await page.locator('.rv-link-icon svg').count(),5,'manual optional icons use SVG');
   const manualIcons=await page.locator('.rv-link-icon svg').evaluateAll(els=>els.map(e=>e.outerHTML));
   await take(page,width,'MANUAL-empty-icons');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor();
   assert.equal(await page.locator('[data-required-status]').count(),3);
   assert.match(await page.locator('.rr-alert').innerText(),/保存前に入力が必要な項目があります/);
@@ -65,7 +65,7 @@ try{
   await page.locator('[data-manual-gait="RUNNING"]').click();
   assert.equal(await page.locator('.rv-link-icon svg').count(),5);
   await take(page,width,'MANUAL-populated-icons');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor();
   assert.equal(await page.locator('[data-required-status]').count(),3);
   assert.equal(await page.locator('.rr-alert').count(),0,'successful record has no repeated informational alert');

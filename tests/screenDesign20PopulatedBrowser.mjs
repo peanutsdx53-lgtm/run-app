@@ -162,7 +162,7 @@ if(extended&&(!widths.length||widths.length>3||
   await page.locator('[data-draft="distance"]').fill('5');
   await page.locator('[data-draft="minutes"]').fill('30');
   await page.locator('[data-manual-gait="RUNNING"]').click();
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await verify('S08',null,'[data-record-review]',async t=>{
    assert.match(await t.innerText(),/記録内容の確認/);
    assert.equal(await t.locator('[data-manual-run-save]').count(),1);

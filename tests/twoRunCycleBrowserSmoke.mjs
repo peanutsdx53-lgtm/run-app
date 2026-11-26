@@ -38,7 +38,7 @@ try{
   await page.locator('a[href="#/record-reflection"]').first().click();
   await page.locator('[data-draft="memo"]').fill(memo);
   await page.locator('[data-apply]').click();
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor();
   await page.locator('[data-manual-run-save]').click();
   await page.waitForFunction(()=>location.hash.startsWith('#/result?record='));
@@ -348,7 +348,7 @@ try{
   el.value='4';el.dispatchEvent(new Event('input',{bubbles:true}));
  });
  await page.locator('.rv4-done').click();
- await page.locator('[data-demo-save]').click();
+ await page.locator('[data-open-record-review]').click();
  await page.locator('[data-manual-run-save]').click();
  await page.waitForFunction(()=>location.hash.startsWith('#/result?record='));
  const timingRun=(await readRuns()).records.at(-1);

@@ -41,7 +41,7 @@ try{
    await page.goto('http://127.0.0.1:4196/#/record',{waitUntil:'networkidle'});
    await page.locator('[data-draft="distance"]').fill('5.00');
    await page.locator('[data-draft="minutes"]').fill('30');
-   await page.locator('[data-demo-save]').click();
+   await page.locator('[data-open-record-review]').click();
    await page.locator('.rr-page').waitFor();
   }else{
    if(screen==='S15'){

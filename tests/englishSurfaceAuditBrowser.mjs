@@ -218,7 +218,7 @@ try{
  await page.locator('[data-draft="distance"]').fill('5');
  await page.locator('[data-draft="minutes"]').fill('30');
  await page.locator('[data-manual-gait="RUNNING"]').click();
- await page.locator('[data-demo-save]').click();
+ await page.locator('[data-open-record-review]').click();
  await record(page,'S08','', '[data-record-review]');
  await record(page,'S09','result?record='+encodeURIComponent(id),'#activity-result');
  await record(page,'S10','history','#activity-history');

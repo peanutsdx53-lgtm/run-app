@@ -57,7 +57,7 @@ try{
   await page.goto(host+'record',{waitUntil:'networkidle'});
   await page.locator('[data-record-type="rest"]').click();
   await page.locator('[data-draft="date"]').fill('2026-10-29');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   const review=page.locator('[data-record-review]');await review.waitFor();
   const restSave=review.locator('[data-rest-day-save]');
   assert.equal(await restSave.isEnabled(),true);

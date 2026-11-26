@@ -72,7 +72,7 @@ try{
   await page.locator('a[href="#/record-reflection"]').first().click();
   await page.locator('[data-draft="memo"]').fill('月をまたぐ検索用の本人メモ');
   await page.locator('[data-apply]').click();
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor();
   await page.locator('[data-manual-run-save]').click();
   await page.waitForFunction(()=>location.hash.startsWith('#/result?record='),null,{timeout:12000});
@@ -150,7 +150,7 @@ try{
   await restPage.goto(host+'record',{waitUntil:'networkidle'});
   await restPage.locator('[data-record-type="rest"]').click();
   await restPage.locator('[data-draft="date"]').fill(date);
-  await restPage.locator('[data-demo-save]').click();
+  await restPage.locator('[data-open-record-review]').click();
   await restPage.locator('[data-record-review]').waitFor();
   assert.match(await restPage.locator('[data-record-review]').innerText(),/走行の結果画面は表示しません/);
   await restPage.locator('[data-rest-day-save]').click();

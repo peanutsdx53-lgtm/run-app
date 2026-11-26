@@ -1217,13 +1217,6 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
 .record-related-item strong{font-size:.82rem}
 .record-related-item small{font-size:.70rem;color:#748ba3;line-height:1.4}
 .record-related-item>span:last-child{color:#7895b3;font-size:1.3rem}
-.record-preview-overlay{position:fixed;inset:0;z-index:260;background:#182f4e85;display:grid;place-items:center;padding:15px}
-.record-preview-dialog{box-sizing:border-box;max-width:450px;width:100%;padding:22px;background:#fff;border-radius:17px;box-shadow:0 22px 55px #1b335060;display:grid;gap:12px}
-.record-preview-dialog h2{font-size:1.15rem}
-.record-preview-dialog p{font-size:.83rem;color:#68809a;line-height:1.5}
-.record-preview-dialog dl{display:grid;grid-template-columns:86px 1fr;gap:7px 9px;font-size:.82rem}
-.record-preview-dialog dt{color:#6a819a}.record-preview-dialog dd{margin:0;overflow-wrap:anywhere;font-weight:700}
-.record-preview-dialog button{justify-self:end;min-width:110px}
 /* History: readable rows and aligned date filters */
 .history-calendar,.history-records{background:#fff;border-color:#e2edf7;min-width:0}
 .history-records .timeline{display:grid;gap:8px}
@@ -1453,35 +1446,6 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
 .record-choose-grid small{font-size:.71rem;color:#f1f8ff;line-height:1.45}
 .record-choose-grid .choose-arrow{align-self:end;font-size:.87rem;font-weight:800;margin-top:auto}
 .record-choose-note{font-size:.78rem;color:#647d94}
-.record-rof-j{display:grid;gap:11px;background:#f9fcfe;border:1px solid #dce9f1;border-radius:14px;padding:15px}
-.record-rof-header{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.record-rof-header h2{color:#1c4862;font-size:1rem;font-weight:850}
-.record-rof-header h2 span{font-weight:500;color:#728ea3;font-size:.71rem}
-.record-rof-header .eyebrow{letter-spacing:.06em;color:#3496ae;font-size:.64rem}
-.rof-label{padding:5px 8px;background:#e0f4f7;color:#098198;border-radius:20px;font-weight:850;font-variant-numeric:tabular-nums}
-.rof-intro{font-size:.79rem;color:#4e6c82;line-height:1.5}
-.rof-anchor-guide{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;min-width:0}
-.rof-anchor-card{display:flex;flex-direction:column;gap:5px;align-items:center;min-width:0;padding:7px 5px;background:#fff;border:1px solid #e3ebf2;border-radius:11px;text-align:center}
-.rof-anchor-card img{width:100%;height:83px;object-fit:contain;display:block}
-.rof-anchor-card strong{font-size:.78rem;color:#0b778f}
-.rof-anchor-card>span{font-size:.65rem;color:#506c81;line-height:1.38;overflow-wrap:anywhere}
-.rof-entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.rof-entry{display:grid;gap:7px;min-width:0;padding:11px 12px;background:#fff;border:1px solid #dbe9f0;border-radius:13px}
-.rof-entry>label{display:flex;align-items:baseline;gap:6px}
-.rof-entry>label strong{font-size:.87rem;color:#244a63;margin-right:auto}
-.rof-entry output{font-size:2rem;font-weight:900;color:#088ba2;font-variant-numeric:tabular-nums}
-.rof-of-ten{font-size:.7rem;color:#738b9d}
-.rof-entry input[type="range"]{width:100%;height:25px;accent-color:#058fa9;cursor:pointer;touch-action:pan-y}
-.rof-endpoints{display:flex;justify-content:space-between;gap:6px;font-size:.6rem;color:#8292a1}
-.rof-endpoints span:last-child{text-align:right}
-.rof-selection-description{min-height:21px;font-size:.72rem;color:#1c788d;font-weight:740}
-.rof-clear{justify-self:start;background:none;border:0;padding:3px 1px;color:#2685a0;text-decoration:underline;font-size:.69rem}
-.rof-clear:disabled{opacity:.36;text-decoration:none;cursor:default}
-.rof-rights{border-top:1px solid #e3ecf0;padding-top:8px}
-.rof-rights summary{color:#53748b;font-size:.7rem;font-weight:760;cursor:pointer}
-.rof-rights p,.rof-unsaved-note{font-size:.68rem;color:#688195;line-height:1.55;margin-top:6px}
-.rof-rights a{text-decoration:underline;color:#097b9c}
-.rof-unsaved-note{margin-top:0;color:#8b6550}
 .tree-zoom-head{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:7px 3px 8px}
 .tree-zoom-head>span{font-size:.74rem;color:#668496}
 .tree-zoom-actions{display:flex;align-items:center;gap:5px;flex-wrap:nowrap}
@@ -1509,19 +1473,6 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
  .record-choose-grid strong{font-size:1.1rem}
  .record-choose-grid p{font-size:.78rem}
  .record-choose-grid small{font-size:.67rem}
- .record-rof-j{padding:11px 9px;gap:8px}
- .record-rof-header h2{font-size:.88rem}
- .rof-intro{font-size:.72rem;line-height:1.45}
- .rof-anchor-guide{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;gap:6px;padding:2px 1px 8px}
- .rof-anchor-card{flex:0 0 124px;scroll-snap-align:start;padding:5px 4px}
- .rof-anchor-card img{height:77px}
- .rof-anchor-card>span{font-size:.64rem}
- .rof-entry-grid{grid-template-columns:1fr;gap:7px}
- .rof-entry{padding:8px 10px}
- .rof-entry>label strong{font-size:.8rem}
- .rof-entry output{font-size:1.65rem}
- .rof-entry input[type="range"]{height:29px}
- .rof-endpoints{font-size:.58rem}
  .exploration-stage .tree-pan-viewport{max-height:420px}
  .exploration-stage .tree-pan-viewport>.tree-overview{width:calc(470px * var(--tree-zoom,1));}
  .exploration-stage .tree-pan-viewport .tree-canvas.tree-desktop{display:none}
@@ -1538,8 +1489,6 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
  .mobile-start-controls strong{font-size:.68rem}
  .mobile-start-controls small{font-size:.52rem}
  .mobile-start-controls span:first-child{font-size:1rem}
- .rof-anchor-card{flex-basis:116px}
- .rof-intro{font-size:.69rem}
 }
 
 /* First-run guidance is a preview until reviewed terms/privacy policy are available. */
@@ -1601,7 +1550,7 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
 }
 
 /* v2 Record complete-input hierarchy: optional sections retain the original
-   RunLoad science-facing field meanings without creating fictitious observations. */
+   scientific field meanings without creating fictitious observations. */
 .record-optional-stack{display:grid;gap:9px;min-width:0}
 .record-extra-section{background:#fff;border:1px solid #dbe8f1;border-radius:12px;min-width:0;overflow:hidden}
 .record-extra-section>summary{list-style:none;display:grid;grid-template-columns:29px minmax(0,1fr) 17px;gap:11px;align-items:center;padding:12px 14px;cursor:pointer;min-height:57px}
@@ -1626,7 +1575,6 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
 .record-course-section{display:grid;gap:7px;background:#f7fafc;border:1px solid #e4edf2;border-radius:10px;padding:9px 10px}
 .record-course-section>strong{font-size:.76rem;color:#3e6a80}
 .record-runwalk-fields{background:#f3fafc;padding:11px;border:1px solid #d4e8ef;border-radius:10px}
-.record-preview-dialog dl{max-height:38dvh;overflow-y:auto;padding:2px 6px 2px 0;line-height:1.45}
 .record-review-alert{display:grid;gap:5px;border:1px solid #e9d4ad;background:#fff9ed;border-radius:10px;padding:10px}
 .record-review-alert strong{font-size:.78rem;color:#99682a}
 .record-review-alert p{font-size:.71rem;line-height:1.45;color:#805f31}
@@ -1635,17 +1583,6 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
 .record-related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 /* ROF-J retains all five source anchors, but avoids making a gallery
    occupy most of the smartphone's record entry screen. */
-.record-rof-j{gap:8px;padding:12px}
-.record-rof-header h2{font-size:.9rem;line-height:1.4}
-.record-rof-j .rof-intro{font-size:.72rem;line-height:1.48}
-.record-rof-j .rof-anchor-card img{height:58px}
-.record-rof-j .rof-anchor-card{padding:4px;gap:3px}
-.record-rof-j .rof-anchor-card strong{font-size:.72rem}
-.record-rof-j .rof-anchor-card>span{font-size:.61rem;line-height:1.4}
-.record-rof-j .rof-entry-grid{gap:8px}
-.record-rof-j .rof-entry{padding:8px 9px;gap:5px}
-.record-rof-j .rof-entry output{font-size:1.55rem}
-.record-rof-j .rof-endpoints{line-height:1.35}
 @media(max-width:800px){
  .record-editor{gap:10px}
  .record-optional-stack{gap:7px}
@@ -1658,54 +1595,18 @@ a:focus-visible,button:focus-visible{outline-offset:3px}
  .record-extra-field{font-size:.7rem;gap:5px}
  .record-extra-field input,.record-extra-field select,.record-extra-field textarea{font-size:.8rem;min-height:39px;padding:7px 8px}
  .record-related-grid{grid-template-columns:1fr}
- .record-rof-j{padding:10px 9px;gap:7px}
- .record-rof-j .rof-anchor-card{flex-basis:98px}
- .record-rof-j .rof-anchor-card img{height:52px}
- .record-rof-j .rof-entry-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .record-rof-j .rof-entry{padding:7px 6px}
- .record-rof-j .rof-entry>label strong{font-size:.7rem}
- .record-rof-j .rof-entry output{font-size:1.35rem}
- .record-rof-j .rof-endpoints{font-size:.53rem}
- .record-rof-j .rof-selection-description{font-size:.63rem;min-height:31px}
- .record-rof-j .rof-clear{font-size:.62rem}
 }
 @media(max-width:355px){
  .record-extra-grid{grid-template-columns:1fr}
- .record-rof-j .rof-entry-grid{grid-template-columns:1fr}
- .record-rof-j .rof-anchor-card{flex-basis:91px}
 }
 
 /* Original application record UX: a compact fatigue summary that expands into
    the approved five illustrations and independent 0-10 selectors only on demand. */
-.record-rof-j{padding:11px 12px;gap:7px}
-.rof-editor-details{min-width:0;border:1px solid #d2e7ef;border-radius:12px;background:#fff;overflow:hidden}
-.rof-editor-summary{display:grid;grid-template-columns:35px minmax(0,1fr) 18px;gap:9px;align-items:center;min-height:64px;padding:10px 12px;cursor:pointer;list-style:none}
-.rof-editor-summary::-webkit-details-marker{display:none}
-.rof-summary-mark{display:grid;place-items:center;width:35px;height:35px;border-radius:10px;color:#168ba2;background:#e3f5f8;font-size:1.1rem}
-.rof-summary-text{display:grid;gap:5px;min-width:0}
-.rof-summary-text strong{font-size:.83rem;color:#244d64;line-height:1.4}
-.rof-summary-text small{font-size:.74rem;color:#617f90;line-height:1.5}
-.rof-summary-text b{color:#07889d;font-size:.89rem;font-variant-numeric:tabular-nums}
-.rof-summary-chevron{color:#648da0;transition:transform .2s ease;font-size:1rem}
-.rof-editor-details[open] .rof-summary-chevron{transform:rotate(180deg)}
-.rof-editor-details[open] .rof-editor-summary{border-bottom:1px solid #dcebf0;background:#f6fbfd}
-.rof-editor-body{display:grid;gap:10px;padding:11px}
-.rof-editor-body .rof-anchor-guide{margin:0}
-.rof-editor-body .rof-rights{padding-top:8px}
-.rof-editor-body .rof-intro{font-size:.73rem;line-height:1.5}
 .record-save-actions>.btn{width:100%;max-width:420px;min-height:42px}
 @media(max-width:800px){
- .record-rof-j{gap:5px;padding:9px 8px}
- .rof-editor-summary{padding:9px 10px;gap:7px;grid-template-columns:32px minmax(0,1fr) 15px;min-height:59px}
- .rof-summary-mark{width:32px;height:32px}
- .rof-summary-text strong{font-size:.76rem}
- .rof-summary-text small{font-size:.67rem;line-height:1.45}
- .rof-editor-body{padding:9px 6px;gap:9px}
  .record-save-actions>.btn{max-width:none}
 }
 @media(max-width:355px){
- .rof-summary-text strong{font-size:.71rem}
- .rof-summary-text small{font-size:.61rem}
 }
 
 /* Result Ver4: premium dark app chrome; scoped exclusively to the result route. */

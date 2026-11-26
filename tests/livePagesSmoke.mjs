@@ -40,7 +40,7 @@ try{
   await page.locator('[data-draft="distance"]').fill('5.20');
   await page.locator('[data-draft="minutes"]').fill('32.5');
   await page.locator('[data-manual-gait="RUNNING"]').click();
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor({timeout:12000});
   assert.match(await page.locator('.rr-metrics').innerText(),/5\.20/);
   assert.match(await page.locator('.rr-metrics').innerText(),/32:30/);

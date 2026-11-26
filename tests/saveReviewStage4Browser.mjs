@@ -113,7 +113,7 @@ try{
    await page.locator('[data-draft="distance"]').fill('6');
    await page.locator('[data-draft="minutes"]').fill('42');
    await page.locator('[data-manual-gait="RUNNING"]').click();
-   await page.locator('[data-demo-save]').click();
+   await page.locator('[data-open-record-review]').click();
    await page.locator('[data-record-review]').waitFor();
    const review=page.locator('[data-pre-save-scope]');
    assert.equal(await review.getAttribute('data-save-source'),'manual');

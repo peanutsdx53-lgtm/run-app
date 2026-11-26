@@ -351,7 +351,7 @@ try{
     await page.goto(base+'#/record',{waitUntil:'networkidle'});
     await page.locator('[data-draft="distance"]').fill('5');
     await page.locator('[data-draft="minutes"]').fill('30');
-    await page.locator('[data-demo-save]').click();
+    await page.locator('[data-open-record-review]').click();
     await page.locator('[data-record-review]').waitFor({timeout:12000});
     await snap(page,'review',language,width,'ready-to-save');
    }catch(err){failures.push({screen:'review',language,width,error:String(err).slice(0,280)});}

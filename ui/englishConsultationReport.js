@@ -80,7 +80,7 @@ export function localizeConsultationAfterDraw(host,{mode,group,single,scienceRun
   const field=host.querySelector('#cp-'+kind),target=host.querySelector('[data-report-'+kind+']');
   if(target&&!field?.value.trim())target.textContent='(Not Entered)';
  }
- setText(host,'.cp-demo-banner',sourceErrors?.length?
+ setText(host,'.cp-source-banner',sourceErrors?.length?
   'Some saved data could not be read: '+sourceErrors.join(' / '):
   'Prepared from locally saved records and user entries. Only selected information is included in the printout/PDF.');
  translateConsultationFixedNodes(host);

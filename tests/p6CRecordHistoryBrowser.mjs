@@ -64,7 +64,7 @@ try{
   await go('#/record');await page.locator('.rv-manual').waitFor();
   assert.equal(await page.locator('.rv-manual .rv-screen-help summary').count(),1);
   assert.equal(await page.locator('.rv-links .rv-link').count(),5,'all optional destinations retained');
-  assert.equal(await page.locator('.rv-manual [data-demo-save]').count(),1);
+  assert.equal(await page.locator('.rv-manual [data-open-record-review]').count(),1);
   await assertWidth(page,width,'manual');
   await screenshot(page,'record-manual',width);
   await screenshot(page,'record-manual',width,'full');
@@ -74,7 +74,7 @@ try{
   await page.locator('[data-draft="date"]').fill('2026-10-24');
   await page.locator('[data-draft="distance"]').fill('5.20');
   await page.locator('[data-draft="minutes"]').fill('32.5');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('.rr-page').waitFor();
   assert.equal(await page.locator('.rr-screen-help summary').count(),1);
   assert.equal(await page.locator('[data-review-link]').count(),5,'all review edit routes');

@@ -61,7 +61,7 @@ try{
   await page.goto(base+'#/record',{waitUntil:'networkidle'});
   await page.locator('[data-draft="distance"]').fill('5.00');
   await page.locator('[data-draft="minutes"]').fill('35');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   assert.equal(await page.locator('[data-manual-run-save]').isDisabled(),true,
    'webkit '+width+' missing activity must block saving');
   assert.match(await page.locator('.rr-alert').innerText(),/活動種目を選択してください/);
