@@ -5,11 +5,11 @@ const source=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const version='20261126-cleanup-v5';
 const pwaVersion='20261126-cleanup-v5';
 const cacheVersion='20261126-cleanup-v5';
-test('all 45 current startup modules load as one concurrent import batch',()=>{
+test('all 43 current startup modules load as one concurrent import batch',()=>{
  const app=source('app.js');
  const block=app.slice(app.indexOf('const ['),app.indexOf('const [initialGpsV2Cache,canonicalStartup]'));
  assert.match(block,/await Promise\.all\(\[/);
- assert.equal([...block.matchAll(/import\(["']\.\/ui\//g)].length,45);
+ assert.equal([...block.matchAll(/import\(["']\.\/ui\//g)].length,43);
  assert.doesNotMatch(block,/=\s*await import\(/);
  assert.ok(block.includes('import("./ui/manualRunCanonical.js")'));
  assert.match(app,/const \[initialGpsV2Cache,canonicalStartup\]=await Promise\.all\(\[/);
