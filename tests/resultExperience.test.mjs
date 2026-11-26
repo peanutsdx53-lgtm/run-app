@@ -48,7 +48,7 @@ test('ROF-J results and image export do not manufacture time-eligible before/aft
  assert.doesNotMatch(js,/<small>前後差<\/small>|rv4-change/,'remove obsolete difference field');
  assert.match(js,/<p class="rv4-fatigue-caption" data-source-rof>ROF-J・本人回答/,'retain concise scientific status');
  assert.doesNotMatch(js,/rv4-fatigue-note|role="note"/,'do not render a callout');
- for(const css of [read('ui/resultExperience.css'),read('ui/resultInlineStyles.js')]){
+ for(const css of [read('tests/fixtures/retiredResultExperience.css'),read('ui/resultInlineStyles.js')]){
   const caption=css.match(/\.rv4-fatigue-caption\{([^}]+)\}/);
   assert.ok(caption,'caption has its own minimal styling');
   assert.match(caption[1],/font-size:12px/);
@@ -67,7 +67,7 @@ test('ROF-J results and image export do not manufacture time-eligible before/aft
  assert.match(js,/未回答は「—」で、0と区別します。/);
  assert.match(js,/value!==null&&Number\.isFinite\(value\)/,'valid zero must not become missing');
  assert.match(js,/value!==null&&Number\.isFinite\(value\)/,'valid zero must not become missing');
- for(const css of [read('ui/resultExperience.css'),read('ui/resultInlineStyles.js')]){
+ for(const css of [read('tests/fixtures/retiredResultExperience.css'),read('ui/resultInlineStyles.js')]){
   assert.doesNotMatch(css,/\.rv4-change/,'obsolete delta styling absent');
   assert.match(css,/\.rv4-fatigue-numbers>div\{/,'retain two-value layout');
   assert.match(css,/\.rv4-rof-audit h3\{/,'audit section has a heading');
@@ -80,7 +80,8 @@ test('Result v4 view is isolated and precached',()=>{
  const app=read('app.js'),sw=read('sw.js'),html=read('index.html');
  assert.ok(app.includes('resultExperience.mountResult'));
  assert.ok(sw.includes('./ui/resultExperience.js'));
- assert.ok(sw.includes('./ui/resultExperience.css'));
+ assert.ok(sw.includes('./ui/resultInlineStyles.js'));
+ assert.ok(!sw.includes('./ui/resultExperience.css'));
  const currentAsset=html.match(/\.\/app\.js\?v=([a-z0-9-]+)/);assert.ok(currentAsset,'HTML cache-busted application entry');assert.ok(sw.includes('./app.js?v='+currentAsset[1]),'matching offline precache asset');
  assert.ok(sw.includes('./ui/gpsDynamicResult.js'));
  assert.ok(sw.includes('./ui/gpsDynamicResult.css'));
@@ -222,7 +223,7 @@ test('S09 T02/T06: source facts are disclosure-only and summary is readable at r
 test('S09: 44px number-toggle target and meaningful focus after redraw',()=>{
  const js=read('ui/resultExperience.js');
  const inline=read('ui/resultInlineStyles.js');
- const css=read('ui/resultExperience.css');
+ const css=read('tests/fixtures/retiredResultExperience.css');
  assert.ok(js.includes("root.querySelector('[data-label-toggle]')?.focus({preventScroll:true})"));
  assert.match(js,/fromSvg=!!b\.closest\('svg'\)/);
  assert.ok(js.includes(".rv4-choices [data-region="));

@@ -42,10 +42,6 @@ test('tracked application assets have a shell reference path independent of prec
  }
  assert.ok(reached.has('sw.js'),'worker must be registered by application');
  assert.ok(reached.has('ui/resultInlineStyles.js'),'live result styles must be reachable');
- // This historical mirror is retained for current result contract tests; do not
- // confuse it with the actual inline Shadow DOM stylesheet. Review separately.
- const retainedMirror='ui/resultExperience.css';
- assert.ok(read('tests/resultExperience.test.mjs').includes(retainedMirror));
- assert.deepEqual([...runtime].filter(path=>!reached.has(path)&&path!==retainedMirror).sort(),[]);
- for(const retired of ['ui/interpretationView.js','ui/interpretationExperience.css'])assert.ok(!files.has(retired));
+ assert.deepEqual([...runtime].filter(path=>!reached.has(path)).sort(),[]);
+ for(const retired of ['ui/interpretationView.js','ui/interpretationExperience.css','ui/resultExperience.css'])assert.ok(!files.has(retired));
 });
