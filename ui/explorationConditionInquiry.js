@@ -23,7 +23,6 @@ export const CONDITION_FIELDS=Object.freeze([
 ]);
 const err=(status,reason,extra={})=>Object.freeze({status,reason,...extra});
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fieldKeys=CONDITION_FIELDS.map(s=>s.field);
 const hasOwn=(obj,key)=>Object.prototype.hasOwnProperty.call(obj,key);
 
 export function conditionInquiryModel({ref=null,record=null,reads=null}={}){

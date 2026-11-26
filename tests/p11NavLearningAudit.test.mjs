@@ -7,7 +7,7 @@ import {fatigueMarkup} from '../ui/learningFatigueLesson.js';
 import {mountLearning} from '../ui/learningExperience.js';
 import {shortcutsCard} from '../ui/homeExperience.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261126-cleanup-v4';
+const cacheVersion='20261126-cleanup-v5';
 function visibleText(markup){
  return markup.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ')
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ')
@@ -41,7 +41,7 @@ test('P11: the extra three functions remain in Home quick access, never Settings
 });
 test('P11: the last stylesheet and offline version are really new',()=>{
  const index=read('index.html'),sw=read('sw.js'),css=read('ui/unifiedLearningShell.css');
- const version='20261126-cleanup-v4',presentationVersion='20261126-cleanup-v4';
+ const version='20261126-cleanup-v5',presentationVersion='20261126-cleanup-v5';
  assert.ok(index.includes('unifiedLearningShell.css?v=20261122-ux03-reflow-v1'));
  assert.match(index,new RegExp('app\\.js\\?v='+version));
  assert.match(sw,new RegExp('runload-ui-next-shell-'+cacheVersion));

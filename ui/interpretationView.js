@@ -1,9 +1,8 @@
-import {buildLifePacket,latestEligibleLifeBaseline,evaluateLifeIntent,KNOWLEDGE,minuteText} from './interpretationRules.js';
+import {buildLifePacket,latestEligibleLifeBaseline,evaluateLifeIntent,KNOWLEDGE} from './interpretationRules.js';
 const e=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 export function lifeComparisonPanel(conditions,{a='',b='',notice='',intent=null}={}){
- const life=latestEligibleLifeBaseline(conditions);const r=buildLifePacket(conditions,a,b);
+ const r=buildLifePacket(conditions,a,b);
  const records=Array.isArray(r.records)?r.records:[];
- const choices=records.filter(x=>x.minutes!==null).map(x=>`<option value="${e(x.date)}">${e(x.date)}</option>`).join('');
  const select=(key,date)=>`<label>${key==='a'?'日付A':'日付B'}<select data-interpret-date="${key}" aria-label="比較する日付${key.toUpperCase()}"><option value="">選んでください</option>${records.filter(x=>x.minutes!==null).map(x=>`<option value="${e(x.date)}" ${x.date===date?'selected':''}>${e(x.date)}</option>`).join('')}</select></label>`;
  let info='';
  if(r.status==='ready'){

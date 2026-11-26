@@ -91,15 +91,15 @@ test('UX038 bilingual shortcut and active offline review assets match the curren
  assert.equal(translateUiText('保存する内容と出所を確認する'),'Review What Will Be Saved and Its Source');
  assert.equal(translateUiText('保存可否と出所を確認する'),'Review Save Availability and Source');
  assert.equal(translateUiText('端末内に保存'),'Save Destination: This Device');
- const ver='20261123-ux11-result-source-v1',shell='20261126-cleanup-v4';
+ const ver='20261123-ux11-result-source-v1',shell='20261126-cleanup-v5';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
-  [app,'recordReviewExperience.js?v=20261126-cleanup-v4'],[app,'englishUi.js?v=20261126-cleanup-v4'],
-  [index,'recordReviewExperience.css?v=20261126-cleanup-v4'],[index,'app.js?v=20261126-cleanup-v4'],
-  [sw,'runload-ui-next-shell-'+shell],[sw,'recordReviewExperience.js?v=20261126-cleanup-v4'],
-  [sw,'recordReviewExperience.css?v=20261126-cleanup-v4'],[sw,'englishFinalRecording.js?v='+ver],
+  [app,'recordReviewExperience.js?v=20261126-cleanup-v5'],[app,'englishUi.js?v=20261126-cleanup-v5'],
+  [index,'recordReviewExperience.css?v=20261126-cleanup-v5'],[index,'app.js?v=20261126-cleanup-v5'],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'recordReviewExperience.js?v=20261126-cleanup-v5'],
+  [sw,'recordReviewExperience.css?v=20261126-cleanup-v5'],[sw,'englishFinalRecording.js?v='+ver],
   [en,'englishFinalRecording.js?v='+ver],
-  [en,'englishFinalGps.js?v=20261126-cleanup-v4'],[sw,'englishFinalGps.js?v=20261126-cleanup-v4']
+  [en,'englishFinalGps.js?v=20261126-cleanup-v5'],[sw,'englishFinalGps.js?v=20261126-cleanup-v5']
  ];
  for(const [s,token] of items)assert.ok(s.includes(token),'missing active/offline URL '+token);
  assert.ok(app.includes('environmentExperience.js?v=20261123-ux09-environment-states-v1'));

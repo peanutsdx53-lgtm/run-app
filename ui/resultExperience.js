@@ -6,7 +6,7 @@ import {comparableRunChoices,compareSavedRuns,gaitOf} from './runReflection.js';
 import {compareBodyReferenceRows} from './regionReferenceComparison.js';
 import {calculateActivityReference,ACTIVITY_LABELS} from '../core/activity/activityReference.js';
 import {describeRegionEvidence} from './referenceEvidenceInfo.js';
-import {explorationHref,FATIGUE_TOPIC} from './explorationLinkPolicy.js';
+import {explorationHref} from './explorationLinkPolicy.js';
 import {isRunId,linkedReflectionNotes} from './noteRunLink.js';
 import {resultExportDisclosure,sourceProvenance} from './resultSharingPolicy.js';
 import {englishResultImageCopy} from './englishResultExport.js';
@@ -214,8 +214,7 @@ export function mountResult(host,inputDraft={},options={}){
  const hasInvalidCompare=options.compareId!==undefined&&options.compareId!==null&&!other;
  const resultLink=fromSaved?'#/result?record='+encodeURIComponent(options.recordId):'#/result';
  const resultReflectionHref=resultReflectionEntry({saved:fromSaved,recordId:options.recordId,record:options.record});
- const exploreLink=(category,topic)=>explorationHref(fromSaved?{sourceType:'MANUAL',recordId:options.recordId}:fromGps?{sourceType:'GPS_V2',recordId:gps.id}:null,category,topic);
- for(const [i,item] of data.entries()){
+ for(const item of data){
    const row=bodyReferenceRow(reference?.rows,item.id);
    if(row?.calculationState==='CALCULATED'&&Number.isFinite(row.value))item.value=row.value;
  }

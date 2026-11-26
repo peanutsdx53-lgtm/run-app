@@ -87,17 +87,17 @@ test('UX05: CSS reflows all stage labels while both dynamic JS and CSS stay offl
  assert.ok(homeCss.includes('#app .home-v3 .hx-condition-stats{grid-template-columns:repeat(2,minmax(0,1fr))}'));
  assert.ok(homeCss.includes('#app .home-v3 .hx-condition-stats > div:last-child{grid-column:1/-1}'));
  assert.ok(homeCss.includes('white-space:normal;overflow-wrap:anywhere;line-height:1.4;'));
- const gen='20261122-ux05-firstuse-home-v1',shellGen='20261126-cleanup-v4';
+ const gen='20261122-ux05-firstuse-home-v1',shellGen='20261126-cleanup-v5';
  for(const [txt,fragment] of [
-  [app,'firstUseExperience.js?v='+gen],
+  [app,'firstUseExperience.js?v='+shellGen],
   [index,'firstUseExperience.css?v='+gen],
-  [index,'homeExperience.css?v=20261126-cleanup-v4'],
-  [index,'app.js?v=20261126-cleanup-v4'],
+  [index,'homeExperience.css?v=20261126-cleanup-v5'],
+  [index,'app.js?v=20261126-cleanup-v5'],
   [sw,'runload-ui-next-shell-'+shellGen],
   [sw,'firstUseExperience.css?v='+gen],
-  [sw,'homeExperience.css?v=20261126-cleanup-v4'],
-  [sw,'firstUseExperience.js?v='+gen],
-  [sw,'app.js?v=20261126-cleanup-v4']
+  [sw,'homeExperience.css?v=20261126-cleanup-v5'],
+  [sw,'firstUseExperience.js?v='+shellGen],
+  [sw,'app.js?v=20261126-cleanup-v5']
  ])assert.ok(txt.includes(fragment),'active offline version is missing: '+fragment);
  assert.match(read('.github/workflows/run-app-regression.yml'),/node tests\/ux05OnboardingHomeBrowser\.mjs/);
 });

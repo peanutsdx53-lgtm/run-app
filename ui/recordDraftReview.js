@@ -81,7 +81,7 @@ export function checkRecordDraft(d={},isRun=true){
  if(steps!==null&&!Number.isInteger(steps))errors.push("歩数は整数で入力してください");
  if(steps!==null&&String(d.stepsProvenance||"UNKNOWN")==="UNKNOWN")warnings.push("歩数を入力した場合は取得方法も選んでください");
  if(steps===null&&!["","UNKNOWN"].includes(String(d.stepsProvenance??"UNKNOWN")))warnings.push("歩数の取得方法を選択していますが歩数が未入力です");
- const temp=range(d.temperatureC,-50,60,errors,"気温");
+ range(d.temperatureC,-50,60,errors,"気温");
  if(d.runningFormat==="RUN_WALK"){
   errors.push(...checkRunWalkBounds(d));
   for(const [key,label] of [["runWalkRunningDistanceKm","走った距離"],["runWalkRunningDurationMinutes","走った時間"]]){

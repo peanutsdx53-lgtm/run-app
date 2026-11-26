@@ -11,7 +11,6 @@ export const DIRECTIONS = Object.freeze([['FLAT','平坦'],['UPHILL','上り'],[
 const names=Object.fromEntries(SURFACES);
 const escape = v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const filled = v=>v!==undefined&&v!==null&&String(v).trim()!=='';
-const value = (x,unit='')=>filled(x)?escape(x)+unit:'—';
 const choose=(items,current)=>items.map(([id,label])=>`<option value="${escape(id)}" ${current===id?'selected':''}>${escape(label)}</option>`).join('');
 const courseModeA11y=Object.freeze({
  'data-rv-grade':{'SUMMARY':'上り・下りの距離割合を設定','SECTIONS':'区間ごとの坂道を設定'},
