@@ -18,7 +18,7 @@ export async function readEffectiveAnnotation(db,ref,fieldKey,resolveParent=reso
   return err('UNREADABLE_PARENT','親の走行記録を照合できません');
  if(!thread.value.length)return ok({status:'NO_ANSWER'});
  if(thread.value.some(e=>!validateAnnotationEvent(e,{record:parent.value.record}).ok))
-  return err('READ_FAILED','親記録の条件と追記値が一致しません');
+  return err('READ_FAILED','元の走行記録の条件と追記した内容が一致しません');
  const latest=thread.value.at(-1),previous=thread.value.slice(0,-1);
  return ok({status:latest.operation==='RETRACT'?'RETRACTED':'ACTIVE',latest,previous,
   provenance:'POST_HOC_SELF_REPORT',scientificRecalculation:false});

@@ -3,19 +3,14 @@
  * Knowledge curriculum, not app-operation instructions or personal diagnosis.
  * No user records are read, edited or sent from this module.
  */
-import {ORIGIN_LESSON,mountOriginLesson} from "./learningOriginLesson.js?v=20261126-cleanup-v2";
-import {MOTION_LESSON,mountMotionLesson} from "./learningMotionLesson.js?v=20261126-cleanup-v2";
-import {FATIGUE_LESSON,mountFatigueLesson} from "./learningFatigueLesson.js?v=20261126-cleanup-v2";
+import {ORIGIN_LESSON,mountOriginLesson} from "./learningOriginLesson.js?v=20261126-cleanup-v3";
+import {MOTION_LESSON,mountMotionLesson} from "./learningMotionLesson.js?v=20261126-cleanup-v3";
+import {FATIGUE_LESSON,mountFatigueLesson} from "./learningFatigueLesson.js?v=20261126-cleanup-v3";
 import {enhanceLearningLesson} from "./learningPresentation.js?v=20261111-learning-density-v1";
 export const LEARNING_COURSES=Object.freeze([
  {id:"data",title:"走る速さとペース配分",description:"走るときの速さや配分を、実際の走行場面を模した例で学びます。",ready:true},
  {id:"movement",title:"ランニングの身体と動作",description:"股関節・膝・足関節、接地・離地、研究での動きや筋活動の調べ方を学びます。",ready:true},
  {id:"fatigue",title:"きつさ・疲労感・休養",description:"走行中のきつさ・運動後の疲れと、回復・睡眠を研究条件とともに学びます。",ready:true},
- {id:"context",title:"走行条件と生活",description:"路面・坂・生活状況と走行の関係を学ぶ。",ready:false},
- {id:"science",title:"研究と数字の読み方",description:"運動科学の根拠、条件、限界を学ぶ。",ready:false},
- {id:"comparison",title:"変化と過去比較",description:"異なる走行の情報を比較する考え方を学ぶ。",ready:false},
- {id:"reflection",title:"走行経験を捉える視点",description:"数値だけでは表せない経験と情報の吟味を学ぶ。",ready:false},
- {id:"exercise",title:"運動の基礎と個人差",description:"運動強度・持久運動・適応に関する知識を学ぶ。",ready:false}
 ]);
 export const READY_LESSON=Object.freeze({id:"pace-basics",version:"0.3-content-audit",title:"平均ペースと区間ペース",courseId:"data"});
 export const RUNNING_PACE_PROFILES=Object.freeze([
@@ -115,7 +110,7 @@ function catalogue(){
  const subjects={data:'速さと配分',movement:'身体の動き',fatigue:'疲労と休養'};
  const descriptions={data:'平均ペースと途中の配分を比べます。',movement:'脚の動きと研究での測り方を学びます。',fatigue:'きつさ・疲労感と休養の考え方を学びます。'};
  const links={data:['pace-basics','平均ペースと区間ペースを学ぶ'],movement:['running-motion-basics','脚の動きと測定方法を学ぶ'],fatigue:['effort-fatigue-recovery','きつさ・疲労感・休養を学ぶ']};
- return '<section class="lr-catalog" aria-label="学べる教材">'+LEARNING_COURSES.filter(course=>course.ready).map((course,index)=>
+ return '<section class="lr-catalog" aria-label="学べる教材">'+LEARNING_COURSES.map((course,index)=>
    '<article class="lr-course" data-lr-course="'+course.id+'">'+
    '<div class="lr-course-top"><span class="lr-course-icon" aria-hidden="true">'+learningCardIcons[course.id]+'</span>'+
    '<div class="lr-course-meta"><span class="lr-number">基礎教材 '+String(index+1).padStart(2,"0")+' · '+subjects[course.id]+'</span>'+

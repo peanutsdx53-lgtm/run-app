@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v2';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v3';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -56,45 +56,45 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
     import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2"),
-    import("./ui/rofExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/rofExperience.js?v=20261126-cleanup-v3"),
     import("./ui/recordDraftReview.js"),
-    import("./ui/recordReviewExperience.js?v=20261126-cleanup-v2"),
-    import("./ui/manualRunStore.js?v=20261126-cleanup-v2"),
+    import("./ui/recordReviewExperience.js?v=20261126-cleanup-v3"),
+    import("./ui/manualRunStore.js?v=20261126-cleanup-v3"),
     import("./ui/manualRunLock.js"),
     import("./ui/manualRunCanonical.js"),
-    import("./ui/recordExperience.js?v=20261126-cleanup-v2"),
-    import("./ui/coursePresetStore.js?v=20261126-cleanup-v2"),
-    import("./ui/gaitExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/recordExperience.js?v=20261126-cleanup-v3"),
+    import("./ui/coursePresetStore.js?v=20261126-cleanup-v3"),
+    import("./ui/gaitExperience.js?v=20261126-cleanup-v3"),
     import("./ui/environmentExperience.js?v=20261123-ux09-environment-states-v1"),
-    import("./ui/bodyContextExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/bodyContextExperience.js?v=20261126-cleanup-v3"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
-    import("./ui/measurementExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/measurementExperience.js?v=20261126-cleanup-v3"),
     import("./ui/gpsMeasurementCore.js?v=20261116-gps-stage2-controls-v1"),
-    import("./ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v2"),
-    import("./ui/gpsDynamicResult.js?v=20261126-cleanup-v2"),
+    import("./ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v3"),
+    import("./ui/gpsDynamicResult.js?v=20261126-cleanup-v3"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/resultExperience.js?v=20261126-cleanup-v3"),
     import("./ui/runQuestionContinuation.js"),
-    import("./ui/historyExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/historyExperience.js?v=20261126-cleanup-v3"),
     import("./ui/settingsExperience.js?v=20261125-ux16-19-batch-v1"),
-    import("./ui/portableDataV2.js?v=20261126-cleanup-v2"),
-    import("./ui/mentalExperience.js?v=20261126-cleanup-v2"),
-    import("./ui/mentalSaveFlow.js?v=20261126-cleanup-v2"),
+    import("./ui/portableDataV2.js?v=20261126-cleanup-v3"),
+    import("./ui/mentalExperience.js?v=20261126-cleanup-v3"),
+    import("./ui/mentalSaveFlow.js?v=20261126-cleanup-v3"),
     import("./ui/explorationMentalInquiry.js"),
     import("./ui/explorationBodyInquiry.js"),
     import("./ui/explorationConditionInquiry.js"),
     import("./ui/explorationLifeInquiry.js"),
     import("./ui/recordRef.js"),
     import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1"),
-    import("./ui/annotationEditor.js?v=20261126-cleanup-v2"),
+    import("./ui/annotationEditor.js?v=20261126-cleanup-v3"),
     import("./ui/dataManagementUi.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/firstUseExperience.js?v=20261122-ux05-firstuse-home-v1"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
-    import("./ui/consultationExperience.js?v=20261126-cleanup-v2"),
-    import("./ui/explorationExperience.js?v=20261126-cleanup-v2"),
-    import("./ui/learningExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/consultationExperience.js?v=20261126-cleanup-v3"),
+    import("./ui/explorationExperience.js?v=20261126-cleanup-v3"),
+    import("./ui/learningExperience.js?v=20261126-cleanup-v3"),
     import("./ui/interpretationView.js?v=20261026-interpret-v14"),
-    import("./ui/interpretationRules.js?v=20261126-cleanup-v2"),
+    import("./ui/interpretationRules.js?v=20261126-cleanup-v3"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
     import("./ui/conditionJourney.js?v=20261125-ux15-condition-v1"),
     import("./ui/conditionInsights.js?v=20261026-condition-v15")
@@ -367,7 +367,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   const onboardStorage=canonical.viewStorage(nativeStorage);
   const loadIntro=()=>{try{return JSON.parse(onboardStorage?.getItem(onboardingKey)||"null")}catch{return null}};
   const introStored=loadIntro();
-  if(!canonicalStartup.ok)state.toast='手入力記録の正本を利用できません。保存は停止しました。';
+  if(!canonicalStartup.ok)state.toast='手入力の保存済み記録を確認できません。保存は停止しました。';
   const readSettingsSnapshot=key=>{try{return onboardStorage?.getItem(key)??null}catch{return undefined}};
   const settingsUi={profile:settingsExperience.loadProfile(onboardStorage,introStored||{}),display:settingsExperience.loadDisplay(onboardStorage),notice:"",
    profileSnapshot:readSettingsSnapshot(settingsExperience.PROFILE_KEY),displaySnapshot:readSettingsSnapshot(settingsExperience.DISPLAY_KEY)};
@@ -1560,7 +1560,7 @@ function recordExtras(){
         }
         clearManualSaveIdentity();
         const ref={sourceType:'MANUAL',recordId:saved.record.id};
-        const extra=saved.duplicate?{ok:false,reason:'既存の親記録を照合しました。任意回答は結果画面から確認してください'}:await saveOptionalMentalAfterParent(ref,manualMental);
+        const extra=saved.duplicate?{ok:false,reason:'すでに保存された元の走行記録を確認しました。任意回答は結果画面から確認してください'}:await saveOptionalMentalAfterParent(ref,manualMental);
         selectedRunId=saved.record.id;manualSaveNotice="";state.recordReviewReturn=false;
         state.toast=extra.ok?"手入力の走行記録を保存しました":'走行記録は保存しましたが、任意の回答は確認できません。結果画面で再試行してください。';
         Object.assign(manualMental,mentalExperience.newMentalDraft());

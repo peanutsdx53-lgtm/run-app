@@ -85,7 +85,7 @@ export async function inspectPostHoc(ref,fieldKey,{openStore=openAnnotationStore
 export async function mountAnnotationEditor(root,hash,services={}){
  if(!root)return;
  const parsed=parseEditorLink(hash);
- const style='<link rel="stylesheet" href="./ui/annotationEditor.css?v=20261126-cleanup-v2">';
+ const style='<link rel="stylesheet" href="./ui/annotationEditor.css?v=20261126-cleanup-v3">';
  if(!parsed.ok){root.innerHTML=style+'<section class="ax-page"><p role="alert">'+esc(parsed.reason)+'</p><a href="#/history">履歴へ戻る</a></section>';return;}
  const ref=parsed.value,record=await (services.resolveParent||resolveRecord)(ref);
  if(!root.isConnected)return;
@@ -130,7 +130,7 @@ export async function mountAnnotationEditor(root,hash,services={}){
   const originalDetails=['rofBefore','rofAfter'].includes(state.fieldKey)&&ref.sourceType==='GPS_V2'?'本人の主観は元GPSの計測値ではありません。':'';
   content.innerHTML=`<div class="ax-compare"><div><small>記録時（原本の情報）</small><p>${esc(orig)}</p></div><div><small>後日申告（科学計算に未使用）</small>${statusBlock()}</div></div>
   <div class="ax-history">${a?.ok&&a.value.previous?.length?`<details><summary>過去の追記・訂正・撤回履歴 ${a.value.previous.length}件</summary><ul>${a.value.previous.map(e=>`<li>${esc(e.enteredAt)} — ${esc(({ADD:'追加',CORRECT:'訂正',RETRACT:'撤回'})[e.operation]||e.operation)}：${esc(postHocValue(state.fieldKey,e.payload))}</li>`).join('')}</ul></details>`:''}</div>
-  ${editable?`<form data-ax-form novalidate><fieldset ${state.busy?'disabled':''}><legend>${esc(labels[state.fieldKey])}</legend><div class="ax-editor-fields">${editForm(state.fieldKey,state.rawDraft)}</div>${selector('declaredPhase','申告の対象時点',{UNSPECIFIED:'特定しない',BEFORE:'走る前',DURING:'走っている間',AFTER:'走った後'},state.declaredPhase)}${selector('timeBasis','申告した内容の時点',{RECALLED:'以前の経験を思い出した',AT_ENTRY:'いまの感覚を申告した',UNKNOWN:'分からない'},state.timeBasis)}<p class="ax-caution">後日申告は本人が書いた内容です。記録時の計測値・ROF-Jの正本・12部位の文献参考値・過去比較は変更しません。申告時刻は端末の操作時刻で、体験が生じた時刻を保証しません。</p><div class="ax-buttons"><button type="submit" data-ax-save ${state.busy||state.pending?'disabled':''}>${a.value.status==='ACTIVE'?'後日申告を訂正して保存':'後日申告を保存'}</button>${a.value.status==='ACTIVE'?`<button type="button" data-ax-retract ${state.busy||state.pending?'disabled':''}>以前の申告を取り消す</button>`:''}</div></fieldset></form>`:''}
+  ${editable?`<form data-ax-form novalidate><fieldset ${state.busy?'disabled':''}><legend>${esc(labels[state.fieldKey])}</legend><div class="ax-editor-fields">${editForm(state.fieldKey,state.rawDraft)}</div>${selector('declaredPhase','申告の対象時点',{UNSPECIFIED:'特定しない',BEFORE:'走る前',DURING:'走っている間',AFTER:'走った後'},state.declaredPhase)}${selector('timeBasis','申告した内容の時点',{RECALLED:'以前の経験を思い出した',AT_ENTRY:'いまの感覚を申告した',UNKNOWN:'分からない'},state.timeBasis)}<p class="ax-caution">後日申告は本人が書いた内容です。記録時の計測値・ROF-Jの回答・12部位の文献参考値・過去比較は変更しません。申告時刻は端末の操作時刻で、体験が生じた時刻を保証しません。</p><div class="ax-buttons"><button type="submit" data-ax-save ${state.busy||state.pending?'disabled':''}>${a.value.status==='ACTIVE'?'後日申告を訂正して保存':'後日申告を保存'}</button>${a.value.status==='ACTIVE'?`<button type="button" data-ax-retract ${state.busy||state.pending?'disabled':''}>以前の申告を取り消す</button>`:''}</div></fieldset></form>`:''}
   ${state.pending?'<div class="ax-retry"><p>保存が完了したか確認できません。元の記録は変更されていません。重複を避けるため、この操作の状態を再確認します。</p><button type="button" data-ax-retry>同じ操作を再確認・再試行</button></div>':''}
   <div data-ax-notice role="status" aria-live="polite">${esc(state.notice)}</div>${state.error?`<p role="alert" class="ax-error">${esc(state.error)}</p>`:''}<p class="ax-footnote">${esc(originalDetails)}</p>`;
  }

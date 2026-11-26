@@ -7,9 +7,9 @@ test('stage7: responsive 200% navigation text remains full-length and PWA uses o
  assert.match(shell,/grid-template-columns:repeat\(auto-fit,minmax\(min\(100%,clamp\(60px,3\.2rem,112px\)\),1fr\)\)!important/);
  assert.match(shell,/white-space:nowrap!important/);
  assert.match(shell,/grid-template-columns:minmax\(0,1fr\)/);
- assert.match(html,/styles\.css\?v=20261126-cleanup-v2/);
- assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v2/);
- assert.match(sw,/\.\/styles\.css\?v=20261126-cleanup-v2/);
+ assert.match(html,/styles\.css\?v=20261126-cleanup-v3/);
+ assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v3/);
+ assert.match(sw,/\.\/styles\.css\?v=20261126-cleanup-v3/);
  assert.doesNotMatch(sw,/styles\.css\?v=20261115-retire-whatif-v1/);
  const record=read('ui/recordExperience.css');
  assert.match(record,/font-size:min\(1\.3rem,10vw\)!important/);

@@ -39,7 +39,7 @@ export function inspectAnnotationBundleShape(bundle){
  if(meta.key!=='root'||meta.schemaVersion!==1||meta.eventCount!==events.length||meta.storeRevision!==events.length||
   !Number.isSafeInteger(meta.totalBytes)||meta.totalBytes<0||meta.totalBytes>ANNOTATION_MAX_BYTES)
   return fail('BAD_EVENT','追記の管理情報が一致しません');
- let expectedBytes;try{expectedBytes=events.reduce((n,e)=>n+annotationUtf8Bytes(JSON.stringify(e)),0);}catch{return fail('BAD_EVENT','追記イベントを検証できません');}
+ let expectedBytes;try{expectedBytes=events.reduce((n,e)=>n+annotationUtf8Bytes(JSON.stringify(e)),0);}catch{return fail('BAD_EVENT','追記した内容を確認できません');}
  if(expectedBytes!==meta.totalBytes)return fail('BAD_EVENT','追記容量と実データが一致しません');
  const ids=new Set(),requests=new Set(),groups=new Map();
  for(const e of events){
@@ -105,9 +105,9 @@ export async function exportAnnotationBundle({includeGps=false,resolveParent=nul
   if(resolveParent){
    const parents=new Map(selected.map(e=>[e.recordKey,e.recordRef]));
    for(const ref of parents.values()){
-    let result;try{result=await resolveParent(ref);}catch{return fail('UNREADABLE_PARENT','親記録を確認できません');}
+    let result;try{result=await resolveParent(ref);}catch{return fail('UNREADABLE_PARENT','元の走行記録を確認できません');}
     if(result?.ok!==true||result.value?.record?.id!==ref.recordId||result.value?.ref?.sourceType!==ref.sourceType)
-     return fail(result?.code==='NOT_FOUND'?'ORPHANED':'UNREADABLE_PARENT','親記録が存在しない追記はバックアップできません');
+     return fail(result?.code==='NOT_FOUND'?'ORPHANED':'UNREADABLE_PARENT','元の走行記録が見つからない追記はバックアップできません');
    }
   }
   const bundle=makeBundle(selected),checked=await inspectAnnotationBundle(bundle);
@@ -146,12 +146,12 @@ export async function preflightAnnotationImport(incoming,{resolveParent}={}){
  if(typeof resolveParent!=='function')return fail('UNREADABLE_PARENT','親レコードの検証方法が指定されていません');
  const parents=new Map();for(const e of incoming.events)parents.set(e.recordKey,e.recordRef);
  for(const ref of parents.values()){
-  let parent;try{parent=await resolveParent(ref);}catch{return fail('UNREADABLE_PARENT','親記録を照合できません');}
+  let parent;try{parent=await resolveParent(ref);}catch{return fail('UNREADABLE_PARENT','元の走行記録との関連を確認できません');}
   if(parent?.ok!==true||parent.value?.record?.id!==ref.recordId||parent.value?.ref?.sourceType!==ref.sourceType)
    return fail(parent?.code==='NOT_FOUND'?'ORPHANED':'UNREADABLE_PARENT','追記の親レコードがありません');
   for(const e of incoming.events.filter(ev=>ev.recordKey===ref.sourceType+':'+ref.recordId))
    if(!validateAnnotationEvent(e,{record:parent.value.record}).ok)
-    return fail('BAD_EVENT','親記録の条件と追記が一致しません');
+    return fail('BAD_EVENT','元の走行記録の条件と追記した内容が一致しません');
  }
  const opened=await openAnnotationStore();if(!opened.ok)return opened;
  try{

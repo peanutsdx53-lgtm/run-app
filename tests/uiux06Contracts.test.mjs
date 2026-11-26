@@ -40,8 +40,8 @@ test('UIUX06 S20: exported PNG does not falsely assert timestamp absence',()=>{
  assert.match(privacy,/ROF-J（本人回答）/,'opted-in ROF retains its provenance');
  assert.equal(resultImageAnnotation({saved:true,reference:{count:9}}).status,'文献参考値：9/12 部位算出');
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8'),sw=readFileSync(new URL('../sw.js',import.meta.url),'utf8'),html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
- assert.match(app,/resultExperience\.js\?v=20261126-cleanup-v2/);
- assert.match(sw,/resultExperience\.js\?v=20261126-cleanup-v2/);
+ assert.match(app,/resultExperience\.js\?v=20261126-cleanup-v3/);
+ assert.match(sw,/resultExperience\.js\?v=20261126-cleanup-v3/);
  const appEntry=html.match(/src="(\.\/app\.js\?v=[^"]+)"/)?.[1];
  assert.ok(appEntry,'entrypoint must use a versioned app.js URL');
  assert.ok(sw.includes('"'+appEntry+'"'),'offline assets must match the current app.js entrypoint');

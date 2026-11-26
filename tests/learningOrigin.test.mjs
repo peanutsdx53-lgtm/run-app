@@ -32,10 +32,10 @@ test('L2 candidate is bounded to K04/K05 general knowledge',()=>{
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  const shell=readFileSync(new URL('../sw.js',import.meta.url),'utf8');
  const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
- assert.match(app,/learningExperience\.js\?v=20261126-cleanup-v2/);
+ assert.match(app,/learningExperience\.js\?v=20261126-cleanup-v3/);
  const appAsset=index.match(/src="(\.\/app\.js\?v=[a-z0-9-]+)"/)?.[1];
  assert.ok(appAsset,'versioned app entry must exist');
  const assets=JSON.parse(shell.match(/const ASSETS=(\[[^\n]*\]);/)[1]);
  assert.ok(assets.includes(appAsset),'offline shell must cache the current app entry');
- assert.match(shell,/"\.\/ui\/learningOriginLesson\.js\?v=20261126-cleanup-v2"/);
+ assert.match(shell,/"\.\/ui\/learningOriginLesson\.js\?v=20261126-cleanup-v3"/);
 });

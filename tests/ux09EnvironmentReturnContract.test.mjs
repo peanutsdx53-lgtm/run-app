@@ -71,17 +71,17 @@ test('UX037 status, warning and save-boundary interface have explicit offline En
  for(const [jp,en] of pairs)assert.equal(translateUiText(jp),en,jp);
 });
 test('UX09 versioned environment modules and dictionary are precached without overriding other modules',()=>{
- const v='20261123-ux09-environment-states-v1',shell='20261126-cleanup-v2',resultVersion='20261123-ux11-result-source-v1';
+ const v='20261123-ux09-environment-states-v1',shell='20261126-cleanup-v3',resultVersion='20261123-ux11-result-source-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
- for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v=20261126-cleanup-v2'],
-  [index,'environmentExperience.css?v='+v],[index,'app.js?v=20261126-cleanup-v2'],
+ for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v=20261126-cleanup-v3'],
+  [index,'environmentExperience.css?v='+v],[index,'app.js?v=20261126-cleanup-v3'],
   [sw,'runload-ui-next-shell-'+shell],[sw,'environmentExperience.js?v='+v],
   [sw,'environmentExperience.css?v='+v],[sw,'englishFinalRecording.js?v='+resultVersion],
   [en,'englishFinalRecording.js?v='+resultVersion]])assert.ok(s.includes(label),'missing '+label);
- assert.ok(en.includes('englishFinalConditions.js?v=20261126-cleanup-v2'));
+ assert.ok(en.includes('englishFinalConditions.js?v=20261126-cleanup-v3'));
  assert.ok(index.includes('recordReturnActions.css?v='+v));
  assert.ok(sw.includes('recordReturnActions.css?v='+v));
- assert.ok(sw.includes('englishFinalConditions.js?v=20261126-cleanup-v2'));
- assert.ok(app.includes('rofExperience.js?v=20261126-cleanup-v2'));
- assert.ok(app.includes('recordExperience.js?v=20261126-cleanup-v2'));
+ assert.ok(sw.includes('englishFinalConditions.js?v=20261126-cleanup-v3'));
+ assert.ok(app.includes('rofExperience.js?v=20261126-cleanup-v3'));
+ assert.ok(app.includes('recordExperience.js?v=20261126-cleanup-v3'));
 });

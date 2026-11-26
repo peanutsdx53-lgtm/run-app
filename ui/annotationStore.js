@@ -30,7 +30,7 @@ async function parentOf(ref,resolver){
  }catch{return fail('UNREADABLE_PARENT','原本の照合に失敗しました');}
 }
 export async function openAnnotationStore(){
- if(typeof globalThis.indexedDB?.open!=='function')return fail('READ_FAILED','IndexedDBを利用できません');
+ if(typeof globalThis.indexedDB?.open!=='function')return fail('READ_FAILED','この端末の保存領域を利用できません');
  try{
   const db=await new Promise((res,rej)=>{
    const req=indexedDB.open(ANNOTATION_DB,ANNOTATION_DB_VERSION);
@@ -215,7 +215,7 @@ export async function quarantineMissingParents(db,resolveParent=baseParent){
   for(const [key,ref] of parents){
    const parent=await parentOf(ref,resolveParent);
    if(parent.code==='NOT_FOUND')orphanKeys.push(key);
-   else if(!parent.ok)return fail('UNREADABLE_PARENT','親記録を読み取れないため隔離状態を確定できません');
+   else if(!parent.ok)return fail('UNREADABLE_PARENT','元の走行記録を読み取れないため、別ファイルに分けられるか確認できません');
   }
   return ok({count:orphanKeys.length,recordKeys:orphanKeys,inspectionOnly:true});
  }catch(e){return issue(e);}

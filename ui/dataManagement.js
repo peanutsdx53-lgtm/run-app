@@ -10,7 +10,7 @@ import {HOME_DASHBOARD_KEY,loadHomeDashboardLayout} from "./homeDashboardLayout.
 const PROFILE_KEY="runload-v2-user-profile-v1",DISPLAY_KEY="runload-v2-display-preferences-v1";
 import {LEGAL_CONSENT_KEY} from "./legalDocuments.js";
 import {LEARNING_PROGRESS_KEY} from "./learningPresentation.js";
-import * as gpsV2 from "./gpsReplayIndexedDbStore.js?v=20261126-cleanup-v2";
+import * as gpsV2 from "./gpsReplayIndexedDbStore.js?v=20261126-cleanup-v3";
 
 export const PORTABLE_FORMAT="running-data-portable-backup";
 export const PORTABLE_VERSION=1;

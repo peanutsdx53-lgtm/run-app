@@ -93,7 +93,7 @@ export const ENGLISH_FINAL_ANNOTATION=Object.freeze({
  "追記の状態を確認できません。": "Later-entry Status Cannot Be Verified.",
  "記録時（原本の情報）": "Original Record",
  "後日申告（科学計算に未使用）": "Retrospective Report (Not Used in Scientific Calculations)",
- "後日申告は本人が書いた内容です。記録時の計測値・ROF-Jの正本・12部位の文献参考値・過去比較は変更しません。申告時刻は端末の操作時刻で、体験が生じた時刻を保証しません。": "Retrospective entries are user-authored. They do not change original measurements, canonical ROF-J responses, 12 regional references or past comparisons. The operation timestamp does not establish when the experience occurred.",
+ "後日申告は本人が書いた内容です。記録時の計測値・ROF-Jの回答・12部位の文献参考値・過去比較は変更しません。申告時刻は端末の操作時刻で、体験が生じた時刻を保証しません。": "Retrospective entries are user-authored. They do not change original measurements, original ROF-J responses, 12 regional references or past comparisons. The time of entry does not establish when the experience occurred.",
  "以前の申告を取り消す": "Withdraw Previous Report",
  "保存結果が不明です。元の走行記録は変更していません。重複して保存せず、前回の追記の保存結果だけを確認します。": "The save result is unknown. The original run is unchanged. Check the previous additional information save without saving it again.",
  "同じ操作を再確認・再試行": "Check or Retry the Same Operation",

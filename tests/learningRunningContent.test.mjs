@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {LEARNING_COURSES,READY_LESSON,RUNNING_PACE_PROFILES,describeRunningProfile,QUIZ,evaluateQuiz,mountLearning}
  from '../ui/learningExperience.js';
 test('Pacing is first substantive running lesson, data provenance is auxiliary',()=>{
- assert.equal(LEARNING_COURSES.length,8);
+ assert.equal(LEARNING_COURSES.length,3);
  assert.equal(LEARNING_COURSES[0].title,'走る速さとペース配分');
  assert.equal(LEARNING_COURSES[0].ready,true);
  assert.equal(LEARNING_COURSES.filter(c=>c.ready).length,3);

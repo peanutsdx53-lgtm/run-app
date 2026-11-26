@@ -8,7 +8,7 @@ test('P5 source gates: learning, nav and scientific provenance preserved',()=>{
  const learning={innerHTML:''};mountLearning(learning,new URLSearchParams());
  assert.equal((learning.innerHTML.match(/class="lr-course"/g)||[]).length,3);
  assert.equal(LEARNING_COURSES.filter(c=>c.ready).length,3);
- assert.equal(LEARNING_COURSES.length,8,'eight-slot curricular design kept internally');
+ assert.deepEqual(LEARNING_COURSES.map(c=>c.id),['data','movement','fatigue'],'only the three available course families remain internally');
  assert.doesNotMatch(learning.innerHTML,/RUNLOAD LEARNING|内部審査候補|原著・教材確認中|RunLoad独自/);
  assert.match(learning.innerHTML,/学習でできること/);
  for(const id of ['pace-basics','running-motion-basics','effort-fatigue-recovery','record-origin-missing'])assert.ok(learning.innerHTML.includes('lesson='+id));

@@ -7,7 +7,7 @@ import {LEARNING_COURSES} from '../ui/learningExperience.js';
 test('L5 running exertion, perceived fatigue and recovery is bounded general knowledge',()=>{
  assert.equal(FATIGUE_LESSON.id,'effort-fatigue-recovery');
  assert.equal(FATIGUE_LESSON.courseId,'fatigue');
- assert.equal(LEARNING_COURSES.length,8);
+ assert.equal(LEARNING_COURSES.length,3);
  assert.equal(LEARNING_COURSES.find(c=>c.id==='fatigue').ready,true);
  assert.equal(LEARNING_COURSES.filter(c=>c.ready).length,3);
  assert.equal(FATIGUE_QUESTIONS.length,4);
@@ -41,11 +41,11 @@ test('L5 running exertion, perceived fatigue and recovery is bounded general kno
  const sw=readFileSync(new URL('../sw.js',import.meta.url),'utf8');
  const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
- assert.match(sw,/"\.\/ui\/learningFatigueLesson\.js\?v=20261126-cleanup-v2"/);
- assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v2/);
- assert.match(index,/learningExperience\.css\?v=20261126-cleanup-v2/);
+ assert.match(sw,/"\.\/ui\/learningFatigueLesson\.js\?v=20261126-cleanup-v3"/);
+ assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v3/);
+ assert.match(index,/learningExperience\.css\?v=20261126-cleanup-v3/);
  const current=index.match(/app\.js\?v=([\w-]+)/)?.[1];
  assert.ok(current,'app entry must be versioned');
  assert.ok(sw.includes('app.js?v='+current),'app entry must be available offline');
- assert.match(app,/learningExperience\.js\?v=20261126-cleanup-v2/);
+ assert.match(app,/learningExperience\.js\?v=20261126-cleanup-v3/);
 });

@@ -54,7 +54,7 @@ function parentResolver(plan){
  const incoming=plan.parsed.data;
  const futureRaw=plan.writes[MANUAL_RUN_KEY]??plan.old[MANUAL_RUN_KEY]??null;
  const manuals=readManualRuns(storeWith(futureRaw));
- if(!manuals.ok)return ()=>fail('手入力の保存正本を照合できません','UNREADABLE_PARENT');
+ if(!manuals.ok)return ()=>fail('保存済みの手入力記録を確認できません','UNREADABLE_PARENT');
  return async ref=>{
   const n=normalizeRecordRef(ref);if(!n.ok)return n;
   let rows=[];
@@ -65,13 +65,13 @@ function parentResolver(plan){
    rows=[...(current.ok?current.records:[]),...(incoming.gps?.summaries||[])];
   }else return fail('記録の種類が不正です','BAD_REF');
   const matched=rows.filter(x=>x?.id===n.value.recordId);
-  if(!matched.length)return fail('親記録が見つかりません','NOT_FOUND');
+  if(!matched.length)return fail('元の走行記録が見つかりません','NOT_FOUND');
   if(matched.length>1&&!matched.every(x=>JSON.stringify(x)===JSON.stringify(matched[0])))
    return fail('同じ元の記録に異なる内容があります','SOURCE_MISMATCH');
   const record=matched[0];
   if(n.value.sourceType==='MANUAL'&&(record.schema!==2||record.source!=='manual')||
    n.value.sourceType==='GPS_V2'&&!gps2.validGpsV2Summary(record))
-   return fail('親記録の形式が正しくありません','UNREADABLE_PARENT');
+   return fail('元の走行記録の内容を確認できません','UNREADABLE_PARENT');
   return {ok:true,value:{ref:n.value,record,sourceKind:n.value.sourceType}};
  };
 }
@@ -97,12 +97,12 @@ export async function isolateOrphanBackup(storage,text,{consent=false}={}){
  const refs=new Map(parsed.annotations.events.map(e=>[e.recordKey,e.recordRef]));
  const missing=[];
  for(const [key,ref] of refs){
-  let p;try{p=await resolveParent(ref);}catch{return fail('親を照合できません','UNREADABLE_PARENT');}
+  let p;try{p=await resolveParent(ref);}catch{return fail('元の走行記録との関連を確認できません','UNREADABLE_PARENT');}
   if(p?.ok)continue;
   if(p?.code==='NOT_FOUND')missing.push(key);
-  else return fail('親の状態が不明なため隔離できません','UNREADABLE_PARENT');
+  else return fail('元の走行記録の状態を確認できないため、別ファイルに分けられません','UNREADABLE_PARENT');
  }
- if(!missing.length)return fail('親のない注記はありません','NO_ORPHANS');
+ if(!missing.length)return fail('元の走行記録が見つからない追記はありません','NO_ORPHANS');
  const keys=new Set(missing);
  const isolated={format:'orphan-annotations-inspection-only',version:1,
   exportedAt:new Date().toISOString(),notice:'復元できない読み取り専用の隔離ファイル。個人情報を含む未暗号化JSONです。',
