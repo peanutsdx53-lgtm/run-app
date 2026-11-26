@@ -12,3 +12,6 @@ Baseline main: `69a02a9575729d97cec4903551f5c75b5d814adc`. Regression 4583411058
 
 ## Gate
 This is a consolidated candidate, not a PASS declaration. Require all existing PR jobs plus new unavailable-state assertions and comparison of actual corrected screenshots; merge only verified head. Require main regression, Pages deployment and live smoke after merge. Retain known limitations: physical iOS/Android tests, OS accessibility and real GPS field validation, no scientific efficacy claim; final acceptance belongs to stage 4. No fabricated pass or removal of scientific/behavioral tests.
+
+## Candidate CI correction
+Initial candidate regression 45845641139: 17/18 required jobs succeeded; repository-neutral contract failed because of hardcoded Pages fallback. Replaced it with current-repository Pages API discovery under pages:read, retaining explicit environment override and main-only scope. Updated contract to enforce neutral discovery, override, main-only execution and actual smoke invocation; no unrelated tests removed. Candidate rerun and actual main discovery still required.

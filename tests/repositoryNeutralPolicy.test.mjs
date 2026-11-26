@@ -34,7 +34,17 @@ test('Deployment check and current-facing documentation have no former repositor
   assert.doesNotMatch(read(path),previous,path);
  }
  assert.match(read('tests/livePagesSmoke.mjs'),/process\.env\.RUNLOAD_PAGES_URL/);
- assert.match(read('.github/workflows/run-app-regression.yml'),/vars\.RUNLOAD_PAGES_URL != ''/);
+ const workflow=read('.github/workflows/run-app-regression.yml');
+ const deployed=workflow.slice(workflow.indexOf('  deployed-pages:'));
+ assert.match(deployed,/github\.ref == 'refs\/heads\/main' && github\.event_name != 'pull_request'/);
+ assert.match(deployed,/RUNLOAD_PAGES_URL: \$\{\{ vars\.RUNLOAD_PAGES_URL \}\}/);
+ assert.match(deployed,/vars\.RUNLOAD_PAGES_URL == ''/);
+ assert.match(deployed,/github\.rest\.repos\.getPages\(/);
+ assert.match(deployed,/owner: context\.repo\.owner, repo: context\.repo\.repo/);
+ assert.match(deployed,/pages: read/);
+ assert.match(deployed,/core\.exportVariable\('RUNLOAD_PAGES_URL', url\.href\)/);
+ assert.match(deployed,/run: node tests\/livePagesSmoke\.mjs/);
+ assert.doesNotMatch(deployed,/https?:\/\/[^\s'"]+\.github\.io/);
  assert.match(read('README.md'),/一般向けの正式なリリース/);
  assert.match(read('docs/INSTALL.md'),/一般向けに正式リリースしていません/);
 });
