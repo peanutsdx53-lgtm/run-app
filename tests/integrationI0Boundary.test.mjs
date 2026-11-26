@@ -10,7 +10,7 @@ import {parseLegacyOrTypedLink} from '../ui/recordRef.js';
 
 test('I0 cross-feature scientific and personal-data contract: learning never becomes a saved run',()=>{
   assert.deepEqual(LEARNING_COURSES.filter(x=>x.ready).map(x=>x.id),['data','movement','fatigue']);
-  assert.equal(LEARNING_COURSES.length,8);
+  assert.deepEqual(LEARNING_COURSES.map(x=>x.id),['data','movement','fatigue'],'only available curriculum is retained');
   assert.equal(QUIZ.length+MOTION_QUESTIONS.length+FATIGUE_QUESTIONS.length+ORIGIN_QUIZ.length,16);
   for(const k of ['01|距離・時間・ペース','02|足・膝・股関節','04|疲れの感じ方','01|過去の走りとの比較']){
     assert.ok(LEARNING_TOPICS[k],k+' existing topic contract');
