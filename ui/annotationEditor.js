@@ -85,7 +85,7 @@ export async function inspectPostHoc(ref,fieldKey,{openStore=openAnnotationStore
 export async function mountAnnotationEditor(root,hash,services={}){
  if(!root)return;
  const parsed=parseEditorLink(hash);
- const style='<link rel="stylesheet" href="./ui/annotationEditor.css?v=20261126-cleanup-v3">';
+ const style='<link rel="stylesheet" href="./ui/annotationEditor.css?v=20261126-cleanup-v4">';
  if(!parsed.ok){root.innerHTML=style+'<section class="ax-page"><p role="alert">'+esc(parsed.reason)+'</p><a href="#/history">履歴へ戻る</a></section>';return;}
  const ref=parsed.value,record=await (services.resolveParent||resolveRecord)(ref);
  if(!root.isConnected)return;

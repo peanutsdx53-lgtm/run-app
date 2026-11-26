@@ -177,3 +177,20 @@ test('G4-C3 deleted-note tombstone is metadata-only and cannot resurrect old tex
  assert.equal(inspectPortableV3Backup(json(injected)).ok,false,
   'deleted note text must not be restored from malformed backup');
 });
+
+test('neutral portable fields survive private-v3 packaging and exact preflight without rewriting the GPS evidence',async()=>{
+ const {PORTABLE_LOCAL_FIELDS}=await import('../ui/dataManagement.js');
+ const neutral={...v2,local:Object.fromEntries(DATA_KEYS.map(k=>[PORTABLE_LOCAL_FIELDS[k],v2.local[k]]))};
+ const output=preparePortableV3Candidate(json(neutral),snapshot,choice);
+ assert.ok(output.ok,json(output));
+ const root=JSON.parse(output.text);
+ assert.deepEqual(root.local,neutral.local);
+ assert.deepEqual(root.gps,gps);
+ assert.deepEqual(root.annotations,annotations);
+ assert.deepEqual(root.gpsReflections,reflections);
+ assert.ok(inspectPortableV3Backup(output.text).ok);
+ assert.ok(planPrivateGpsRestore(output.text,snapshot).ok);
+ assert.doesNotMatch(JSON.stringify(root.local),/runload/i);
+ const mixed={...root,local:{...root.local,[DATA_KEYS[0]]:null}};
+ assert.equal(inspectPortableV3Backup(json(mixed)).ok,false);
+});

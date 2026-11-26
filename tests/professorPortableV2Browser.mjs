@@ -125,7 +125,7 @@ try{
   // M7 T-046: v2 backup envelope with a VALID but different record under
   // the SAME manual ID must fail entirely before any data-store mutation.
   const conflict=JSON.parse(full.text);
-  const manualKey=(await import('/ui/manualRunStore.js')).MANUAL_RUN_KEY;
+  const manualKey='manualRuns';
   const payload=JSON.parse(conflict.local[manualKey]);
   const oldId=payload.records[0].id;
   payload.records[0].memo='同一IDで異なる有効な本人メモ';

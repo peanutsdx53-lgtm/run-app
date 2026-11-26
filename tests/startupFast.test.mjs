@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const source=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const version='20261126-cleanup-v3';
-const pwaVersion='20261126-cleanup-v3';
-const cacheVersion='20261126-cleanup-v3';
+const version='20261126-cleanup-v4';
+const pwaVersion='20261126-cleanup-v4';
+const cacheVersion='20261126-cleanup-v4';
 test('all 45 current startup modules load as one concurrent import batch',()=>{
  const app=source('app.js');
  const block=app.slice(app.indexOf('const ['),app.indexOf('const [initialGpsV2Cache,canonicalStartup]'));

@@ -3,9 +3,9 @@
  * Knowledge curriculum, not app-operation instructions or personal diagnosis.
  * No user records are read, edited or sent from this module.
  */
-import {ORIGIN_LESSON,mountOriginLesson} from "./learningOriginLesson.js?v=20261126-cleanup-v3";
-import {MOTION_LESSON,mountMotionLesson} from "./learningMotionLesson.js?v=20261126-cleanup-v3";
-import {FATIGUE_LESSON,mountFatigueLesson} from "./learningFatigueLesson.js?v=20261126-cleanup-v3";
+import {ORIGIN_LESSON,mountOriginLesson} from "./learningOriginLesson.js?v=20261126-cleanup-v4";
+import {MOTION_LESSON,mountMotionLesson} from "./learningMotionLesson.js?v=20261126-cleanup-v4";
+import {FATIGUE_LESSON,mountFatigueLesson} from "./learningFatigueLesson.js?v=20261126-cleanup-v4";
 import {enhanceLearningLesson} from "./learningPresentation.js?v=20261111-learning-density-v1";
 export const LEARNING_COURSES=Object.freeze([
  {id:"data",title:"走る速さとペース配分",description:"走るときの速さや配分を、実際の走行場面を模した例で学びます。",ready:true},

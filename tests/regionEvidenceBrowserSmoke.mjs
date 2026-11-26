@@ -30,7 +30,7 @@ async function mount(page,{speed=3,activity='RUNNING',mixed=false}={}){
  // mountResult() contract used by the application's saved/manual route.
  const distanceKm=Number((speed*1.8).toFixed(6)); // 30 minutes
  return page.evaluate(async({distanceKm,activity,mixed})=>{
-  const {mountResult}=await import('/ui/resultExperience.js?v=20261126-cleanup-v3');
+  const {mountResult}=await import('/ui/resultExperience.js?v=20261126-cleanup-v4');
   const id='run-v1-11111111-1111-4111-8111-111111111111';
   const draft={date:'2026-10-25',distance:String(distanceKm),minutes:'30',activityGait:activity,
    runningFormat:mixed?'RUN_WALK':'CONTINUOUS_RUN',rofBefore:0,rofAfter:4,

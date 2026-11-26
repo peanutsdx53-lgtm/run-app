@@ -10,7 +10,7 @@ import {HOME_DASHBOARD_KEY,loadHomeDashboardLayout} from "./homeDashboardLayout.
 const PROFILE_KEY="runload-v2-user-profile-v1",DISPLAY_KEY="runload-v2-display-preferences-v1";
 import {LEGAL_CONSENT_KEY} from "./legalDocuments.js";
 import {LEARNING_PROGRESS_KEY} from "./learningPresentation.js";
-import * as gpsV2 from "./gpsReplayIndexedDbStore.js?v=20261126-cleanup-v3";
+import * as gpsV2 from "./gpsReplayIndexedDbStore.js?v=20261126-cleanup-v4";
 
 export const PORTABLE_FORMAT="running-data-portable-backup";
 export const PORTABLE_VERSION=1;
@@ -20,6 +20,29 @@ export const portableUtf8Bytes=text=>new Blob([text]).size;
 export const RECORD_KEYS=Object.freeze([MANUAL_RUN_KEY,REST_DAY_KEY,CONDITION_KEY,COURSE_PRESET_KEY,CONDITION_INSIGHTS_KEY,EXPLORATION_NOTE_KEY]);
 export const OPTION_KEYS=Object.freeze([ACTION_INTENT_KEY,HOME_DASHBOARD_KEY,PROFILE_KEY,DISPLAY_KEY]);
 export const DATA_KEYS=Object.freeze([...RECORD_KEYS,...OPTION_KEYS]);
+// Wire names are independent of the existing on-device storage namespaces.
+// Older backups remain readable; never migrate or rename browser storage here.
+export const PORTABLE_LOCAL_FIELDS=Object.freeze({
+ [MANUAL_RUN_KEY]:"manualRuns",[REST_DAY_KEY]:"restDays",[CONDITION_KEY]:"dailyConditions",
+ [COURSE_PRESET_KEY]:"savedCourses",[CONDITION_INSIGHTS_KEY]:"conditionReflections",
+ [EXPLORATION_NOTE_KEY]:"explorationNotes",[ACTION_INTENT_KEY]:"actionIntents",
+ [HOME_DASHBOARD_KEY]:"homeLayout",[PROFILE_KEY]:"profile",[DISPLAY_KEY]:"displayPreferences"
+});
+function encodeLocalFields(local){
+ return Object.fromEntries(DATA_KEYS.map(key=>[PORTABLE_LOCAL_FIELDS[key],local[key]]));
+}
+// Accept exactly one complete namespace, except the historically optional rest-day field.
+// A mixture, duplicate alias, or unknown field must not silently replace a record.
+function decodeLocalFields(local){
+ const keys=Object.keys(local);
+ const allLegacy=keys.every(key=>DATA_KEYS.includes(key));
+ const allPublic=keys.every(key=>Object.values(PORTABLE_LOCAL_FIELDS).includes(key));
+ if(!allLegacy&&!allPublic)return null;
+ const names=DATA_KEYS.map(key=>allLegacy?key:PORTABLE_LOCAL_FIELDS[key]);
+ if(![names.length,names.length-1].includes(keys.length)||
+  DATA_KEYS.some((key,i)=>key!==REST_DAY_KEY&&!Object.hasOwn(local,names[i])))return null;
+ return Object.fromEntries(DATA_KEYS.map((key,i)=>[key,Object.hasOwn(local,names[i])?local[names[i]]:null]));
+}
 export const RESET_KEYS=Object.freeze([...DATA_KEYS,LEGAL_CONSENT_KEY,LEARNING_PROGRESS_KEY,"runload-v2-introduction-preview-v1"]);
 const countKey=Object.freeze({
  [MANUAL_RUN_KEY]:"records",[REST_DAY_KEY]:"records",[CONDITION_KEY]:null,[COURSE_PRESET_KEY]:"records",
@@ -89,13 +112,12 @@ function validateEnvelope(o){
  if(!strictObject(o)||o.format!==PORTABLE_FORMAT||o.version!==PORTABLE_VERSION||
   !strictObject(o.local)||typeof o.exportedAt!=="string"||!Number.isFinite(Date.parse(o.exportedAt))||
   Object.keys(o).some(k=>!["format","version","exportedAt","local","gps"].includes(k))||
-  ![DATA_KEYS.length,DATA_KEYS.length-1].includes(Object.keys(o.local).length)||
-  DATA_KEYS.filter(k=>k!==REST_DAY_KEY).some(k=>!Object.hasOwn(o.local,k))||
-  Object.keys(o.local).some(k=>!DATA_KEYS.includes(k))||
   (o.gps!==null&&!strictObject(o.gps)))return {ok:false,reason:"バックアップの形式・バージョンが正しくありません"};
+ const local=decodeLocalFields(o.local);
+ if(!local)return {ok:false,reason:"バックアップの形式・バージョンが正しくありません"};
  const counts={};
  for(const key of DATA_KEYS){
-  const checked=checkLocal(key,o.local[key]===undefined&&key===REST_DAY_KEY?null:o.local[key]);
+  const checked=checkLocal(key,local[key]);
   if(!checked.ok)return checked;
   counts[key]=checked.count;
  }
@@ -103,7 +125,7 @@ function validateEnvelope(o){
   const checked=gpsV2.inspectGpsV2Backup(encoded(o.gps));
   if(!checked.ok)return {ok:false,reason:"GPS記録の検証に失敗しました："+checked.reason};
  }
- return {ok:true,data:{...o,local:{...o.local,[REST_DAY_KEY]:o.local[REST_DAY_KEY]??null}},counts,gpsCount:o.gps?.summaries?.length||0};
+ return {ok:true,data:{...o,local},counts,gpsCount:o.gps?.summaries?.length||0};
 }
 export function inspectPortableBackup(text){
  if(typeof text!=="string"||portableUtf8Bytes(text)>PORTABLE_MAX_BYTES)return {ok:false,reason:"80MB以内のJSONファイルを選択してください"};
@@ -127,7 +149,7 @@ export async function exportPortableBackup(storage,{includeGps=false}={}){
  if(DATA_KEYS.some(key=>snap.local[key]!==checkedAgain.local[key]))
   return {ok:false,reason:"バックアップ中に端末の保存情報が変更されました。不整合なファイルを作成しないため中止しました。ほかのタブを閉じてから再試行してください"};
  const data={format:PORTABLE_FORMAT,version:PORTABLE_VERSION,exportedAt:new Date().toISOString(),
-  local:snap.local,gps};
+  local:encodeLocalFields(snap.local),gps};
  const text=encoded(data);
  if(portableUtf8Bytes(text)>PORTABLE_MAX_BYTES)return {ok:false,reason:"ファイルが80MBを超えます。GPS記録は履歴画面から個別に保存してください"};
  return {ok:true,text,counts:snap.counts,gpsCount:gps?.summaries.length||0,includesGps:includeGps};
