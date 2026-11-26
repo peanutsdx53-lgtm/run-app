@@ -56,7 +56,7 @@ for(const workflow of [...tracked].filter(p=>p.startsWith('.github/workflows/')&
   }
  }
 }
-const retired=['ui/gpsIndexedDbStore.js','ui/gpsMeasurementStore.js','tests/gpsBackupContract.test.mjs','tests/gpsIndexedDbStore.test.mjs',
+const retired=['ui/interpretationView.js','ui/gpsIndexedDbStore.js','ui/gpsMeasurementStore.js','tests/gpsBackupContract.test.mjs','tests/gpsIndexedDbStore.test.mjs',
  'ui/historyExperience.css','docs/SCREEN_MAP.md','docs/UNIMPLEMENTED_PRIORITY_V27_20261026.md',
  'docs/ENGLISH_UI_PREVIEW_IMPLEMENTATION_20261111.md','docs/FIRST_USE_ENGLISH_COPY_AND_I18N_PREPARATION_20261110.md',
  'docs/P9_PREMERGE_GATE_SCOPE_20261109.md'];

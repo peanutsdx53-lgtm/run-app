@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {buildLifePacket,latestEligibleLifeBaseline,evaluateLifeIntent,INTERPRETATION_RULE_VERSION} from '../ui/interpretationRules.js';
 import {createLifeIntent,loadIntent,updateIntent,ACTION_INTENT_KEY} from '../ui/actionIntentStore.js';
-import {lifeComparisonPanel,actionIntentCard} from '../ui/interpretationView.js';
+import {lifeComparisonPanel,actionIntentCard} from './fixtures/retiredInterpretationView.js';
 const entry=(date,minutes=360,source='duration',feeling='ふつう')=>({date,sleepMinutes:minutes,sleepSource:source,feeling,memo:''});
 const good={canSave:true,entries:[entry('2026-10-20',360),entry('2026-10-22',450,'duration','良い')]};
 const storage=()=>{const map=new Map();return {map,getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)};};
