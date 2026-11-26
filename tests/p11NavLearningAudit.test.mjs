@@ -7,7 +7,7 @@ import {fatigueMarkup} from '../ui/learningFatigueLesson.js';
 import {mountLearning} from '../ui/learningExperience.js';
 import {shortcutsCard} from '../ui/homeExperience.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261126-cleanup-v5';
+const cacheVersion='20261126-cleanup-v5-css-retired';
 function visibleText(markup){
  return markup.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ')
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ')
