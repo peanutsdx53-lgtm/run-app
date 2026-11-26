@@ -39,7 +39,9 @@ export async function exportPortableBackup(storage,{includeGps=false}={}){
  const checked=base.inspectLocalStorage(storage);
  if(!checked.ok)return checked;
  const previousJSON=JSON.parse(previous.text);
- if(base.DATA_KEYS.some(k=>checked.local[k]!==previousJSON.local[k]))
+ const normalized=base.inspectPortableBackup(previous.text);
+ if(!normalized.ok)return normalized;
+ if(base.DATA_KEYS.some(k=>checked.local[k]!==normalized.data.local[k]))
   return fail('バックアップ中に保存記録が変更されました。別の画面を閉じて再試行してください','HEAD_CONFLICT');
  const output={...previousJSON,version:2,annotations:annotations.value.bundle};
  const text=JSON.stringify(output);

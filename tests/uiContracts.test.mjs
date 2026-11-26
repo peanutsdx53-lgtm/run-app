@@ -110,12 +110,12 @@ test("v8 release uses cache-busted body resources and a user-controlled update p
  assert.ok(sw.includes('./ui/bodyContextExperience.js?v='+jsRevision[1]),'offline shell caches active body module');
  assert.match(pwa,/updateViaCache:\"none\"/);
  assert.match(pwa,/更新する/);
- assert.ok(sw.includes('./ui/gpsDynamicResult.js?v=20261126-cleanup-v3'),'current GPS dynamic module must be precached');
+ assert.ok(sw.includes('./ui/gpsDynamicResult.js?v=20261126-cleanup-v4'),'current GPS dynamic module must be precached');
  assert.match(sw,/\.\/ui\/gpsReplayIndexedDbStore\.js/);
  assert.match(sw,/cache:\"no-cache\"/);
 });
 
-test("settings v2 uses a dark outer shell and full content width",()=>{const css=read("ui/settingsExperience.css"),html=read("index.html");assert.match(css,/\.app-shell:has\(\[data-settings-v2\]\) \.main-frame/);assert.match(css,/\.app-shell:has\(\[data-settings-v2\]\) \.main-content\{max-width:none/);assert.match(html,/settingsExperience\.css\?v=20261126-cleanup-v3/)});
+test("settings v2 uses a dark outer shell and full content width",()=>{const css=read("ui/settingsExperience.css"),html=read("index.html");assert.match(css,/\.app-shell:has\(\[data-settings-v2\]\) \.main-frame/);assert.match(css,/\.app-shell:has\(\[data-settings-v2\]\) \.main-content\{max-width:none/);assert.match(html,/settingsExperience\.css\?v=20261126-cleanup-v4/)});
 
 test("global double-tap suppression preserves accessible pinch zoom and approved condition navigation colors",()=>{
  const styles=read("styles.css"),condition=read("ui/conditionJourney.css"),html=read("index.html"),sw=read("sw.js");
@@ -126,9 +126,9 @@ test("global double-tap suppression preserves accessible pinch zoom and approved
  for(const token of ['background:#0c1d2bef','border-top-color:#2e5263','color:#c0cbd5','color:#55dce3','background:transparent']){
   assert.ok(condition.includes(token),"condition uses approved Home navigation: "+token);
  }
- assert.match(html,/styles\.css\?v=20261126-cleanup-v3/);
+ assert.match(html,/styles\.css\?v=20261126-cleanup-v4/);
  assert.match(html,/conditionJourney\.css\?v=20261125-ux15-condition-v1/);
- assert.ok(sw.includes('./ui/gpsDynamicResult.js?v=20261126-cleanup-v3'),'current GPS dynamic module must be precached');
+ assert.ok(sw.includes('./ui/gpsDynamicResult.js?v=20261126-cleanup-v4'),'current GPS dynamic module must be precached');
  assert.match(sw,/\.\/ui\/gpsReplayReference\.js/);
 });
 

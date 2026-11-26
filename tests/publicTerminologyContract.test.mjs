@@ -48,7 +48,7 @@ test('current GPS is the only runtime storage and reference path',()=>{
   assert.doesNotMatch(read(path),/GPS_V1|gpsLegacy|gpsCurrent|gpsIndexedDbStore|gpsMeasurementStore|gps-v1-/,path);
  }
  assert.match(read('ui/gpsReplayIndexedDbStore.js'),/prepareGpsMeasurement/);
- assert.match(read('ui/dataManagement.js'),/local:snap.local,gps/);
+ assert.match(read('ui/dataManagement.js'),/local:encodeLocalFields\(snap\.local\),gps/);
  assert.match(read('sw.js'),/\.\/ui\/gpsMeasurementValidation\.js/);
 });
 

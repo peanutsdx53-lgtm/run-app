@@ -79,9 +79,9 @@ try{
   assert.equal(Object.hasOwn(parsed.local,'runload-v2-learning-checklist-v1'),false,'progress is intentionally omitted from backup');
   assert.equal(parsed.gps,null);
   assert.equal(parsed.local["runload-v2-legal-consent-v1"],undefined);
-  assert.equal(JSON.parse(parsed.local["runload-v2-life-condition-v1"]).length,1);
-  assert.equal(JSON.parse(parsed.local["runload-v2-user-profile-v1"]).nickname,"テスト");
-  const archived=JSON.parse(parsed.local["runload-v2-manual-runs-v2"]);
+  assert.equal(JSON.parse(parsed.local.dailyConditions).length,1);
+  assert.equal(JSON.parse(parsed.local.profile).nickname,"テスト");
+  const archived=JSON.parse(parsed.local.manualRuns);
   assert.equal(archived.records.length,1);
   assert.equal(archived.records[0].id,run.record.id);
   assert.equal(archived.records[0].rofBefore,0);

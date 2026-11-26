@@ -50,12 +50,12 @@ test('UX04 keyed translation is opt-in, preserves unknown and original saved tex
 
 test('UX04 versioned app, dictionary and new action keys are coherent with offline precache',()=>{
  const app=read('app.js'),html=read('index.html'),sw=read('sw.js');
- assert.match(app,/englishUi\.js\?v=20261126-cleanup-v3/);
- assert.match(html,/app\.js\?v=20261126-cleanup-v3/);
- assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v3/);
+ assert.match(app,/englishUi\.js\?v=20261126-cleanup-v4/);
+ assert.match(html,/app\.js\?v=20261126-cleanup-v4/);
+ assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v4/);
  for(const expected of [
-  './app.js?v=20261126-cleanup-v3',
-  './ui/englishUi.js?v=20261126-cleanup-v3',
+  './app.js?v=20261126-cleanup-v4',
+  './ui/englishUi.js?v=20261126-cleanup-v4',
   './ui/actionCopyKeys.js',
   './ui/actionCopyKeys.js?v=20261122-ux04-stable-actions-v1'
  ])assert.ok(sw.includes(expected),'offline precache missing '+expected);
