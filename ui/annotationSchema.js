@@ -158,7 +158,7 @@ export function validateAnnotationEvent(event,{record}={}){
  const valid=validateAppendRequest(req,{record});if(!valid.ok)return valid;
  if(recordKeyOf(valid.value)!==event.recordKey||streamKeyOf(valid.value,event.fieldKey)!==event.streamKey)
   return fail('BAD_EVENT','記録の参照先と保存先が一致しません');
- if(annotationUtf8Bytes(JSON.stringify(event))>ANNOTATION_MAX_EVENT_BYTES)return fail('BAD_EVENT','イベントが長すぎます');
+ if(annotationUtf8Bytes(JSON.stringify(event))>ANNOTATION_MAX_EVENT_BYTES)return fail('BAD_EVENT','追記した内容が長すぎます');
  return ok(event);
 }
 export const validAnnotationId=id=>typeof id==='string'&&idPattern.test(id);

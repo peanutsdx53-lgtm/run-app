@@ -89,7 +89,7 @@ export async function readGpsPrivateBackupSnapshot(choice={}){
   if(scope.value.includeGpsReflections)
    names.push(GPS_V2_REFLECTION_CONTENT,GPS_V2_REFLECTION_EVENTS);
   if(!names.every(n=>db.objectStoreNames.contains(n)))
-   return fail('UNREADABLE_SCHEMA','GPS保存領域の構成に不整合があります');
+   return fail('UNREADABLE_SCHEMA','保存済みのGPS記録を安全に確認できません');
 
   tx=db.transaction(names,'readonly');
   completed=txDone(tx);

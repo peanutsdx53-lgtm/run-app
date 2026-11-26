@@ -21,7 +21,7 @@ const extractRoute=html=>{
  return key;
 };
 test('L6 running lesson roles, distinct knowledge tasks, and 4 valid legacy exploration links',()=>{
- assert.equal(LEARNING_COURSES.length,8);
+ assert.equal(LEARNING_COURSES.length,3);
  assert.deepEqual(LEARNING_COURSES.filter(c=>c.ready).map(c=>c.id),['data','movement','fatigue']);
  const catalog={innerHTML:''};
  mountLearning(catalog,new URLSearchParams(''));

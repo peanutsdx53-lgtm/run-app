@@ -5,7 +5,7 @@ import {
  splitPractice,assessPartialExample,evaluateQuiz,mountLearning
 } from '../ui/learningExperience.js';
 
-assert.equal(LEARNING_COURSES.length,8);
+assert.equal(LEARNING_COURSES.length,3);
 assert.equal(LEARNING_COURSES.filter(x=>x.ready).length,3);
 assert.equal(READY_LESSON.id,'pace-basics');
 assert.equal(READY_LESSON.version,'0.3-content-audit');

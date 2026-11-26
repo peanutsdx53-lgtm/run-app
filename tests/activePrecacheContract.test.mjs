@@ -56,14 +56,14 @@ test('obsolete query revisions are not retained solely for historical compatibil
 
 test('offline entry points and dynamic Shadow DOM stylesheet are preserved',()=>{
  for(const url of [
-  './app.js?v=20261126-cleanup-v2',
-  './ui/resultExperience.js?v=20261126-cleanup-v2',
-  './ui/buttonContrastSystem.css?v=20261126-cleanup-v2',
+  './app.js?v=20261126-cleanup-v3',
+  './ui/resultExperience.js?v=20261126-cleanup-v3',
+  './ui/buttonContrastSystem.css?v=20261126-cleanup-v3',
   './ui/resultInlineStyles.js?v=20261119-s09-focus-controls-v1',
-  './ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v2',
-  './ui/annotationEditor.css?v=20261126-cleanup-v2',
+  './ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v3',
+  './ui/annotationEditor.css?v=20261126-cleanup-v3',
   './ui/historyInlineStyles.js?v=20261121-history-more-filters-v2',
-  './ui/englishUi.js?v=20261126-cleanup-v2',
+  './ui/englishUi.js?v=20261126-cleanup-v3',
   './ui/actionCopyKeys.js?v=20261122-ux04-stable-actions-v1',
   './manifest.en.webmanifest'
  ])assert.ok(cached.has(url),'necessary offline resource missing: '+url);

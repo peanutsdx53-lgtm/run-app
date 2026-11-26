@@ -129,7 +129,7 @@ try{
     const reg=await navigator.serviceWorker.ready;
     const cache=await caches.open('runload-ui-next-shell-20261111-explore-controls-v1');
     const base=location.origin+'/';
-    return {registered:!!reg.active,js:!!(await cache.match(base+'ui/learningExperience.js?v=20261126-cleanup-v2')),css:!!(await cache.match(base+'ui/learningExperience.css?v=20261126-cleanup-v2'))};
+    return {registered:!!reg.active,js:!!(await cache.match(base+'ui/learningExperience.js?v=20261126-cleanup-v3')),css:!!(await cache.match(base+'ui/learningExperience.css?v=20261126-cleanup-v3'))};
    });
    assert.deepEqual(cached,{registered:true,js:true,css:true},'learning assets cached for offline');
    await context.setOffline(true);
@@ -140,8 +140,8 @@ try{
     const retainedCache=await page.evaluate(async()=>{
      const cache=await caches.open('runload-ui-next-shell-20261111-explore-controls-v1');
      return await Promise.all([
-      './ui/learningExperience.js?v=20261126-cleanup-v2',
-      './ui/learningExperience.css?v=20261126-cleanup-v2'
+      './ui/learningExperience.js?v=20261126-cleanup-v3',
+      './ui/learningExperience.css?v=20261126-cleanup-v3'
      ].map(async url=>!!(await cache.match(new URL(url,location.href)))));
     });
     assert.deepEqual(retainedCache,[true,true],

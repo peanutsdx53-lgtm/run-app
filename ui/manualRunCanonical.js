@@ -5,7 +5,7 @@
  */
 import {MANUAL_RUN_KEY,readManualRuns} from './manualRunStore.js';
 export const MANUAL_DB='runload-v2-manual-authoritative-v1',MANUAL_STORE='envelopes',MANUAL_ENTRY='current';
-const error='手入力記録の正本を安全に読み取れません。元のデータを変更しません';
+const error='保存済みの手入力記録を安全に読み取れません。元の記録は変更しません';
 let opening=null,raw=null,ready=false,notice=error;
 const requested=req=>new Promise((resolve,reject)=>{req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||Error('IDB request'))});
 const settled=tx=>new Promise((resolve,reject)=>{tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error||Error('IDB failed'));tx.onabort=()=>reject(tx.error||Error('IDB aborted'))});
@@ -20,7 +20,7 @@ function open(){
   request.onerror=()=>fail(request.error||Error('IDB open'));
   request.onblocked=()=>fail(Error('IDB blocked'));
   request.onsuccess=()=>{const db=request.result;if(done){db.close();return}done=true;clearTimeout(timer);
-   db.onversionchange=()=>{db.close();opening=null;ready=false;notice='正本の形式が変更されました。再読込してください'};
+   db.onversionchange=()=>{db.close();opening=null;ready=false;notice='保存情報の形式が変更されました。画面を再読み込みしてください'};
    resolve(db)};
  });
  const guarded=p.catch(e=>{if(opening===guarded)opening=null;throw e});opening=guarded;return guarded;
@@ -39,8 +39,8 @@ const usable=base=>base&&typeof base.getItem==='function'&&typeof base.setItem==
 const unsupported='端末の保存領域を利用できません。他の保存情報も含めて確認できないため処理を停止しました';
 export const viewStorage=base=>({
  getItem(key){if(key!==MANUAL_RUN_KEY){if(!usable(base))throw Error(unsupported);return base.getItem(key)}if(!ready)throw Error(notice);return raw},
- setItem(key,value){if(key===MANUAL_RUN_KEY)throw Error('IndexedDB正本は書込APIのみ');return base.setItem(key,value)},
- removeItem(key){if(key===MANUAL_RUN_KEY)throw Error('IndexedDB正本は書込APIのみ');return base.removeItem(key)}
+ setItem(key,value){if(key===MANUAL_RUN_KEY)throw Error('手入力記録は専用の保存操作から変更してください');return base.setItem(key,value)},
+ removeItem(key){if(key===MANUAL_RUN_KEY)throw Error('手入力記録は専用の保存操作から変更してください');return base.removeItem(key)}
 });
 export async function readCanonical(){
  try{const db=await open(),tx=db.transaction(MANUAL_STORE,'readonly'),done=settled(tx);
@@ -69,11 +69,11 @@ export async function mutate(operation){
   if(result?.then||!result?.ok||!valid(next)){
    tx.abort();await done.catch(()=>{});
    return result?.then?failure('原子的な保存処理に非同期操作は指定できません'):
-    result?.ok?failure('正本に保存できない形式です'):result||failure(error);
+    result?.ok?failure('手入力記録として保存できない内容です'):result||failure(error);
   }
   if(next!==old){if(next===null)store.delete(MANUAL_ENTRY);else store.put(next,MANUAL_ENTRY)}
   await done;raw=next;ready=true;notice='';return result;
- }catch{return failure('IndexedDBへの保存を確認できません。既存記録を確認してください')}
+ }catch{return failure('手入力記録の保存を確認できません。保存済みの記録を確認してください')}
 }
 /** For export, IDB snapshot is refreshed then rechecked after other stores. */
 export async function snapshotTask(base,operation){
@@ -81,7 +81,7 @@ export async function snapshotTask(base,operation){
  const first=await refresh();if(!first.ok)return first;
  let result;try{result=await operation(viewStorage(base))}catch{return failure('バックアップを実行できません')}
  const final=await readCanonical();
- if(!final.ok||first.raw!==final.raw)return failure('バックアップ中に正本が変更されました。中止して再試行してください');
+ if(!final.ok||first.raw!==final.raw)return failure('バックアップ中に保存済みの記録が変更されました。処理を中止しました。再試行してください');
  return result;
 }
 /** Restore/remove: stage manual key in memory, never in localStorage. Commit it
@@ -100,15 +100,15 @@ export async function portableMutation(base,operation){
  let result;try{result=await operation(proxy)}catch{return {ok:false,partial:true,reason:'復元・削除の途中で例外が発生しました。複数の保存先を照合してください'}}
  if(staged===initial){
   const verified=await refresh();
-  if(!verified.ok||verified.raw!==initial)return {ok:false,partial:true,reason:'処理中に正本が変更された可能性があります。再読込して照合してください'};
+  if(!verified.ok||verified.raw!==initial)return {ok:false,partial:true,reason:'処理中に保存済みの記録が変更された可能性があります。画面を再読み込みして確認してください'};
   return result;
  }
  if(!result?.ok&&!result?.partial)return result;
- if(!valid(staged))return {ok:false,partial:true,reason:'保存正本の形式を確認できません'};
+ if(!valid(staged))return {ok:false,partial:true,reason:'保存済み記録の形式を確認できません'};
  try{const db=await open(),tx=writeTransaction(db),done=settled(tx),store=tx.objectStore(MANUAL_STORE);
   const current=await requested(store.get(MANUAL_ENTRY));
-  if((current===undefined?null:current)!==initial){tx.abort();await done.catch(()=>{});return {ok:false,partial:true,reason:'復元中に別の正本更新がありました。各記録とバックアップを照合してください'}}
+  if((current===undefined?null:current)!==initial){tx.abort();await done.catch(()=>{});return {ok:false,partial:true,reason:'復元中に別の操作で記録が変更されました。保存済み記録とバックアップを確認してください'}}
   if(staged===null)store.delete(MANUAL_ENTRY);else store.put(staged,MANUAL_ENTRY);
   await done;raw=staged;ready=true;notice='';return result;
- }catch{return {ok:false,partial:true,reason:'正本への復元・削除が完了していません。他の保存先を確認してください'}}
+ }catch{return {ok:false,partial:true,reason:'手入力記録の復元・削除が完了していません。他の保存済み情報も確認してください'}}
 }
