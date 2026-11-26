@@ -56,7 +56,7 @@ test('obsolete query revisions are not retained solely for historical compatibil
 
 test('offline entry points and dynamic Shadow DOM stylesheet are preserved',()=>{
  for(const url of [
-  './app.js?v=20261126-cleanup-v5',
+  './app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3',
   './ui/resultExperience.js?v=20261126-cleanup-v5',
   './ui/buttonContrastSystem.css?v=20261126-cleanup-v5',
   './ui/resultInlineStyles.js?v=20261119-s09-focus-controls-v1',

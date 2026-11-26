@@ -92,12 +92,12 @@ test('UX05: CSS reflows all stage labels while both dynamic JS and CSS stay offl
   [app,'firstUseExperience.js?v='+shellGen],
   [index,'firstUseExperience.css?v='+gen],
   [index,'homeExperience.css?v=20261126-cleanup-v5'],
-  [index,'app.js?v=20261126-cleanup-v5'],
-  [sw,'runload-ui-next-shell-'+shellGen],
+  [index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3'],
+  [sw,'runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3'],
   [sw,'firstUseExperience.css?v='+gen],
   [sw,'homeExperience.css?v=20261126-cleanup-v5'],
   [sw,'firstUseExperience.js?v='+shellGen],
-  [sw,'app.js?v=20261126-cleanup-v5']
+  [sw,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3']
  ])assert.ok(txt.includes(fragment),'active offline version is missing: '+fragment);
  assert.match(read('.github/workflows/run-app-regression.yml'),/node tests\/ux05OnboardingHomeBrowser\.mjs/);
 });

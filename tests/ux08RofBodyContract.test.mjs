@@ -85,7 +85,7 @@ test('UX08: the live ROF and body modules, styles, English dictionary and PWA sh
  const items=[
   [app,'rofExperience.js?v=20261126-cleanup-v5'],[app,'bodyContextExperience.js?v=20261126-cleanup-v5'],
   [app,'englishUi.js?v=20261126-cleanup-v5'],[index,'rofExperience.css?v='+version],
-  [index,'bodyContextExperience.css?v=20261126-cleanup-v5'],[index,'app.js?v=20261126-cleanup-v5'],
+  [index,'bodyContextExperience.css?v=20261126-cleanup-v5'],[index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3'],
   [sw,'runload-ui-next-shell-'+shell],[sw,'rofExperience.js?v=20261126-cleanup-v5'],
   [sw,'bodyContextExperience.js?v=20261126-cleanup-v5'],[sw,'rofExperience.css?v='+version],
   [sw,'bodyContextExperience.css?v=20261126-cleanup-v5'],[sw,'englishUi.js?v=20261126-cleanup-v5'],

@@ -173,7 +173,18 @@ try{
    await rootResult.locator('[data-tab="body"]').waitFor({state:'attached',timeout:15000});
    assert.equal(await rootResult.locator('[data-gps-dynamic-gate]').count(),0,'GPS summary without location consent must not expose replay');
    await page.goto(base+'dynamic-result?record='+encodeURIComponent(saved.emptyId),{waitUntil:'networkidle'});
-   await page.locator('.gd-empty').waitFor({timeout:15000});
+   const expected=language==='en'?'Saved data for dynamic results could not be verified.':'動的結果の保存データを確認できません';
+   await page.waitForFunction(text=>document.querySelector('[data-gps-dynamic] .gd-empty')?.textContent===text,expected,{timeout:15000});
+   const unavailable=page.locator('[data-gps-dynamic] .gd-empty');
+   assert.equal(await unavailable.getAttribute('role'),'status');
+   const colors=await unavailable.evaluate(el=>{const s=getComputedStyle(el);return {fg:s.color,bg:s.backgroundColor};});
+   const luminance=color=>{
+    const values=color.match(/\d+(?:\.\d+)?/g).slice(0,3).map(n=>Number(n)/255).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);
+    return values[0]*0.2126+values[1]*0.7152+values[2]*0.0722;
+   };
+   assert.match(colors.bg,/^rgb\(/,'unavailable state has an opaque background');
+   const contrast=(Math.max(luminance(colors.fg),luminance(colors.bg))+0.05)/(Math.min(luminance(colors.fg),luminance(colors.bg))+0.05);
+   assert.ok(contrast>=4.5,'unavailable GPS explanation contrast '+contrast);
    assert.equal(await page.locator('.gd-main').count(),0,'force navigation cannot load unsaved route');
    await capture(page,width,language,'07-no-detail-not-available');
   }
