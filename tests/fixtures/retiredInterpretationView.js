@@ -1,4 +1,4 @@
-import {buildLifePacket,latestEligibleLifeBaseline,evaluateLifeIntent,KNOWLEDGE} from './interpretationRules.js';
+import {buildLifePacket,latestEligibleLifeBaseline,evaluateLifeIntent,KNOWLEDGE} from '../../ui/interpretationRules.js';
 const e=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 export function lifeComparisonPanel(conditions,{a='',b='',notice='',intent=null}={}){
  const r=buildLifePacket(conditions,a,b);
