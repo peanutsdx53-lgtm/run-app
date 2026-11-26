@@ -76,7 +76,7 @@ test('UX038 click action only focuses existing scope and leaves all save handler
 });
 test('review entry renders once after canonical refresh; focus correction is scoped and does not save',()=>{
  const app=read('app.js');
- const entry=app.slice(app.indexOf('if(event.target.closest("[data-demo-save]"))'),app.indexOf('if(event.target.closest(".rr-date-edit")'));
+ const entry=app.slice(app.indexOf('if(event.target.closest("[data-open-record-review]"))'),app.indexOf('if(event.target.closest(".rr-date-edit")'));
  assert.ok(entry.includes('location.hash="#/record-review";return;'));
  assert.doesNotMatch(entry,/\brender\(\)/);
  const focus=app.slice(app.indexOf('function keepReviewControlVisible(target)'),app.indexOf('app.addEventListener("click",async(event)=>{'));
@@ -91,15 +91,15 @@ test('UX038 bilingual shortcut and active offline review assets match the curren
  assert.equal(translateUiText('保存する内容と出所を確認する'),'Review What Will Be Saved and Its Source');
  assert.equal(translateUiText('保存可否と出所を確認する'),'Review Save Availability and Source');
  assert.equal(translateUiText('端末内に保存'),'Save Destination: This Device');
- const ver='20261123-ux11-result-source-v1',shell='20261126-cleanup-v1';
+ const ver='20261123-ux11-result-source-v1',shell='20261126-cleanup-v2';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
-  [app,'recordReviewExperience.js?v=20261126-cleanup-v1'],[app,'englishUi.js?v=20261126-cleanup-v1'],
-  [index,'recordReviewExperience.css?v=20261126-cleanup-v1'],[index,'app.js?v=20261126-cleanup-v1'],
-  [sw,'runload-ui-next-shell-'+shell],[sw,'recordReviewExperience.js?v=20261126-cleanup-v1'],
-  [sw,'recordReviewExperience.css?v=20261126-cleanup-v1'],[sw,'englishFinalRecording.js?v='+ver],
+  [app,'recordReviewExperience.js?v=20261126-cleanup-v2'],[app,'englishUi.js?v=20261126-cleanup-v2'],
+  [index,'recordReviewExperience.css?v=20261126-cleanup-v2'],[index,'app.js?v=20261126-cleanup-v2'],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'recordReviewExperience.js?v=20261126-cleanup-v2'],
+  [sw,'recordReviewExperience.css?v=20261126-cleanup-v2'],[sw,'englishFinalRecording.js?v='+ver],
   [en,'englishFinalRecording.js?v='+ver],
-  [en,'englishFinalGps.js?v=20261126-cleanup-v1'],[sw,'englishFinalGps.js?v=20261126-cleanup-v1']
+  [en,'englishFinalGps.js?v=20261126-cleanup-v2'],[sw,'englishFinalGps.js?v=20261126-cleanup-v2']
  ];
  for(const [s,token] of items)assert.ok(s.includes(token),'missing active/offline URL '+token);
  assert.ok(app.includes('environmentExperience.js?v=20261123-ux09-environment-states-v1'));

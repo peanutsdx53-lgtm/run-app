@@ -111,7 +111,7 @@ try{
    await page.locator('[data-draft="distance"]').fill('5');
    await page.locator('[data-draft="minutes"]').fill('30');
    await page.locator('[data-manual-gait="RUNNING"]').click();
-   await page.locator('[data-demo-save]').click();
+   await page.locator('[data-open-record-review]').click();
    await page.locator('[data-record-review]').waitFor({state:'visible',timeout:4500});
    if(font===200)await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
    // The review wrapper may appear before its help control has finished painting.

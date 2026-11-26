@@ -974,7 +974,7 @@ try{
   assert.equal(await page.locator('[data-draft="distance"]').count(),0);
   await page.locator('[data-record-type="run"]').click();
   assert.equal(await page.locator('[data-draft="distance"]').inputValue(),"7.25");
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor();
   assert.match(await page.locator('[data-record-review]').innerText(),/手入力した走行を端末内に保存/);
   assert.match(await page.locator('[data-record-review]').innerText(),/川沿い往復/);
@@ -1501,7 +1501,7 @@ try{
   await page.reload({waitUntil:'networkidle'});
   await page.goto(host+"#/record",{waitUntil:'networkidle'});
   assert.equal(await page.locator('.rv-required-progress').isHidden(),true,'untouched manual form does not duplicate required fields');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor();
   assert.equal(await page.locator('[data-manual-run-save]').isDisabled(),true);
   const missingAll=await page.locator('.rr-alert').innerText();
@@ -1510,7 +1510,7 @@ try{
   await page.locator('[data-draft="distance"]').fill('5.00');
   await page.locator('[data-draft="minutes"]').fill('30');
   assert.equal(await page.locator('[data-manual-gait]').count(),3,'activity choices appear in the manual basic form');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   const review=page.locator('[data-record-review]');await review.waitFor();
   assert.ok(await review.locator('[data-manual-run-save]').isDisabled(),
     'a manual run is not savable without an activity category');
@@ -1769,7 +1769,7 @@ try{
     // record, not the optional gait/steps sub-screen. Use the real save path.
     await page.locator('[data-manual-gait="'+example.activity+'"]').click();
     assert.equal(await page.locator('[data-manual-gait="'+example.activity+'"]').getAttribute('aria-pressed'),'true');
-    await page.locator('[data-demo-save]').click();
+    await page.locator('[data-open-record-review]').click();
     await page.locator('[data-record-review] [data-manual-run-save]').click();
     // Saving is asynchronous; wait for navigation to the newly saved record
     // before reading the result. A previous result may still be rendering.

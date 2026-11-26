@@ -1,7 +1,7 @@
 /* UX16–19: scoped screen-only reflow. Export/measurement/storage semantics unchanged. */
 @media screen{
  .cp-app .cp-panel h2,.cp-app .cp-preview-top h2{font-size:max(15px,.9rem);line-height:1.4}
- .cp-app .cp-panel p.cp-description,.cp-app .cp-label,.cp-app .cp-sensitive,.cp-app .cp-note,.cp-app .cp-preview-top p,.cp-app .cp-demo-banner{font-size:max(12px,.76rem);line-height:1.5}
+ .cp-app .cp-panel p.cp-description,.cp-app .cp-label,.cp-app .cp-sensitive,.cp-app .cp-note,.cp-app .cp-preview-top p,.cp-app .cp-source-banner{font-size:max(12px,.76rem);line-height:1.5}
  .cp-app .cp-sensitive strong{font-size:inherit;line-height:inherit}
  .cp-app .cp-mode-button span,.cp-app .cp-check{font-size:max(13px,.82rem);line-height:1.45}
  .cp-app .cp-mode-button small{font-size:max(12px,.73rem);line-height:1.45}

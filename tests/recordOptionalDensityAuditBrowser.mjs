@@ -266,7 +266,7 @@ try{
   await page.locator('[data-apply]').click();await page.locator('.rv-manual').waitFor();
   await take(page,w,'MANUAL-populated-summary');
   // Persist the user's original text plus the explicitly transferred choice.
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor();
   const reviewText=await page.locator('[data-record-review]').innerText();
   if(language==='ja')assert.match(reviewText,/本人申告：天候：くもり、風が強い/,'pre-save summary exposes the explicit self-report');

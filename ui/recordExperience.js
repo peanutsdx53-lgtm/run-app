@@ -63,7 +63,7 @@ export function manualPage(state){
  '<p class="rv-muted">休養日は距離・時間を入力しません。必要に応じてメモを追加できます。</p>'}
  </section><section class="rv-panel rv-secondary"><h2 class="rv-section-title">追加情報 <small>任意</small></h2>
  <div class="rv-links">${(run?access:access.slice(3)).map(([url,icon,label,sub])=>`<a href="${url}" class="rv-link"><span class="rv-link-icon">${recordIcon(icon)}</span><span class="rv-link-content"><strong>${label}</strong><small>${sub}</small></span><span class="rv-chevron">›</span></a>`).join('')}</div></section></div>
- <div class="rv-bottom-actions"><button type="button" class="rv-main-button" data-demo-save>入力内容を確認</button>${!run?'<p class="rv-muted">休養日は走行結果・参考値を表示しません。</p>':''}</div></div>`;
+ <div class="rv-bottom-actions"><button type="button" class="rv-main-button" data-open-record-review>入力内容を確認</button>${!run?'<p class="rv-muted">休養日は走行結果・参考値を表示しません。</p>':''}</div></div>`;
 }
 export function recordMethodPage(isGpsPhone=true){return `<div class="record-v3 rv-method"><header class="rv-head"><h1>記録</h1><details class="rv-screen-help"><summary aria-label="記録方法の説明">？</summary><p>手入力かGPS測定を選びます。GPS測定はスマートフォンで利用できます。</p></details></header>
  <div class="rv-method-cards">

@@ -92,7 +92,7 @@ try{
   if(zoom===200&&(width===320||width===390||width===1440))
    await page.screenshot({path:resolve(out,engine+'-'+lang+'-'+width+'-blank.png'),
     fullPage:true,animations:'disabled'});
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   let save=page.locator('[data-manual-run-save]');
   await save.waitFor();
   assert.equal(await save.isDisabled(),true,'incomplete manual run must not save');
@@ -105,11 +105,11 @@ try{
   await page.locator('[data-manual-gait="JOGGING"]').click();
   assert.equal(await distance.inputValue(),'0');
   assert.equal(await page.locator('[data-manual-gait="JOGGING"]').getAttribute('aria-pressed'),'true');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   assert.equal(await save.isDisabled(),true,'0 km must not save');
   await page.locator('.rr-date-edit').click();
   await distance.fill('5');
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   assert.equal(await save.isEnabled(),true,'valid manual run is saveable');
   if(zoom===200&&(width===320||width===390||width===1440))
    await page.screenshot({path:resolve(out,engine+'-'+lang+'-'+width+'-review.png'),

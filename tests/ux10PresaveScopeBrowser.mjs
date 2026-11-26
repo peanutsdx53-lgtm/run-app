@@ -154,7 +154,7 @@ try{
   await page.locator('[data-draft="distance"]').fill('6');
   await page.locator('[data-draft="minutes"]').fill('42');
   await page.locator('[data-manual-gait="RUNNING"]').click();
-  await page.locator('[data-demo-save]').click();
+  await page.locator('[data-open-record-review]').click();
   await page.locator('[data-record-review]').waitFor({state:'visible',timeout:20000});
   const label=lang==='en'?'Review What Will Be Saved and Its Source':'保存する内容と出所を確認する';
   await page.waitForFunction(expected=>
@@ -195,7 +195,7 @@ try{
    await page.locator('.rr-back').click();
    await page.locator('.rv-manual').waitFor({state:'visible'});
    await page.locator('[data-draft="distance"]').fill('0');
-   await page.locator('[data-demo-save]').click();
+   await page.locator('[data-open-record-review]').click();
    await page.locator('[data-record-review]').waitFor({state:'visible'});
    assert.equal(await page.locator('[data-manual-run-save]').isDisabled(),true);
    assert.equal(await page.locator('#rr-review-validation[role="alert"]').count(),1);

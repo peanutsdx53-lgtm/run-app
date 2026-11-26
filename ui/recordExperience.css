@@ -117,13 +117,11 @@
 .record-v3 .rv-method-card em{font-size:.72rem;font-style:normal;color:#ffe5b4}
 .record-v3 .rv-method-card .rv-chevron{position:relative}
 /* Previous auxiliary fields (ROF-J and v1 record comparators) are not removed. */
-.record-v3 .record-rof-j,.record-v3 .record-extra-section{color:#1e4257}
+.record-v3 .record-extra-section{color:#1e4257}
 .record-v3 .record-optional-stack{margin-top:9px}
 .record-v3 .rv-aux-wrap{max-width:870px;margin:0 auto}
 .record-v3 .rv-aux-wrap>.rv-panel{margin-bottom:13px}
 .record-v3 .rv-aux-wrap .record-extra-section{background:#f8fcff;border-radius:12px;margin-bottom:9px}
-.record-v3 .rv-aux-wrap .record-rof-j{background:#f5fbfe}
-.app-shell:has(.record-v3) .record-preview-overlay{background:#030e19bb}
 @media(min-width:801px){
  .app-shell:has(.record-v3){grid-template-columns:96px minmax(0,1fr)}
  .app-shell:has(.record-v3) .sidebar{padding:20px 8px}

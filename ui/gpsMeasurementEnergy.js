@@ -1,4 +1,4 @@
-/* Unmodified energy estimator from runload-app/main ui/mobileRunMeasurementEnergy.js.
+/* Energy estimator preserved from its original implementation.
  * Model adult-compendium-2024-running-speed-v1, RUN/JOG only; not the 12-region model.
  */
 const MPH_PER_KMH = 0.621371192237334;

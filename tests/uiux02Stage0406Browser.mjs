@@ -83,7 +83,7 @@ for(const width of [320,390,1440]){
  await page.locator('[data-draft="distance"]').fill('5');
  await page.locator('[data-draft="minutes"]').fill('30');
  await page.locator('[data-manual-gait="RUNNING"]').click();
- await page.locator('[data-demo-save]').click();
+ await page.locator('[data-open-record-review]').click();
  await review.waitFor();
  assert.equal(await review.locator('[data-manual-run-save]').isEnabled(),true);
  assert.equal(await review.locator('[data-required-status][data-required-ok="true"]').count(),3);

@@ -1,85 +1,44 @@
-# 走行記録と振り返り｜走行情報の解釈を支援するWebアプリ
+# 走行記録と振り返り
 
-本リポジトリは、**本人が記録した走行の事実・本人申告・適格な文献参考値を区別して解釈する**日本語Webアプリの実装・内部評価用です。**GitHubでの公開は、一般向けの正式なリリースやアプリストアでの配布を意味しません。** 研究資料の原本や本人の実記録を無断で置換・移行しません。
+走行の事実、本人が申告した感覚、文献参考値を区別し、自分の記録を確認するための日本語・英語Webアプリです。公開リポジトリへの掲載は、一般向けの正式なリリースやアプリストアでの配布を意味しません。
 
-**現在の状態（2026-11-16）**：S18条件変更シミュレーション（F21）は廃止しました。歴史上のS01〜S20のうち、稼働する画面・横断状態は19対象です。記録・結果・履歴・任意の問い、原著の条件を踏まえた部位内参考値、手入力・スマートフォン向けGPS測定、任意ROF-J、コース設計、学習・探究、相談・共有、ローカル保存、PNG出力、PWA・オフラインの実装があります。対象幅320/390/1440pxのChromium/WebKitブラウザ試験を行っています。全機能の実機品質と科学的・学術的な総合成立を表すものではありません。
+## 主な機能と注意事項
 
-## 研究目的と表示上の限界
+- 手入力またはスマートフォンのGPS測定で記録し、保存前に内容と出所を確認できます。手入力はPCでも利用できます。
+- 保存済みの走行結果・履歴を確認し、比較できる条件がそろった記録を比べ、気づきや疑問を任意で記述できます。
+- 距離・時間などの記録、本人の任意回答（ROF-Jの0は有効な回答で、未回答とは異なります）、文献から得た条件付き参考値を混同しません。
+- 文献参考値は各部位自身の基準100に対する相対値です。身体組織への負荷の直接測定、部位間の共通単位での順位、傷害リスク予測や医学的診断を行いません。
+- GPSの新規測定はウォーキング、ジョギング、ランニングの3種類です。過去の混合活動記録を読み取る場合も、対応していない科学計算は行いません。
+- GPSの詳細経路の保存は初期OFFで、本人の選択が必要です。相談用出力に詳細な個人情報を自動公開しません。
 
-本アプリが扱う「走行状態」は、本人が記録・申告した経験上の状態です。**身体組織への負荷を直接測定する機器、診断、傷害リスク予測装置ではありません。**
+## 利用方法
 
-- **事実**：入力した距離・時間、またはGPSが実際に受信した位置点等の出所を保つ。平均ペースは当該距離と時間からの計算値。
-- **主観**：ROF-Jは本人が任意回答する0〜10の疲労感。0は有効回答、未回答とは異なる。回答時刻と運動前／後のラベルは、実際の時間的前後関係を無条件に証明しない。
-- **文献参考値**：採用文献の観測条件・速度範囲・部位と計算経路が適格な場合だけ算出する。各部位**自身**の基準100であり、部位間を共通の物理単位で順位付けしない。一般の初心者への予測精度・健康状態の判定は意味しない。
-- **GPS活動種別（2026-11-16・工程1）**：新しいGPS測定はウォーキング・ジョギング・ランニングの3種のみ。旧「走る＋歩く」の新規作成・区間切替は終了しました。過去の混合運動記録とそのバックアップは読み取り・復元可能なまま保護し、モデル非対応の12部位文献参考値を後から推定しません。手入力の複数路面や研究上の適用外判定とは別の制約です。
-- **利用者効果**：内部の実装・整合性試験は、初心者ランナーの自己理解が実際に向上したという実証ではない。
+GitHubのCodeからソースを取得し、フォルダ内で `python3 -m http.server 8000` を実行して `http://localhost:8000/` をブラウザで開きます。初回案内に従い、日本語またはEnglishを選び、利用条件を確認してください。設定画面から表示言語を変更できます。英語版の利用条件は日本語原文の参考訳であり、独立した法的審査は未実施です。
 
-保存された記録へのリンクは実在するIDのみを使用し、メモの変更・削除は本人の操作で行います。GPS詳細軌跡の保存は初期OFFで本人選択制です。旧GPS混合運動記録は保存形式を変えず表示し、新規には作成しません。相談用の出力では要配慮の詳細情報を自動公開しません。
+GPS利用やホーム画面への追加はブラウザ、端末、接続の安全性に依存します。初回読み込み後のオフライン利用はキャッシュの有無によります。詳しくは[インストール案内](docs/INSTALL.md)を参照してください。
 
-## 起動方法（一般的なPC、VS Code/Live Server）
+## 保存とプライバシー
 
-外部有料サービスやビルド工程を要求しない、静的HTML/CSS/JavaScriptの構成です。
+保存先は端末内のブラウザ保存領域です。端末の故障、ブラウザデータの消去、共有端末、プライベートブラウズ、容量不足などからの保護は保証できません。バックアップは暗号化されず、本人が詳細経路を保存した場合は位置情報を含み得ます。安全な場所に保管してください。記録の削除は本人による確認操作を必要とします。既存の保存データを損なわないため、保存形式および互換性のある読み取り処理は維持します。
 
-1. このリポジトリのファイル群を取得（GitHubの「Code」→「Download ZIP」、または移行先リポジトリのURLを確認して `git clone`）。
-2. 取得したフォルダで `python3 -m http.server 8000` を実行するか、VS CodeのLive Serverで`index.html`を配信します。
-3. ブラウザで `http://localhost:8000/` を開き、初回案内を確認します。手入力の確認・保存・結果・履歴・探究はPCでも操作できます。**GPS測定はスマートフォン専用**であり、PCからの直接URLでも開始できません。
-4. 本人の実記録を検証用に使う必要はありません。**本リポジトリの試験は隔離したブラウザ領域を使用**し、試験シナリオによる一時記録だけを作ります。
+## 開発・検証
 
-GitHub Pagesの配信先はリポジトリ移行後に確定するため、本書には固定URLを記載しません。配信されるWebページはPWAとして追加できますが、**一般向けの正式リリースではなく、iPhoneアプリのIPAやAndroidのAPKでもありません**。ローカルHTTPサーバーでのPWA登録・実機GPS権限は環境と安全なコンテキストに依存します。オフライン試験はキャッシュがない初回とインストール済みの再訪を区別しています。
-
-## English interface / 英語版
-
-**English is now an available display language**, not a “preview” choice. At first launch, select **English** on the language screen. Existing users can switch in **Settings → Display and Language → English**. The preference remains on this device and survives reloads; Japanese can be selected again from Settings.
-
-英語版は、初回起動の言語選択または「設定 → 表示と言語 → English」から利用できます。英語選択と日本語への復帰は保存済みの走行原本・科学的計算・GPS位置情報を書き換えません。初回の言語選択だけでは、利用規約への同意は成立しません。
-
-English translations cover the first-use guide, manual recording, review, results, history, GPS recording and replay, environmental conditions and ROF-J responses, optional personal notes, course planning, the four available learning lessons and quizzes, Explore topics, consultation/print/PDF reports, backup/restore/deletion instructions, and common errors. No external translation service is used. **Your personal notes are preserved in the language you entered.** Scientific references do not constitute measured tissue loads, injury-risk predictions, or medical diagnoses; zero and unanswered fatigue scores remain distinct.
-
-**Legal-document limitation:** The original Japanese Terms of Use and Privacy Policy remain the authoritative legal text. English article-by-article *reference translations* are provided alongside the originals. These English reference texts have **not undergone independent legal review**. English language selection does not bypass explicit consent. Other untranslated strings may still occur in uncommon errors or dynamically constructed combinations; such strings should be reported rather than treated as certified English completeness.
-
-Automated regression: `node --test tests/englishUi.test.mjs tests/firstUseExperience.test.mjs tests/settingsExperience.test.mjs`, plus `RUNLOAD_BROWSER_ENGINE=chromium node tests/englishUiBrowser.mjs` and `RUNLOAD_BROWSER_ENGINE=webkit node tests/englishUiBrowser.mjs`. The full-app research and physical-device reviews are separate from the translation rollout. The current language behavior, compatibility decisions and verified regression evidence are recorded in [the cleanup and acceptance worklog](docs/APP_CLEANUP_WORKLOG.md). Earlier preview-only drafts are retired.
-
-## テスト再現（開発・内部評価）
-
-推奨：Node.js **22**、Python 3（HTTPサーバーを使う場合）。ブラウザ自動試験にはPlaywright 1.56.1を用います。npmのインストールは**テスト時だけ**でありアプリ起動時の通信依存にはしません。
+Node.js 22を使用します。ブラウザ試験ではPlaywright 1.56.1を使用します。試験に利用者本人の記録は必要ありません。
 
 ```bash
+node scripts/auditLocalDependencies.mjs
+node scripts/auditPublicTerminology.mjs
 node --test tests/*.test.mjs
 npm install --no-save playwright@1.56.1
-npx playwright install --with-deps chromium webkit
-RUNLOAD_BROWSER_ENGINE=chromium node tests/screenDesign20PopulatedBrowser.mjs
-RUNLOAD_BROWSER_ENGINE=webkit node tests/screenDesign20PopulatedBrowser.mjs
-RUNLOAD_BROWSER_ENGINE=chromium node tests/uiux02Stage0406Browser.mjs
-RUNLOAD_BROWSER_ENGINE=webkit node tests/uiux02Stage0406Browser.mjs
-RUNLOAD_BROWSER_ENGINE=chromium node tests/uiux06TargetBrowser.mjs
-RUNLOAD_BROWSER_ENGINE=webkit node tests/uiux06TargetBrowser.mjs
+npx playwright install chromium webkit
+node tests/englishUiBrowser.mjs
 node tests/offlineShellBrowserSmoke.mjs
 ```
 
-`--with-deps`はLinux CI用の追加システムライブラリをインストールするため、端末・OSによって管理者権限や代替手順が必要です。Windows/macOSでは通常`npx playwright install chromium webkit`等を使用します。自動試験のGPS位置点はテストが明示的に注入した入力で、実機屋外測位ではありません。
+Linuxでブラウザのシステム依存関係が不足する場合は `npx playwright install --with-deps chromium webkit` を利用します。回帰試験と両ブラウザの試験はGitHub Actionsでも実行します。試験で使う位置情報は模擬入力であり、実機屋外GPS品質、OSの補助機能、一般利用者への効果を保証しません。内部評価は設計と技術的成立性を確認するものであり、利用者の自己理解が実際に向上したことの実証ではありません。
 
-試験結果は、実行したリポジトリの**Actions**にコミットSHAごと保存します。F21/S18の廃止理由と旧証拠の扱いは非公開Currentの既存設計資料に直接追記し、旧時点の検査結果を現在の採用要件として扱いません。S18廃止後の現役19画面・状態のChromium/WebKit内部検査、研究解釈監査、二走行の連続性を別々のテストで確認します。特定コミットでの成功を、無条件に後続コードや別の端末環境へ拡張しません。
+- [素材と利用条件](assets/ASSET_REGISTER.md)
+- [GPSの設計・検証範囲](docs/GPS_CODE_DESIGN_ASSURANCE_20261027.md)
+- [GPSのソフトウェア検証記録](docs/GPS_SOFTWARE_CLOSEOUT_20261027.md)
 
-## 研究資料の取り扱いと成立条件
-
-**現行の研究成立条件の唯一の正本**は非公開ChatGPT Libraryの `/RunLoad/Current/07_成立条件と正式受入の区分.md`（G1〜G8）であり、最新の根拠付き判定は `/RunLoad/Current/09_成立審査_再現性と論文証拠_20261114.md` を参照します。旧V0.2のR12/C12/F5・計29条件は2026-11-13に廃止された履歴資料であり、現行の合格基準ではありません。**研究の正式Currentや権利保護された原典PDFを、この公開リポジトリのREADME・配布ZIPに同梱しません。** 研究原典・設計・内部評価・権利の検証はCurrent内の固定SHA付き証拠により別途再現します。アプリ本体のソースコード正本は本リポジトリmainです。
-
-- [第1〜6回のUI/UX改修と工程19の横断受入](docs/UIUX_20261102_工程19_全20画面横断受入_実装検証記録.md)
-- [廃止済み旧V0.2・29条件の履歴査定（現行の受入条件ではありません）](docs/ACCEPTANCE_V02_29_GATES_20261102_現行証拠暫定再査定.md)
-- [素材・許諾に関する管理](assets/ASSET_REGISTER.md)
-- [インストール案内](docs/INSTALL.md)
-- [研究の科学的・走歩混在の適用範囲](docs/RESEARCH_AND_MIXED_SCOPE_20261027.md)
-
-現行CurrentのG1〜G8判定は上記09の**最新版**だけで確認してください。特定の過去コミットに対するCI成功は後続コミットへ自動継承できません。公開Pagesのライブ配信同一性、物理iPhone/Androidの屋外GPS・権限中断復帰、OS付随の読み上げや端末補助機能、人対象の自己理解改善効果は、実施済みの内部CIによって認定されるものではありません。
-
-## セキュリティと本人の記録
-
-記録は端末側の保存領域に格納します。共有端末、ブラウザデータ削除、プライベートブラウザ、端末容量不足などでは保存を保証できません。バックアップ出力は暗号化されず、GPS詳細を本人が保存した場合は位置情報を含み得ます。新しく保存するJSON内のGPS・注記の形式識別子は中立的な名称へ整理していますが、過去形式のバックアップも厳格な検証後に読み取れます。既存の端末内データベース名・保存キーは互換性のため変更していません。バックアップを他者へ不用意に送らず、安全な保存場所を選んでください。保存済みデータ削除は本人が確認手順を行った場合のみ実行します。開発・試験ではユーザー本人の実記録を削除・移行しません。
-
-## GPS工程2：準備・測定中UI（2026-11-16）
-
-測定前の開始操作をスマホの固定ナビより上に配置し、測定中はフラッグ・一時停止／再開・終了を常時見える下部操作領域に変更。終了はネイティブの確認ダイアログでのみ確定し、Esc・キャンセルでは測定継続。活動時間とGPS取得待ち・受信・誤差・任意目標残量を区別し、重複する長文説明を「？」のヘルプに移しました。GPS位置点の採否・計測値・科学計算・保存形式・位置詳細保存の初期OFFは変更しません。模擬GPS・Chromium/WebKitでの検査は物理端末・GPS屋外品質・バックグラウンド動作を認定しません。
-
-## 更新履歴
-
-本リポジトリの初期段階（2026-10-23〜26）はデモ主体でした。その後、科学計算・保存・GPS・PWA等を段階的に接続しています。初期の「すべて架空のデモ」「保存は未接続」「GPS開始不可」という説明は**現行コードには当てはまらない**ため、READMEの現状説明を本版へ更新しました。不要になった旧プレビューや旧CIの草稿は削除し、現行の変更根拠は `docs/APP_CLEANUP_WORKLOG.md` に集約しています。研究・科学・権利・移設時点の監査証拠は保護対象として区別します。
+過去の仕様・開発記録は原本と照合して別途保管し、現行コードの要件と混同しません。研究の正式資料・権利保護された原典は公開配布物に同梱しません。

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261126-cleanup-v1';
+const cacheVersion='20261126-cleanup-v2';
 
 test('P12: Home guide, learning header, History and Exploration controls preserve behavior',()=>{
  const home=read('app.js');
@@ -26,7 +26,7 @@ test('P12: Home guide, learning header, History and Exploration controls preserv
 
 test('P12: newest stylesheet, module imports and PWA precache share one release version',()=>{
  const html=read('index.html'),sw=read('sw.js'),css=read('ui/screenCoherenceP12.css'),app=read('app.js');
- const version='20261126-cleanup-v1',pwaVersion='20261126-cleanup-v1',presentationVersion='20261110-p14-visual-v4';
+ const version='20261126-cleanup-v2',pwaVersion='20261126-cleanup-v2',presentationVersion='20261110-p14-visual-v4';
  const previous='20261110-p12-card-help-v1';
  assert.ok(html.indexOf('unifiedLearningShell.css')<html.indexOf('screenCoherenceP12.css'));
  assert.ok(html.indexOf('screenCoherenceP12.css')<html.indexOf('screenRefinementP13.css'));
@@ -37,8 +37,8 @@ test('P12: newest stylesheet, module imports and PWA precache share one release 
  assert.ok(sw.includes('runload-ui-next-shell-'+cacheVersion));
  assert.ok(sw.includes('app.js?v='+version),'missing cached resource app.js');
  assert.ok(sw.includes('ui/screenCoherenceP14.css?v='+presentationVersion),'P14 CSS unchanged');
- assert.ok(sw.includes('ui/historyExperience.js?v=20261126-cleanup-v1'),'current history precache');
- assert.ok(app.includes('ui/historyExperience.js?v=20261126-cleanup-v1'),'current dynamic history module');
+ assert.ok(sw.includes('ui/historyExperience.js?v=20261126-cleanup-v2'),'current history precache');
+ assert.ok(app.includes('ui/historyExperience.js?v=20261126-cleanup-v2'),'current dynamic history module');
  for(const selector of ['.lr-course-icon','.lr-screen-help-content','.ex-reflection-footer','.hx-help-toggle'])
   assert.ok(css.includes(selector),'missing P12 style '+selector);
 });

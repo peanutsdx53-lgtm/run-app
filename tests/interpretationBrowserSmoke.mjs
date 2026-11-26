@@ -291,7 +291,7 @@ try{
    await page.locator('[data-draft="distance"]').fill('6');
    await page.locator('[data-draft="minutes"]').fill('36');
    await page.locator('[data-manual-gait="RUNNING"]').click();
-   await page.locator('[data-demo-save]').click();
+   await page.locator('[data-open-record-review]').click();
    await page.locator('[data-record-review]').waitFor();
    await page.locator('[data-manual-run-save]').click();
    await page.waitForFunction(()=>location.hash.startsWith('#/result?record='),null,{timeout:15000});

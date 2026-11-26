@@ -83,7 +83,7 @@ try{
   if(!key)return false;
   const cache=await caches.open(key),base=location.origin+'/';
   return !!(await cache.match(base+'index.html'))&&!!(await cache.match(base+'app.js'))&&
-   !!(await cache.match(base+'ui/manualRunStore.js?v=20261126-cleanup-v1'))&&
+   !!(await cache.match(base+'ui/manualRunStore.js?v=20261126-cleanup-v2'))&&
    !!(await cache.match(base+consultationUrl.replace(/^\.\//,'')))&&
    !!(await cache.match(base+explorationUrl.replace(/^\.\//,'')))&&
    !!(await cache.match(base+'ui/referenceEvidenceInfo.js'));
@@ -98,7 +98,7 @@ try{
  await page.locator('a[href="#/record-reflection"]').first().click();
  await page.locator('[data-draft="memo"]').fill('オフラインの走行メモ');
  await page.locator('[data-apply]').click();
- await page.locator('[data-demo-save]').click();
+ await page.locator('[data-open-record-review]').click();
  await page.locator('[data-manual-run-save]').click();
  await page.waitForFunction(()=>location.hash.startsWith('#/result?record='),null,{timeout:18000});
  const state=await page.evaluate(async()=>JSON.parse((await (await import('/ui/manualRunCanonical.js')).readCanonical()).raw));

@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v2';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -10,7 +10,6 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     dashboardPrefs,
     dashboardDrag,
     homeExperience,
-    rofScale,
     rofExperience,
     reviewDraft,
     recordReviewExperience,
@@ -57,46 +56,45 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
     import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2"),
-    import("./ui/rofJScale.js"),
-    import("./ui/rofExperience.js?v=20261126-cleanup-v1"),
+    import("./ui/rofExperience.js?v=20261126-cleanup-v2"),
     import("./ui/recordDraftReview.js"),
-    import("./ui/recordReviewExperience.js?v=20261126-cleanup-v1"),
-    import("./ui/manualRunStore.js?v=20261126-cleanup-v1"),
+    import("./ui/recordReviewExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/manualRunStore.js?v=20261126-cleanup-v2"),
     import("./ui/manualRunLock.js"),
     import("./ui/manualRunCanonical.js"),
-    import("./ui/recordExperience.js?v=20261123-ux07-course-clarity-v1"),
-    import("./ui/coursePresetStore.js?v=20261126-cleanup-v1"),
-    import("./ui/gaitExperience.js?v=20261126-cleanup-v1"),
+    import("./ui/recordExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/coursePresetStore.js?v=20261126-cleanup-v2"),
+    import("./ui/gaitExperience.js?v=20261126-cleanup-v2"),
     import("./ui/environmentExperience.js?v=20261123-ux09-environment-states-v1"),
-    import("./ui/bodyContextExperience.js?v=20261126-cleanup-v1"),
+    import("./ui/bodyContextExperience.js?v=20261126-cleanup-v2"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
-    import("./ui/measurementExperience.js?v=20261126-cleanup-v1"),
+    import("./ui/measurementExperience.js?v=20261126-cleanup-v2"),
     import("./ui/gpsMeasurementCore.js?v=20261116-gps-stage2-controls-v1"),
-    import("./ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v1"),
-    import("./ui/gpsDynamicResult.js?v=20261126-cleanup-v1"),
+    import("./ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v2"),
+    import("./ui/gpsDynamicResult.js?v=20261126-cleanup-v2"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261126-cleanup-v1"),
+    import("./ui/resultExperience.js?v=20261126-cleanup-v2"),
     import("./ui/runQuestionContinuation.js"),
-    import("./ui/historyExperience.js?v=20261126-cleanup-v1"),
+    import("./ui/historyExperience.js?v=20261126-cleanup-v2"),
     import("./ui/settingsExperience.js?v=20261125-ux16-19-batch-v1"),
-    import("./ui/portableDataV2.js?v=20261126-cleanup-v1"),
-    import("./ui/mentalExperience.js?v=20261126-cleanup-v1"),
-    import("./ui/mentalSaveFlow.js?v=20261126-cleanup-v1"),
+    import("./ui/portableDataV2.js?v=20261126-cleanup-v2"),
+    import("./ui/mentalExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/mentalSaveFlow.js?v=20261126-cleanup-v2"),
     import("./ui/explorationMentalInquiry.js"),
     import("./ui/explorationBodyInquiry.js"),
     import("./ui/explorationConditionInquiry.js"),
     import("./ui/explorationLifeInquiry.js"),
     import("./ui/recordRef.js"),
     import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1"),
-    import("./ui/annotationEditor.js?v=20261126-cleanup-v1"),
+    import("./ui/annotationEditor.js?v=20261126-cleanup-v2"),
     import("./ui/dataManagementUi.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/firstUseExperience.js?v=20261122-ux05-firstuse-home-v1"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
-    import("./ui/consultationExperience.js?v=20261126-cleanup-v1"),
-    import("./ui/explorationExperience.js?v=20261126-cleanup-v1"),
-    import("./ui/learningExperience.js?v=20261126-cleanup-v1"),
+    import("./ui/consultationExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/explorationExperience.js?v=20261126-cleanup-v2"),
+    import("./ui/learningExperience.js?v=20261126-cleanup-v2"),
     import("./ui/interpretationView.js?v=20261026-interpret-v14"),
-    import("./ui/interpretationRules.js?v=20261126-cleanup-v1"),
+    import("./ui/interpretationRules.js?v=20261126-cleanup-v2"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
     import("./ui/conditionJourney.js?v=20261125-ux15-condition-v1"),
     import("./ui/conditionInsights.js?v=20261026-condition-v15")
@@ -127,7 +125,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     {id:"06",name:"走る前後の工夫",color:"#7658dc",tint:"#efebff",icon:"✳",topics:["ウォームアップ","走行中の対応","クールダウン・ストレッチ","無理をしない判断"]},
     {id:"07",name:"目的と楽しみ方",color:"#d44a86",tint:"#ffeaf2",icon:"⚑",topics:["走る目的","目標との付き合い方","楽しみ方","自分に合う記録の使い方"]}
   ];
-  const state={mode:"today",category:"03",topic:"上り坂・下り坂",recordType:"run",feeling:"",recordDraft:{distance:"",hours:"",minutes:"",seconds:"",date:new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10),memo:"",rofBefore:null,rofAfter:null,steps:"",stepsProvenance:"UNKNOWN",activityGait:"UNKNOWN",runningFormat:"UNKNOWN",runWalkRunningDistanceKm:"",runWalkRunningDurationMinutes:"",courseName:"",gradeMode:"UNKNOWN",upPercent:"",downPercent:"",upGradePercent:"",downGradePercent:"",surfaceMode:"UNKNOWN",primarySurface:"",temperatureC:"",environmentNote:"",bodyObservation:"",shoeName:"",...Object.fromEntries(Array.from({length:5},(_,i)=>[[`sectionShare${i}`,""],[`sectionDirection${i}`,"FLAT"],[`sectionGrade${i}`,""],[`sectionSurface${i}`,"UNKNOWN"]]).flat()),...Object.fromEntries(["paved","track","treadmill","soil","trail","naturalGrass","artificialTurf","sand"].map(k=>[`surface${k}`,""]))},recordPreviewOpen:false,recordReviewSource:"manual",recordReviewReturn:false,recordOpenSections:[],rofEditorOpen:false,treeZoom:1,treeScroll:null,historyMode:"all",historyDate:null,toast:"",sheetVisible:false,sheetExpanded:false};
+  const state={mode:"today",category:"03",topic:"上り坂・下り坂",recordType:"run",feeling:"",recordDraft:{distance:"",hours:"",minutes:"",seconds:"",date:new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10),memo:"",rofBefore:null,rofAfter:null,steps:"",stepsProvenance:"UNKNOWN",activityGait:"UNKNOWN",runningFormat:"UNKNOWN",runWalkRunningDistanceKm:"",runWalkRunningDurationMinutes:"",courseName:"",gradeMode:"UNKNOWN",upPercent:"",downPercent:"",upGradePercent:"",downGradePercent:"",surfaceMode:"UNKNOWN",primarySurface:"",temperatureC:"",environmentNote:"",bodyObservation:"",shoeName:"",...Object.fromEntries(Array.from({length:5},(_,i)=>[[`sectionShare${i}`,""],[`sectionDirection${i}`,"FLAT"],[`sectionGrade${i}`,""],[`sectionSurface${i}`,"UNKNOWN"]]).flat()),...Object.fromEntries(["paved","track","treadmill","soil","trail","naturalGrass","artificialTurf","sand"].map(k=>[`surface${k}`,""]))},recordReviewSource:"manual",recordReviewReturn:false,recordOpenSections:[],treeZoom:1,treeScroll:null,toast:""};
   state.recordCourseUi=recordExperience.initialCourseUi(state.recordDraft);
   const homePreferenceStorage=(()=>{try{return window.localStorage}catch{return null}})();
   const homePreferenceState=dashboardPrefs.loadHomeDashboardLayout(homePreferenceStorage);
@@ -400,10 +398,6 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   return `<svg class="nav-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[name]||shapes.home}</svg>`;
 };
   const navHtml=(items,page,mobile)=>items.map(([path,icon,label])=>`<a class="${mobile?"mobile-link":"side-link"} ${page===path?"is-active":""}" href="#/${path}" data-ui-copy-key="nav.${path}" data-ui-action-kind="navigate" ${page===path?'aria-current="page"':""}><span class="nav-icon">${navIcon(path)}</span>${label}</a>`).join("");
-  const header=(name,description,right="")=>`<section class="card page-hero"><div><h1>${name}</h1><p class="lead">${description}</p></div>${right}</section>${sheetBody}`;
-  // Result reference maps and charts are owned by resultExperience, with
-  // saved-input science data. Legacy demo/reference charts were removed.
-  const valid=x=>x!==null&&x!==undefined&&Number.isFinite(x);
   // S02 optional screen-specific guidance. Does not write user data.
   function homeScreenGuide(){
     if(!homeUi.guideOpen)return '<section id="home-screen-guide" hidden aria-label="ホーム画面の使い方"></section>';
@@ -473,29 +467,6 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
  ${homeUi.achievementOpen?homeExperience.achievementPanel(savedRunState):""}
  </div>`;
 }
-    function rofPanel(){
- const anchors=rofScale.ROF_J_ANCHORS.map(a=>`<div class="rof-anchor-card" aria-label="${esc(a.positionLabel)}、${esc(a.descriptor)}">
-   <img src="${esc(rofScale.referenceImageUrl(a))}" alt="" loading="lazy">
-   <strong>${esc(a.positionLabel)}</strong><span>${esc(a.descriptor)}</span></div>`).join("");
- const fields=[["rofBefore","運動前"],["rofAfter","運動後"]].map(([key,label])=>{
-  const n=state.recordDraft[key],selected=rofScale.isValidRofJ(n);
-  return `<div class="rof-entry" data-rof-entry="${key}"><label for="rof-${key}"><strong>${label}</strong><output data-rof-output="${key}">${selected?n:"—"}</output><span class="rof-of-ten">/ 10</span></label>
-  <input id="rof-${key}" type="range" data-rof-input="${key}" min="0" max="10" step="1" value="${selected?n:5}" aria-label="${label}のROF-J疲労感（0〜10）">
-  <div class="rof-endpoints"><span>0：まったく疲れていない</span><span>10：完全な疲労困憊</span></div>
-  <p class="rof-selection-description" data-rof-description="${key}">${selected?esc(rofScale.guidanceForRofJ(n)):"未入力・任意"}</p>
-  <button class="rof-clear" type="button" data-rof-clear="${key}" ${selected?"":"disabled"}>選択を消す</button></div>`;
- }).join("");
- return `<section class="record-rof-j" aria-label="ROF-J主観的疲労感">
- <div class="record-rof-header"><div><p class="eyebrow">ROF-J</p><h2>ROF-J｜運動前後の疲労感 <span>任意</span></h2></div><span class="rof-label">0–10</span></div>
- <details class="rof-editor-details" data-rof-editor><summary class="rof-editor-summary"><span class="rof-summary-mark" aria-hidden="true">◉</span><span class="rof-summary-text"><strong>運動前後の疲労感を入力・確認</strong><small>運動前 <b data-rof-summary-before>${rofScale.isValidRofJ(state.recordDraft.rofBefore)?state.recordDraft.rofBefore:"—"}</b> ／ 運動後 <b data-rof-summary-after>${rofScale.isValidRofJ(state.recordDraft.rofAfter)?state.recordDraft.rofAfter:"—"}</b> （各0〜10）</small></span><span class="rof-summary-chevron" aria-hidden="true">⌄</span></summary><div class="rof-editor-body"><p class="rof-intro">今感じている疲れを数字で選びます。運動前と運動後は別々に入力してください。医学的な診断や走行可否の判断ではありません。</p>
- <div class="rof-anchor-guide" role="group" aria-label="著者確認済みROF-Jの5つの尺度目安">${anchors}</div>
- <div class="rof-entry-grid">${fields}</div>
- <details class="rof-rights"><summary>尺度・イラストの出典と利用条件</summary>
- <p>日本語の尺度表現：Suzuki &amp; Arai (2026)（CC BY-NC-ND 4.0）。配置は責任著者への確認に基づき原版ROFと同じ目安位置を使用。2と3の間・7と8の間は選択できる追加点数ではありません。</p>
- <p>図：Micklewright et al. (2017)（CC BY 4.0）。原版に基づくイラストを変更せず利用。<a href="${rofScale.ROF_J_RIGHTS.scaleUrl}" target="_blank" rel="noopener">日本語尺度の原文</a> ／ <a href="${rofScale.ROF_J_RIGHTS.imagesUrl}" target="_blank" rel="noopener">図の出典</a> ／ <a href="${rofScale.ROF_J_RIGHTS.scaleLicense}" target="_blank" rel="noopener">日本語資料のライセンス</a> ／ <a href="${rofScale.ROF_J_RIGHTS.imagesLicense}" target="_blank" rel="noopener">図のライセンス</a></p>
- </details><p class="rof-unsaved-note">ここで選んだ疲労感は、記録内容を確認して手入力の走行を保存すると一緒に保存されます。</p></div></details>
- </section>`;
-}
   function onboardingView(){return firstUseExperience.renderFirstUse(onboardingState);}
   function finishOnboarding(){
     onboardingState.open=false;onboardingState.replay=false;onboardingState.error="";
@@ -507,27 +478,7 @@ function recordExtras(){
  const d=state.recordDraft, field=(id)=>esc(d[id]??"");
  const select=(name,items,extra="")=>`<select data-draft="${name}" ${extra}>${items.map(([value,label])=>`<option value="${value}" ${d[name]===value?"selected":""}>${label}</option>`).join("")}</select>`;
  const num=(name,label,opts={})=>`<label class="record-extra-field"><span>${label}</span><input data-draft="${name}" type="number" inputmode="${opts.integer?"numeric":"decimal"}" min="${opts.min??0}" max="${opts.max??(opts.integer?10000000:100)}" step="${opts.step??(opts.integer?1:.1)}" placeholder="${opts.placeholder??"未入力"}" value="${field(name)}"></label>`;
- const surfaceLabels=[["paved","舗装路"],["track","陸上トラック"],["treadmill","トレッドミル"],["soil","締まった土道"],["trail","不整地トレイル"],["naturalGrass","天然芝"],["artificialTurf","人工芝"],["sand","砂地"]];
- const surfaces=[["","選択してください"],...surfaceLabels.map(([k,label])=>[k,label])];
- const sections=Array.from({length:5},(_,i)=>`<div class="record-course-section"><strong>区間 ${i+1}</strong><div class="record-extra-grid">
- ${num("sectionShare"+i,"割合 (%)",{max:100})}
- <label class="record-extra-field"><span>坂の向き</span>${select("sectionDirection"+i,[["FLAT","平坦"],["UPHILL","上り"],["DOWNHILL","下り"]])}</label>
- ${num("sectionGrade"+i,"傾斜 (%)",{max:100})}
- <label class="record-extra-field"><span>路面</span>${select("sectionSurface"+i,[["UNKNOWN","不明"],...surfaceLabels.map(([v,t])=>[v,t])])}</label>
- </div></div>`).join("");
- return `<div class="record-optional-stack" aria-label="走行条件などの任意入力項目">
- <details class="record-extra-section" data-record-section="course"><summary><span class="record-extra-step">2</span><span><strong>コースと走行条件</strong><small>保存コース相当の情報・坂・路面を入力</small></span><span class="record-extra-chevron" aria-hidden="true">⌄</span></summary>
- <div class="record-extra-content">
- <p class="record-extra-help">入力できる条件だけ記録できます。分からない場合は「不明」のままにしてください。コースの登録やGPSで測定したコースはまだ取り込めません。</p>
- <label class="record-extra-field"><span>今回のコース名（任意）</span><input data-draft="courseName" type="text" maxlength="80" placeholder="例：川沿い往復" value="${field("courseName")}"></label>
- <div class="record-extra-grid"><label class="record-extra-field"><span>坂道</span>${select("gradeMode",[["UNKNOWN","不明・未設定"],["FLAT","ほぼ平坦"],["SUMMARY","坂あり：割合で入力"],["SECTIONS","区間ごとに入力"]])}</label>
- <label class="record-extra-field"><span>路面</span>${select("surfaceMode",[["UNKNOWN","不明・未設定"],["SINGLE","1種類を選択"],["MIXED","複数を割合で入力"]])}</label></div>
- <div data-grade-submode="SUMMARY" ${d.gradeMode==="SUMMARY"?"":"hidden"}><h3>坂の構成</h3><div class="record-extra-grid">${num("upPercent","上りの割合 (%)",{max:100})}${num("downPercent","下りの割合 (%)",{max:100})}${num("upGradePercent","上りの傾き (%)",{max:100})}${num("downGradePercent","下りの傾き (%)",{max:100})}</div><p class="record-extra-help">上り・下りの割合の合計は100%以下。残りを平坦として整理します。未入力を0とみなしません。</p></div>
- <div data-grade-submode="SECTIONS" ${d.gradeMode==="SECTIONS"?"":"hidden"}><h3>区間の内訳（最大5区間）</h3><p class="record-extra-help">割合の合計は100%。区間の速度を勝手に補うことはしません。</p>${sections}</div>
- <div data-surface-submode="SINGLE" ${d.surfaceMode==="SINGLE"?"":"hidden"}><label class="record-extra-field"><span>主な路面</span>${select("primarySurface",surfaces)}</label></div>
- <div data-surface-submode="MIXED" ${d.surfaceMode==="MIXED"?"":"hidden"}><h3>路面の割合</h3><div class="record-extra-grid">${surfaceLabels.map(([k,label])=>num("surface"+k,label+" (%)",{max:100})).join("")}</div><p class="record-extra-help">実際に使った路面の割合が合計100%になるように入力します。</p></div>
- </div></details>
- <details class="record-extra-section" data-record-section="compare"><summary><span class="record-extra-step">3</span><span><strong>歩数・走り方・環境</strong><small>比較に役立つ情報（任意）</small></span><span class="record-extra-chevron" aria-hidden="true">⌄</span></summary>
+ return `<details class="record-extra-section" data-record-section="compare"><summary><span class="record-extra-step">3</span><span><strong>歩数・走り方・環境</strong><small>比較に役立つ情報（任意）</small></span><span class="record-extra-chevron" aria-hidden="true">⌄</span></summary>
  <div class="record-extra-content">
  <div class="record-extra-grid">${num("steps","歩数（歩）",{integer:true,max:10000000,placeholder:"例：6000"})}<label class="record-extra-field"><span>歩数の取得方法</span>${select("stepsProvenance",[["UNKNOWN","不明・未設定"],["DEVICE_MEASURED","端末・時計で計測"],["ESTIMATED","手入力・おおよそ"]])}</label></div>
  <p class="record-extra-help">歩数の出所を区別します。GPS距離から歩数を自動推定しません。</p>
@@ -536,37 +487,18 @@ function recordExtras(){
  <div class="record-extra-grid">${num("temperatureC","気温（℃）",{min:-50,max:60,step:.1})}<label class="record-extra-field"><span>環境メモ</span><textarea data-draft="environmentNote" rows="2" maxlength="500" placeholder="天気、湿度、向かい風など">${field("environmentNote")}</textarea></label></div>
  </div></details>
  <details class="record-extra-section" data-record-section="reflection"><summary><span class="record-extra-step">4</span><span><strong>身体・使用したもの・メモ</strong><small>自覚したことやシューズなど（任意）</small></span><span class="record-extra-chevron" aria-hidden="true">⌄</span></summary>
- <div class="record-extra-content"><p class="record-extra-help">身体の自覚情報はROF-Jや12部位の計算結果とは別に扱います。選んだ部位は、必要に応じて文章として記録できます。</p><label class="record-extra-field"><span>身体の気づき（自由記述）</span><textarea data-draft="bodyObservation" rows="2" maxlength="500" placeholder="気になった部位、違和感など">${field("bodyObservation")}</textarea></label><label class="record-extra-field"><span>今回のシューズ</span><input type="text" data-draft="shoeName" maxlength="100" placeholder="未入力" value="${field("shoeName")}"></label><label class="record-extra-field"><span>走行・休養時のメモ</span><textarea data-draft="memo" rows="3" maxlength="500" placeholder="自分が感じたことを記入">${field("memo")}</textarea></label></div></details>
- </div>`;
+ <div class="record-extra-content"><p class="record-extra-help">身体の自覚情報はROF-Jや12部位の計算結果とは別に扱います。選んだ部位は、必要に応じて文章として記録できます。</p><label class="record-extra-field"><span>身体の気づき（自由記述）</span><textarea data-draft="bodyObservation" rows="2" maxlength="500" placeholder="気になった部位、違和感など">${field("bodyObservation")}</textarea></label><label class="record-extra-field"><span>今回のシューズ</span><input type="text" data-draft="shoeName" maxlength="100" placeholder="未入力" value="${field("shoeName")}"></label><label class="record-extra-field"><span>走行・休養時のメモ</span><textarea data-draft="memo" rows="3" maxlength="500" placeholder="自分が感じたことを記入">${field("memo")}</textarea></label></div></details>`;
 }
-  function recordPreview(){
-    if(!state.recordPreviewOpen)return "";
-    const d=state.recordDraft,active=state.recordType==="run",v=reviewDraft.checkRecordDraft(d,active);
-    const errors=[...v.errors];
-    if(!d.date)errors.unshift("日付を入力してください");
-    if(active&&(!d.distance||Number(d.distance)<=0||!d.minutes||Number(d.minutes)<=0))errors.unshift("距離と時間を入力してください");
-    return `<div class="record-preview-overlay" data-close-preview><section class="record-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="record-preview-title"><h2 id="record-preview-title">入力内容の確認</h2>
-      <p>手入力した走行は、確認画面から端末に保存できます。</p>
-      <dl><dt>種類</dt><dd>${active?"走行":"休養"}</dd><dt>日付</dt><dd>${esc(d.date||"未入力")}</dd>${active?`<dt>距離</dt><dd>${esc(d.distance||"未入力")} km</dd><dt>時間</dt><dd>${esc(d.minutes||"未入力")} 分</dd><dt>コース</dt><dd>${esc(d.courseName||"未設定")}</dd><dt>ROF-J</dt><dd>${Number.isInteger(d.rofBefore)?d.rofBefore:"未入力"} → ${Number.isInteger(d.rofAfter)?d.rofAfter:"未入力"}</dd>`:""}<dt>メモ</dt><dd>${esc(d.memo||"未入力")}</dd></dl>
-      ${errors.length||v.warnings.length?`<div class="record-review-alert" role="alert">${errors.map(t=>`<p class="is-error">${esc(t)}</p>`).join("")}${v.warnings.map(t=>`<p>${esc(t)}</p>`).join("")}</div>`:`<p class="record-review-success">入力内容を確認しました。身体の部位別の参考値は計算していません。</p>`}
-      <button type="button" class="btn primary" data-close-preview>閉じる</button></section></div>`;
-  }
   function record(){return recordExperience.manualPage(state);}
   function recordReview(){return recordReviewExperience.reviewView(state.recordDraft,{
     recordType:state.recordType,source:state.recordReviewSource,courseUi:state.recordCourseUi,bodySelected:bodyUi.selected,saveNotice:manualSaveNotice,mentalSummary:mentalExperience.mentalSummary(manualMental)
   });}
   function recordCourse(fromHome=false){return recordExperience.coursePage(state,state.recordCourseUi,coursePresets.readCoursePresets(onboardStorage),fromHome);}
   function recordRof(){return rofExperience.rofPage(state.recordDraft,rofUi);}
-  function recordMore(kind="both"){
-    const all=recordExtras();
-    const compareStart=all.indexOf('<details class="record-extra-section" data-record-section="compare">');
-    const reflectionStart=all.indexOf('<details class="record-extra-section" data-record-section="reflection">');
-    const compare=all.slice(compareStart,reflectionStart);
-    const environmentAt=compare.indexOf('<div class="record-extra-grid"><label class="record-extra-field"><span>気温');
-    const compareOnly=environmentAt>=0?compare.slice(0,environmentAt)+"</div></details>":compare;
-    const fields=kind==="compare"?compareOnly:kind==="reflection"?all.slice(reflectionStart).replace(/\s*<\/div>\s*$/,''):all.slice(compareStart).replace(/\s*<\/div>\s*$/,'');
-    const title=kind==="compare"?"歩数・走り方・環境":kind==="reflection"?"身体・使用品・メモ":"追加情報";
-    return `<div class="record-v3 rv-aux"><header class="rv-head"><a href="#/record" class="rv-back" aria-label="手入力へ戻る">‹</a><h1>${title}</h1><details class="rv-screen-help"><summary aria-label="追加情報の入力方法">？</summary><p>必要な情報だけ記録します。入力内容は保存前に確認できます。</p></details></header><div class="rv-aux-wrap"><section class="rv-panel"><div class="record-optional-stack">${fields}</div></section></div></div>`;
+  function recordMore(){
+    const fields=recordExtras();
+    const title="追加情報";
+    return `<div class="record-v3 rv-aux"><header class="rv-head"><a href="#/record" class="rv-back" aria-label="手入力へ戻る">‹</a><h1>${title}</h1><details class="rv-screen-help"><summary aria-label="追加情報の入力方法">？</summary><p>必要な情報だけ記録します。入力内容は保存前に確認できます。</p></details></header><div class="rv-aux-wrap"><section class="rv-panel"><div class="record-optional-stack" aria-label="走行条件などの任意入力項目">${fields}</div></section></div></div>`;
   }
   const recordCompare=()=>gaitExperience.gaitPage(state.recordDraft),recordReflection=()=>bodyExperience.renderScreen(state.recordDraft,bodyUi,{mentalHtml:mentalExperience.renderMentalInput(manualMental,'manual')});
   function recordEnvironment(){return environmentExperience.environmentPage(state.recordDraft,environmentUi);}
@@ -691,7 +623,6 @@ function recordExtras(){
       if(previousConditionStrip&&conditionUi.scrollLeft!==null)conditionUi.scrollLeft=previousConditionStrip.scrollLeft;
       // Dispose the old consultation resize listener before replacing its host.
       app.querySelector('#consultation-root')?._consultationAbort?.abort();
-      const existingRof=app.querySelector(".rof-editor-details");if(existingRof)state.rofEditorOpen=existingRof.open;
       const openedRecordSections=app.querySelectorAll(".record-extra-section[open]");
       if(openedRecordSections.length||app.querySelector(".record-extra-section"))state.recordOpenSections=[...openedRecordSections].map(el=>el.dataset.recordSection);
  const page=currentPage();if(page!=="exploration-tree")lastExploreRoute=null;
@@ -883,8 +814,7 @@ function recordExtras(){
  if(page==="record-compare")gaitExperience.paintGait(app.querySelector("[data-g4-page]"),state.recordDraft);
  if(page==="record-environment")environmentExperience.paintEnvironment(app.querySelector("[data-e4-page]"),state.recordDraft,environmentUi);
   if(page==="record-reflection")bodyExperience.fitTextareas(app);
- if(["record-rof","record-more"].includes(page)){
-  const rofEditor=app.querySelector(".rof-editor-details");if(rofEditor)rofEditor.open=state.rofEditorOpen;
+ if(page==="record-more"){
   for(const id of state.recordOpenSections){const el=app.querySelector('.record-extra-section[data-record-section="'+id+'"]');if(el)el.open=true}
  }
  if(page==="exploration-tree"){
@@ -1161,18 +1091,6 @@ function recordExtras(){
       if(gpsRofActive())syncGpsRofCapture(ui.phase);
       rofExperience.reflectRofPage(app,d,ui);
       return;
-    }
-    if(event.target.matches("[data-rof-input]")){
-      const key=event.target.dataset.rofInput,value=Number(event.target.value);
-      if(!rofScale.isValidRofJ(value))return;
-      rofExperience.recordRofInput(state.recordDraft,key==='rofBefore'?'before':'after',value);
-      const box=event.target.closest("[data-rof-entry]");
-      if(box){
-        box.querySelector("[data-rof-output]").textContent=String(value);
-        box.querySelector("[data-rof-description]").textContent=rofScale.guidanceForRofJ(value);
-        box.querySelector("[data-rof-clear]").disabled=false;
-        const summary=app.querySelector('[data-rof-summary-'+(key==="rofBefore"?"before":"after")+']');if(summary)summary.textContent=String(value);
-      }
     }
   });
   app.addEventListener("change",(event)=>{
@@ -2150,10 +2068,6 @@ function recordExtras(){
       commitHomeLayout(next);
       render();window.scrollTo(0,y);return;
     }
-    const sheetExpand=event.target.closest("[data-sheet-expand]");
-    if(sheetExpand){const y=window.scrollY;state.sheetExpanded=!state.sheetExpanded;render();window.scrollTo(0,y);return}
-    const sheetToggle=event.target.closest("[data-sheet-toggle]");
-    if(sheetToggle){const y=window.scrollY;state.sheetVisible=!state.sheetVisible;render();window.scrollTo(0,y);return}
     const exploreSelect=event.target.closest("[data-ex-category]");
     if(exploreSelect){
       const id=exploreSelect.dataset.exCategory,c=CATEGORIES.find(c=>c.id===id);
@@ -2287,18 +2201,11 @@ function recordExtras(){
       if(gpsRofActive())syncGpsRofCapture(ui.phase);
       rofExperience.reflectRofPage(app,d,ui);return;
     }
-    const rofClear=event.target.closest("[data-rof-clear]");
-    if(rofClear){const y=window.scrollY;rofExperience.recordRofInput(state.recordDraft,rofClear.dataset.rofClear==='rofBefore'?'before':'after',null);render();window.scrollTo(0,y);return}
     const feeling=event.target.closest("[data-feeling]");
     if(feeling){const y=window.scrollY;state.feeling=feeling.dataset.feeling;render();window.scrollTo(0,y);return}
     const type=event.target.closest("[data-record-type]");
     if(type){const y=window.scrollY;state.recordType=type.dataset.recordType;render();window.scrollTo(0,y);return}
-    const day=event.target.closest("[data-history-day]");
-    if(day){const y=window.scrollY;const n=Number(day.dataset.historyDay);state.historyDate=state.historyDate===n?null:n;render();window.scrollTo(0,y);return}
-    if(event.target.closest("[data-history-clear]")){const y=window.scrollY;state.historyDate=null;render();window.scrollTo(0,y);return}
-    const filter=event.target.closest("[data-history-mode]");
-    if(filter){const y=window.scrollY;state.historyMode=filter.dataset.historyMode;render();window.scrollTo(0,y);return}
-    if(event.target.closest("[data-demo-save]")){
+    if(event.target.closest("[data-open-record-review]")){
       state.recordReviewSource="manual";
       state.recordReviewReturn=false;manualSaveNotice="";
       // The hashchange handler refreshes the canonical store and renders the
@@ -2315,7 +2222,6 @@ function recordExtras(){
       state.recordReviewReturn=true;
     }
     if(event.target.closest(".rv-link"))state.recordReviewReturn=false;
-    if(event.target.matches(".record-preview-overlay")||event.target.closest(".record-preview-dialog button[data-close-preview]")){state.recordPreviewOpen=false;render();return}
   });
   // Keep focus and Escape handling inside the top-level legal dialog.
   document.addEventListener("click",event=>{
