@@ -31,7 +31,6 @@ const strict=(v,required,optional=[])=>v!==null&&typeof v==='object'&&!Array.isA
 const int=(v,min,max)=>Number.isSafeInteger(v)&&v>=min&&v<=max;
 const num=(v,min,max)=>typeof v==='number'&&Number.isFinite(v)&&v>=min&&v<=max;
 const nonempty=(v,max)=>typeof v==='string'&&v.trim().length>0&&v.length<=max;
-const blankOr=(v,f)=>v===null||f(v);
 const iso=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(v)&&!Number.isNaN(Date.parse(v))&&new Date(v).toISOString()===v;
 const percent=v=>num(v,0,100);
 const sum=arr=>arr.reduce((n,x)=>n+x,0);

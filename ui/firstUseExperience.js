@@ -5,7 +5,6 @@ import {englishLegalDocumentMarkup,englishLegalParity} from "./englishLegalDocum
 
 export const FIRST_USE_STEPS=Object.freeze(["表示言語","利用規約・プライバシー","記録と振り返り","記録する","結果を確認する","履歴と体調","情報を調べる・共有する","プロフィール"]);
 const h=escapeLegalHtml;
-const badge=(title,body)=>'<article class="fu-feature"><span class="fu-feature-dot" aria-hidden="true">●</span><div><strong>'+title+'</strong><p>'+body+'</p></div></article>';
 const panel=(heading,body)=>'<section class="fu-panel"><h3>'+heading+'</h3>'+body+'</section>';
 const shortCard=(number,heading,description)=>'<div class="fu-number-card"><span>'+number+'</span><div><strong>'+heading+'</strong><p>'+description+'</p></div></div>';
 const shell=(title,lead,body,kicker)=>'<header class="fu-screen-title">'+(kicker?'<span class="fu-eyebrow">'+kicker+'</span>':'')+'<h1 id="onboard-title">'+title+'</h1>'+(lead?'<p>'+lead+'</p>':'')+'</header>'+body;

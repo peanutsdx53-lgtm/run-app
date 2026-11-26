@@ -118,8 +118,8 @@ test('Result and manual-save surfaces use the approved dark chrome and button st
   '.rr-page .rr-foot-actions .rr-save:disabled{background:#1e4859',
   '.rr-page .rr-foot-actions .rr-save:focus-visible{outline:3px',
  ]) assert.ok(review.includes(style),style);
- assert.match(html,/homeExperience\.css\?v=20261126-cleanup-v4/);
- assert.match(html,/recordReviewExperience\.css\?v=20261126-cleanup-v4/);
+ assert.match(html,/homeExperience\.css\?v=20261126-cleanup-v5/);
+ assert.match(html,/recordReviewExperience\.css\?v=20261126-cleanup-v5/);
 });
 
 test('public-facing result copy omits internal branding and preserves formal names',()=>{

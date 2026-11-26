@@ -41,11 +41,11 @@ test('L4 running motion lesson: research scope, independent knowledge, safe hypo
  const sw=readFileSync(new URL('../sw.js',import.meta.url),'utf8');
  const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
- assert.match(sw,/"\.\/ui\/learningMotionLesson\.js\?v=20261126-cleanup-v4"/);
- assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v4/);
- assert.match(index,/learningExperience\.css\?v=20261126-cleanup-v4/);
+ assert.match(sw,/"\.\/ui\/learningMotionLesson\.js\?v=20261126-cleanup-v5"/);
+ assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v5/);
+ assert.match(index,/learningExperience\.css\?v=20261126-cleanup-v5/);
  const current=index.match(/app\.js\?v=([\w-]+)/)?.[1];
  assert.ok(current,'app entry must be versioned');
  assert.ok(sw.includes('app.js?v='+current),'app entry must be available offline');
- assert.match(app,/learningExperience\.js\?v=20261126-cleanup-v4/);
+ assert.match(app,/learningExperience\.js\?v=20261126-cleanup-v5/);
 });

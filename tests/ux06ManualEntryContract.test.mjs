@@ -56,12 +56,12 @@ test('UX-026/027/039: responsive labels, three explicit activities, original ato
   assert.match(view(d),new RegExp('data-manual-gait="'+activity+'"'));
  assert.match(view({...d,activityGait:'JOGGING'}),/data-manual-gait="JOGGING" aria-pressed="true"/);
  assert.doesNotMatch(view(d),/rv-gait-hint|活動種目が未選択のため保存できません/);
- const gen='20261126-cleanup-v4',shell='20261126-cleanup-v4',resultVersion='20261123-ux11-result-source-v1',index=read('index.html'),sw=read('sw.js');
+ const gen='20261126-cleanup-v5',shell='20261126-cleanup-v5',resultVersion='20261123-ux11-result-source-v1',index=read('index.html'),sw=read('sw.js');
  for(const [s,url] of [
-  [app,'recordExperience.js?v='+gen],[index,'recordExperience.css?v=20261126-cleanup-v4'],
-  [index,'app.js?v=20261126-cleanup-v4'],[sw,'runload-ui-next-shell-'+shell],
-  [sw,'recordExperience.js?v='+gen],[sw,'recordExperience.css?v=20261126-cleanup-v4'],
-  [sw,'app.js?v=20261126-cleanup-v4']
+  [app,'recordExperience.js?v='+gen],[index,'recordExperience.css?v=20261126-cleanup-v5'],
+  [index,'app.js?v=20261126-cleanup-v5'],[sw,'runload-ui-next-shell-'+shell],
+  [sw,'recordExperience.js?v='+gen],[sw,'recordExperience.css?v=20261126-cleanup-v5'],
+  [sw,'app.js?v=20261126-cleanup-v5']
  ])assert.ok(s.includes(url),'PWA required active URL missing: '+url);
  assert.match(read('.github/workflows/run-app-regression.yml'),/node tests\/ux06ManualEntryBrowser\.mjs/);
 });

@@ -17,7 +17,6 @@ export const GPS_V2_BACKUP_FORMAT='gps-records-backup-v2';
 // Keep accepting the original exported format; the IndexedDB name must not change.
 const LEGACY_GPS_V2_BACKUP_FORMAT='runload-gps-v2-backup';
 const good=n=>typeof n==='number'&&Number.isFinite(n);
-const plain=x=>JSON.parse(JSON.stringify(x));
 const finite=(x,lo,hi)=>good(x)&&x>=lo&&x<=hi;
 const FAIL='GPSの保存領域を安全に処理できません。既存の記録は変更していません';
 const RESULT_LIMIT=2000;

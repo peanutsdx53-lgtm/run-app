@@ -43,9 +43,9 @@ try{
   const match=async path=>!!(await cache.match(new URL(path,location.href)));
   return {registered:!!reg.active,controlled:!!navigator.serviceWorker.controller,
    shell:await match('./index.html'),
-   app:await match('./app.js?v=20261126-cleanup-v4'),
-   js:await match('./ui/learningExperience.js?v=20261126-cleanup-v4'),
-   css:await match('./ui/learningExperience.css?v=20261126-cleanup-v4')};
+   app:await match('./app.js?v=20261126-cleanup-v5'),
+   js:await match('./ui/learningExperience.js?v=20261126-cleanup-v5'),
+   css:await match('./ui/learningExperience.css?v=20261126-cleanup-v5')};
  });
  assert.deepEqual(before,{registered:true,controlled:true,shell:true,app:true,js:true,css:true});
  // Drop the *origin server* entirely, not just a mocked fetch response.
@@ -65,8 +65,8 @@ try{
  assert.equal(await page.locator('.lr-question').count(),4);
  assert.match(await page.locator('.lr-hero h1').innerText(),/平均ペースと区間ペース/);
  const network=await page.evaluate(async()=>{
-  const paths=['./ui/learningExperience.js?v=20261126-cleanup-v4',
-   './ui/learningExperience.css?v=20261126-cleanup-v4'];
+  const paths=['./ui/learningExperience.js?v=20261126-cleanup-v5',
+   './ui/learningExperience.css?v=20261126-cleanup-v5'];
   const responses=await Promise.all(paths.map(async path=>{
    try{const response=await fetch(path,{cache:'no-store'});return response.ok;}catch{return false;}
   }));

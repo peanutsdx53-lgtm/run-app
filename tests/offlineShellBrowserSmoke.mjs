@@ -83,7 +83,7 @@ try{
   if(!key)return false;
   const cache=await caches.open(key),base=location.origin+'/';
   return !!(await cache.match(base+'index.html'))&&!!(await cache.match(base+'app.js'))&&
-   !!(await cache.match(base+'ui/manualRunStore.js?v=20261126-cleanup-v4'))&&
+   !!(await cache.match(base+'ui/manualRunStore.js?v=20261126-cleanup-v5'))&&
    !!(await cache.match(base+consultationUrl.replace(/^\.\//,'')))&&
    !!(await cache.match(base+explorationUrl.replace(/^\.\//,'')))&&
    !!(await cache.match(base+'ui/referenceEvidenceInfo.js'));
