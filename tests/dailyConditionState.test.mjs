@@ -70,3 +70,5 @@ test('new public labels are translated, and condition palette meets text/control
   assert.ok(contrast(p.accent,p.surface)>=3);
  }
 });
+
+test('a requested missing daily date never falls back to another date',()=>{const s=store();assert.ok(saveCondition(s,from(['focus']).entry).ok);const html=renderConditionJourney(readConditions(s),{dailySelected:'2026-11-25'});assert.match(html,/value="2026-11-25" selected/);assert.match(html,/この日の生活記録はありません/);assert.doesNotMatch(html,/class="cj-daily-tag"/);});

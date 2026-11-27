@@ -47,12 +47,13 @@ export function renderConditionJourney(conditions,ui={},insights={ok:true,entrie
  if(data.status!=='ready')return header+'<p role="alert">'+esc(data.reason)+'</p></section>';
  const chosen=data.selected;
  const dailyRecords=conditions.entries.slice().reverse();
- const selectedDaily=dailyRecords.find(e=>e.date===ui.dailySelected)||dailyRecords[0];
+ const requested=typeof ui.dailySelected==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(ui.dailySelected)&&Number.isFinite(Date.parse(ui.dailySelected+'T12:00:00Z'))&&new Date(ui.dailySelected+'T12:00:00Z').toISOString().slice(0,10)===ui.dailySelected?ui.dailySelected:null;
+ const selectedDaily=requested?dailyRecords.find(e=>e.date===requested):dailyRecords[0];
  const dailyHistory=selectedDaily?(()=>{
   const e=selectedDaily,time=e.dailyState?formatLocalInstant(e.dailyState.recordedAt,{language:globalThis.document?.documentElement.lang==='en'?'en':'ja'}):null;
   const sleepLabel=e.sleepSource==='clock'?'就床時間':e.sleepSource==='duration'||e.sleepMinutes===null?'睡眠':'記録した時間';
   return '<section class="cj-daily-history"><h3>日付別の生活記録</h3><label>日付<select data-cj-daily-date>'+dailyRecords.map(x=>'<option value="'+esc(x.date)+'" '+(x.date===e.date?'selected':'')+'>'+esc(x.date.replaceAll('-','/'))+'</option>').join('')+'</select></label><div class="cj-daily-record"><dl><div><dt>'+sleepLabel+'</dt><dd>'+esc(Number.isInteger(e.sleepMinutes)&&e.sleepMinutes>0?minuteText(e.sleepMinutes):'未入力')+'</dd></div><div><dt>起床時の調子</dt><dd>'+esc(e.feeling||'未入力')+'</dd></div><div><dt>今日の疲れ・気分</dt><dd>'+(e.dailyState?e.dailyState.choices.map(k=>'<span class="cj-daily-tag">'+esc(DAILY_STATE_LABELS[k])+'</span>').join(''):'未回答')+'</dd></div>'+(time?'<div><dt>回答の保存日時</dt><dd><time datetime="'+esc(e.dailyState.recordedAt)+'">'+esc(time.date)+' '+esc(time.time)+' '+esc(time.offset)+'</time></dd></div>':'')+'<div><dt>生活のメモ</dt><dd '+(typeof e.memo==='string'&&e.memo.trim()?'data-user-authored':'')+'>'+esc(e.memo||'未入力')+'</dd></div></dl></div></section>';
- })():'';
+ })():requested?'<section class="cj-daily-history"><h3>日付別の生活記録</h3><label>日付<select data-cj-daily-date><option value="'+esc(requested)+'" selected>'+esc(requested.replaceAll('-','/'))+'</option>'+dailyRecords.map(x=>'<option value="'+esc(x.date)+'">'+esc(x.date.replaceAll('-','/'))+'</option>').join('')+'</select></label><p class="cj-daily-record" role="status">この日の生活記録はありません。</p></section>':'';
  const byDate=new Map(data.allEntries.map(e=>[e.date,e]));
  const filters=[['all','すべて'],['good','調子が良かった日'],['other','それ以外'],['memo','メモがある日']];
  const methods=[['auto','最新の方法'],['self-reported','申告した睡眠時間'],['time-in-bed','就床〜起床の経過時間']];

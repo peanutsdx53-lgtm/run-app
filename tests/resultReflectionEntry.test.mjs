@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {resultReflectionEntry} from '../ui/resultExperience.js';
+import {resultReflectionEntry,resultConditionHref} from '../ui/resultExperience.js';
 import {resolveExplorationContext} from '../ui/explorationLinkPolicy.js';
 import {EXPLORATION_NOTE_KEY,makeUi,saveNote} from '../ui/explorationExperience.js';
 import {ENGLISH_RESULT_COPY} from '../ui/englishResultCopy.js';
@@ -38,11 +38,15 @@ test('G2 saved run A can be linked to new optional note even without a compariso
 test('G2 card is outside preserved three panes, is non-printing and translates',()=>{
  const js=read('ui/resultExperience.js');const html=read('ui/englishResultCopy.js');
  assert.match(js,/data-result-reflection-entry/);
- assert.match(js,/\+extras\(\)\+reflectionInvite\(\)\+referenceHelp\(\)/);
+ assert.match(js,/\+conditionLink\(\)\+reflectionInvite\(\)/);
+ assert.match(js,/\+resultNotice\(\)\+extras\(\)\+sourceDetails\(\)/);
+ assert.match(js,/\+evidencePanel\(\)\+referenceHelp\(\)/);
  assert.match(js,/@media print\{\.rv4-reflection-next\{display:none!important\}\}/);
  assert.match(js,/RESULT_BODY_LAYOUT_STYLES\+RESULT_REFLECTION_ENTRY_STYLES/);
- for(const label of ['今回の走行を振り返る','気づき・次の問いを書く（任意）']){
+ for(const label of ['走行の振り返り','振り返りを書く（任意）']){
   assert.equal(typeof ENGLISH_RESULT_COPY[label],'string');assert.ok(html.includes(label));
  }
  assert.match(js,/const nav=\(\)=>/);
 });
+
+test('condition link uses only the exact saved day, no inferred day or draft',()=>{const r=record(1);assert.equal(resultConditionHref({saved:true,recordId:r.id,record:r}),'#/condition?date=2026-11-17');assert.equal(resultConditionHref({saved:true,recordId:id(2),record:r}),null);assert.equal(resultConditionHref({saved:false,recordId:r.id,record:r}),null);assert.equal(resultConditionHref({gps:{schema:2,date:'2026-11-17'}}),'#/condition?date=2026-11-17');assert.equal(resultConditionHref({gps:{schema:2,date:'2026-02-31'}}),null);});

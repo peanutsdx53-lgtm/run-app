@@ -20,6 +20,13 @@ const format=(n,d=0)=>n===null||!Number.isFinite(n)?'—':n.toLocaleString('ja-J
 const icon=(name)=>({body:'◈',run:'↗',time:'◷',pace:'◉',fatigue:'♡',radar:'⬡',memo:'▤',save:'⇩',location:'⌁'})[name]||'◈';
 export const OFFICIAL_NAMES=Object.freeze(REGIONS.map(r=>Object.freeze([r.id,r.name])));
 /** The saved PNG must never misrepresent the scientific reference state. */
+export function resultConditionHref({gps=null,saved=false,recordId=null,record=null}={}){
+ const date=gps?.schema===2?gps.date:saved&&record?.id===recordId&&record?.source==='manual'&&record?.type==='run'?record.date:null;
+ if(typeof date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(date))return null;
+ const instant=new Date(date+'T12:00:00Z');
+ if(!Number.isFinite(instant.getTime())||instant.toISOString().slice(0,10)!==date)return null;
+ return '#/condition?date='+encodeURIComponent(date);
+}
 export function resultImageAnnotation({gps=false,saved=false,reference=null}={}){
  if(!gps&&!saved)return Object.freeze({status:'保存前：部位別値は未表示',detail:'保存した走行の文献適用条件を確認します'});
  const count=Number.isInteger(reference?.count)&&reference.count>0&&reference.count<=12?reference.count:0;
@@ -51,7 +58,7 @@ export function resultReflectionEntry({saved=false,recordId=null,record=null}={}
  return explorationHref({sourceType:'MANUAL',recordId},'01','気付きと次の確認');
 }
 const RESULT_REFLECTION_ENTRY_STYLES=String.raw`
-.rv4-reflection-next{margin:18px 0 8px;padding:16px 18px;border:1px solid #4a8c9b;border-radius:15px;background:#0c2d3d;color:#eefbfc;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+.rv4-reflection-next{margin:12px 0 8px;padding:14px 16px;border:1px solid #4a8c9b;border-radius:15px;background:#0c2d3d;color:#eefbfc;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
 .rv4-reflection-next>div{flex:1 1 230px;min-width:0}
 .rv4-reflection-next h2{font-size:16px;margin:3px 0 6px;color:#ecffff}
 .rv4-reflection-next p{font-size:12px;line-height:1.7;color:#bad9de;margin:0}
@@ -61,7 +68,15 @@ const RESULT_REFLECTION_ENTRY_STYLES=String.raw`
 .rv4-reflection-memory{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;width:100%;padding-top:9px;border-top:1px solid #316574;font-size:12px;line-height:1.6;color:#d6ebee}
 .rv4-reflection-memory>a{min-height:44px;display:inline-flex;align-items:center;padding:8px 12px;border-radius:9px;border:1px solid #6fabb5;color:#e8fcff;text-decoration:none}
 .rv4-reflection-memory>a:focus-visible{outline:3px solid #a1f6e8;outline-offset:3px}
-@media print{.rv4-reflection-next{display:none!important}}
+.rv4-hero .rv4-run-details{grid-column:1/-1;margin:0;padding:0;border:0;border-top:1px solid #2c6679;border-radius:0;box-shadow:none;background:transparent;overflow:visible}
+.rv4-hero .rv4-run-details>summary{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 1px;list-style:none;color:#c4e7ed;font-size:13px}
+.rv4-hero .rv4-run-details>summary::-webkit-details-marker{display:none}
+.rv4-hero .rv4-run-details>summary b{color:#93dcdb;font-size:18px}
+.rv4-hero .rv4-run-details .rv4-note p{white-space:pre-wrap;overflow-wrap:anywhere}
+.rv4-condition-link{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;margin:12px 0 0;padding:10px 12px;border:1px solid #526f83;border-radius:11px;color:#d8d1fb;text-decoration:none;font-size:.875rem;overflow-wrap:anywhere}
+.rv4-condition-link:focus-visible,.rv4-run-details>summary:focus-visible{outline:3px solid #a1f6e8;outline-offset:3px}
+.rv4-body .rv4-method-disclosure{margin:12px 0 0}
+@media print{.rv4-condition-link,.rv4-run-details{display:none!important}.rv4-reflection-next{display:none!important}}
 `;
 const RESULT_HELP_RIGHT_STYLES=String.raw`
 /* S17 screen help: identical control to all ordinary application screen headers. */
@@ -179,7 +194,7 @@ export function mountResult(host,inputDraft={},options={}){
   '.rv4-region-evidence','.rv4-fatigue-method','.rv4-rof-time-help','.rv4-rof-revisions','.rv4-rof-correction',
   '.rv4-mental-details','.rv4-region-compare-method','.rv4-comparison-caution',
   '.rv4-gps-compare-method','.rv4-question-continuation',
-  '.rv4-details:not(.rv4-region-evidence)','.rv4-method-disclosure'
+  '.rv4-run-details','.rv4-method-disclosure'
  ]);
  const draftSelectors=Object.freeze([
   '[data-rof-correct-phase]','[data-rof-correct-score]',
@@ -293,7 +308,7 @@ export function mountResult(host,inputDraft={},options={}){
     +(fromGps&&gps.detailSaved&&['RUNNING','JOGGING','WALK'].includes(gps.activity)?
        '<div class="rv4-gps-gate"><div><small>GPSコースと身体の変化</small><strong>フラッグ地点の参考値を振り返る</strong><span>コース上の地点・速度・人体図を連動表示します</span></div><a data-gps-dynamic-gate href="#/dynamic-result?record='+encodeURIComponent(gps.id)+'">動的結果を見る ›</a></div>':'')
 
-    +evidencePanel()+'</section>';
+    +evidencePanel()+referenceHelp()+'</section>';
   };
 
  const fatigueScaleRow=(phase,value)=>{
@@ -382,12 +397,11 @@ export function mountResult(host,inputDraft={},options={}){
    '</section>';
  };
   const reflectionNotes=options.reflectionData?linkedReflectionNotes(options.reflectionData,options.recordId):null;
-  const reflectionMemory=()=>!reflectionNotes?'':reflectionNotes.status==='unavailable'?'<div class="rv4-reflection-memory" role="status">保存した気づきを確認できません。メモの原本は変更していません。</div>':reflectionNotes.status==='ready'?'<div class="rv4-reflection-memory" data-result-reflection-count><span>保存した気づき</span><strong>('+reflectionNotes.notes.length+')</strong>'+(reflectionNotes.notes.length?'<a data-result-review-notes href="'+clean(resultReflectionHref+'&memories=1')+'">この走行のメモを確認・修正</a>':'<span>この走行のメモはまだありません。</span>')+'</div>':'';
-  const reflectionInvite=()=>!resultReflectionHref?'':
-   '<section class="rv4-reflection-next" data-result-reflection-entry aria-label="今回の走行を振り返る">'+
-   '<div><h2>今回の走行を振り返る</h2><p>結果を見て気になったことや、次に確かめたいことを自分の言葉で残せます。書かなくても構いません。</p></div>'+
-   '<a href="'+clean(resultReflectionHref)+'" data-result-to-reflection>気づき・次の問いを書く（任意）</a>'+reflectionMemory()+'</section>';
-  const extras=()=>!hasInput?'':'<details class="rv4-details"><summary><span class="rv4-icon">'+icon('memo')+'</span><span><strong>その日の記録</strong><small>使用品・コース・メモ</small></span><b>⌄</b></summary><div class="rv4-extra-grid"><div><small>シューズ</small><strong>'+clean(draft.shoeName||'—')+'</strong></div><div><small>歩数</small><strong>'+(positive(draft.steps)!==null?format(positive(draft.steps))+' 歩':'—')+'</strong></div><div><small>上り割合</small><strong>'+(number(draft.upPercent)!==null?format(number(draft.upPercent))+'%':'—')+'</strong></div></div><div class="rv4-note"><small>メモ</small><p>'+clean(draft.memo||'記録がありません')+'</p></div></details>';
+  const reflectionMemory=()=>!reflectionNotes?'':reflectionNotes.status==='unavailable'?'<div class="rv4-reflection-memory" role="status">保存した振り返りを確認できません。元の記録は変更していません。</div>':reflectionNotes.status==='ready'&&reflectionNotes.notes.length?'<div class="rv4-reflection-memory" data-result-reflection-count><span>保存した振り返り</span><strong>('+reflectionNotes.notes.length+')</strong><a data-result-review-notes href="'+clean(resultReflectionHref+'&memories=1')+'">振り返りを確認・修正</a></div>':'';
+  const reflectionInvite=()=>!resultReflectionHref?'':'<section class="rv4-reflection-next" data-result-reflection-entry aria-label="走行の振り返り"><div><h2>走行の振り返り</h2><p>気づいたことや次に確かめたいことを残せます。</p></div><a href="'+clean(resultReflectionHref)+'" data-result-to-reflection>振り返りを書く（任意）</a>'+reflectionMemory()+'</section>';
+  const extras=()=>!hasInput?'':'<details class="rv4-details rv4-run-details"><summary><span><strong>走行の詳細</strong></span><b aria-hidden="true">⌄</b></summary><div class="rv4-extra-grid"><div><small>シューズ</small><strong data-user-authored>'+clean(draft.shoeName||'—')+'</strong></div><div><small>歩数</small><strong>'+(positive(draft.steps)!==null?format(positive(draft.steps))+' 歩':'—')+'</strong></div><div><small>上り割合</small><strong>'+(number(draft.upPercent)!==null?format(number(draft.upPercent))+'%':'—')+'</strong></div></div><div class="rv4-note"><small>記録時のメモ</small><p '+(draft.memo?'data-user-authored':'')+'>'+clean(draft.memo||'記録がありません')+'</p></div></details>';
+  const conditionHref=resultConditionHref({gps,saved:fromSaved,recordId:options.recordId,record:options.record});
+  const conditionLink=()=>conditionHref?'<a class="rv4-condition-link" data-result-condition href="'+clean(conditionHref)+'"><span>この日のコンディションを見る</span><span aria-hidden="true">›</span></a>':'';
  const missingActivityPanel=()=>!activityMissing?'':`<section class="rv4-activity-missing" role="group" aria-label="保存済み記録の活動種別を設定"><div><strong>12部位の参考値を表示するために、活動種別を選択してください</strong><p>この記録は活動種別が未設定です。距離と時間から活動の種類を推測しないため、数値は未取得となっています。</p></div><div class="rv4-activity-options">${[['RUNNING','ランニング'],['JOGGING','ジョギング'],['WALK','ウォーキング']].map(([id,label])=>`<button type="button" data-result-gait="${id}">${label}</button>`).join('')}</div><small>選択した活動種別だけをこの記録に保存します。走歩混在や文献の適用速度範囲外では、数値を算出できない場合があります。</small></section>`;
  const reflectionPath=()=>'<details class="rv4-reading-route rv4-header-help"><summary aria-label="結果の見方を開く">？</summary><p>記録を理解する順番：走行の事実、疲労感、文献の参考情報、過去比較。詳しい条件は各項目で確認できます。</p></details>';
  const resultNotice=()=>{
@@ -412,7 +426,7 @@ export function mountResult(host,inputDraft={},options={}){
  '<p><strong>時間</strong><span data-source-duration>出所：'+clean(origin.duration)+'</span></p>'+
  '<p><strong>平均ペース</strong><span data-source-pace>出所：'+clean(origin.pace)+'</span></p>'+
  '<p><strong>疲労感</strong><span data-source-rof-detail>出所：'+clean(origin.rof)+'</span></p></div></details>';
- const hero=()=>!hasInput?'':'<section class="rv4-hero"><div class="rv4-hero-glow"></div><div class="rv4-hero-left"><small class="rv4-date">'+titleDate+'　<span>'+clean(ACTIVITY_LABELS[fromGps?gps.activity:fromSaved?gaitOf(options.record):draft.activityGait]||'活動種別未設定')+'</span></small><div class="rv4-measures"><div class="rv4-distance"><small>距離</small><strong>'+format(distance,2)+'</strong><span>km</span></div><div class="rv4-secondary"><div><small>時間</small><strong>'+(duration>0?format(duration,0)+' 分':'—')+'</strong></div><div><small>平均ペース</small><strong>'+pace+' <em>/km</em></strong></div></div></div></div><div class="rv4-hero-report"><span>疲労感（本人回答）</span><div class="rv4-today-chips"><span>運動前 <b>'+(before??'—')+'</b></span><span>運動後 <b>'+(after??'—')+'</b></span></div></div>'+resultNotice()+sourceDetails()+'</section>';
+ const hero=()=>!hasInput?'':'<section class="rv4-hero"><div class="rv4-hero-glow"></div><div class="rv4-hero-left"><small class="rv4-date">'+titleDate+'　<span>'+clean(ACTIVITY_LABELS[fromGps?gps.activity:fromSaved?gaitOf(options.record):draft.activityGait]||'活動種別未設定')+'</span></small><div class="rv4-measures"><div class="rv4-distance"><small>距離</small><strong>'+format(distance,2)+'</strong><span>km</span></div><div class="rv4-secondary"><div><small>時間</small><strong>'+(duration>0?format(duration,0)+' 分':'—')+'</strong></div><div><small>平均ペース</small><strong>'+pace+' <em>/km</em></strong></div></div></div></div><div class="rv4-hero-report"><span>疲労感（本人回答）</span><div class="rv4-today-chips"><span>運動前 <b>'+(before??'—')+'</b></span><span>運動後 <b>'+(after??'—')+'</b></span></div></div>'+resultNotice()+extras()+sourceDetails()+'</section>';
  // WebKit can keep a native <summary> at 13px even when its rem-based
  // style is important. Match the *visible* text to the actual document root.
  // This does not measure or change any running/scientific reference values.
@@ -439,7 +453,7 @@ export function mountResult(host,inputDraft={},options={}){
     if(control)draftState.set(selector,control.value);
    }
   }
-  app.innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1></div>'+resultActions()+reflectionPath()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+mentalCard()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+extras()+reflectionInvite()+referenceHelp()+'</div>';
+  app.innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1></div>'+resultActions()+reflectionPath()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+mentalCard()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+conditionLink()+reflectionInvite()+'</div>';
   for(const [selector,open] of openState){
    const el=app.querySelector(selector);
    if(el)el.open=open;

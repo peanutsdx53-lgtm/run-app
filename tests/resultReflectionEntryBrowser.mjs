@@ -47,7 +47,16 @@ try{
    await page.waitForFunction(lang=>document.documentElement.lang===lang,language);
    assert.equal(await page.locator('#activity-result [data-tab]').count(),3,'result stays three tabs');
    const label=await btn.innerText();
-   assert.ok(label.includes(language==='en'?'Write a Note or Question':'気づき・次の問い'),language+' CTA must be translated');
+   assert.ok(label.includes(language==='en'?'Write a reflection':'振り返りを書く'),language+' CTA must be translated');
+   assert.equal(await page.locator('[data-result-reflection-count]').count(),0,'empty reflection count is omitted');
+   assert.equal(await page.locator('.rv4-hero .rv4-run-details').count(),1,'run details belong to the hero');
+   const condition=page.locator('[data-result-condition]');
+   assert.match(await condition.getAttribute('href'),/^#\/condition\?date=\d{4}-\d{2}-\d{2}$/);
+   await condition.click();
+   await page.locator('.cj-daily-history').waitFor();
+   assert.ok(await page.locator('.cj-daily-record').isVisible(),'exact day is shown even if unrecorded');
+   await page.goBack();
+   await btn.waitFor({state:'visible'});
    const bounds=await btn.boundingBox();assert.ok(bounds&&bounds.height>=43,'44px minimum tap target');
    assert.ok(bounds.x>=-2&&bounds.x+bounds.width<=width+2,'no horizontal overflow');
    await page.screenshot({path:resolve(out,engine+'-'+language+'-'+width+'-'+zoom+'-result.png'),fullPage:true,animations:'disabled'});

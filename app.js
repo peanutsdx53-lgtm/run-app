@@ -345,7 +345,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     return options;
   }
   let selectedRunId=null;
-  const conditionUi={days:30,method:"auto",focus:"all",selected:"",dailySelected:"",notice:"",scrollLeft:null};
+  const conditionUi={days:30,method:"auto",focus:"all",selected:"",dailySelected:"",route:null,notice:"",scrollLeft:null};
   const environmentUi=environmentExperience.newEnvironmentUi();
   const bodyUi=bodyExperience.makeUi();
   const rofUi=rofExperience.createRofUiState();
@@ -509,6 +509,10 @@ function recordExtras(){
     }
     // Condition inspection lives off the home dashboard, not inside running history.
     function condition(){
+      if(conditionUi.route!==location.hash){
+        conditionUi.route=location.hash;
+        conditionUi.dailySelected=new URLSearchParams(location.hash.split('?')[1]||'').get('date')||'';
+      }
       const conditions=homeExperience.readConditions(onboardStorage);
       const insights=conditionInsights.loadConditionInsights(onboardStorage);
       return '<section class="cj-screen" aria-label="コンディションの歩み"><header class="cj-page-head"><a href="#/home" class="cj-back" aria-label="ホームに戻る">‹</a><div><h1>コンディションの歩み</h1></div><details class="rl-screen-help"><summary aria-label="コンディションの見方">？</summary><p>保存した睡眠・在床時間と、その日の調子を日付から確認できます。本人の記録であり、睡眠や健康状態を測定・診断するものではありません。</p></details></header>'+conditionJourney.renderConditionJourney(conditions,conditionUi,insights)+'</section>';
@@ -2334,6 +2338,7 @@ function recordExtras(){
   window.addEventListener("focus",refreshForeground);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)void refreshForeground();});
   window.addEventListener("hashchange",async()=>{
+    if(currentPage()!=="condition")conditionUi.route=null;
     dismissLegalDialog();
     // P8: even outside inquiry panels, the old exploration view can hold
     // record-linked note previews and identifying context. Seal the ENTIRE
