@@ -41,7 +41,7 @@ test('G2 card is outside preserved three panes, is non-printing and translates',
  assert.match(js,/\+conditionLink\(\)\+reflectionInvite\(\)/);
  assert.match(js,/\+resultNotice\(\)\+extras\(\)\+sourceDetails\(\)/);
  assert.match(js,/\+evidencePanel\(\)\+referenceHelp\(\)/);
- assert.match(js,/@media print\{\.rv4-reflection-next\{display:none!important\}\}/);
+ assert.match(js,/@media print\{[^\n]*\.rv4-reflection-next\{display:none!important\}\}/);
  assert.match(js,/RESULT_BODY_LAYOUT_STYLES\+RESULT_REFLECTION_ENTRY_STYLES/);
  for(const label of ['走行の振り返り','振り返りを書く（任意）']){
   assert.equal(typeof ENGLISH_RESULT_COPY[label],'string');assert.ok(html.includes(label));

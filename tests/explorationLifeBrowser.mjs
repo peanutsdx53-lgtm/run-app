@@ -85,7 +85,12 @@ try{
   await expectLifeState('NEED_SELECTION');
   assert.doesNotMatch(await panel.innerText(),/E6-(LIFE|REST)-PRIVATE|450分/);
   assert.equal(await panel.locator('[data-e-life-kind]').count(),2);
-  assert.match(await panel.innerText(),/同じ日付というだけで/);
+  const boundary=panel.locator('details.ex-e-boundary');
+  assert.equal(await boundary.evaluate(e=>e.open),false);
+  assert.equal(await boundary.locator('p').isVisible(),false);
+  await boundary.locator('summary').click();
+  assert.match(await boundary.innerText(),/同じ日付というだけで/);
+  await boundary.locator('summary').click();
   // Choosing a date is an independent, affirmative action, even on the SAME day.
   await panel.locator('[data-e-life-date]').fill('2026-11-08');
   await panel.locator('[data-e-life-kind="life"]').click();
@@ -94,7 +99,10 @@ try{
   assert.match(await panel.innerText(),/本人申告の睡眠時間/);
   assert.match(await panel.innerText(),/450分/);
   assert.doesNotMatch(await panel.innerText(),/E6-REST-PRIVATE/);
-  assert.match(await panel.innerText(),/日付が同じでも/);
+  assert.equal(await boundary.evaluate(e=>e.open),false);
+  await boundary.locator('summary').click();
+  assert.match(await boundary.innerText(),/日付が同じでも/);
+  await boundary.locator('summary').click();
   assert.doesNotMatch(await panel.innerText(),/睡眠のおかげ|回復した|睡眠によって改善|原因と判定/);
   if(item.source!=='manual'){
    assert.equal(await page.locator('[data-gps-inquiry-bridge]').count(),1);
