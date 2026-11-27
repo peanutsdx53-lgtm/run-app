@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -71,7 +71,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v5"),
     import("./ui/gpsDynamicResult.js?v=20261126-cleanup-v5"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261126-cleanup-v5-readable"),
+    import("./ui/resultExperience.js?v=20261126-cleanup-v5-readable-history"),
     import("./ui/runQuestionContinuation.js"),
     import("./ui/historyExperience.js?v=20261126-cleanup-v5"),
     import("./ui/settingsExperience.js?v=20261125-ux16-19-batch-v1"),
