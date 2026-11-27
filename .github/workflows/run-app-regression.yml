@@ -25,6 +25,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      # A reproducible source snapshot lets reviewers run the same full suite locally
+      # without a direct clone. Archive tracked files only, never the runner workspace.
+      - name: Archive exact tracked source for independent preflight
+        run: git archive --format=zip --output=/tmp/run-app-preflight-source.zip HEAD
+      - name: Upload preflight source snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: preflight-source
+          path: /tmp/run-app-preflight-source.zip
+          if-no-files-found: error
+          retention-days: 2
       - name: Verify all local references
         run: node scripts/auditLocalDependencies.mjs
       - name: Check public terminology

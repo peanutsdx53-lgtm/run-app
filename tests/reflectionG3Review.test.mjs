@@ -47,7 +47,8 @@ test('G3 explicit focused Explore memory dialog does not include another run; ge
  let html=render(u,{categories:cats,focusRunId:id(1),focusRun:saved(1),manualRuns});
  assert.match(html,/RUN_A_PRIVATE_TEXT|OLD_A_WITHOUT_TOPIC_ID/);assert.match(html,/OLD_A_WITHOUT_TOPIC_ID/);
  assert.doesNotMatch(html,/RUN_B_PRIVATE_TEXT|LEGACY_UNLINKED_TEXT/);
- assert.match(html,/旧メモ（テーマ未設定）/);
+ assert.match(html,/<span>テーマ未設定<\/span>/);
+  assert.doesNotMatch(html,/旧メモ（テーマ未設定）/);
  html=render(u,{categories:cats,focusRunId:null,focusRun:null,manualRuns});
  assert.match(html,/RUN_B_PRIVATE_TEXT/);assert.match(html,/LEGACY_UNLINKED_TEXT/);
 });

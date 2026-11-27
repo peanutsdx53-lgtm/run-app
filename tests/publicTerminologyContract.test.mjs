@@ -111,3 +111,16 @@ test('Compact result and condition use only the current public wording and retai
 test('retired per-run response terminology cannot reappear in current authoring or result UI',()=>{
  for(const p of ['app.js','ui/recordReviewExperience.js','ui/bodyContextExperience.js','ui/measurementExperience.js','ui/resultExperience.js','ui/annotationEditor.js','ui/annotationEditorCore.js','ui/englishResultCopy.js','ui/englishSurfaceRemainders.js','ui/englishGpsExplorationCopy.js','ui/englishFinalConditions.js'])assert.doesNotMatch(read(p),/気持ち・考える面の疲れ|任意の回答だけ再試行|今回の走りについて、気持ちや考えることの面で疲れ/);
 });
+
+
+test('current note and condition labels do not conflict with retired copy lists',()=>{
+ const home=read('ui/homeExperience.js'),guide=read('ui/explorationTopicView.js'),explore=read('ui/explorationExperience.js'),browser=read('tests/homeCopyBilingualBrowser.mjs');
+ assert.match(home,/コンディションの履歴を見る/);
+ assert.doesNotMatch(home,/睡眠・体調の記録を見る/);
+ assert.match(guide,/研究出典に基づく専門解説ではありません/);
+ assert.doesNotMatch(guide,/専門解説は出典審査前/);
+ assert.match(explore,/<span>テーマ未設定<\/span>/);
+ assert.doesNotMatch(explore,/旧メモ（テーマ未設定）/);
+ const obsolete=browser.match(/const obsolete=\[(.*?)\];/)[1];
+ assert.doesNotMatch(obsolete,/View Condition History|コンディションの履歴を見る/);
+});

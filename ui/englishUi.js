@@ -20,7 +20,7 @@ import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-dail
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
-import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261124-upr-explore-gps-v1-notes-copy';
+import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
 import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy';
 

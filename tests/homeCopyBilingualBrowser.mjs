@@ -63,7 +63,7 @@ try{
    assert.equal(await latest.locator('a[href="#/record-start"]').count(),1);
    const condition=page.locator('.hx-condition a[href="#/condition"]');
    assert.equal((await condition.innerText()).replace('›','').trim(),copy.link,'condition history is named directly');
-   const obsolete=['記録は自分のペースで始められます。','手入力またはGPSを選択','手入力した走行を保存すると、ここに表示されます。','コンディションの歩みを見る','View Condition History','Saved manual runs appear here.','Choose Manual Entry or GPS','Start recording whenever you wish.'];
+   const obsolete=['記録は自分のペースで始められます。','手入力またはGPSを選択','手入力した走行を保存すると、ここに表示されます。','コンディションの歩みを見る','睡眠・体調の記録を見る','View Sleep & Condition Records','Saved manual runs appear here.','Choose Manual Entry or GPS','Start recording whenever you wish.'];
    const cardCopy=await page.locator('.hx-latest,.hx-condition').allInnerTexts();
    for(const old of obsolete)assert.ok(!cardCopy.join(' ').includes(old),'obsolete home copy: '+old);
    const boxed=await page.evaluate(()=>{
