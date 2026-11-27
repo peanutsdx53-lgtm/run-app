@@ -1,6 +1,12 @@
 const KEY = "runload-v2-life-condition-v1";
 const FEELINGS = Object.freeze(["とても良い","良い","ふつう","疲れ気味","良くない"]);
 export const CONDITION_KEY = KEY;
+// Daily experience labels; no score or classification.
+export const DAILY_STATE_LABELS=Object.freeze({heavy:"体が重い・だるい",sleepy:"眠気がある",focus:"集中しにくい",motivation:"やる気が出にくい",strain:"気持ちに余裕がない",other:"その他",none:"特にない",unsure:"よく分からない"});
+export function validDailyChoices(choices){
+ return Array.isArray(choices)&&choices.length<=Object.keys(DAILY_STATE_LABELS).length&&new Set(choices).size===choices.length&&choices.every(c=>typeof c==="string"&&Object.hasOwn(DAILY_STATE_LABELS,c))&&(!(choices.includes("none")||choices.includes("unsure"))||choices.length===1);
+}
+const validDailyState=v=>v&&typeof v==="object"&&!Array.isArray(v)&&Object.keys(v).every(k=>k==="choices"||k==="recordedAt")&&validDailyChoices(v.choices)&&v.choices.length>0&&typeof v.recordedAt==="string"&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(v.recordedAt)&&Number.isFinite(Date.parse(v.recordedAt))&&new Date(v.recordedAt).toISOString()===v.recordedAt;
 
 const CLOCK_PATTERN=/^([01]\d|2[0-3]):([0-5]\d)$/;
 function clockMinutes(value) {
@@ -15,10 +21,10 @@ export function calculatedTimeInBed(bedTime,wakeTime,relation="auto"){
  if(minutes<=0||minutes>=1440)return null;
  return {minutes,bedDayOffset:offset};
 }
-export function conditionEntryFromForm(fields) {
+export function conditionEntryFromForm(fields,now=()=>new Date().toISOString()) {
  const date=String(fields.date||""),feeling=String(fields.feeling||""),
   memo=String(fields.memo||""),mode=String(fields.sleepMode||"");
- let entry={date,feeling,memo,sleepMinutes:0};
+ let entry={date,feeling,memo,sleepMinutes:null};
  if(mode==="clock"){
   const bedTime=String(fields.bedTime||""),wakeTime=String(fields.wakeTime||""),
    bedDayRule=String(fields.bedDayRule||"auto"),
@@ -37,8 +43,12 @@ export function conditionEntryFromForm(fields) {
   const minutes=Number(parts[1])*60+Number(parts[2]);
   if(minutes<=0||minutes>=1440)return {ok:false,reason:"合計時間は1分以上24時間未満にしてください"};
   entry={...entry,sleepMinutes:minutes,sleepSource:"duration"};
- }else return {ok:false,reason:"睡眠の入力方法を選択してください"};
- if(!FEELINGS.includes(feeling))return {ok:false,reason:"起床時の調子を選択してください。未回答を「ふつう」として保存しません"};
+ }else if(mode!=="none")return {ok:false,reason:"睡眠の入力方法を選択してください"};
+ const choices=fields.dailyChoices??[];
+ if(!validDailyChoices(choices))return {ok:false,reason:"疲れ・気分の選択内容を確認してください"};
+ if(choices.length)entry.dailyState={choices:Object.keys(DAILY_STATE_LABELS).filter(k=>choices.includes(k)),recordedAt:now()};
+ if(feeling!==""&&!FEELINGS.includes(feeling))return {ok:false,reason:"起床時の調子を確認してください"};
+ if(entry.sleepMinutes===null&&feeling===""&&!memo.trim()&&!choices.length)return {ok:false,reason:"記録する項目を一つ以上入力してください"};
  if(!validEntry(entry))return {ok:false,reason:"日付・起床時の調子・メモを確認してください"};
  return {ok:true,entry};
 }
@@ -56,6 +66,14 @@ export function updateSleepForm(form){
  const error=form.querySelector("[data-sleep-error]");
  if(error){error.hidden=true;error.textContent="";}
  let minutes=null,message="";
+ if(mode==="none"){
+  if(result)result.textContent="—";
+  if(label)label.textContent="睡眠は未入力";
+  if(note)note.textContent="";
+  form.querySelector(".hx-sleep-result").hidden=true;
+  return;
+ }
+ form.querySelector(".hx-sleep-result").hidden=false;
  if(mode==="clock"){
   const bed=form.querySelector('[name="bedTime"]')?.value,
     wake=form.querySelector('[name="wakeTime"]')?.value,
@@ -90,8 +108,11 @@ function pastDay(offset) {const d=new Date();d.setHours(12,0,0,0);d.setDate(d.ge
 export function validEntry(v) {
  return !!v && typeof v==="object" && !Array.isArray(v) &&
  /^\d{4}-\d{2}-\d{2}$/.test(v.date) && !Number.isNaN(new Date(v.date+"T12:00:00Z").getTime()) && new Date(v.date+"T12:00:00Z").toISOString().slice(0,10)===v.date &&
- Number.isInteger(v.sleepMinutes) && v.sleepMinutes>=0 && v.sleepMinutes<=1440 &&
- FEELINGS.includes(v.feeling) && typeof v.memo==="string" && v.memo.length<=160 &&
+ (v.sleepMinutes===null||(Number.isInteger(v.sleepMinutes)&&v.sleepMinutes>=0&&v.sleepMinutes<=1440)) &&
+ (v.feeling===""||FEELINGS.includes(v.feeling)) && typeof v.memo==="string" && v.memo.length<=160 &&
+ (!("dailyState" in v)||validDailyState(v.dailyState)) &&
+ (v.sleepMinutes!==null||v.feeling!==""||!!v.memo.trim()||!!v.dailyState) &&
+ (v.sleepMinutes===null?(v.sleepSource===undefined&&!("bedTime" in v)&&!("wakeTime" in v)):
  (v.sleepSource===undefined ||
   (v.sleepSource==="duration" && v.sleepMinutes>0 && v.sleepMinutes<1440 &&
    !("bedTime" in v) && !("wakeTime" in v)) ||
@@ -99,7 +120,7 @@ export function validEntry(v) {
    ["auto","previous","same"].includes(v.bedDayRule) &&
    (v.bedDayOffset===0||v.bedDayOffset===1) &&
    (()=>{const r=calculatedTimeInBed(v.bedTime,v.wakeTime,v.bedDayRule);
-   return !!r&&r.minutes===v.sleepMinutes&&r.bedDayOffset===v.bedDayOffset;})()));
+   return !!r&&r.minutes===v.sleepMinutes&&r.bedDayOffset===v.bedDayOffset;})())));
 }
 export function readConditions(storage) {
  try {
@@ -119,7 +140,10 @@ export function saveCondition(storage, entry) {
  if(!before.canSave)return {ok:false,reason:before.reason};
  try {
   const old=storage.getItem(KEY);
-  const entries=before.entries.filter(v=>v.date!==entry.date).concat([{...entry}]).sort((a,b)=>a.date.localeCompare(b.date));
+  const prior=before.entries.find(v=>v.date===entry.date);
+  const nextEntry={...entry};
+  if(prior?.dailyState&&entry.dailyState&&prior.dailyState.choices.length===entry.dailyState.choices.length&&prior.dailyState.choices.every(k=>entry.dailyState.choices.includes(k)))nextEntry.dailyState=prior.dailyState;
+  const entries=before.entries.filter(v=>v.date!==entry.date).concat([nextEntry]).sort((a,b)=>a.date.localeCompare(b.date));
   // A new date must never silently evict an older self-report.
   // The user can explicitly manage old data before another save.
   if(entries.length>366)return {ok:false,reason:"生活記録が保存上限の366日分に達しました。以前の記録を自動削除せず保存を中止しました"};
@@ -195,14 +219,16 @@ export function latestCard(record=null,savedRuns=null){
 }
 export function conditionCard(storage){
  const state=readConditions(storage),entries=state.entries,map=new Map(entries.map(x=>[x.date,x])),today=map.get(todayLocal());
- const count=Array.from({length:7},(_,i)=>pastDay(i)).filter(d=>map.has(d)).length;
+ const recentDates=Array.from({length:7},(_,i)=>pastDay(i));
+ const count=recentDates.filter(d=>map.has(d)).length;
+ const sleepCount=recentDates.filter(d=>Number.isInteger(map.get(d)?.sleepMinutes)).length;
  const sleep= sleepText(today?.sleepMinutes),feeling=today?.feeling||"未入力",sleepLabel=today?.sleepSource==="clock"?"就床時間":"睡眠";
  const stat='<div class="hx-condition-stats"><div><small>'+sleepLabel+'</small><strong>'+escape(sleep)+'</strong>'+(today?.sleepSource==="clock"?'<span class="hx-wake-time">起床 '+escape(today.wakeTime)+'</span>':'')+'</div><div><small>起床時の調子</small><strong>'+escape(feeling)+'</strong></div><div><small>直近7日の入力</small><strong>'+count+'<em> / 7日</em></strong></div></div>';
  return '<section class="hx-card hx-condition">'+
  '<button type="button" class="hx-title-button" data-condition-open aria-label="コンディションの入力と詳細を開く">'+head("コンディション","moon",'<span class="hx-right">開く ›</span>')+'</button>'+
- stat+'<div class="hx-chart-label">睡眠・就床の記録 <span>直近7日</span></div>'+
+ stat+(today?.dailyState?'<div class="hx-daily-summary"><small>今日の疲れ・気分</small><div>'+today.dailyState.choices.map(k=>'<span>'+escape(DAILY_STATE_LABELS[k])+'</span>').join('')+'</div></div>':'')+'<div class="hx-chart-label">睡眠・就床の記録 <span>直近7日</span></div>'+
  (count===0?'<div class="hx-condition-empty" role="status"><strong>'+(state.canSave?'直近7日の記録はまだありません':'生活記録を確認できません')+'</strong><p>'+(state.canSave?'未記録日は0時間として扱いません。':'保存領域の状態を確認してください。')+'</p></div>'
- :sevenBars(entries)+'<p class="hx-condition-source">記録した日のみ表示します。未記録日は空欄です。</p>')+
+ :sleepCount?sevenBars(entries)+'<p class="hx-condition-source">記録した日のみ表示します。未記録日は空欄です。</p>':'<p class="hx-condition-source">睡眠の記録はまだありません</p>')+
  '<a class="hx-condition-explore" href="#/condition" aria-label="睡眠・体調の記録を確認する">睡眠・体調の記録を見る <span aria-hidden="true">›</span></a>'+
  (!state.canSave?'<p class="hx-warning">'+escape(state.reason)+'</p>':"")+'</section>';
 }
@@ -262,17 +288,17 @@ export function conditionPanel(storage,selectedDate=todayLocal(),deletePendingDa
  const state=readConditions(storage),chartEntries=state.entries;
  state.deletePendingDate=deletePendingDate;
  const existing=state.entries.find(x=>x.date===selectedDate);
- const mode=existing?.sleepSource==="clock"||!existing?"clock":"duration";
+ const mode=existing?.sleepMinutes===null?"none":existing?.sleepSource==="clock"||!existing?"clock":"duration";
  const feeling=existing?.feeling||"";
  // A first-time answer must never be inferred from a pre-selected neutral category.
- const opts='<option value="" disabled'+(feeling===""?' selected':'')+'>選択してください（未回答）</option>'+FEELINGS.map(v=>'<option value="'+escape(v)+'"'+(feeling===v?' selected':'')+'>'+escape(v)+'</option>').join("");
- const bars=chartEntries.length?sevenBars(chartEntries):'<p class="hx-no-sleep">睡眠の記録はまだありません</p>';
- const durationHours=existing?Math.floor(existing.sleepMinutes/60):"";
- const durationMinutes=existing?existing.sleepMinutes%60:"";
+ const opts='<option value=""'+(feeling===""?' selected':'')+'>選択してください（未回答）</option>'+FEELINGS.map(v=>'<option value="'+escape(v)+'"'+(feeling===v?' selected':'')+'>'+escape(v)+'</option>').join("");
+ const bars=chartEntries.some(e=>Number.isInteger(e.sleepMinutes))?sevenBars(chartEntries):'<p class="hx-no-sleep">睡眠の記録はまだありません</p>';
+ const durationHours=Number.isInteger(existing?.sleepMinutes)?Math.floor(existing.sleepMinutes/60):"";
+ const durationMinutes=Number.isInteger(existing?.sleepMinutes)?existing.sleepMinutes%60:"";
  const bed=existing?.sleepSource==="clock"?existing.bedTime:"";
  const wake=existing?.sleepSource==="clock"?existing.wakeTime:"";
  const dayRule=existing?.sleepSource==="clock"?existing.bedDayRule:"auto";
- const modeButtons=[["clock","時刻から入力"],["duration","合計時間だけ"]].map(([value,label])=>
+ const modeButtons=[["clock","時刻から入力"],["duration","合計時間だけ"],["none","睡眠は未入力"]].map(([value,label])=>
   '<button type="button" data-sleep-mode="'+value+'" class="'+(mode===value?'is-selected':'')+'" aria-pressed="'+String(mode===value)+'">'+label+'</button>').join("");
  const dayRadios=[["auto","自動判定"],["previous","前日に就寝"],["same","当日に就寝"]].map(([v,label])=>
   '<label class="hx-day-radio"><input type="radio" name="bedDayRule" value="'+v+'"'+(dayRule===v?' checked':'')+'><span>'+label+'</span></label>').join("");
@@ -294,8 +320,9 @@ export function conditionPanel(storage,selectedDate=todayLocal(),deletePendingDa
  [0,15,30,45].map(v=>'<button type="button" data-duration-minute="'+v+'" aria-pressed="'+String(durationMinutes!==""&&Number(durationMinutes)===v)+'">'+String(v).padStart(2,"0")+'分</button>').join("")+
  '</div><small>分は1分単位で直接入力もできます。</small></div></div>'+
  '<div class="hx-sleep-result" aria-live="polite"><div data-sleep-result-label></div><strong data-sleep-result>—</strong><p data-sleep-result-note></p><small>時刻からの計算は実際に眠っていた時間とは異なる場合があります。</small></div></section>'+
- '<label>起床時の調子（保存時に選択）<select name="feeling" aria-required="true">'+opts+'</select></label>'+
- '<label>メモ（任意）<textarea name="memo" maxlength="160" rows="2">'+escape(existing?.memo||"")+'</textarea></label>'+
+ '<label>起床時の調子（任意）<select name="feeling">'+opts+'</select></label>'+
+ '<fieldset class="hx-daily-state"><legend>今日の疲れ・気分（任意）</legend><p>この日に感じたことを選んでください。複数選択できます。</p><div class="hx-daily-choices">'+Object.entries(DAILY_STATE_LABELS).map(([key,label])=>'<label><input type="checkbox" name="dailyChoices" value="'+key+'" '+(existing?.dailyState?.choices.includes(key)?'checked':'')+'><span>'+label+'</span></label>').join('')+'</div><details><summary>この項目の見方</summary><p>本人が選んだ生活上の状態を記録します。疲労の種類や原因を判定する尺度ではありません。</p><p>疲労を多面的に捉える研究を参考にした独自の記録項目です。</p><p><a href="https://pubmed.ncbi.nlm.nih.gov/7636775/" target="_blank" rel="noopener noreferrer">疲労の研究（参考）</a> ・ <a href="https://square.umin.ac.jp/of/service.html" target="_blank" rel="noopener noreferrer">疲労に関する調査票（参考）</a></p></details></fieldset>'+
+ '<label>生活のメモ（任意）<textarea name="memo" maxlength="160" rows="2">'+escape(existing?.memo||"")+'</textarea></label>'+
  '<p class="hx-form-error" data-sleep-error role="alert" hidden></p>'+
  '<div class="hx-dialog-foot"><button type="button" data-home-close>キャンセル</button><button type="submit" class="hx-save" '+(!state.canSave?'disabled':'')+'>保存</button></div></form>'+
  (existing?'<div class="hx-delete-record">'+

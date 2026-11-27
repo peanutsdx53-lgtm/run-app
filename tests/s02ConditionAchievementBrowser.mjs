@@ -57,10 +57,10 @@ try{
     const css=getComputedStyle(panel),icon=getComputedStyle(svg),dialogCss=getComputedStyle(el);
     return {bg:css.backgroundColor,border:css.borderTopColor,icon:icon.color,type:date?.type,display:el.querySelector('.rl-date-value')?.textContent,dialogBorder:dialogCss.borderTopColor};
   });
-  assert.equal(dateTone.bg,'rgb(32, 36, 64)','Condition date uses indigo, not global teal');
-  assert.equal(dateTone.border,'rgb(169, 155, 224)','Condition date uses lavender border');
-  assert.equal(dateTone.icon,'rgb(210, 193, 255)','Condition date calendar uses lavender');
-  assert.equal(dateTone.dialogBorder,'rgb(164, 146, 213)');
+  assert.equal(dateTone.bg,'rgb(13, 28, 40)','Condition date uses neutral background');
+  assert.equal(dateTone.border,'rgb(120, 146, 160)','Condition date uses common border');
+  assert.equal(dateTone.icon,'rgb(196, 181, 253)','Condition date calendar uses lavender accent');
+  assert.equal(dateTone.dialogBorder,'rgb(120, 146, 160)');
   assert.equal(dateTone.type,'date','native date picker retained');
   assert.match(dateTone.display,/\d{4}\/\d{2}\/\d{2}/);
   assert.equal(await dialog.locator('.hx-dialog-head [data-home-close]').evaluate(el=>document.activeElement===el),true,'condition dialog receives focus');
@@ -71,7 +71,7 @@ try{
   const keyboardFocus=await dialog.locator('.hx-dialog-head [data-home-close]').evaluate(el=>({focused:document.activeElement===el,color:getComputedStyle(el).outlineColor,style:getComputedStyle(el).outlineStyle}));
   assert.equal(keyboardFocus.focused,true,'Tab focus remains on Condition close button');
   assert.notEqual(keyboardFocus.style,'none','visible focus outline remains on WebKit and Chromium');
-  assert.equal(keyboardFocus.color,'rgb(225, 201, 255)','focused Condition close button uses lavender, not teal');
+  assert.equal(keyboardFocus.color,'rgb(196, 181, 253)','focused Condition close button uses lavender accent');
   await page.screenshot({path:resolve(out,name+'-'+width+'-condition-dialog.png'),animations:'disabled'});
   const modalGeometry=await dialog.evaluate(el=>{
    const d=el.getBoundingClientRect(),f=el.querySelector('[data-condition-form]'),button=f.querySelector('.hx-save'),save=button.getBoundingClientRect();
@@ -91,8 +91,10 @@ try{
   const reached=await dialog.evaluate(el=>{const r=el.getBoundingClientRect(),b=el.querySelector('.hx-save').getBoundingClientRect();return {saveTop:b.top,saveBottom:b.bottom,dialogTop:r.top,dialogBottom:r.bottom,scrollTop:el.scrollTop,scrollHeight:el.scrollHeight};});
   assert.ok(reached.saveTop>=reached.dialogTop-2&&reached.saveBottom<=reached.dialogBottom+2,'save can be reached by scrolling '+JSON.stringify(reached));
   await save.click();
-  assert.equal(await dialog.count(),1,'without a stated condition answer, form remains open');
-  assert.match(await dialog.locator('[data-sleep-error]').innerText(),/起床時の調子/);
+  await dialog.waitFor({state:'detached'});
+  assert.equal(await page.evaluate(async()=>{const h=await import('./ui/homeExperience.js');return h.readConditions(localStorage).entries.find(x=>x.date===h.todayLocal())?.feeling;}),'','unanswered waking condition stays missing');
+  await page.locator('[data-condition-open]').click();
+  await dialog.waitFor();
   await dialog.locator('[name="feeling"]').selectOption({label:'良い'});
   await save.click();
   await dialog.waitFor({state:'detached'});

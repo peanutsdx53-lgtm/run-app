@@ -40,11 +40,11 @@ export function readLifeEntries(conditionResult){
  if(!conditionResult||conditionResult.canSave!==true||!Array.isArray(conditionResult.entries))return res('unavailable',{reason:conditionResult?.reason||'保存された生活記録を確認できません'});
  const records=[];const seen=new Set();
  for(const entry of conditionResult.entries){
-  if(!entry||!validISO(entry.date)||seen.has(entry.date)||!Number.isInteger(entry.sleepMinutes)||entry.sleepMinutes<0||entry.sleepMinutes>1440)return res('invalid',{reason:'日付または睡眠データに矛盾があります'});
+  if(!entry||!validISO(entry.date)||seen.has(entry.date)||(entry.sleepMinutes!==null&&(!Number.isInteger(entry.sleepMinutes)||entry.sleepMinutes<0||entry.sleepMinutes>1440)))return res('invalid',{reason:'日付または睡眠データに矛盾があります'});
   seen.add(entry.date);
-  const source=entry.sleepSource==='clock'?'time-in-bed':entry.sleepSource==='duration'?'self-reported':'legacy-unknown';
+  const source=entry.sleepMinutes===null?'not-recorded':entry.sleepSource==='clock'?'time-in-bed':entry.sleepSource==='duration'?'self-reported':'legacy-unknown';
   const m=source==='legacy-unknown'&&entry.sleepMinutes===0?null:entry.sleepMinutes;
-  if(source!=='legacy-unknown'&&(m===null||m<=0||m>=1440))return res('invalid',{reason:'睡眠・就床時間が不正です'});
+  if(['time-in-bed','self-reported'].includes(source)&&(m===null||m<=0||m>=1440))return res('invalid',{reason:'睡眠・就床時間が不正です'});
   records.push(Object.freeze({date:entry.date,minutes:m,source,feeling:typeof entry.feeling==='string'?entry.feeling:'',runStatus:'not-connected'}));
  }
  return res('complete',{source:'saved-life-records',records:records.sort((a,b)=>a.date.localeCompare(b.date)),reason:'端末内に保存した生活記録だけを扱います。走行記録との対応関係は判断しません'});
@@ -54,7 +54,7 @@ export function compareLifeDays(data,a,b){
  const first=data.records.find(x=>x.date===a),second=data.records.find(x=>x.date===b);
  if(!first||!second)return res('incomplete',{reason:'両方の日付の記録がありません'});
  if(first.source!==second.source)return res('incompatible',{reason:'申告した睡眠時間と就寝〜起床の経過時間は同じ測定量として比較しません'});
- if(first.source==='legacy-unknown'||first.minutes===null||second.minutes===null)return res('incompatible',{reason:'測定方法または値が確認できないため比較しません'});
+ if(first.source==='legacy-unknown'||first.source==='not-recorded'||first.minutes===null||second.minutes===null)return res('incompatible',{reason:'測定方法または値が確認できないため比較しません'});
  return res('complete',{minutesDelta:second.minutes-first.minutes,source:first.source,reason:'同一方法で記録された時間の記述的な差。原因を示しません'});
 }
 export function describeBodyReference(result,regionId){

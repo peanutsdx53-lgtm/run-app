@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -53,7 +53,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   ]=await Promise.all([
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
-    import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2-readable"),
+    import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2-readable-daily"),
     import("./ui/rofExperience.js?v=20261126-cleanup-v5"),
     import("./ui/recordDraftReview.js"),
     import("./ui/recordReviewExperience.js?v=20261126-cleanup-v5"),
@@ -92,7 +92,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/learningExperience.js?v=20261126-cleanup-v5"),
     import("./ui/interpretationRules.js?v=20261126-cleanup-v5"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
-    import("./ui/conditionJourney.js?v=20261125-ux15-condition-v1"),
+    import("./ui/conditionJourney.js?v=20261125-ux15-condition-v1-daily"),
     import("./ui/conditionInsights.js?v=20261026-condition-v15")
   ]);
   // Independent IndexedDB stores can initialize together. Wait for canonical data
@@ -345,7 +345,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     return options;
   }
   let selectedRunId=null;
-  const conditionUi={days:30,method:"auto",focus:"all",selected:"",notice:"",scrollLeft:null};
+  const conditionUi={days:30,method:"auto",focus:"all",selected:"",dailySelected:"",notice:"",scrollLeft:null};
   const environmentUi=environmentExperience.newEnvironmentUi();
   const bodyUi=bodyExperience.makeUi();
   const rofUi=rofExperience.createRofUiState();
@@ -942,6 +942,10 @@ function recordExtras(){
     if(event.target.matches('[data-gps-goal-mode]')){ensureGps().setGoalMode(event.target.value);const y=window.scrollY;render();window.scrollTo(0,y);return;}
     if(event.target.matches('[data-gps-goal-value]')){ensureGps().setGoalValue(event.target.value);return;}
     if(event.target.matches("[data-onboard-purpose]"))onboardingState.purpose=event.target.value;
+    if(event.target.matches("[data-cj-daily-date]")){
+      conditionUi.dailySelected=event.target.value;
+      const y=window.scrollY;render();window.scrollTo(0,y);app.querySelector("[data-cj-daily-date]")?.focus({preventScroll:true});return;
+    }
     if(event.target.matches("[data-cj-method],[data-cj-focus]")){
       if(event.target.matches("[data-cj-method]"))conditionUi.method=event.target.value;
       else conditionUi.focus=event.target.value;
@@ -1119,6 +1123,11 @@ function recordExtras(){
       const advance=app.querySelector("[data-onboard-next]");if(advance)advance.disabled=!(onboardingState.termsAccepted&&onboardingState.privacyConfirmed);
       return;
     }
+    if(event.target.matches('[data-condition-form] [name="dailyChoices"]')){
+      const target=event.target,exclusive=['none','unsure'];
+      if(target.checked)for(const input of target.form.querySelectorAll('[name="dailyChoices"]'))if(input!==target&&(exclusive.includes(target.value)||exclusive.includes(input.value)))input.checked=false;
+      return;
+    }
     if(event.target.matches('[data-condition-form] [name="date"]')){
       if(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(event.target.value)){
         homeUi.conditionDate=event.target.value;homeUi.deletePendingDate=null;render();
@@ -1198,7 +1207,8 @@ function recordExtras(){
       memo:String(fields.get("memo")||""),sleepMode:String(fields.get("sleepMode")||""),
       bedTime:String(fields.get("bedTime")||""),wakeTime:String(fields.get("wakeTime")||""),
       bedDayRule:String(fields.get("bedDayRule")||"auto"),
-      durationHours:String(fields.get("durationHours")??""),durationMinutes:String(fields.get("durationMinutes")??"")
+      durationHours:String(fields.get("durationHours")??""),durationMinutes:String(fields.get("durationMinutes")??""),
+      dailyChoices:fields.getAll("dailyChoices")
     });
     const saved=result.ok?homeExperience.saveCondition(homePreferenceStorage,result.entry):result;
     if(!saved.ok){

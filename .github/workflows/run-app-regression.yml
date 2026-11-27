@@ -74,6 +74,16 @@ jobs:
           path: audit-output/home-fatigue-readability-${{ matrix.engine }}/
           if-no-files-found: error
           retention-days: 7
+      - name: Verify daily condition input, history, missing sleep and bilingual reflow
+        run: node tests/ux15ConditionBrowser.mjs
+      - name: Preserve daily condition screenshots and measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-condition-${{ matrix.engine }}
+          path: audit-output/ux15-condition/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Inspect Japanese and English Home cards and guide across viewports
         run: node tests/homeCopyBilingualBrowser.mjs
       - name: Preserve Home copy screenshots for visual inspection

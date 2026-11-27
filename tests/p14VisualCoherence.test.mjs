@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history';
+const cacheVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily';
 
 test('P14: History matches GPS card density, and Shadow DOM no longer adds blank viewport height',()=>{
  const history=HISTORY_STYLES;
@@ -47,23 +47,25 @@ test('P14: six navigation screens share the same explicit heading scale',()=>{
  assert.match(css,/max-width:420px/,'long screen titles need a narrow-phone exception');
 });
 
-test('P14: Condition journey matches violet home card, while Condition and Achievement use deliberate distinct Open buttons',()=>{
+test('P14: Condition shares neutral theme tokens across Home and history; Achievement retains its independent Open control',()=>{
  const css=read('ui/screenCoherenceP14.css');
  const home=read('ui/homeExperience.css');
  const journey=read('ui/conditionJourney.css');
- assert.match(home,/\.home-v3 \.hx-condition\{[\s\S]*?#3a315e/);
- assert.match(journey,/\.cj-screen \.cj-page-head/);
- assert.match(css,/\.cj-screen \.cj-panel\{[\s\S]*?#322e53/);
- assert.match(css,/\.cj-screen \.cj-chart-viewport\{/);
- assert.match(css,/\.cj-screen \.cj-back\{/);
- assert.match(css,/\.home-v3 \.hx-condition \.hx-title-button \.hx-right,[\s\S]*?\.home-v3 \.hx-achievement \.hx-title-button \.hx-right\{[\s\S]*?#195b70/);
- assert.doesNotMatch(css,/#895523|#6c4328/,'card-color Achievement action must not return');
+ assert.match(home,/\.home-v3 \.hx-condition\{background:var\(--condition-surface\)/);
+ assert.match(journey,/\.cj-panel\{[^}]*background:var\(--condition-surface\)/);
+ assert.match(journey,/\.cj-chart-viewport\{[^}]*background:var\(--condition-bg\)/);
+ assert.match(journey,/\.cj-back\{[^}]*color:var\(--condition-accent\)/);
+ assert.match(home,/\.home-v3 \.hx-condition \.hx-right,[^{}]*\{color:var\(--condition-on-accent\);background:var\(--condition-accent\)/);
+ assert.doesNotMatch(css,/\.cj-screen\s+\.(?:cj-panel|cj-chart-viewport|cj-back)\s*\{/,'retired competing palette must not override condition CSS');
+ assert.doesNotMatch(css,/#322e53|#3a315e/);
+ assert.match(css,/\.home-v3 \.hx-achievement \.hx-title-button \.hx-right\{[^}]*#195b70/);
+ assert.doesNotMatch(css,/#895523|#6c4328/);
  assert.doesNotMatch(css,/高評価|傷害リスクの程度/);
 });
 
 test('P14: app, worker, and style versions are aligned without deleting local history data',()=>{
  const index=read('index.html'),sw=read('sw.js'),app=read('app.js');
- const v='20261110-p14-visual-v4',entryV='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history',pwaV='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history';
+ const v='20261110-p14-visual-v4-daily',entryV='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily',pwaV='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily';
  assert.ok(index.includes('app.js?v='+entryV),'HTML missing app.js');
  assert.ok(sw.includes('app.js?v='+entryV),'SW missing app.js');
  assert.ok(index.includes('pwa.js?v='+pwaV),'HTML missing pwa.js');

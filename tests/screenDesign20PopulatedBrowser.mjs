@@ -138,15 +138,27 @@ if(extended&&(!widths.length||widths.length>3||
    const buttonStyles=await page.locator('.hx-condition .hx-title-button .hx-right,.hx-achievement .hx-title-button .hx-right')
     .evaluateAll(nodes=>nodes.map(node=>{
      const btn=getComputedStyle(node),card=getComputedStyle(node.closest('.hx-card'));
-     return {text:node.textContent.trim(),background:btn.backgroundImage,border:btn.borderTopColor,color:btn.color,
-      cardBackground:card.backgroundImage,labelWidth:node.scrollWidth,available:node.clientWidth};
+     return {text:node.textContent.trim(),background:btn.backgroundImage,fill:btn.backgroundColor,border:btn.borderTopColor,color:btn.color,
+      cardBackground:card.backgroundImage,cardFill:card.backgroundColor, minHeight:btn.minHeight,radius:btn.borderRadius,labelWidth:node.scrollWidth,available:node.clientWidth};
     }));
    assert.equal(buttonStyles.length,2,'both Home Open actions are present');
    assert.ok(buttonStyles.every(x=>x.text.includes('開く')),'actions remain explicitly named');
-   assert.equal(buttonStyles[0].background,buttonStyles[1].background,'Condition and Achievement Open share a visual action');
-   assert.equal(buttonStyles[0].border,buttonStyles[1].border,'Open action border is consistent');
-   assert.equal(buttonStyles[0].color,buttonStyles[1].color,'Open action text contrast is consistent');
-   assert.ok(buttonStyles.every(x=>x.background!==x.cardBackground),'Open is distinct from each parent card');
+   const [condition,achievement]=buttonStyles;
+   assert.equal(condition.background,'none','Condition uses a solid accent, not a decorative gradient');
+   assert.equal(condition.fill,'rgb(196, 181, 253)','Condition uses the approved lavender action');
+   assert.equal(condition.cardFill,'rgb(25, 45, 59)','Condition card uses a neutral surface');
+   assert.equal(condition.minHeight,achievement.minHeight,'shared action geometry');
+   assert.equal(condition.radius,achievement.radius,'shared action geometry');
+   assert.match(achievement.background,/linear-gradient/,'Achievement retains its existing palette');
+   const rgb=value=>[...value.matchAll(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/g)].map(m=>m.slice(1).map(Number));
+   const lum=channels=>channels.map(x=>x/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0);
+   const ratio=(a,b)=>(Math.max(lum(a),lum(b))+.05)/(Math.min(lum(a),lum(b))+.05);
+   for(const style of buttonStyles){
+    const colors=style.background==='none'?rgb(style.fill):rgb(style.background);
+    assert.ok(colors.length>0,'actual computed action background');
+    for(const bg of colors)assert.ok(ratio(rgb(style.color)[0],bg)>=4.5,'Open text contrast at every gradient endpoint');
+    assert.ok(style.background!==style.cardBackground||style.fill!==style.cardFill,'Open is distinct from its card');
+   }
    assert.ok(buttonStyles.every(x=>x.labelWidth<=x.available+2),'Open text is not clipped');
   });
   await verify('S03','record-start','.rv-method',async t=>{assert.match(await t.innerText(),/手入力/);});
