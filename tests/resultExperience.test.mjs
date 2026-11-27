@@ -313,7 +313,8 @@ test('S09 side-by-side bilingual strings preserve reference provenance',()=>{
  assert.match(js,/部位の文献基準100との差/);
  assert.match(js,/色は60〜140で表示します。参考値は変更しません。/);
  assert.match(english,/出所：ROF-J／本人回答/);
- assert.match(remainder,/vs. This Region’s Reference 100/);
+ assert.match(remainder,/vs\. This Region’s Source-Study Baseline of 100/);
+ assert.doesNotMatch(remainder,/Reference[- ]?100/i);
  assert.match(english,/The color scale ends at 60 and 140/);
 });
 

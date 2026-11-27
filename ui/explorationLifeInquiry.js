@@ -8,6 +8,7 @@ import {normalizeRecordRef} from './recordRef.js';
 import {fatigueInquiryModel} from './explorationInquiry.js';
 import {readLifeEntries} from './explorationReadAdapter.js';
 import {validEntry,DAILY_STATE_LABELS} from './homeExperience.js';
+import {formatLocalInstant} from './localInstantDisplay.js';
 export const LIFE_INQUIRY=Object.freeze({
  id:'T06',category:'05',topic:'日々のコンディション',
  question:'この走行と、自分で選んだ生活・休養の記録から何を確かめたい？',
@@ -57,6 +58,10 @@ export function lifeInquiryModel({ref=null,record=null,conditions=null,rests=nul
   memo:rest.memo,bodyObservation:rest.bodyObservation,
   environmentNote:rest.environmentNote});
 }
+// Separate interface labels from user-authored values so the English UI cannot translate notes.
+const field=(label,html)=>'<p><strong>'+esc(label)+'</strong>：'+html+'</p>';
+const value=v=>'<span>'+esc(v)+'</span>';
+const note=v=>typeof v==='string'&&v.trim()?'<span data-user-authored>'+esc(v)+'</span>':value('記述なし');
 export function renderLifeInquiry(input={}){
  const m=lifeInquiryModel(input);
  let detail='';
@@ -64,21 +69,25 @@ export function renderLifeInquiry(input={}){
   if(m.kind==='life'){
    const method=m.sleepSource==='self-reported'?'本人申告の睡眠時間':
     m.sleepSource==='time-in-bed'?'就床から起床までの経過時間':
-    '記録方法を確認できないため、時間を比較しません';
-   const duration=m.sleepMinutes!==null&&['self-reported','time-in-bed'].includes(m.sleepSource)
+    m.sleepSource==='not-recorded'?'睡眠':'記録方法を確認できないため、時間を比較しません';
+   const duration=m.sleepSource==='not-recorded'?'未入力':m.sleepMinutes!==null&&['self-reported','time-in-bed'].includes(m.sleepSource)
     ?String(m.sleepMinutes)+'分':'値の意味を確定できません';
-   detail='<p>選択した生活記録：'+esc(m.day)+'。出所：'+esc(method)+'。値：'+esc(duration)+'。</p>'+
-    '<p>本人が記録したその日の調子：'+esc(m.feeling||'未入力')+'。</p>'+
-    '<p><strong>今日の疲れ・気分</strong>：'+(m.dailyState?m.dailyState.choices.map(k=>'<span>'+esc(DAILY_STATE_LABELS[k])+'</span>').join(' ／ '):'<span>未回答</span>')+'</p>'+
-    '<p>生活メモ：'+esc(m.memo||'記述なし')+'。</p><a class="ex-e-compare-link" href="#/condition?date='+esc(m.day)+'">この日のコンディションを見る</a>';
+   const time=m.dailyState?formatLocalInstant(m.dailyState.recordedAt,{language:globalThis.document?.documentElement.lang==='en'?'en':'ja'}):null;
+   detail=field('選択した生活記録',value(m.day))+
+    field(method,value(duration))+
+    field('起床時の調子',value(m.feeling||'未入力'))+
+    field('その日の疲れ・気分',m.dailyState?m.dailyState.choices.map(k=>value(DAILY_STATE_LABELS[k])).join(' ／ '):value('未回答'))+
+    (time?field('回答の保存日時','<time datetime="'+esc(m.dailyState.recordedAt)+'">'+esc(time.date)+' '+esc(time.time)+' '+esc(time.offset)+'</time>'):'')+
+    field('生活のメモ',note(m.memo))+'<a class="ex-e-compare-link" href="#/condition?date='+esc(m.day)+'">この日のコンディションを見る</a>';
   }else{
-   detail='<p>選択した休養日：'+esc(m.day)+'。本人が別に保存した「休養」の申告であり、実際に一切走らなかったことを測定した記録ではありません。</p>'+
-    '<p>休養日のメモ：'+esc(m.memo||'記述なし')+'。</p>'+
-    '<p>本人の身体の記述：'+esc(m.bodyObservation||'記述なし')+'。</p>'+
-    '<p>本人の環境メモ：'+esc(m.environmentNote||'記述なし')+'。</p>';
+   detail=field('選択した休養日',value(m.day))+
+    '<p>本人が別に保存した「休養」の申告であり、実際に一切走らなかったことを測定した記録ではありません。</p>'+
+    field('休養日のメモ',note(m.memo))+
+    field('本人の身体の記述',note(m.bodyObservation))+
+    field('本人の環境メモ',note(m.environmentNote));
   }
   detail='<div class="ex-e-life-evidence" data-e-life-evidence>'+
-   '<p>選択中の走行：'+esc(m.current.date)+'／出所：'+esc(m.current.kind)+'。</p>'+
+   field('選択中の走行',value(m.current.date)+' ／ '+value(m.current.kind==='MANUAL'?'手入力':'GPS測定'))+
    detail+'</div><details class="ex-e-boundary"><summary>この並びから判断できないこと</summary>'+
    '<p>日付が同じでも、走行と生活・休養の出来事が同時だったとは限りません。日付や時刻だけで両者を自動結合せず、睡眠・休養が疲労感、回復、走行結果を変えた原因とも判定しません。</p></details>'+
    '<p class="ex-e-prompt">この走行を思い返すとき、選んだ生活・休養の情報から次に確かめたいことは何ですか？</p>';
@@ -86,7 +95,7 @@ export function renderLifeInquiry(input={}){
   '<details class="ex-e-boundary"><summary>記録の選択と出所</summary><p>同じ日付というだけで生活と走行を結び付けたり、別の記録を自動選択したりしません。</p></details>';
  const controls=m.current?
   '<div class="ex-e-life-choice"><label for="ex-e-life-date">自分で確認したい生活・休養の日付</label>'+
-  '<input id="ex-e-life-date" data-e-life-date type="date" aria-describedby="ex-e-life-date-hint">'+
+  '<input id="ex-e-life-date" data-e-life-date type="date" value="'+esc(validDate(input.selection?.date)?input.selection.date:'')+'" aria-describedby="ex-e-life-date-hint">'+
   '<small id="ex-e-life-date-hint">走行日と一致しなくても選べます。選択はこの画面だけで使い、保存しません。</small>'+
   '<div class="ex-e-life-buttons"><button type="button" class="ex-e-memo" data-e-life-kind="life">この日付の生活記録を確認</button>'+
   '<button type="button" class="ex-e-memo" data-e-life-kind="rest">この日付の休養記録を確認</button></div>'+
@@ -95,7 +104,7 @@ export function renderLifeInquiry(input={}){
   '" aria-labelledby="ex-e-t06-title"><small class="ex-e-kicker">本人が選択して考える問い</small>'+
   '<h3 id="ex-e-t06-title">'+LIFE_INQUIRY.question+'</h3>'+
   detail+controls+
-  '<p><a class="ex-e-compare-link" href="#/condition">生活記録の履歴と入力方式を確認する</a>'+
+  '<p>'+(m.status==='READY'&&m.kind==='life'?'':'<a class="ex-e-compare-link" href="#/condition">生活記録の履歴と入力方式を確認する</a>')+
   '<a class="ex-e-compare-link" href="#/history">走行・休養の履歴を確認する</a></p>'+
   '</section>';
 }

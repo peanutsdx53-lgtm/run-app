@@ -1,6 +1,7 @@
 import {createExplorationContext, readCourseDraft} from "./explorationReadAdapter.js";
+import {validEntry} from "./homeExperience.js";
 import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from "./explorationTopicGuides.js?v=20261111-exploration-inquiry-v1-daily-only";
-import {renderObservationGuide} from "./explorationTopicView.js?v=20261127-daily-only";
+import {renderObservationGuide} from "./explorationTopicView.js?v=20261127-daily-only-stage3-copy";
 import {isRunId,resolveOptionalNoteRunLink,visibleTopicNotes,noteRunBackLink} from "./noteRunLink.js";
 import {renderFatigueInquiry} from "./explorationInquiry.js?v=20261109-p7-wording-v1";
 import {renderComparisonInquiry} from "./explorationComparisonInquiry.js";
@@ -75,7 +76,10 @@ export function signals(draft,conditions,manualRuns=null,requestedId=null){
   if(isProvided(recentRun.draft?.bodyObservation))
    mark("02",date+" に保存した身体に関するメモに関連","saved-run");
  }
- const recent=strict.life.status==="complete"?strict.life.records.filter(n=>n.minutes!==null).at(-1):null;
+ // Date-only relevance includes saved daily condition answers even when sleep is omitted.
+ // Only the existence and date are used; no subjective choice or memo is exposed.
+ const dailyDates=new Set((strict.life.status==='complete'?conditions.entries:[]).filter(validEntry).map(e=>e.date));
+ const recent=strict.life.status==="complete"?strict.life.records.filter(n=>n.minutes!==null||dailyDates.has(n.date)).at(-1):null;
  if(recent&&requestedId===null)mark("05",recent.date+" の生活コンディション記録に関連","saved-life");
  return {linked,sources,hasDraft:[...sources.values()].includes("draft"),hasSavedRun:[...sources.values()].includes("saved-run"),
   hasCondition:linked.has("05"),conditionDate:recent?.date||null,recentRunDate:recentRun?.date||null,strict};
