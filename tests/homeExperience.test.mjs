@@ -182,7 +182,8 @@ test('live home cards never synthesize template figures from an empty or corrupt
   assert.doesNotMatch(html,/7\.20|5:50|42\.0|獲得 2 件|表示例|サンプル値/);
  }
  assert.match(conditionCard(empty),/直近7日の記録はまだありません/);
- assert.match(conditionCard(empty),/睡眠・体調の記録を見る/);
+ assert.match(conditionCard(empty),/コンディションの履歴を見る/);
+  assert.doesNotMatch(conditionCard(empty),/睡眠・体調の記録を見る/);
  assert.doesNotMatch(conditionCard(empty),/コンディションの歩み/);
  assert.match(conditionCard(bad),/生活記録を確認できません/);
 });

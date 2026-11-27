@@ -42,7 +42,7 @@ async function record(page,screen,route,selector){
  await page.waitForTimeout(160);
  const sample=await page.evaluate(()=>{
   const jp=/[ぁ-ゟァ-ヿ一-龯]/,found=new Set();
-  const ignore='script,style,code,pre,noscript,[data-onboard-language="ja"],[data-settings-language="ja"],[data-legal-backdrop],.fu-doc-scroll,[data-user-authored],.rv4-note p,.rv4-comparison-memos,.ex-note-preview,.ex-saved,.entry-caption,[data-report-purpose],[data-report-observation],[data-report-question],.cp-condition strong,#cp-target,.cp-report-mode-usertext';
+  const ignore='script,style,code,pre,noscript,[data-onboard-language="ja"],[data-settings-language="ja"],[data-legal-backdrop],.fu-doc-scroll,[data-user-authored],.rv4-note p,.rv4-comparison-memos,.entry-caption,[data-report-purpose],[data-report-observation],[data-report-question],.cp-condition strong,#cp-target,.cp-report-mode-usertext';
   const ignored=el=>!!el?.closest(ignore);
   const shown=el=>!!el&&el.getClientRects().length>0&&!el.closest('[hidden],[aria-hidden="true"]');
   function inspect(scope){

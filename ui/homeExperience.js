@@ -229,7 +229,7 @@ export function conditionCard(storage){
  stat+(today?.dailyState?'<div class="hx-daily-summary"><small>その日の疲れ・気分</small><div>'+today.dailyState.choices.map(k=>'<span>'+escape(DAILY_STATE_LABELS[k])+'</span>').join('')+'</div></div>':'')+'<div class="hx-chart-label">睡眠・就床の記録 <span>直近7日</span></div>'+
  (count===0?'<div class="hx-condition-empty" role="status"><strong>'+(state.canSave?'直近7日の記録はまだありません':'生活記録を確認できません')+'</strong><p>'+(state.canSave?'未記録日は0時間として扱いません。':'保存領域の状態を確認してください。')+'</p></div>'
  :sleepCount?sevenBars(entries)+'<p class="hx-condition-source">記録した日のみ表示します。未記録日は空欄です。</p>':'<p class="hx-condition-source">睡眠の記録はまだありません</p>')+
- '<a class="hx-condition-explore" href="#/condition" aria-label="睡眠・体調の記録を確認する">睡眠・体調の記録を見る <span aria-hidden="true">›</span></a>'+
+ '<a class="hx-condition-explore" href="#/condition" aria-label="コンディションの履歴を見る">コンディションの履歴を見る <span aria-hidden="true">›</span></a>'+
  (!state.canSave?'<p class="hx-warning">'+escape(state.reason)+'</p>':"")+'</section>';
 }
 // Derived display-only milestones. The only source is a successfully read, saved

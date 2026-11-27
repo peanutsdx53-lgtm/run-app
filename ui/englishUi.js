@@ -1,7 +1,7 @@
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261124-upr-explore-gps-v1';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact';
-import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only';
+import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261121-profile-optional-right-v1';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js';
 import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js';
@@ -14,15 +14,15 @@ import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js';
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js';
 import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1';
 import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261126-cleanup-v5-daily-only';
-import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1-daily-compact-stage3-copy';
+import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1-daily-compact-stage3-copy-notes-copy';
 import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261126-cleanup-v5-daily-only';
 import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-daily-only';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
-import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261124-upr-explore-gps-v1';
+import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
@@ -375,7 +375,7 @@ export function translateLessonComposite(text){
  }
  return raw;
 }
-const SKIP='script,style,textarea,input,code,pre,[contenteditable], [data-legal-backdrop], .fu-doc-scroll, [data-user-authored], .ex-note-preview, .ex-saved, .hx-discovery-note, .rv4-note p, .focus-fact strong, .entry-caption:not([data-history-system-caption]), [data-ax-editor] [data-ax-notice], [data-report-purpose], [data-report-observation], [data-report-question], .cp-condition strong, #cp-target, .cp-report-mode-usertext';
+const SKIP='script,style,textarea,input,code,pre,[contenteditable], [data-legal-backdrop], .fu-doc-scroll, [data-user-authored], .hx-discovery-note, .rv4-note p, .focus-fact strong, .entry-caption:not([data-history-system-caption]), [data-ax-editor] [data-ax-notice], [data-report-purpose], [data-report-observation], [data-report-question], .cp-condition strong, #cp-target, .cp-report-mode-usertext';
 export function startEnglishUi(doc,{language='ja'}={}){
  let selected=language==='en'?'en':'ja',queued=false;
  const seen=new WeakSet();
