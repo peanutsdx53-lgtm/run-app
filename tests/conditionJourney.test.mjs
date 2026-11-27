@@ -90,7 +90,7 @@ test('invalid calendar dates reject safely without changing opt-in next-check re
 test('UX15 empty state has no zero bars and retains explicit period and method selection',()=>{
  const html=renderConditionJourney({canSave:true,entries:[]},{days:7,method:'time-in-bed'});
  assert.match(html,/選択した期間・方法の記録なし/);assert.match(html,/未記録日は0時間として扱いません/);
- assert.doesNotMatch(html,/data-cj-chart|data-cj-day=/);assert.match(html,/data-cj-range="7" aria-label="7日" aria-pressed="true"/);
+ assert.doesNotMatch(html,/data-cj-chart(?=[\s=>])|data-cj-day=/);assert.match(html,/<details class="cj-local-help" data-cj-chart-help>/);assert.match(html,/data-cj-range="7" aria-label="7日" aria-pressed="true"/);
  assert.match(html,/就床から起床までの経過時間：0日分/);assert.doesNotMatch(html,/棒の基準/);
 });
 test('UX15 missing method is distinct from an absent date, and self-report symbols do not assess health',()=>{

@@ -51,7 +51,7 @@ try{
    assert.equal(await page.locator('[data-result-reflection-count]').count(),0,'empty reflection count is omitted');
    assert.equal(await page.locator('.rv4-hero .rv4-run-details').count(),1,'run details belong to the hero');
    const condition=page.locator('[data-result-condition]');
-   assert.match(await condition.getAttribute('href'),/^#\/condition\?date=\d{4}-\d{2}-\d{2}$/);
+   assert.equal(await condition.getAttribute('href'),'#/condition?date=2026-11-15','use the exact saved run date, not today');
    await condition.click();
    await page.locator('.cj-daily-history').waitFor();
    assert.ok(await page.locator('.cj-daily-record').isVisible(),'exact day is shown even if unrecorded');
@@ -60,6 +60,16 @@ try{
    const bounds=await btn.boundingBox();assert.ok(bounds&&bounds.height>=43,'44px minimum tap target');
    assert.ok(bounds.x>=-2&&bounds.x+bounds.width<=width+2,'no horizontal overflow');
    await page.screenshot({path:resolve(out,engine+'-'+language+'-'+width+'-'+zoom+'-result.png'),fullPage:true,animations:'disabled'});
+   const details=page.locator('.rv4-hero .rv4-run-details');
+   await details.locator('summary').click();
+   assert.equal(await details.isVisible(),true,'run details are available in screen mode');
+   await page.emulateMedia({media:'print'});
+   assert.equal(await details.isVisible(),false,'run details and private memo must not print');
+   assert.equal(await condition.isVisible(),false,'daily condition link must not print');
+   assert.equal(await page.locator('[data-result-reflection-entry]').isVisible(),false,'reflection must not print');
+   await page.emulateMedia({media:'screen'});
+   assert.equal(await details.isVisible(),true,'screen mode restored');
+   await details.locator('summary').click();
    await btn.click();
    await page.waitForURL(u=>u.hash.startsWith('#/exploration-tree?'));
    const params=new URLSearchParams(new URL(page.url()).hash.split('?')[1]);

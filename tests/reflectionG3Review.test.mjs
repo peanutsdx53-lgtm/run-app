@@ -56,7 +56,7 @@ test('G3 result links to explicit memories view; print and privacy remain protec
  assert.match(src,/data-result-reflection-count/);
  assert.match(src,/data-result-review-notes/);
  assert.match(src,/\&memories=1/);
- assert.match(src,/@media print\{\.rv4-reflection-next\{display:none!important\}\}/);
+ assert.match(src,/@media print\{[^}]*\.rv4-condition-link,\.rv4-run-details\{display:none!important\}\.rv4-reflection-next\{display:none!important\}\}/);
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  assert.match(app,/explorationUi\.modal=params\.get\('memories'\)==='1'/);
  assert.match(app,/onOpenReflection:/);

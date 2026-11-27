@@ -97,3 +97,12 @@ test('Home and fatigue use plain primary copy and preserve scientific details in
   ['自分で回答した疲労感を画像・印刷に含める（任意）','Include Your Fatigue Ratings in Image or Print (Optional)']
  ])assert.equal(translateUiText(ja),en);
 });
+
+
+test('Compact result and condition use only the current public wording and retain local interpretation help',()=>{
+ const result=read('ui/resultExperience.js'),copy=read('ui/englishResultCopy.js'),condition=read('ui/conditionJourney.js');
+ for(const retired of ["今回の走行を振り返る","この走行のメモはまだありません。","気づき・次の問いを書く（任意）"])assert.ok(!result.includes(retired)&&!copy.includes(retired),'retired result phrase: '+retired);
+ assert.doesNotMatch(condition,/class="cj-disclaimer"/,'retired duplicate boundary display');
+ assert.match(condition,/<details class="cj-local-help" data-cj-comparison-help>/);
+ assert.match(result,/振り返りを書く（任意）/);
+});
