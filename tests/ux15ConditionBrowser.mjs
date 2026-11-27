@@ -22,6 +22,41 @@ try{for(const language of ['ja','en'])for(const width of [320,390,768,1440])for(
  await open();let m=await capture('empty');assert.equal(m.enabled,0);assert.equal(m.emptyNonzero,0);check(!m.chart&&!!m.empty,tag+' empty chart or missing empty state');check(m.doc<=width+3,tag+' empty overflow');check(language==='ja'?m.empty.includes('選択した期間・方法の記録なし'):m.empty.includes('No Records for This Period and Method'),tag+' missing translated empty state');check(language==='ja'?m.legend.includes('0日分'):/0 Days/.test(m.legend),tag+' zero count');
  const seed=fixture();await page.evaluate(({key,seed})=>localStorage.setItem(key,JSON.stringify(seed)),{key:KEY,seed});await page.reload({waitUntil:'networkidle'});await page.locator('.cj-panel').waitFor();if(zoom===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
  for(const [method,expected] of [['self-reported',[1,2,3]],['time-in-bed',[1,1,1]]]){await page.locator('[data-cj-method]').selectOption(method);for(const [i,n] of [7,30,90].entries()){await page.locator('[data-cj-range="'+n+'"]').click();await page.locator('[data-cj-range="'+n+'"][aria-pressed="true"]').waitFor();m=await capture(method+'-'+n);assert.equal(m.days,n);assert.equal(m.enabled,expected[i]);assert.equal(m.emptyNonzero,0);check(m.doc<=width+3,tag+' '+method+' '+n+' page overflow');check(m.active===String(n),tag+' focus lost');check(m.controls.slice(0,3).every((c,j)=>c.text.trim()===String([7,30,90][j])&&c.w>=36&&c.h>=44&&c.scroll<=c.client+2),tag+' range label clipped');check(language==='ja'?m.legend.includes(method==='time-in-bed'?'就床から起床までの経過時間':'本人申告の睡眠時間'):(m.legend.includes(method==='time-in-bed'?'Elapsed Time in Bed':'Self-Reported Sleep Duration')&&!/[ぁ-んァ-ヶ一-龯]/.test(m.legend)),tag+' legend source translation');check(language==='ja'?m.moodLegend?.includes('健康状態や走行能力の評価ではありません'):m.moodLegend?.includes('do not assess health or running ability'),tag+' mood key missing');check(new Set(m.colors.map(x=>x.color)).size===1,tag+' evaluative color remains');check(m.missingLabels.some(x=>x.includes(language==='ja'?'選択した方法の記録なし':'No Record for the Selected Method')),tag+' alternate method missing label');assert.equal(await page.evaluate(k=>localStorage.getItem(k),KEY),JSON.stringify(seed));}}
+ await page.goto(host+'#/home',{waitUntil:'networkidle'});
+ await page.locator('[data-condition-open]').click();
+ const dailyDialog=page.locator('.hx-condition-dialog');
+ await dailyDialog.waitFor();
+ if(zoom===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
+ const dailyDate=await dailyDialog.locator('[name="date"]').inputValue();
+ await dailyDialog.locator('[data-sleep-mode="none"]').click();
+ await dailyDialog.locator('[name="dailyChoices"][value="focus"]').check();
+ await dailyDialog.locator('[name="dailyChoices"][value="motivation"]').check();
+ assert.equal(await dailyDialog.locator('[name="dailyChoices"]:checked').count(),2);
+ await dailyDialog.locator('[name="dailyChoices"][value="none"]').check();
+ assert.deepEqual(await dailyDialog.locator('[name="dailyChoices"]:checked').evaluateAll(els=>els.map(e=>e.value)),['none']);
+ await dailyDialog.locator('[name="dailyChoices"][value="focus"]').check();
+ await dailyDialog.locator('[name="dailyChoices"][value="motivation"]').check();
+ assert.deepEqual(await dailyDialog.locator('[name="dailyChoices"]:checked').evaluateAll(els=>els.map(e=>e.value)),['focus','motivation']);
+ const labels=await dailyDialog.locator('.hx-daily-choices label').allInnerTexts();
+ if(language==='en')check(!/[ぁ-んァ-ヶ一-龯]/.test(labels.join(' ')),tag+' daily options untranslated');
+ const dialogMeasure=await dailyDialog.evaluate(el=>({doc:document.documentElement.scrollWidth,width:innerWidth,scroll:el.scrollWidth,client:el.clientWidth,fg:getComputedStyle(el.querySelector('.hx-daily-state legend')).color,bg:getComputedStyle(el).backgroundColor}));
+ check(dialogMeasure.doc<=width+3&&dialogMeasure.scroll<=dialogMeasure.client+3,tag+' daily form overflow');
+ row.dailyForm=dialogMeasure;
+ await page.screenshot({path:resolve(out,tag+'-daily-form.png'),fullPage:true,animations:'disabled'});
+ await dailyDialog.locator('.hx-save').click();
+ await dailyDialog.waitFor({state:'detached'});
+ const saved=await page.evaluate(({key,date})=>JSON.parse(localStorage.getItem(key)).find(e=>e.date===date),{key:KEY,date:dailyDate});
+ assert.equal(saved.sleepMinutes,null);assert.equal(saved.feeling,'');assert.deepEqual(saved.dailyState.choices,['focus','motivation']);assert.ok(Number.isFinite(Date.parse(saved.dailyState.recordedAt)));
+ await open();
+ await page.locator('[data-cj-method]').selectOption('self-reported');
+ await page.locator('[data-cj-range="30"]').click();
+ await page.locator('[data-cj-daily-date]').selectOption(dailyDate);
+ const dayRecord=page.locator('.cj-daily-record');
+ assert.equal(await dayRecord.locator('.cj-daily-tag').count(),2);
+ assert.equal(await dayRecord.locator('time').getAttribute('datetime'),saved.dailyState.recordedAt);
+ m=await capture('daily-no-sleep');
+ assert.equal(m.enabled,2,'default 30-day sleep series excludes the new sleep-free record');
+ check(m.doc<=width+3,tag+' daily record overflow');
  await page.evaluate(k=>localStorage.setItem(k,'{broken'),KEY);await page.reload({waitUntil:'networkidle'});await page.locator('.cj-panel').waitFor();if(zoom===200)await page.addStyleTag({content:'html{font-size:200%!important}'});m=await capture('read-failure');check(!m.chart&&!m.empty&&await page.locator('.cj-panel [role="alert"]').count()===1,tag+' read failure treated as empty');assert.equal(await page.evaluate(k=>localStorage.getItem(k),KEY),'{broken');
  }catch(e){errors.push(tag+' '+String(e));row.exception=String(e)}finally{await ctx.close()}
 }}finally{await browser.close();await new Promise(done=>server.close(done));await writeFile(resolve(out,'summary.json'),JSON.stringify({engine,reports,errors,failures},null,2))}

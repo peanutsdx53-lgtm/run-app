@@ -141,5 +141,8 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "日付別の生活記録": "Daily records by date",
  "回答済み": "Answered",
  "回答の保存日時": "Response saved at",
- "記録した時間": "Recorded duration"
+ "記録した時間": "Recorded duration",
+ "疲労を多面的に捉える研究を参考にした独自の記録項目です。": "These original logging options are informed by multidimensional fatigue research.",
+ "疲労の研究（参考）": "Fatigue research (reference)",
+ "疲労に関する調査票（参考）": "Fatigue questionnaire (reference)"
 });

@@ -6,7 +6,7 @@ export const DAILY_STATE_LABELS=Object.freeze({heavy:"体が重い・だるい",
 export function validDailyChoices(choices){
  return Array.isArray(choices)&&choices.length<=Object.keys(DAILY_STATE_LABELS).length&&new Set(choices).size===choices.length&&choices.every(c=>typeof c==="string"&&Object.hasOwn(DAILY_STATE_LABELS,c))&&(!(choices.includes("none")||choices.includes("unsure"))||choices.length===1);
 }
-const validDailyState=v=>v&&typeof v==="object"&&!Array.isArray(v)&&validDailyChoices(v.choices)&&v.choices.length>0&&typeof v.recordedAt==="string"&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(v.recordedAt)&&Number.isFinite(Date.parse(v.recordedAt))&&new Date(v.recordedAt).toISOString()===v.recordedAt;
+const validDailyState=v=>v&&typeof v==="object"&&!Array.isArray(v)&&Object.keys(v).every(k=>k==="choices"||k==="recordedAt")&&validDailyChoices(v.choices)&&v.choices.length>0&&typeof v.recordedAt==="string"&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(v.recordedAt)&&Number.isFinite(Date.parse(v.recordedAt))&&new Date(v.recordedAt).toISOString()===v.recordedAt;
 
 const CLOCK_PATTERN=/^([01]\d|2[0-3]):([0-5]\d)$/;
 function clockMinutes(value) {
@@ -142,7 +142,7 @@ export function saveCondition(storage, entry) {
   const old=storage.getItem(KEY);
   const prior=before.entries.find(v=>v.date===entry.date);
   const nextEntry={...entry};
-  if(prior?.dailyState&&entry.dailyState&&JSON.stringify(prior.dailyState.choices)===JSON.stringify(entry.dailyState.choices))nextEntry.dailyState=prior.dailyState;
+  if(prior?.dailyState&&entry.dailyState&&prior.dailyState.choices.length===entry.dailyState.choices.length&&prior.dailyState.choices.every(k=>entry.dailyState.choices.includes(k)))nextEntry.dailyState=prior.dailyState;
   const entries=before.entries.filter(v=>v.date!==entry.date).concat([nextEntry]).sort((a,b)=>a.date.localeCompare(b.date));
   // A new date must never silently evict an older self-report.
   // The user can explicitly manage old data before another save.
@@ -321,7 +321,7 @@ export function conditionPanel(storage,selectedDate=todayLocal(),deletePendingDa
  '</div><small>分は1分単位で直接入力もできます。</small></div></div>'+
  '<div class="hx-sleep-result" aria-live="polite"><div data-sleep-result-label></div><strong data-sleep-result>—</strong><p data-sleep-result-note></p><small>時刻からの計算は実際に眠っていた時間とは異なる場合があります。</small></div></section>'+
  '<label>起床時の調子（任意）<select name="feeling">'+opts+'</select></label>'+
- '<fieldset class="hx-daily-state"><legend>今日の疲れ・気分（任意）</legend><p>この日に感じたことを選んでください。複数選択できます。</p><div class="hx-daily-choices">'+Object.entries(DAILY_STATE_LABELS).map(([key,label])=>'<label><input type="checkbox" name="dailyChoices" value="'+key+'" '+(existing?.dailyState?.choices.includes(key)?'checked':'')+'><span>'+label+'</span></label>').join('')+'</div><details><summary>この項目の見方</summary><p>本人が選んだ生活上の状態を記録します。疲労の種類や原因を判定する尺度ではありません。</p></details></fieldset>'+
+ '<fieldset class="hx-daily-state"><legend>今日の疲れ・気分（任意）</legend><p>この日に感じたことを選んでください。複数選択できます。</p><div class="hx-daily-choices">'+Object.entries(DAILY_STATE_LABELS).map(([key,label])=>'<label><input type="checkbox" name="dailyChoices" value="'+key+'" '+(existing?.dailyState?.choices.includes(key)?'checked':'')+'><span>'+label+'</span></label>').join('')+'</div><details><summary>この項目の見方</summary><p>本人が選んだ生活上の状態を記録します。疲労の種類や原因を判定する尺度ではありません。</p><p>疲労を多面的に捉える研究を参考にした独自の記録項目です。</p><p><a href="https://pubmed.ncbi.nlm.nih.gov/7636775/" target="_blank" rel="noopener noreferrer">疲労の研究（参考）</a> ・ <a href="https://square.umin.ac.jp/of/service.html" target="_blank" rel="noopener noreferrer">疲労に関する調査票（参考）</a></p></details></fieldset>'+
  '<label>生活のメモ（任意）<textarea name="memo" maxlength="160" rows="2">'+escape(existing?.memo||"")+'</textarea></label>'+
  '<p class="hx-form-error" data-sleep-error role="alert" hidden></p>'+
  '<div class="hx-dialog-foot"><button type="button" data-home-close>キャンセル</button><button type="submit" class="hx-save" '+(!state.canSave?'disabled':'')+'>保存</button></div></form>'+
