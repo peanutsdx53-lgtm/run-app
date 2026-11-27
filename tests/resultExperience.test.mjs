@@ -46,7 +46,7 @@ test('ROF-J results and image export do not manufacture time-eligible before/aft
  assert.match(js,/回答の実際の時間的前後差は判定しません/);
  assert.doesNotMatch(js,/評価時刻未記録：前後差は判定不可/,'PNG must not falsely claim no time evidence is stored');
  assert.doesNotMatch(js,/<small>前後差<\/small>|rv4-change/,'remove obsolete difference field');
- assert.match(js,/<p class="rv4-fatigue-caption" data-source-rof>ROF-J・本人回答/,'retain concise scientific status');
+ assert.match(js,/<p class="rv4-fatigue-caption" data-source-rof>自分で回答した疲労感（0〜10）/,'identify the self-reported rating in plain language');
  assert.doesNotMatch(js,/rv4-fatigue-note|role="note"/,'do not render a callout');
  for(const css of [read('tests/fixtures/retiredResultExperience.css'),read('ui/resultInlineStyles.js')]){
   const caption=css.match(/\.rv4-fatigue-caption\{([^}]+)\}/);
@@ -57,8 +57,8 @@ test('ROF-J results and image export do not manufacture time-eligible before/aft
  }
  assert.equal((js.match(/<details class="rv4-fatigue-method"/g)||[]).length,1,'one unified disclosure');
  assert.doesNotMatch(js,/<details class="rv4-rof-audit"/,'audit lives inside the disclosure');
- assert.match(js,/回答時刻・訂正履歴を確認・訂正/);
- assert.match(js,/回答時点と解釈上の注意を確認/);
+ assert.match(js,/疲労感の見方・回答履歴・訂正/);
+ assert.match(js,/fromGps\?'疲労感の見方・回答履歴':'疲労感の見方'/,'GPS and unsaved disclosures retain plain-language access');
   assert.match(js,/個人の身体負荷を直接測定した値ではありません。/,'reference caveat remains in details');
   assert.match(js,/この部位の参考値は比較できません/,'ineligible comparison remains visible');
  assert.match(js,/data-rof-correct-save/,'saved correction action remains');

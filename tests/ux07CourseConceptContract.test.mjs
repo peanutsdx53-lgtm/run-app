@@ -59,10 +59,10 @@ test('UX-032: hidden fields are not erased; only chosen input modes drive curren
  assert.ok(courseReadiness(summary,ui).length>0,'invalid active summary must not be silently accepted');
 });
 test('UX-07: offline boot uses new shell and dictionary imports; old immutable URLs are not pinned',()=>{
- const ver='20261126-cleanup-v5',shell='20261126-cleanup-v5-css-retired-mirror-stage3',resultVersion='20261123-ux11-result-source-v1',app=read('app.js'),html=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
- for(const [source,url] of [[app,'recordExperience.js?v='+ver],[app,'englishUi.js?v=20261126-cleanup-v5'],
-  [html,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3'],[html,'recordExperience.css?v=20261126-cleanup-v5'],
-  [sw,'runload-ui-next-shell-'+shell],[sw,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3'],
+ const ver='20261126-cleanup-v5',shell='20261126-cleanup-v5-css-retired-mirror-stage3-readable',resultVersion='20261123-ux11-result-source-v1',app=read('app.js'),html=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
+ for(const [source,url] of [[app,'recordExperience.js?v='+ver],[app,'englishUi.js?v=20261126-cleanup-v5-readable'],
+  [html,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable'],[html,'recordExperience.css?v=20261126-cleanup-v5'],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable'],
   [sw,'recordExperience.js?v='+ver],[sw,'englishFinalRecording.js?v='+resultVersion],
   [en,'englishFinalRecording.js?v='+resultVersion]])assert.ok(source.includes(url),'missing versioned URL: '+url);
  assert.doesNotMatch(sw,/20261123-ux06-manual-clarity-v1/);

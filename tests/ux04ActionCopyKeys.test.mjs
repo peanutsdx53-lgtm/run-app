@@ -52,10 +52,10 @@ test('UX04 versioned app, dictionary and new action keys are coherent with offli
  const app=read('app.js'),html=read('index.html'),sw=read('sw.js');
  assert.match(app,/englishUi\.js\?v=20261126-cleanup-v5/);
  assert.match(html,/app\.js\?v=20261126-cleanup-v5/);
- assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3/);
+ assert.match(sw,/runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3-readable/);
  for(const expected of [
-  './app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3',
-  './ui/englishUi.js?v=20261126-cleanup-v5',
+  './app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable',
+  './ui/englishUi.js?v=20261126-cleanup-v5-readable',
   './ui/actionCopyKeys.js',
   './ui/actionCopyKeys.js?v=20261122-ux04-stable-actions-v1'
  ])assert.ok(sw.includes(expected),'offline precache missing '+expected);

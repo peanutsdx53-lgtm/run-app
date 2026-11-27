@@ -182,8 +182,8 @@ export function latestCard(record=null,savedRuns=null){
  const pace=secs?Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0'):'—';
  // The manual editor accepts minutes (including decimals); preserve that unit on Home.
  // A rounded seconds store must not produce a misleading "35分00秒" label.
- const time=recent?String(Number((recent.durationSeconds/60).toFixed(2)))+'分':'—';
- const body=recent?'<div class="hx-latest-fig"><div><small>距離</small><strong>'+escape(recent.distanceKm.toFixed(2))+' <em>km</em></strong></div><div><small>時間</small><strong>'+escape(time)+'</strong></div><div><small>平均ペース</small><strong>'+escape(pace)+' <em>/km</em></strong></div></div><a class="hx-condition-explore" href="#/result?record='+encodeURIComponent(recent.id)+'">保存した走行の結果を見る <span aria-hidden="true">›</span></a>'
+ const time=recent?String(Number((recent.durationSeconds/60).toFixed(2))):'—';
+ const body=recent?'<div class="hx-latest-fig"><div><small>距離</small><strong>'+escape(recent.distanceKm.toFixed(2))+'</strong><em>km</em></div><div><small>時間</small><strong>'+escape(time)+'</strong><em>分</em></div><div><small>平均ペース</small><strong>'+escape(pace)+'</strong><em>/km</em></div></div><a class="hx-condition-explore" href="#/result?record='+encodeURIComponent(recent.id)+'">保存した走行の結果を見る <span aria-hidden="true">›</span></a>'
   :savedRuns&&(!savedRuns.ok||!Array.isArray(savedRuns.records))?
    '<div class="hx-latest-empty" role="alert"><span class="hx-runmark">'+icon("run")+'</span><div><strong>走行記録を確認できません</strong><p>'+escape(savedRuns.reason||'保存済みの記録を読み取れません。端末の保存領域を確認してください。')+'</p><p>記録が0件という意味ではありません。元の記録は変更していません。</p></div></div>'
   : '<div class="hx-latest-empty"><div><strong>走行記録はまだありません</strong></div></div>';
