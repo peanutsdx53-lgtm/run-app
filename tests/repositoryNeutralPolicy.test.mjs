@@ -30,7 +30,7 @@ test('ROF-J diagrams and service worker never fetch the former repository',()=>{
  assert.equal(ROF_J_ANCHORS.length,5);
 });
 test('Deployment check and current-facing documentation have no former repository hardcoding',()=>{
- for(const path of ['README.md','docs/INSTALL.md','tests/livePagesSmoke.mjs','.github/workflows/run-app-regression.yml']){
+ for(const path of ['README.md','docs/INSTALL.md','tests/livePagesSmoke.mjs','tests/pagesBrowserSmokeShared.mjs','tests/pagesCandidateBrowser.mjs','.github/workflows/run-app-regression.yml']){
   assert.doesNotMatch(read(path),previous,path);
  }
  assert.match(read('tests/livePagesSmoke.mjs'),/process\.env\.RUNLOAD_PAGES_URL/);
@@ -47,4 +47,15 @@ test('Deployment check and current-facing documentation have no former repositor
  assert.doesNotMatch(deployed,/https?:\/\/[^\s'"]+\.github\.io/);
  assert.match(read('README.md'),/一般向けの正式なリリース/);
  assert.match(read('docs/INSTALL.md'),/一般向けに正式リリースしていません/);
+});
+
+test('candidate and deployed Pages smoke use the same current browser assertions',()=>{
+ const live=read('tests/livePagesSmoke.mjs'),candidate=read('tests/pagesCandidateBrowser.mjs'),shared=read('tests/pagesBrowserSmokeShared.mjs'),workflow=read('.github/workflows/run-app-regression.yml');
+ for(const s of [live,candidate]){assert.match(s,/from '\.\/pagesBrowserSmokeShared\.mjs'/);assert.match(s,/await runPagesBrowserSmoke\(/);}
+ assert.match(live,/assert\.equal\(parsed\.protocol,'https:'/);
+ assert.match(live,/assert\.ok\(valid,/);
+ assert.match(shared,/部位の文献参考値/);
+ assert.match(shared,/reference\.locator\('summary'\)\.click\(/);
+ assert.match(workflow,/run: node tests\/pagesCandidateBrowser\.mjs/);
+ assert.doesNotMatch(shared,/el\.style\.position\s*=/,'screenshots should not change app layout');
 });

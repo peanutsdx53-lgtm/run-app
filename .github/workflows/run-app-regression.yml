@@ -559,6 +559,31 @@ jobs:
       - name: Verify offline record, result, consultation, exploration and English
         run: node tests/offlineShellBrowserSmoke.mjs
 
+  pages-candidate:
+    name: Candidate Pages browser smoke (local build)
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --ipc=host
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium test runner
+        run: npm install --no-save playwright@1.56.1
+      - name: Run the same browser checks before deployment
+        run: node tests/pagesCandidateBrowser.mjs
+      - name: Preserve candidate browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-candidate-screenshots
+          path: audit-output/pages-candidate/
+          if-no-files-found: warn
+          retention-days: 7
+
   deployed-pages:
     name: Deployed Pages byte and live browser check (main only)
     permissions:
