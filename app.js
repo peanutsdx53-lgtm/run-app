@@ -625,7 +625,7 @@ function recordExtras(){
   // Never retain an opened GPS private text panel after leaving that exact run.
   if(page!=='result'||!location.hash.includes('?gps=')||new URLSearchParams(location.hash.split('?')[1]||'').get('gps')!==gpsNotesUi.recordId)
    Object.assign(gpsNotesUi,{recordId:null,loaded:null,selectedId:null,draft:null,busy:false,notice:''});
- const content={home,condition,record,"record-review":recordReview,result:()=>'<section id="activity-result" aria-label="走行結果"></section>',"dynamic-result":()=>'<section data-gps-dynamic aria-label="GPS動的結果"><p class="gd-empty">動的結果を読み込んでいます…</p></section>',annotation:()=>'<section id="annotation-editor-root" aria-label="保存済み走行の後日補完"></section>',history,"exploration-tree":explore,learning:()=>'<section id="learning-root" class="lr-root" aria-label="学習"></section>',settings,"record-start":recordStart,"record-course":recordCourse,course:()=>recordCourse(true),"record-rof":recordRof,"record-more":recordMore,"record-compare":recordCompare,"record-reflection":recordReflection,"record-environment":recordEnvironment}[page]?.()||secondary(page);
+ const content={home,condition,record,"record-review":recordReview,result:()=>'<section id="activity-result" aria-label="走行結果"></section>',"dynamic-result":()=>`<section data-gps-dynamic aria-label="GPS動的結果"><p class="gd-empty" role="status">${settingsUi.display.language==='en'?'Loading dynamic results…':'動的結果を読み込んでいます…'}</p></section>`,annotation:()=>'<section id="annotation-editor-root" aria-label="保存済み走行の後日補完"></section>',history,"exploration-tree":explore,learning:()=>'<section id="learning-root" class="lr-root" aria-label="学習"></section>',settings,"record-start":recordStart,"record-course":recordCourse,course:()=>recordCourse(true),"record-rof":recordRof,"record-more":recordMore,"record-compare":recordCompare,"record-reflection":recordReflection,"record-environment":recordEnvironment}[page]?.()||secondary(page);
  const navPage=page==="condition"?"home":page==="result"||page==="dynamic-result"?"result":["measurement","gps-review"].includes(page)?"record":["record-review","record-course","record-rof","record-more","record-compare","record-reflection","record-environment","gps-rof"].includes(page)?"record":page;
  // Return links to the common confirmation when a detail was opened from that screen.
  const detailPages=["record-course","record-rof","record-more","record-compare","record-environment","record-reflection"];
@@ -716,9 +716,23 @@ function recordExtras(){
    if(currentPage()!=="dynamic-result"||id!==currentId)return;
    const host=app.querySelector("[data-gps-dynamic]");
    if(!host)return;
-   if(!saved.ok){host.innerHTML=`<p class="gd-empty">${esc(saved.reason)}</p>`;return;}
+   if(!saved.ok){
+    const en=settingsUi.display.language==='en';
+    const message=saved.reason==='INVALID_ID'
+     ?(en?'The requested GPS record ID is invalid.':'指定されたGPS記録の識別子が正しくありません。')
+     :saved.reason==='動的結果の保存データを確認できません'
+      ?(en?'Saved data for dynamic results could not be verified.':'動的結果の保存データを確認できません')
+      :(en?'GPS storage could not be safely read. Existing records have not been changed.':saved.reason);
+    host.innerHTML=`<p class="gd-empty" role="status">${esc(message)}</p>`;
+    return;
+   }
    dynamicPlayback=gpsDynamic.mountGpsDynamicResult(host,saved.summary,saved.detail);
-  }).catch(()=>{const host=app.querySelector("[data-gps-dynamic]");if(host)host.textContent="動的結果を読み込めませんでした";});
+  }).catch(()=>{
+   const currentId=new URLSearchParams(location.hash.split("?")[1]||"").get("record");
+   if(currentPage()!=="dynamic-result"||id!==currentId)return;
+   const host=app.querySelector("[data-gps-dynamic]");
+   if(host)host.innerHTML=`<p class="gd-empty" role="status">${settingsUi.display.language==='en'?'Dynamic results could not be loaded.':'動的結果を読み込めませんでした'}</p>`;
+  });
  }
  if(page==="measurement"){
    measurementExperience.updateMeasurementDom(app.querySelector("[data-gps-live-page]"),ensureGps().state,ensureGps().elapsed());

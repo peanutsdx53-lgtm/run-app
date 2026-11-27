@@ -560,8 +560,11 @@ jobs:
         run: node tests/offlineShellBrowserSmoke.mjs
 
   deployed-pages:
-    name: Optional deployed Pages byte and live browser check
-    if: ${{ vars.RUNLOAD_PAGES_URL != '' }}
+    name: Deployed Pages byte and live browser check (main only)
+    permissions:
+      contents: read
+      pages: read
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
     runs-on: ubuntu-24.04
     # Browser and operating-system dependencies are preinstalled at Playwright v1.56.1.
     # Avoid repeated network installations that have exhausted the WebKit job timeout.
@@ -578,5 +581,24 @@ jobs:
           node-version: '22'
       - name: Install Chromium test runner
         run: npm install --no-save playwright@1.56.1
+      - name: Resolve current repository Pages URL when no override is configured
+        if: ${{ vars.RUNLOAD_PAGES_URL == '' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {data} = await github.rest.repos.getPages({
+              owner: context.repo.owner, repo: context.repo.repo
+            });
+            const url = new URL(data.html_url);
+            if (url.protocol !== 'https:') throw new Error('Expected HTTPS Pages URL');
+            core.exportVariable('RUNLOAD_PAGES_URL', url.href);
       - name: Verify matching deployed files and startup
         run: node tests/livePagesSmoke.mjs
+      - name: Preserve deployed browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployed-pages-screenshots
+          path: screenshots/
+          if-no-files-found: warn
+          retention-days: 7

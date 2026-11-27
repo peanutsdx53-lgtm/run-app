@@ -95,7 +95,7 @@ test('UX038 bilingual shortcut and active offline review assets match the curren
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
   [app,'recordReviewExperience.js?v=20261126-cleanup-v5'],[app,'englishUi.js?v=20261126-cleanup-v5'],
-  [index,'recordReviewExperience.css?v=20261126-cleanup-v5'],[index,'app.js?v=20261126-cleanup-v5'],
+  [index,'recordReviewExperience.css?v=20261126-cleanup-v5'],[index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3'],
   [sw,'runload-ui-next-shell-'+shell],[sw,'recordReviewExperience.js?v=20261126-cleanup-v5'],
   [sw,'recordReviewExperience.css?v=20261126-cleanup-v5'],[sw,'englishFinalRecording.js?v='+ver],
   [en,'englishFinalRecording.js?v='+ver],

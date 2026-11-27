@@ -36,6 +36,6 @@ test('PWA loads the new semantic button stylesheet before iOS input safeguards a
  assert.ok(html.indexOf(a)<html.indexOf('mobileInputFocus.css'),'preserve iOS input CSS last');
  assert.ok(sw.includes(a)&&sw.includes('ui/buttonContrastSystem.css'));
  assert.ok(sw.includes('runload-ui-next-shell-20261126-cleanup-v5'));
- assert.ok(html.includes('app.js?v=20261126-cleanup-v5'));
+ assert.ok(html.includes('app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3'));
  assert.ok(sw.includes('resultExperience.js?v=20261126-cleanup-v5'));
 });
