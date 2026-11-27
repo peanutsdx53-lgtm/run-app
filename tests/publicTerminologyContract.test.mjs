@@ -77,3 +77,23 @@ test('public copy hides old-version language and academic placeholders without c
  assert.doesNotMatch(read('ui/englishFinalAppShell.js')+read('ui/englishFinalInquiry.js'),
   /Optional Entries Retained From Previous Versions|Previous examples are not actual saved records|Form a Tentative Question/);
 });
+
+test('Home and fatigue use plain primary copy and preserve scientific details in the disclosure',()=>{
+ const home=read('ui/homeExperience.css'),shell=read('styles.css'),result=read('ui/resultExperience.js'),copy=read('ui/englishResultCopy.js'),other=read('ui/englishSurfaceRemainders.js');
+ assert.match(home,/@container latest-run \(min-width:17rem\)/);
+ assert.match(home,/\.hx-latest-fig\{[^}]*grid-template-columns:minmax\(0,1fr\)/);
+ assert.doesNotMatch(shell,/hx-latest-fig/,'retire competing auto-fit override');
+ assert.match(result,/data-source-rof>自分で回答した疲労感（0〜10）/);
+ assert.match(result,/rv4-fatigue-method-content[^\n]*疲労感の評価方法（ROF-J）[^\n]*ROF_J_RIGHTS\.scaleUrl/);
+ assert.match(result,/data-rof-time-status="unverified"/);
+ assert.match(result,/data-rof-correct-save/);
+ for(const obsolete of ['ROF-J・本人回答｜時間的変化・原因は未判定','ROF-Jの0〜10の本人回答','回答時刻・訂正履歴を確認・訂正','回答時点と解釈上の注意を確認','ROF-Jの本人回答を画像・印刷に含める（任意）']){
+  assert.ok(!result.includes(obsolete)&&!copy.includes(obsolete)&&!other.includes(obsolete),'retired display phrase: '+obsolete);
+ }
+ for(const [ja,en] of [
+  ['自分で回答した疲労感（0〜10）','Your fatigue ratings (0–10)'],
+  ['疲労感の評価方法（ROF-J）','Rating of Fatigue Scale (ROF-J)'],
+  ['疲労感の見方・回答履歴・訂正','How to read ratings, view history & make corrections'],
+  ['自分で回答した疲労感を画像・印刷に含める（任意）','Include Your Fatigue Ratings in Image or Print (Optional)']
+ ])assert.equal(translateUiText(ja),en);
+});
