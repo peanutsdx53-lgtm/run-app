@@ -39,7 +39,7 @@ export function gpsGoalProgress(s,elapsedMs=0){
  return s.goalReached?'目標に到達しました。測定は自動で終了しません。'
   :'目標 '+value+' '+unit+' ／ 残り '+remaining;
 }
-export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml='',reviewUi={}){
+export function gpsReviewPage(s,elapsedMs=0,experience={},reviewUi={}){
  if(s.phase!=='finished')return '<section class="gps-v2 gps-review" data-gps-review><h1>GPS記録内容の確認</h1><p role="alert">終了したGPS測定がありません。未保存の記録は再読込後に復元できません。</p><a href="#/measurement">GPS測定へ戻る</a></section>';
  const data=format(s,elapsedMs);
  const ready=canSave(s);
@@ -50,7 +50,6 @@ export function gpsReviewPage(s,elapsedMs=0,experience={},mentalHtml='',reviewUi
  '<a href="#/gps-rof" class="gps-rof-link" data-gps-rof-entry="after"><span><strong>運動後の疲労感</strong><small>任意・イラストで選択</small><small class="gps-rof-term">ROF-J</small></span><output>'+reportedScore(experience.rofAfter)+'</output><span aria-hidden="true">›</span></a>'+
  '<p class="gps-review-rof-before"><span>運動前</span>: <output>'+reportedScore(experience.rofBefore)+'</output></p>'+
  '<p class="gps-review-provenance">疲労感は本人の任意回答（0〜10）です。0は回答済み、未回答は未回答のまま保存します。「運動前／後」の区分だけで実際の時間的前後差を判定しません。</p>'+
- mentalHtml+
  '<label class="gps-review-note">今回の気づき・メモ（任意）<textarea data-gps-note maxlength="500" rows="3" placeholder="次に確かめたいこと、気づいたことなど">'+esc(experience.memo||'')+'</textarea></label>'+
  '</section>'+
  '<section class="gps-v35-panel gps-review-save"><h2>保存する</h2>'+saveReviewScope({source:'gps',routeOptIn:experience.saveRoute===true,notice:reviewUi.notice||'',busy:!!reviewUi.saving})+'<p class="gps-review-storage-note">記録の距離・時間と本人の任意回答をこの端末に保存します。位置情報を含むコース詳細は、次のチェックを入れた場合だけ追加保存します。</p>'+

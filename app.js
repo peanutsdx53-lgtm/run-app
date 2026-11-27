@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -32,9 +32,6 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     historyExperience,
     settingsExperience,
     dataManagement,
-    mentalExperience,
-    mentalSaveFlow,
-    explorationMentalInquiry,
     explorationBodyInquiry,
     explorationConditionInquiry,
     recordRef,
@@ -56,7 +53,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2-readable-daily"),
     import("./ui/rofExperience.js?v=20261126-cleanup-v5"),
     import("./ui/recordDraftReview.js"),
-    import("./ui/recordReviewExperience.js?v=20261126-cleanup-v5"),
+    import("./ui/recordReviewExperience.js?v=20261126-cleanup-v5-daily-only"),
     import("./ui/manualRunStore.js?v=20261126-cleanup-v5"),
     import("./ui/manualRunLock.js"),
     import("./ui/manualRunCanonical.js"),
@@ -64,31 +61,28 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/coursePresetStore.js?v=20261126-cleanup-v5"),
     import("./ui/gaitExperience.js?v=20261126-cleanup-v5"),
     import("./ui/environmentExperience.js?v=20261123-ux09-environment-states-v1"),
-    import("./ui/bodyContextExperience.js?v=20261126-cleanup-v5"),
+    import("./ui/bodyContextExperience.js?v=20261126-cleanup-v5-daily-only"),
     import("./ui/gpsPlatform.js?v=20261101-gps-mobile-v1"),
-    import("./ui/measurementExperience.js?v=20261126-cleanup-v5"),
+    import("./ui/measurementExperience.js?v=20261126-cleanup-v5-daily-only"),
     import("./ui/gpsMeasurementCore.js?v=20261116-gps-stage2-controls-v1"),
     import("./ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v5"),
     import("./ui/gpsDynamicResult.js?v=20261126-cleanup-v5"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261126-cleanup-v5-readable-history-compact"),
+    import("./ui/resultExperience.js?v=20261126-cleanup-v5-readable-history-compact-daily-only"),
     import("./ui/runQuestionContinuation.js"),
     import("./ui/historyExperience.js?v=20261126-cleanup-v5"),
     import("./ui/settingsExperience.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/portableDataV2.js?v=20261126-cleanup-v5"),
-    import("./ui/mentalExperience.js?v=20261126-cleanup-v5"),
-    import("./ui/mentalSaveFlow.js?v=20261126-cleanup-v5"),
-    import("./ui/explorationMentalInquiry.js"),
     import("./ui/explorationBodyInquiry.js"),
     import("./ui/explorationConditionInquiry.js"),
     import("./ui/recordRef.js"),
-    import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1"),
-    import("./ui/annotationEditor.js?v=20261126-cleanup-v5"),
+    import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1-daily-only"),
+    import("./ui/annotationEditor.js?v=20261126-cleanup-v5-daily-only"),
     import("./ui/dataManagementUi.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/firstUseExperience.js?v=20261126-cleanup-v5"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
-    import("./ui/consultationExperience.js?v=20261126-cleanup-v5"),
-    import("./ui/explorationExperience.js?v=20261126-cleanup-v5"),
+    import("./ui/consultationExperience.js?v=20261126-cleanup-v5-daily-only"),
+    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only"),
     import("./ui/learningExperience.js?v=20261126-cleanup-v5"),
     import("./ui/interpretationRules.js?v=20261126-cleanup-v5"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
@@ -117,7 +111,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     {id:"02",name:"身体のしくみ",color:"#db8c28",tint:"#fff2df",icon:"◉",topics:["足・膝・股関節","姿勢と走る動作","体幹と腕の動き","12部位の参考値の見方"]},
     {id:"03",name:"コースと環境",color:"#16996f",tint:"#e2f9ec",icon:"△",topics:["上り坂・下り坂","路面","気温・天候","屋外・室内"]},
     {id:"04",name:"疲れと回復",color:"#b448d1",tint:"#f8e9ff",icon:"♡",topics:["疲れの感じ方","筋肉痛・違和感","休養と回復","疲れを考える視点"]},
-    {id:"05",name:"暮らしと気持ち",color:"#129b9f",tint:"#e2fbf6",icon:"✦",topics:["睡眠","食事・水分","気分・ストレス","日々のコンディション"]},
+    {id:"05",name:"暮らしと気持ち",color:"#129b9f",tint:"#e2fbf6",icon:"✦",topics:["睡眠","食事・水分","日々のコンディション"]},
     {id:"06",name:"走る前後の工夫",color:"#7658dc",tint:"#efebff",icon:"✳",topics:["ウォームアップ","走行中の対応","クールダウン・ストレッチ","無理をしない判断"]},
     {id:"07",name:"目的と楽しみ方",color:"#d44a86",tint:"#ffeaf2",icon:"⚑",topics:["走る目的","目標との付き合い方","楽しみ方","自分に合う記録の使い方"]}
   ];
@@ -259,27 +253,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
    manualSaveRequestId=null;try{sessionStorage.removeItem(pendingManualKey);}catch{}
   };
 
-  const manualMental=mentalExperience.newMentalDraft();
-  let gpsMental=mentalExperience.newMentalDraft();
-  const mentalPending=new Map();
-  let mentalSaveBusy=false;
-  const mentalKey=ref=>ref.sourceType+':'+ref.recordId;
-  async function saveOptionalMentalAfterParent(ref,draft){
-    // Parent has been committed. An annotation failure MUST NOT re-save the original.
-    const parent=await recordRef.resolveRecord(ref);
-    if(!parent.ok)return {ok:false,reason:'走行記録の保存後照合ができません。元記録を二重保存せず確認してください'};
-    const made=mentalExperience.makeMentalAppendRequest(ref,draft);
-    if(!made.ok)return {ok:false,reason:made.reason};
-    if(!made.request)return {ok:true,status:'NO_ANSWER'};
-    const key=mentalKey(ref),entry={request:made.request,reason:''};
-    mentalPending.set(key,entry);
-    let saved;
-    try{saved=await mentalSaveFlow.saveMentalOnly(entry)}
-    catch{saved={ok:false,reason:'任意回答が保存されたか確認できません。新しく入力せず、前回の保存結果を確認してください'}}
-    if(saved.ok)mentalPending.delete(key);
-    else entry.reason=saved.reason||'保存先を確認できません';
-    return saved;
-  }
+  let recordSaveBusy=false;
 
   function resultPostHocOptions(ref,host){
     let html='';
@@ -309,40 +283,6 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     }
     Promise.resolve().then(inspect).catch(()=>{html='<p role="alert">後日申告を安全に確認できません。補完画面から確認してください。</p>';paint();});
     return {getPostHocHtml:()=>html};
-  }
-  function resultMentalOptions(ref,host){
-    const key=mentalKey(ref),options={mentalRef:ref,showMentalPending:mentalPending.has(mentalKey(ref)),mentalHtml:'<p>本人の任意回答を確認しています…</p>'};
-    options.getMentalHtml=()=>options.mentalHtml;
-    const paint=async()=>{
-      let read;
-      try{read=await mentalSaveFlow.readMental(ref)}
-      catch{read={ok:false,code:'READ_FAILED'};}
-      const pending=mentalPending.get(key);
-      if(pending&&read.ok&&read.value.status==='ACTIVE'&&read.value.latest.eventId===pending.request.eventId)
-       mentalPending.delete(key);
-      const left=mentalPending.get(key);
-      options.mentalHtml=mentalExperience.mentalResultHtml(read,{pending:!!left,reason:left?.reason||''});
-      if(host.isConnected){
-       const target=host.shadowRoot?.querySelector('[data-mental-result]');
-       if(target)target.innerHTML=options.mentalHtml;
-      }
-    };
-    options.onRetryMental=async()=>{
-      if(mentalSaveBusy)return;
-      const pending=mentalPending.get(key);if(!pending)return;
-      mentalSaveBusy=true;
-      options.mentalHtml='<p role="status">任意の回答だけを再確認しています…</p>';
-      const target=host.shadowRoot?.querySelector('[data-mental-result]');
-      if(target)target.innerHTML=options.mentalHtml;
-      try{
-       const saved=await mentalSaveFlow.saveMentalOnly(pending);
-       if(saved.ok)mentalPending.delete(key);
-       else pending.reason=saved.reason||'再確認できませんでした';
-      }catch{pending.reason='再試行後も保存を確認できませんでした'}
-      finally{mentalSaveBusy=false;await paint()}
-    };
-    Promise.resolve().then(paint);
-    return options;
   }
   let selectedRunId=null;
   const conditionUi={days:30,method:"auto",focus:"all",selected:"",dailySelected:"",route:null,notice:"",scrollLeft:null};
@@ -487,7 +427,7 @@ function recordExtras(){
 }
   function record(){return recordExperience.manualPage(state);}
   function recordReview(){return recordReviewExperience.reviewView(state.recordDraft,{
-    recordType:state.recordType,source:state.recordReviewSource,courseUi:state.recordCourseUi,bodySelected:bodyUi.selected,saveNotice:manualSaveNotice,mentalSummary:mentalExperience.mentalSummary(manualMental)
+    recordType:state.recordType,source:state.recordReviewSource,courseUi:state.recordCourseUi,bodySelected:bodyUi.selected,saveNotice:manualSaveNotice
   });}
   function recordCourse(fromHome=false){return recordExperience.coursePage(state,state.recordCourseUi,coursePresets.readCoursePresets(onboardStorage),fromHome);}
   function recordRof(){return rofExperience.rofPage(state.recordDraft,rofUi);}
@@ -496,7 +436,7 @@ function recordExtras(){
     const title="追加情報";
     return `<div class="record-v3 rv-aux"><header class="rv-head"><a href="#/record" class="rv-back" aria-label="手入力へ戻る">‹</a><h1>${title}</h1><details class="rv-screen-help"><summary aria-label="追加情報の入力方法">？</summary><p>必要な情報だけ記録します。入力内容は保存前に確認できます。</p></details></header><div class="rv-aux-wrap"><section class="rv-panel"><div class="record-optional-stack" aria-label="走行条件などの任意入力項目">${fields}</div></section></div></div>`;
   }
-  const recordCompare=()=>gaitExperience.gaitPage(state.recordDraft),recordReflection=()=>bodyExperience.renderScreen(state.recordDraft,bodyUi,{mentalHtml:mentalExperience.renderMentalInput(manualMental,'manual')});
+  const recordCompare=()=>gaitExperience.gaitPage(state.recordDraft),recordReflection=()=>bodyExperience.renderScreen(state.recordDraft,bodyUi);
   function recordEnvironment(){return environmentExperience.environmentPage(state.recordDraft,environmentUi);}
   
     // The current result is mounted exclusively by resultExperience.mountResult
@@ -520,8 +460,13 @@ function recordExtras(){
     function explore(){
       const conditions=homeExperience.readConditions(onboardStorage);
       const saved=manualRunStore.readManualRuns(onboardStorage);
+      const params=new URLSearchParams(location.hash.split('?')[1]||'');
+      // An earlier topic link opens only the current daily-condition inquiry; no data migration.
+      if(params.getAll('category').length===1&&params.getAll('topic').length===1&&params.get('category')==='05'&&params.get('topic')==='気分・ストレス'){
+        params.set('topic','日々のコンディション');
+        window.history.replaceState(null,'','#/exploration-tree?'+params.toString());
+      }
       const route=location.hash;
-      const params=new URLSearchParams(route.split('?')[1]||'');
       const resolved=explorationLinkPolicy.resolveExplorationContext(route,{
         manual:saved,gpsV2:gpsV2Cache
       });
@@ -581,7 +526,7 @@ function recordExtras(){
  if(['measurement','gps-review','gps-rof'].includes(page)&&!gpsPlatform.currentGpsSmartphone())
    return '<section class="gps-v2 gps-platform-unavailable" role="status"><h1>GPS測定はスマートフォン専用です</h1><p>PCでは手入力をご利用ください。</p><a href="#/record-start" class="gps-v2-button gps-v2-primary">記録方法に戻る</a></section>';
  if(page==="measurement")return measurementExperience.measurementPage(ensureGps().state,ensureGps().elapsed(),gpsSelfReport,{pendingSave:!!gpsSaveOperation});
- if(page==="gps-review")return measurementExperience.gpsReviewPage(ensureGps().state,ensureGps().elapsed(),gpsSelfReport,mentalExperience.renderMentalInput(gpsMental,'gps'),{notice:gpsSaveNotice,saving:mentalSaveBusy});
+ if(page==="gps-review")return measurementExperience.gpsReviewPage(ensureGps().state,ensureGps().elapsed(),gpsSelfReport,{notice:gpsSaveNotice,saving:recordSaveBusy});
  if(page==="gps-rof"){
    const phase=ensureGps().state.phase;
    if(!['ready','finished'].includes(phase))
@@ -655,7 +600,7 @@ function recordExtras(){
     const saved=gpsV2Cache.ok?gpsV2Cache.records.find(r=>r.id===v2id):null;
     const host=app.querySelector('#activity-result');
     if(saved){
-     resultExperience.mountResult(host,{}, {gpsSummary:saved,annotationLink:annotationEditor.editorLink({sourceType:'GPS_V2',recordId:saved.id}),showFatigue:params.get('view')==='fatigue',...resultMentalOptions({sourceType:'GPS_V2',recordId:saved.id},host),...resultPostHocOptions({sourceType:'GPS_V2',recordId:saved.id},host)});
+     resultExperience.mountResult(host,{}, {gpsSummary:saved,annotationLink:annotationEditor.editorLink({sourceType:'GPS_V2',recordId:saved.id}),showFatigue:params.get('view')==='fatigue',...resultPostHocOptions({sourceType:'GPS_V2',recordId:saved.id},host)});
      if(gpsNotesUi.recordId!==saved.id)Object.assign(gpsNotesUi,{recordId:saved.id,loaded:null,selectedId:null,draft:null,busy:false,notice:''});
      host.insertAdjacentHTML('afterend',gpsNoteScreen.renderGpsNotes(gpsNotesUi));
     }
@@ -677,7 +622,7 @@ function recordExtras(){
     resultHost.innerHTML='<div class="gd-empty" role="status">'+esc(message)+' <a href="#/history">履歴へ戻る</a></div>';
    }else{
     resultExperience.mountResult(resultHost,record?.draft||{},record?{
-     ...resultMentalOptions({sourceType:'MANUAL',recordId:record.id},resultHost),...resultPostHocOptions({sourceType:'MANUAL',recordId:record.id},resultHost),
+     ...resultPostHocOptions({sourceType:'MANUAL',recordId:record.id},resultHost),
      annotationLink:annotationEditor.editorLink({sourceType:'MANUAL',recordId:record.id}),showFatigue:params.get('view')==='fatigue',
      saved:true,recordId:record.id,record,compareRecords:stored,questionNotes:reflectionState.notes,reflectionData:{readable:reflectionState.canSave,notes:reflectionState.notes,manualRuns:stored},compareId:params.has('compare')?params.get('compare'):undefined,showCompare:params.get('view')==='compare',
      onContinueQuestion:async (sourceNoteId,text,fromRunId)=>{
@@ -875,19 +820,6 @@ function recordExtras(){
     setTimeout(()=>URL.revokeObjectURL(url),30000);
   };
   app.addEventListener("change",async(event)=>{
-    const mentalInput=event.target;
-    if(mentalInput.matches('[data-mental-answer],[data-mental-phase],[data-mental-basis]')){
-      const scope=mentalInput.dataset.mentalAnswer||mentalInput.dataset.mentalPhase||mentalInput.dataset.mentalBasis;
-      if(!['manual','gps'].includes(scope))return;
-      const d=scope==='gps'?gpsMental:manualMental;
-      if(mentalInput.hasAttribute('data-mental-answer')&&Object.hasOwn(mentalExperience.MENTAL_CHOICES,mentalInput.value))d.answer=mentalInput.value;
-      if(mentalInput.hasAttribute('data-mental-phase')&&Object.hasOwn(mentalExperience.MENTAL_PHASES,mentalInput.value))d.declaredPhase=mentalInput.value;
-      if(mentalInput.hasAttribute('data-mental-basis')&&Object.hasOwn(mentalExperience.MENTAL_BASIS,mentalInput.value))d.timeBasis=mentalInput.value;
-      d.open=true;
-      const status=mentalInput.closest('[data-mental-panel]')?.querySelector('.mx-current');
-      if(status)status.textContent=mentalExperience.mentalSummary(d);
-      return;
-    }
     const portable=event.target.closest('[data-dm-file]');
     if(portable){
       const file=portable.files?.[0];dataUi.pendingText="";dataUi.preview=null;dataUi.safetyCopy=false;dataUi.orphanBlocked=false;dataUi.orphanConsent=false;dataUi.privateRestoreAgree=false;
@@ -969,11 +901,6 @@ function recordExtras(){
     notice.textContent=message;
   };
   app.addEventListener("input",(event)=>{
-    if(event.target.matches('[data-mental-text]')){
-      const scope=event.target.dataset.mentalText,d=scope==='gps'?gpsMental:manualMental;
-      d.freeText=event.target.value.slice(0,500);d.open=true;
-      return;
-    }
     if(event.target.matches('[data-dm-delete-word]')){
       dataUi.deleteWord=event.target.value;
       const button=app.querySelector('[data-dm-delete-confirm]');
@@ -1408,41 +1335,6 @@ function recordExtras(){
        ?.focus({preventScroll:true});
       return;
     }
-    // E3: no private mental annotation read without this explicit user action.
-    const inquiryReveal=event.target.closest('[data-e-mental-reveal]');
-    if(inquiryReveal){
-      const panel=inquiryReveal.closest('[data-e-mental-inquiry]');
-      if(!panel||inquiryReveal.disabled||currentPage()!=='exploration-tree')return;
-      const route=location.hash;
-      const params=new URLSearchParams(route.split('?')[1]||'');
-      if(params.get('category')!=='05'||params.get('topic')!=='気分・ストレス')return;
-      inquiryReveal.disabled=true;inquiryReveal.textContent='任意申告を確認しています…';
-      panel.setAttribute('aria-busy','true');
-      // The parent's own RecordRef resolver rehydrates GPS v1 from IDB.
-      // No second UI-side cache is used as evidence for a private answer.
-      const ctx=explorationLinkPolicy.resolveExplorationContext(route,{
-       manual:manualRunStore.readManualRuns(onboardStorage),
-       gpsV2:gpsV2Cache
-      });
-      const read=ctx.ok&&ctx.value.ref?
-       await mentalSaveFlow.readMental(ctx.value.ref):
-       {ok:false,code:ctx.code||'READ_FAILED',reason:ctx.reason||'記録を確認できません'};
-      if(!panel.isConnected||currentPage()!=='exploration-tree'||location.hash!==route)return;
-      panel.outerHTML=explorationMentalInquiry.renderMentalInquiry({
-       ref:ctx.ok?ctx.value.ref:(recordRef.parseLegacyOrTypedLink(route,'exploration').value??null),
-       record:ctx.ok?ctx.value.record:null,read
-      });
-      app.querySelector('[data-e-mental-inquiry] [data-e-mental-reveal]')?.focus({preventScroll:true});
-      return;
-    }
-    const mentalClear=event.target.closest('[data-mental-clear]');
-    if(mentalClear){
-      const scope=mentalClear.dataset.mentalClear;
-      if(!['manual','gps'].includes(scope))return;
-      const d=scope==='gps'?gpsMental:manualMental;
-      Object.assign(d,mentalExperience.newMentalDraft(),{open:true});
-      const y=window.scrollY;render();window.scrollTo(0,y);return;
-    }
     const dataAction=event.target.closest('[data-dm-export],[data-dm-isolate],[data-dm-restore],[data-dm-delete-confirm]');
     if(dataAction){
       if(dataUi.busy)return;
@@ -1531,14 +1423,14 @@ function recordExtras(){
      return;
     }
     if(event.target.closest("[data-rest-day-save]")){
-      if(mentalSaveBusy)return;
+      if(recordSaveBusy)return;
       if(state.recordReviewSource!=='manual'||state.recordType!=='rest'){
         manualSaveNotice='休養日以外の保存はこの操作ではできません';render();return;
       }
-      mentalSaveBusy=true;setSaveReviewBusy(event.target.closest('[data-rest-day-save]'),true);
+      recordSaveBusy=true;setSaveReviewBusy(event.target.closest('[data-rest-day-save]'),true);
       let saved;try{saved=await manualRunLock.withManualRunWriteLock(()=>restDayStore.saveRestDay(onboardStorage,state.recordDraft))}
       catch{saved={ok:false,reason:'休養日の保存結果が不明です。日付と履歴を確認してください'}}
-      finally{mentalSaveBusy=false}
+      finally{recordSaveBusy=false}
       if(!saved.ok){
         // A failed acknowledgment does not mean the date-keyed rest record was
         // never committed. Verify every user-entered field before reusing it.
@@ -1559,13 +1451,13 @@ function recordExtras(){
       location.hash='#/history';return;
     }
     if(event.target.closest("[data-manual-run-save]")){
-      if(mentalSaveBusy)return;
+      if(recordSaveBusy)return;
       if(state.recordReviewSource!=="manual"||state.recordType!=="run"){
         manualSaveNotice="手入力の走行記録以外は保存できません";render();return;
       }
       const stableId=manualSaveIdentity();
       if(!stableId){manualSaveNotice='保存の準備ができないため保存を中止しました';render();return;}
-      mentalSaveBusy=true;
+      recordSaveBusy=true;
       setSaveReviewBusy(event.target.closest('[data-manual-run-save]'),true);
       try{
         const saved=await manualRunLock.withManualRunWriteLock(()=>canonical.mutate(s=>
@@ -1576,18 +1468,15 @@ function recordExtras(){
           const found=read.ok?read.read.records.find(r=>r.id===stableId):null;
           if(found&&saved.code!=='REQUEST_CONFLICT'){
             clearManualSaveIdentity();selectedRunId=stableId;
-            state.toast='保存後の照合で原本を確認しました。任意回答は必要に応じて後日入力してください。';
+            state.toast='保存後の照合で原本を確認しました。';
             location.hash='#/result?record='+encodeURIComponent(stableId);return;
           }
           manualSaveNotice=saved.code==='REQUEST_CONFLICT'?'前回の保存操作に別の入力内容があります。履歴を確認してください。':'保存の結果を確認できません。入力内容は保持しています。履歴を確認してから、前回の保存を再試行してください。';
           const y=window.scrollY;render();window.scrollTo(0,y);return;
         }
         clearManualSaveIdentity();
-        const ref={sourceType:'MANUAL',recordId:saved.record.id};
-        const extra=saved.duplicate?{ok:false,reason:'すでに保存された元の走行記録を確認しました。任意回答は結果画面から確認してください'}:await saveOptionalMentalAfterParent(ref,manualMental);
         selectedRunId=saved.record.id;manualSaveNotice="";state.recordReviewReturn=false;
-        state.toast=extra.ok?"手入力の走行記録を保存しました":'走行記録は保存しましたが、任意の回答は確認できません。結果画面で再試行してください。';
-        Object.assign(manualMental,mentalExperience.newMentalDraft());
+        state.toast=saved.duplicate?'既存の走行記録を照合しました。重複して保存していません。':'手入力の走行記録を保存しました';
         location.hash="#/result?record="+encodeURIComponent(saved.record.id);
         return;
       }catch{
@@ -1600,7 +1489,7 @@ function recordExtras(){
         }
         manualSaveNotice='保存の結果を確認できません。入力内容は保持しています。履歴を確認してから、前回の保存を再試行してください。';
         render();return;
-      }finally{mentalSaveBusy=false}
+      }finally{recordSaveBusy=false}
     }
     const conditionControl=event.target.closest("[data-cj-range],[data-cj-day],[data-cj-save-insight],[data-cj-delete-insight],[data-cj-create-intent]");
     if(conditionControl){
@@ -1756,12 +1645,12 @@ function recordExtras(){
         }
         releaseGpsWakeLock();
       }
-      else if(action==='discard'){gps.discard();releaseGpsWakeLock();gpsController=null;gpsSelfReport=emptyGpsReport();gpsMental=mentalExperience.newMentalDraft();location.hash='#/record-start';return;}
+      else if(action==='discard'){gps.discard();releaseGpsWakeLock();gpsController=null;gpsSelfReport=emptyGpsReport();location.hash='#/record-start';return;}
       else if(action==='review'){if(gps.state.phase==='finished'){location.hash='#/gps-review';return;}}
       else if(action==='recover'){
-        if(mentalSaveBusy)return;
+        if(recordSaveBusy)return;
         if(!gpsSaveOperation)return;
-        mentalSaveBusy=true;
+        recordSaveBusy=true;
         try{
           const read=await gpsV2.readGpsV2RunById(gpsSaveOperation.id);
           if(read.ok&&read.found){
@@ -1769,7 +1658,7 @@ function recordExtras(){
             if(latest.ok&&latest.records.some(x=>x.id===read.summary.id)){
               gpsV2Cache=latest;
               clearGpsSaveOperation();
-              state.toast='以前のGPS保存結果を照合しました。本人の任意回答は結果画面で確認してください。';
+              state.toast='以前のGPS保存結果を照合しました。';
               location.hash='#/result?gps='+encodeURIComponent(read.summary.id);return;
             }
             gps.state.notice='保存済みのGPS記録を一覧で確認できません。履歴から確認してください。';
@@ -1780,10 +1669,10 @@ function recordExtras(){
             gps.state.notice='保存先を確認できません。前回の保存結果と端末の保存領域を確認してください。';
           }
         }catch{gps.state.notice='前回の保存状態を照合できません。履歴を確認してください。'}
-        finally{mentalSaveBusy=false}
+        finally{recordSaveBusy=false}
       }
       else if(action==='save'){
-        if(mentalSaveBusy)return;
+        if(recordSaveBusy)return;
         if(gps.state.phase!=='finished'||currentPage()!=='gps-review'){
           gpsSaveNotice='終了したGPSの保存前確認から操作してください';render();return;
         }
@@ -1802,7 +1691,7 @@ function recordExtras(){
         const prepared=gpsV2.prepareGpsV2Run(snapshot,options);
         if(!prepared.ok){gpsSaveNotice=prepared.reason;render();return;}
         gpsSaveNotice='';
-        mentalSaveBusy=true;
+        recordSaveBusy=true;
         setSaveReviewBusy(gpsAction,true);
         app.querySelector('[data-gps-review]')?.setAttribute('aria-busy','true');
         const finishConfirmed=async saved=>{
@@ -1812,16 +1701,9 @@ function recordExtras(){
             return false;
           }
           gpsV2Cache=listing;
-          const ref={sourceType:'GPS_V2',recordId:saved.summary.id};
-          const extra=saved.duplicate
-           ?{ok:false,reason:'原本の再照合のため任意回答を再送信していません'}
-           :await saveOptionalMentalAfterParent(ref,gpsMental);
           clearGpsSaveOperation();
-          state.toast=saved.duplicate
-           ?'同じGPS記録を再照合しました。重複保存はしていません。任意回答は結果で確認してください。'
-           :extra.ok?'GPS実走の記録と本人申告を保存しました'
-           :'GPS走行記録は保存しましたが、任意回答は未確認です。結果で注記だけ再試行できます。';
-          gpsController=null;gpsSelfReport=emptyGpsReport();gpsMental=mentalExperience.newMentalDraft();
+          state.toast=saved.duplicate?'同じGPS記録を再照合しました。重複保存はしていません。':'GPS実走の記録と本人申告を保存しました';
+          gpsController=null;gpsSelfReport=emptyGpsReport();
           gpsSaveNotice='';
           location.hash='#/result?gps='+encodeURIComponent(saved.summary.id);
           return true;
@@ -1840,7 +1722,7 @@ function recordExtras(){
           const checked=await gpsV2.verifyGpsV2Commit(snapshot,options);
           if(checked.ok){if(await finishConfirmed(checked))return;}
           else gpsSaveNotice='保存結果が未確認です。履歴と保存済みの記録を確認してから、前回の保存を再試行してください。';
-        }finally{mentalSaveBusy=false;}
+        }finally{recordSaveBusy=false;}
       }
       refreshGpsTicker();render();return;
     }
@@ -2362,7 +2244,6 @@ function recordExtras(){
     // async record refresh. Never reuse a previous RecordRef's disclosure.
     // DOM-only: no stored values are read, written or cleared.
     app.querySelectorAll([
-      '[data-e-mental-inquiry]',
       '[data-e-body-inquiry]',
       '[data-e-condition-inquiry]',
       '[data-e-life-inquiry]',

@@ -372,16 +372,7 @@ try{
      assert.equal(await sources.evaluate(el=>el.open),true,'source disclosure survives region picker');
      assert.equal(await evidence.evaluate(el=>el.open),true,'region evidence remains visible after changing region');
     }
-    if(tab==='fatigue'&&width===390&&zoom===200){
-     const optional=result.locator('.rv4-mental-details');
-     if(await optional.count()){
-      assert.equal(await optional.evaluate(e=>e.open),false,'no optional response is forced open');
-      await optional.locator('summary').click();
-      assert.equal(await optional.evaluate(e=>e.open),true,'optional response is reachable by user action');
-      await page.screenshot({path:resolve(out,engine+'-'+language+'-390-200-fatigue-optional-open.png'),animations:'disabled',fullPage:true});
-      await optional.locator('summary').click();
-     }
-    }
+    if(tab==='fatigue')assert.equal(await result.locator('.rv4-mental-details').count(),0,'retired response card absent');
     if(tab==='body'&&[390,1440].includes(width))for(const view of ['back','sole']){
      await result.locator('[data-view="'+view+'"]').click();
      await capture(page,{language,width,zoom,tab,view});

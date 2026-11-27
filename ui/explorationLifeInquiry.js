@@ -7,7 +7,7 @@
 import {normalizeRecordRef} from './recordRef.js';
 import {fatigueInquiryModel} from './explorationInquiry.js';
 import {readLifeEntries} from './explorationReadAdapter.js';
-import {validEntry} from './homeExperience.js';
+import {validEntry,DAILY_STATE_LABELS} from './homeExperience.js';
 export const LIFE_INQUIRY=Object.freeze({
  id:'T06',category:'05',topic:'日々のコンディション',
  question:'この走行と、自分で選んだ生活・休養の記録から何を確かめたい？',
@@ -42,7 +42,7 @@ export function lifeInquiryModel({ref=null,record=null,conditions=null,rests=nul
   return result('READY','本人が選択した別々の記録です',{
    current,kind:'life',day:selection.date,
    sleepSource:described.source,sleepMinutes:described.minutes,
-   feeling:saved.feeling||null,memo:saved.memo||null});
+   feeling:saved.feeling||null,memo:saved.memo||null,dailyState:saved.dailyState||null});
  }
  if(rests?.ok!==true||!Array.isArray(rests.records))
   return result('READ_ERROR','休養日の保存状態を安全に読み取れません',{current});
@@ -69,7 +69,8 @@ export function renderLifeInquiry(input={}){
     ?String(m.sleepMinutes)+'分':'値の意味を確定できません';
    detail='<p>選択した生活記録：'+esc(m.day)+'。出所：'+esc(method)+'。値：'+esc(duration)+'。</p>'+
     '<p>本人が記録したその日の調子：'+esc(m.feeling||'未入力')+'。</p>'+
-    '<p>生活メモ：'+esc(m.memo||'記述なし')+'。</p>';
+    '<p><strong>今日の疲れ・気分</strong>：'+(m.dailyState?m.dailyState.choices.map(k=>'<span>'+esc(DAILY_STATE_LABELS[k])+'</span>').join(' ／ '):'<span>未回答</span>')+'</p>'+
+    '<p>生活メモ：'+esc(m.memo||'記述なし')+'。</p><a class="ex-e-compare-link" href="#/condition?date='+esc(m.day)+'">この日のコンディションを見る</a>';
   }else{
    detail='<p>選択した休養日：'+esc(m.day)+'。本人が別に保存した「休養」の申告であり、実際に一切走らなかったことを測定した記録ではありません。</p>'+
     '<p>休養日のメモ：'+esc(m.memo||'記述なし')+'。</p>'+

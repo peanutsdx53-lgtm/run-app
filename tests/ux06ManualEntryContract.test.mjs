@@ -49,7 +49,7 @@ test('UX-026/027/039: responsive labels, three explicit activities, original ato
  const css=read('ui/recordExperience.css'),app=read('app.js');
  assert.ok(css.includes('grid-template-columns:max-content minmax(0,1fr)'));
  assert.ok(css.includes('repeat(auto-fit,minmax(min(100%,9rem),1fr))'));
- assert.match(app,/if\(mentalSaveBusy\)return;/);
+ assert.match(app,/if\(recordSaveBusy\)return;/);
  assert.match(app,/manualSaveIdentity\(\)/);
  assert.match(app,/manualRunLock\.withManualRunWriteLock\(\(\)=>canonical\.mutate/);
  for(const activity of ['RUNNING','JOGGING','WALK'])

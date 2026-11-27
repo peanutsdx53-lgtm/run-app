@@ -1,5 +1,5 @@
 /* English for read-only Explore inquiries (body, past comparison, conditions,
- * life and subjective mental reports). No private source text is translated. */
+ * and daily condition). No private source text is translated. */
 export const ENGLISH_FINAL_INQUIRY=Object.freeze({
  "元の手入力走行の本人記述": "Original Manual Run's User-Authored Notes",
  "元のGPS記録には、独立した身体観察の申告欄がありません。計測値から身体感覚を推定しません。": "The original GPS record has no separate body-observation field. Sensations are not inferred from measurements.",
@@ -109,26 +109,8 @@ export const ENGLISH_FINAL_INQUIRY=Object.freeze({
  "記録方法を確認できないため、時間を比較しません": "Recording Method Unknown; Duration Not Compared",
  "値の意味を確定できません": "Value Meaning Cannot Be Determined",
  "記述なし": "No Description",
- "記録を指定していません。ご自身の申告を示しているわけではありません。": "No Run Specified; No Personal Self-report Is Being Displayed.",
- "この走行の任意申告はまだ開いていません。本人が選んだときだけ確認します。": "Optional Responses Are Hidden Until You Choose to View Them.",
- "この記録には精神面の任意申告がありません（未回答）。「感じなかった」とは異なります。": "No Optional Mental-fatigue Report Was Recorded (Unanswered). This Is Different From Reporting No Fatigue.",
- "この記録の以前の精神面の申告は撤回済みです。過去の回答内容は表示しません。": "The Previous Optional Mental-fatigue Report Was Withdrawn. Its Contents Are Not Displayed.",
- "（尺度得点ではありません）": "(Not a Scale Score)",
- "任意申告の確認・修正は別画面で行う": "Review or Correct Optional Reports on a Separate Screen",
- "本人の経験を考える問い": "Questions About Personal Experience",
- "この回答だけでは分からないこと": "What This Response Cannot Establish",
- "気持ちや考える面の疲れは本人の任意申告です。ROF-Jと合算せず、心理状態・診断・運動による原因を推定しません。": "Mental and cognitive fatigue is an optional self-report, not added to ROF-J or used to infer psychological condition, diagnosis, or exercise-related causes.",
- "回答の有無や意味について、今どのような疑問がありますか？ 書くことも、何も残さず戻ることも自由です。": "What Questions Do You Have About Whether You Responded and What It Means? You May Write or Leave Without Saving.",
- "ここでは新しく回答を収集しません。本人の自由文は初期表示しません。既存の任意メモは別の機能です。": "No New Response Is Collected Here. Personal Free Text Is Hidden by Default; Optional Notes Are a Separate Feature.",
- "この気持ち・考える面の疲れの申告から、何が気になった？": "What Caught Your Attention About This Mental/Cognitive Fatigue Report?",
- "本人が選んだ実在記録の任意申告と限界から自分の疑問を考える": "Consider Questions About an Explicitly Selected Optional Response and Its Limits",
  "走行記録を指定していません": "No Running Record Specified",
  "元の走行記録を照合できません": "Original Run Cannot Be Verified",
- "任意申告の保存状態を安全に読み取れません": "Optional-response Storage State Cannot Be Read Safely",
  "元の走行記録を確認できません": "Original Running Record Cannot Be Verified",
- "任意申告の状態を確認できません": "Optional-response Status Cannot Be Verified",
- "任意申告の出所と内容を確認できません": "Optional-response Source and Content Cannot Be Verified",
  "／申告の扱い：": " / Report Context: ",
- "もう一度、申告を確認する": "Review Response Again",
- "この走行の任意申告を確認する": "Review Optional Response for This Run"
 });

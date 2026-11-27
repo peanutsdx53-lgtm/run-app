@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {translateUiText} from '../ui/englishUi.js';
-import {EDIT_FIELDS,MENTAL,GRADE,SURFACES,SURFACE_MODE,FORMAT} from '../ui/annotationEditorCore.js';
+import {EDIT_FIELDS,ANNOTATION_PHASE_LABELS,ANNOTATION_TIME_BASIS_LABELS,GRADE,SURFACES,SURFACE_MODE,FORMAT} from '../ui/annotationEditorCore.js';
 const fieldOptionValues=[
- ...EDIT_FIELDS.map(([,text])=>text),...Object.values(MENTAL),
+ ...EDIT_FIELDS.map(([,text])=>text),...Object.values(ANNOTATION_PHASE_LABELS),...Object.values(ANNOTATION_TIME_BASIS_LABELS),
  ...Object.values(GRADE),...Object.values(SURFACES),
  ...Object.values(SURFACE_MODE),...Object.values(FORMAT),
  '走る前','走っている間','走った後','特定しない',

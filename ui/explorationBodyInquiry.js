@@ -5,7 +5,7 @@
  */
 import {normalizeRecordRef,encodeTypedRecordQuery} from './recordRef.js';
 import {fatigueInquiryModel} from './explorationInquiry.js';
-import {MENTAL_PHASES,MENTAL_BASIS} from './mentalExperience.js';
+import {ANNOTATION_PHASE_LABELS,ANNOTATION_TIME_BASIS_LABELS} from './annotationEditorCore.js';
 export const BODY_INQUIRY=Object.freeze({
  id:'T04',category:'04',topic:'筋肉痛・違和感',
  question:'自分の身体についての記述を読み直して、次に何を確かめたい？',
@@ -35,8 +35,8 @@ export function bodyInquiryModel({ref=null,record=null,read=null}={}){
     e.fieldKey!=='bodyObservation'||!['ADD','CORRECT'].includes(e.operation)||
     e.recordRef?.sourceType!==nr.value.sourceType||e.recordRef?.recordId!==nr.value.recordId||
     typeof e.payload?.text!=='string'||!e.payload.text.trim()||e.payload.text.length>500||
-    !Object.hasOwn(MENTAL_PHASES,e.declaredPhase)||
-    !Object.hasOwn(MENTAL_BASIS,e.timeBasis))
+    !Object.hasOwn(ANNOTATION_PHASE_LABELS,e.declaredPhase)||
+    !Object.hasOwn(ANNOTATION_TIME_BASIS_LABELS,e.timeBasis))
   return result('READ_ERROR','追記の出所・形式を確認できません',{ref:nr.value});
  return result('ACTIVE','元記録と後日申告を区別して表示します',
   {...common,posthoc:e.payload.text,phase:e.declaredPhase,basis:e.timeBasis,
@@ -60,7 +60,7 @@ export function renderBodyInquiry(input={}){
   evidence=original+
    (m.status==='ACTIVE'?
     '<div class="ex-e-body-posthoc"><strong>別に保存した本人の後日追記</strong><p>'+esc(m.posthoc)+'</p>'+
-     '<p>対象とした時点：'+esc(MENTAL_PHASES[m.phase])+'／申告時点の扱い：'+esc(MENTAL_BASIS[m.basis])+
+     '<p>対象とした時点：'+esc(ANNOTATION_PHASE_LABELS[m.phase])+'／申告時点の扱い：'+esc(ANNOTATION_TIME_BASIS_LABELS[m.basis])+
      '。実際の発生時刻や入力時点との順序は証明できません。</p></div>':
     '<p data-e-body-evidence>'+esc(m.reason)+
      (m.status==='RETRACTED'?'。撤回した追記の文章は表示しません。元記録の記述は別の情報です。':'。本人が「異常なし」と申告した意味ではありません。')+'</p>');

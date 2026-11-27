@@ -1,6 +1,6 @@
 /** M5 — presentation-only post-hoc editor model, not a scientific recalculation. */
 export const EDIT_FIELDS=Object.freeze([
- ['mentalExperience','気持ち・考える面の疲れ'],['bodyObservation','身体の自覚情報'],
+ ['bodyObservation','身体の自覚情報'],
  ['shoeName','シューズ'],['memo','走行時のメモ'],['environmentNote','環境メモ'],
  ['courseName','コース名'],['temperatureC','気温（℃）'],['stepsBundle','歩数・取得方法'],
  ['gradeBundle','坂道・傾斜'],['surfaceBundle','路面の割合'],['runWalkBundle','走行と歩行'],
@@ -8,7 +8,8 @@ export const EDIT_FIELDS=Object.freeze([
 ]);
 export const POST_HOC_FIELDS=EDIT_FIELDS.map(x=>x[0]);
 export const SURFACES=Object.freeze({paved:'舗装路',track:'陸上トラック',treadmill:'トレッドミル',soil:'締まった土道',trail:'不整地トレイル',naturalGrass:'天然芝',artificialTurf:'人工芝',sand:'砂地'});
-export const MENTAL=Object.freeze({FELT:'感じた',NOT_FELT:'感じなかった',UNSURE:'よく分からない'});
+export const ANNOTATION_PHASE_LABELS=Object.freeze({UNSPECIFIED:'特定しない',BEFORE:'走る前',DURING:'走っている間',AFTER:'走った後'});
+export const ANNOTATION_TIME_BASIS_LABELS=Object.freeze({UNKNOWN:'時点は不明',AT_ENTRY:'この画面の入力時点',RECALLED:'過去を思い出して申告'});
 export const GRADE=Object.freeze({UNKNOWN:'不明',FLAT:'ほぼ平坦',SUMMARY:'上り・下りの割合',SECTIONS:'区間ごとの割合'});
 export const SURFACE_MODE=Object.freeze({UNKNOWN:'不明',SINGLE:'単一路面',MIXED:'複数路面の割合'});
 export const FORMAT=Object.freeze({UNKNOWN:'不明',CONTINUOUS_RUN:'連続した走行',RUN_WALK:'走行と歩行の組み合わせ'});
@@ -25,11 +26,6 @@ const dateTime=(input)=>typeof input==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}
 /** Plain HTML form input to a typed payload. Do not insert into the source record. */
 export function parsePostHocPayload(field,data,parent){
  if(!POST_HOC_FIELDS.includes(field))return fail('未定義の補完項目です');
- if(field==='mentalExperience'){
-  const answer=f(data,'answer'),freeText=String(f(data,'freeText'));
-  if(!Object.hasOwn(MENTAL,answer)||freeText.length>500)return fail('精神面の回答を3択から選んでください');
-  return ok({answer,...(freeText?{freeText}:{})});
- }
  if(['bodyObservation','shoeName','memo','environmentNote','courseName'].includes(field)){
   const text=String(f(data,'text')),limit=field==='shoeName'||field==='courseName'?100:500;
   return text.trim().length>0&&text.length<=limit?ok({text}):fail('内容を1〜'+limit+'字で入力してください');
@@ -105,7 +101,6 @@ export function parsePostHocPayload(field,data,parent){
 export function originalFieldValue(ref,parent,field){
  if(!parent)return '元記録を読み取れません';
  const gps=ref.sourceType!=='MANUAL';const draft=ref.sourceType==='MANUAL'?(parent.draft||{}):{};
- if(field==='mentalExperience')return '元の走行記録には独立した精神面の設問なし';
  const gpsv2=ref.sourceType==='GPS_V2';const e=gpsv2?parent.experience:null;
  if(['rofBefore','rofAfter'].includes(field)){
   const x=gpsv2?e?.[field]:parent[field];return x===null||x===undefined?'未回答':String(x)+' / 10（本人申告）';
@@ -143,7 +138,6 @@ export function originalFieldValue(ref,parent,field){
 }
 export function postHocValue(field,payload){
  if(!payload)return '回答なし';
- if(field==='mentalExperience')return MENTAL[payload.answer]||'形式未確認';
  if('text' in payload)return payload.text;
  if(field==='rofBefore'||field==='rofAfter')return payload.score+' / 10';
  if(field==='temperatureC')return payload.celsius+' ℃';
@@ -158,6 +152,7 @@ export function operationForStatus(status,action){
  return status==='ACTIVE'?'CORRECT':status==='NO_ANSWER'||status==='RETRACTED'?'ADD':null;
 }
 export function makePostHocRequest(ref,field,action,status,payload,{now=()=>new Date().toISOString(),uuid=()=>globalThis.crypto?.randomUUID?.(),declaredPhase='UNSPECIFIED',timeBasis='RECALLED',latest=null}={}){
+ if(!POST_HOC_FIELDS.includes(field))return fail('未定義の補完項目です');
  const operation=operationForStatus(status,action);
  if(!operation)return fail('現在の状態ではこの操作を実行できません。保存状態を再読込してください');
  const eventId='posthoc_evt_'+uuid(),clientRequestId='posthoc_req_'+uuid(),enteredAt=now();

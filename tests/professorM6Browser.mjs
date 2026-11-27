@@ -52,10 +52,10 @@ try{
  await page.emulateMedia({media:'print'});
  const privacy=await result.evaluate(el=>{const r=el.shadowRoot;return {
   fatigue:getComputedStyle(r.querySelector('.rv4-fatigue')).display,
-  mental:getComputedStyle(r.querySelector('.rv4-mental')).display,
+  mental:r.querySelector('.rv4-mental')!==null,
   extras:getComputedStyle(r.querySelector('.rv4-details:not(.rv4-region-evidence)')).display
  };});
- assert.equal(privacy.fatigue,'none','ROF-J must not print without explicit opt-in');assert.equal(privacy.mental,'none','mental must not print');assert.equal(privacy.extras,'none','private memo must not print');
+ assert.equal(privacy.fatigue,'none','ROF-J must not print without explicit opt-in');assert.equal(privacy.mental,false,'retired response absent');assert.equal(privacy.extras,'none','private memo must not print');
  await page.emulateMedia({media:'screen'});
  await result.locator('[data-export-rof]').check();
  await page.emulateMedia({media:'print'});
@@ -121,15 +121,10 @@ try{
 
  // M7 T-085: a real saved GPS route and mental free text must not enter copy.
  const sensitive=await page.evaluate(async id=>{
-  const [gps,st,mental]=await Promise.all([
-   import('/ui/gpsReplayIndexedDbStore.js'),import('/ui/annotationStore.js'),
-   import('/ui/mentalExperience.js')]);
+  const [gps,st]=await Promise.all([import('/ui/gpsReplayIndexedDbStore.js'),import('/ui/annotationStore.js')]);
   const detail=await gps.readGpsV2Detail(id);
   if(!detail.ok)return {ok:false,reason:'GPS detail missing '+JSON.stringify(detail)};
-  const made=mental.makeMentalAppendRequest({sourceType:'GPS_V2',recordId:id},{
-   answer:'FELT',declaredPhase:'AFTER',timeBasis:'RECALLED',
-   freeText:'PRIVATE-MENTAL-DO-NOT-COPY',open:false});
-  if(!made.ok)return made;
+  const made={request:{recordRef:{sourceType:'GPS_V2',recordId:id},fieldKey:'mentalExperience',operation:'ADD',payload:{answer:'FELT',freeText:'PRIVATE-MENTAL-DO-NOT-COPY'},expectedHeadEventId:null,expectedRevision:0,clientRequestId:'legacy_req_'+crypto.randomUUID(),eventId:'legacy_evt_'+crypto.randomUUID(),declaredPhase:'AFTER',timeBasis:'RECALLED',assessedAt:null,enteredAt:new Date().toISOString()}};
   const opened=await st.openAnnotationStore();if(!opened.ok)return opened;
   const saved=await st.appendAnnotation(opened.value.db,made.request);opened.value.db.close();
   return {ok:saved.ok,reason:saved.reason,detailBytes:JSON.stringify(detail).length};

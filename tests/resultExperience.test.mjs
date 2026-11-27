@@ -237,7 +237,7 @@ test('S09: 44px number-toggle target and meaningful focus after redraw',()=>{
 test('I02: transient result disclosures and unsaved corrections survive local redraw only',()=>{
  const js=read('ui/resultExperience.js');
  for(const selector of ['.rv4-hero-sources','.rv4-region-evidence','.rv4-fatigue-method',
-  '.rv4-mental-details','.rv4-question-continuation','.rv4-method-disclosure'])
+  '.rv4-question-continuation','.rv4-method-disclosure'])
   assert.ok(js.includes("'"+selector+"'"),'must whitelist user-opened explanation '+selector);
  for(const field of ['[data-rof-correct-score]','[data-rof-correct-reason]',
   '[data-run-question-source]','[data-run-question-text]'])
@@ -287,14 +287,8 @@ test('obsolete region helpers and mock graph generation have been fully retired 
  assert.ok(app.includes('data-body-detail-source="saved-only"'),'legacy direct details route to saved results');
 });
 
-test('S09 optional mental self-report details are user-controlled while pending recovery remains visible',()=>{
- const result=read('ui/resultExperience.js');
- const inline=read('ui/resultInlineStyles.js');
- assert.match(result,/class="rv4-mental-details"/);
- assert.match(result,/options\.showMentalPending\?'open':'/);
- assert.match(result,/data-mental-result role="status"/);
- assert.doesNotMatch(result,/<style>\.rv4-grid \.rv4-mental/,'temporary nested CSS must be deleted');
- assert.match(inline,/\.rv4-mental-details>summary/);
+test('S09 retired per-run response card and styles are absent',()=>{
+ for(const file of ['ui/resultExperience.js','ui/resultInlineStyles.js'])assert.doesNotMatch(read(file),/rv4-mental|data-mental|showMentalPending/);
 });
 
 test('S09 anatomy and ROF-J are co-readable without conflating zero with unanswered',()=>{

@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('retired CSS release activates a fresh cache, keeps unrelated caches and matches page release',async()=>{
  const source=read('sw.js'),html=read('index.html');
- const release='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact',current='runload-ui-next-shell-'+release,previous='runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily';
+ const release='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only',current='runload-ui-next-shell-'+release,previous='runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact';
  assert.equal(source.match(/const CACHE="([^"]+)"/)[1],current);
  assert.match(html,new RegExp('pwa\\.js\\?v='+release+'"'));
  assert.doesNotMatch(html,/(?:interpretationExperience|resultExperience)\\.css/);
@@ -21,6 +21,6 @@ test('retired CSS release activates a fresh cache, keeps unrelated caches and ma
  await fire('install');assert.ok(skipped);assert.ok(stores.has(previous),'old cache stays until activation');
  await fire('activate');assert.ok(claimed);assert.ok(!stores.has(previous));assert.ok(stores.has('unrelated-cache'));
  const urls=[...stores.get(current)];
- assert.ok(urls.length>=150);assert.ok(urls.some(u=>u.endsWith('/pwa.js?v='+release)));assert.ok(!urls.some(u=>/(?:interpretationExperience|resultExperience)\.css/.test(u)));
+ assert.ok(urls.length>=150);assert.ok(urls.some(u=>u.endsWith('/pwa.js?v='+release)));assert.ok(!urls.some(u=>/(?:interpretationExperience|resultExperience)\.css|mentalExperience|mentalSaveFlow|explorationMentalInquiry/.test(u)));
  let reply;handlers.get('message')({data:{type:'RUNLOAD_GET_RELEASE'},ports:[{postMessage:x=>{reply=x}}]});assert.equal(reply.release,release);
 });

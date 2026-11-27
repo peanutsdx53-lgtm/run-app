@@ -521,14 +521,6 @@
 .ex-e-compare-link:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
 
-/* E3 T03: sensitive opt-in view; private optional mental answers are excluded
-   from all browser print output even after being explicitly revealed onscreen. */
-.ex-e-mental-inquiry{scroll-margin-top:20px}
-.ex-e-mental-inquiry [data-e-mental-status]{overflow-wrap:anywhere}
-.ex-e-mental-inquiry [data-e-mental-reveal]:disabled{opacity:.78;cursor:progress}
-@media print{.ex-e-mental-inquiry{display:none!important}}
-
-
 /* E4 T04: private original/afterwards observations are revealed only by choice.
    Never include these statements in print, just as M4/M5 notes are excluded. */
 .ex-e-body-inquiry{scroll-margin-top:20px}

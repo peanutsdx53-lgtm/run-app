@@ -295,24 +295,12 @@ try{
 
 
 
- // The same record holds a genuine mental answer, separately from its body note.
- const mental63=await page.evaluate(async ref=>{
-  const [st,m]=await Promise.all([import('/ui/annotationStore.js'),import('/ui/mentalExperience.js')]);
-  const made=m.makeMentalAppendRequest(ref,{answer:'UNSURE',declaredPhase:'UNSPECIFIED',
-   timeBasis:'RECALLED',freeText:'M7-PRIVATE-MENTAL-200',open:false});
-  if(!made.ok)return made;
-  const db=await st.openAnnotationStore();if(!db.ok)return db;
-  const r=await st.appendAnnotation(db.value.db,made.request);db.value.db.close();return r;
- },bodyRef29);
- assert.equal(mental63.ok,true,mental63.reason);
  // M7 T-063: actual 200% text enlargement at all three requested widths.
  // Verify source, separate observation, and saving feedback remain readable.
  for(const width of [320,390,1440]){
   await page.setViewportSize({width,height:900});
-  await openEditor(page,bodyRef29);await choose(page,'mentalExperience');
+  await openEditor(page,bodyRef29);assert.equal(await page.locator('option[value="mentalExperience"]').count(),0);
   await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
-  await page.waitForFunction(()=>document.querySelector('.ax-compare')?.textContent?.includes('よく分からない'),null,{timeout:20000});
-  assert.match(await page.locator('.ax-compare').innerText(),/よく分からない/);
   await choose(page,'bodyObservation');
   await page.waitForFunction(()=>document.querySelector('.ax-compare')?.textContent?.includes('M7-BODY-OBSERVATION-ONLY'));
   await page.locator('[data-ax-form] textarea[name="text"]').fill('M7-BODY-OBSERVATION-ONLY-ZOOM-'+width);

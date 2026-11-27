@@ -25,7 +25,7 @@ export const ENGLISH_SHARING_COPY=Object.freeze({
  "本人の記述（目的・気付き・質問）": "Personal Notes (Purpose, Observations, Questions)",
  "期間中の推移": "Changes Across the Selected Period",
  "ROF-J・コンディション・走行条件・本人の記述は、本人が選んだ場合だけ出力します": "ROF-J, Daily Condition, Running Conditions and Personal Notes Are Exported Only If Selected",
- "GPS詳細軌跡・個人プロフィール・精神面の回答・後日申告・身体の違和感に関する個別メモは、このレポートで選択できません。必要なら共有先を確認し、別の方法で本人が伝えてください。": "Detailed GPS traces, profile details, mental responses, retrospective reports and individual notes about physical discomfort cannot be selected for this report. If you choose to share them separately, first confirm the recipient.",
+ "GPS詳細軌跡・個人プロフィール・個別の任意申告・後日申告・身体の違和感に関する個別メモは、このレポートで選択できません。必要なら共有先を確認し、別の方法で本人が伝えてください。": "Detailed GPS traces, profile details, individual optional responses, retrospective reports and individual notes about physical discomfort cannot be selected for this report. If you choose to share them separately, first confirm the recipient.",
  "指導者に伝えたいこと": "What You Want to Tell Your Coach",
  "今回共有する目的": "Purpose of This Report",
  "何を共有したいかを入力": "Enter What You Want to Share",

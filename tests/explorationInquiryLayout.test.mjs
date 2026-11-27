@@ -10,15 +10,14 @@ const categories=[...app.matchAll(/\{id:"(0[1-7])",name:"([^"]+)",color:[^\n]+?t
 const storage={getItem:()=>null,setItem:()=>{}};
 const ctx={categories,draft:{},conditions:{entries:[]},manualRuns:{ok:true,records:[]}};
 const important=[['01','自分が感じた疲れ','data-e-inquiry="T02"'],
- ['05','気分・ストレス','data-e-mental-inquiry="T03"'],
  ['04','筋肉痛・違和感','data-e-body-inquiry="T04"'],
  ['03','気温・天候','data-e-condition-inquiry="T05"'],
  ['05','日々のコンディション','data-e-life-inquiry="T06"'],
  ['01','過去の走りとの比較','data-e-inquiry="T08"']];
-test('all 28 themes share one question and a three-section inquiry flow, with English copy',()=>{
+test('all 27 themes share one question and a three-section inquiry flow, with English copy',()=>{
  assert.equal(categories.length,7);
- assert.equal(categories.reduce((sum,c)=>sum+c.topics.length,0),28);
- assert.equal(Object.keys(EXPLORATION_STARTING_QUESTIONS).length,28);
+ assert.equal(categories.reduce((sum,c)=>sum+c.topics.length,0),27);
+ assert.equal(Object.keys(EXPLORATION_STARTING_QUESTIONS).length,27);
  for(const cat of categories)for(const topic of cat.topics){
   const key=cat.id+'|'+topic,ui=makeUi(storage);
   ui.selected=cat.id;ui.topic=topic;
@@ -94,7 +93,7 @@ test('Browse Topics omits numeric badges but retains all topics and search filte
  const ui=makeUi(storage);ui.tab='catalog';
  const html=render(ui,ctx);
  assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,7);
- assert.equal((html.match(/data-ex-pick-topic=/g)||[]).length,28);
+ assert.equal((html.match(/data-ex-pick-topic=/g)||[]).length,27);
  assert.doesNotMatch(html,/class="ex-count"|<small>\d+ テーマ<\/small>/);
  ui.search='睡眠';
  const filtered=render(ui,ctx);

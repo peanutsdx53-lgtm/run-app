@@ -140,24 +140,11 @@ test('S08 repeated warnings are merged without losing any validation or disablin
  assert.doesNotMatch(good,/id="rr-review-validation"/);
 });
 
-test('S09 optional mental report is confirmed separately without changing the five required-edit destinations',()=>{
- const answer='感じた（本人の任意申告）';
- const report=reviewView(base,{source:'manual',recordType:'run',mentalSummary:answer});
- assert.match(report,/data-review-mental/);
- assert.match(report,/気持ち・考える面の疲れ（任意）/);
- assert.match(report,/感じた（本人の任意申告）/);
- assert.match(report,/ROF-Jとは別の本人申告/);
- assert.match(report,/href="#\/record-reflection"/);
+test('S09 retired run response is not shown even if supplied to the review',()=>{
+ const report=reviewView(base,{source:'manual',recordType:'run',mentalSummary:'PRIVATE-OLD-RESPONSE'});
+ assert.doesNotMatch(report,/data-review-mental|PRIVATE-OLD-RESPONSE|気持ち・考える面の疲れ/);
  assert.equal((report.match(/data-review-link=/g)||[]).length,5);
  assert.match(report,/data-manual-run-save(?![^>]*disabled)/);
- for(const opts of [
-  {source:'manual',recordType:'run',mentalSummary:'未回答'},
-  {source:'manual',recordType:'rest',mentalSummary:answer},
-  {source:'gps',mentalSummary:answer}
- ])assert.doesNotMatch(reviewView(base,opts),/data-review-mental/);
- const injected=reviewView(base,{source:'manual',recordType:'run',mentalSummary:'<img src=x onerror=alert(1)>'});
- assert.doesNotMatch(injected,/<img src=x/);
- assert.match(injected,/&lt;img src=x onerror=alert\(1\)&gt;/);
 });
 
 test('unfilled optional items show status once while preserving editing links',()=>{
