@@ -43,7 +43,7 @@ try{
   const match=async path=>!!(await cache.match(new URL(path,location.href)));
   return {registered:!!reg.active,controlled:!!navigator.serviceWorker.controller,
    shell:await match('./index.html'),
-   app:await match('./app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history'),
+   app:await match('./app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily'),
    js:await match('./ui/learningExperience.js?v=20261126-cleanup-v5'),
    css:await match('./ui/learningExperience.css?v=20261126-cleanup-v5')};
  });

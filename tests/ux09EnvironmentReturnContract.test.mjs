@@ -73,8 +73,8 @@ test('UX037 status, warning and save-boundary interface have explicit offline En
 test('UX09 versioned environment modules and dictionary are precached without overriding other modules',()=>{
  const v='20261123-ux09-environment-states-v1',shell='20261126-cleanup-v5',resultVersion='20261123-ux11-result-source-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
- for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v=20261126-cleanup-v5-readable-history'],
-  [index,'environmentExperience.css?v='+v],[index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history'],
+ for(const [s,label] of [[app,'environmentExperience.js?v='+v],[app,'englishUi.js?v=20261126-cleanup-v5-readable-history-daily'],
+  [index,'environmentExperience.css?v='+v],[index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily'],
   [sw,'runload-ui-next-shell-'+shell],[sw,'environmentExperience.js?v='+v],
   [sw,'environmentExperience.css?v='+v],[sw,'englishFinalRecording.js?v='+resultVersion],
   [en,'englishFinalRecording.js?v='+resultVersion]])assert.ok(s.includes(label),'missing '+label);
