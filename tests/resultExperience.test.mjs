@@ -349,3 +349,15 @@ test('UX11: reference color legend names provenance without changing numeric res
  assert.match(js,/data-rof-time-status="unverified"/,'ROF-J timing remains an answer, not a measured change');
  assert.match(js,/data-export-rof/,'export remains opt-in');
 });
+
+test('response history presents local instants, independent fields and separately opened corrections',()=>{
+ const js=read('ui/resultExperience.js'),sw=read('sw.js'),css=read('ui/resultInlineStyles.js');
+ assert.match(js,/from '\.\/localInstantDisplay\.js'/);
+ assert.match(sw,/"\.\/ui\/localInstantDisplay\.js"/);
+ assert.match(js,/<time datetime="/);
+ assert.match(js,/<dt>/);assert.match(js,/<dd>/);
+ assert.match(js,/<details class="rv4-rof-correction"><summary>回答を訂正する/);
+ assert.match(js,/data-user-authored/);
+ assert.doesNotMatch(js,/評価時点の扱い：|clean\(x\.changedAt\)/);
+ assert.match(css,/\.rv4-rof-time-grid\{/);
+});

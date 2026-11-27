@@ -36,7 +36,7 @@ try{
   const id=await page.evaluate(async()=>{
    const [canonical,manual]=await Promise.all([import('./ui/manualRunCanonical.js'),import('./ui/manualRunStore.js')]);
    const init=await canonical.refresh();if(!init.ok)throw Error(init.reason);
-   const saved=await canonical.mutate(s=>manual.saveManualRun(s,{date:'2026-11-26',distance:'5',hours:'',minutes:'30',seconds:'',activityGait:'RUNNING',runningFormat:'UNKNOWN',rofBefore:3,rofAfter:7,stepsProvenance:'UNKNOWN'}));
+   const saved=await canonical.mutate(s=>manual.saveManualRun(s,{date:'2026-11-26',distance:'5',hours:'',minutes:'30',seconds:'',activityGait:'RUNNING',runningFormat:'UNKNOWN',rofBefore:3,rofAfter:7,stepsProvenance:'UNKNOWN',rofEntryEvidence:{before:{capturedAt:'2026-11-27T03:33:02.176Z',assessedAt:null,timeBasis:'UNKNOWN'},after:{capturedAt:'2026-11-27T03:33:04.476Z',assessedAt:null,timeBasis:'UNKNOWN'}},exerciseTimingDraft:{startedAt:'2026-11-27T03:33:00.000Z',endedAt:'2026-11-27T04:03:00.000Z'}}));
    if(!saved.ok)throw Error(saved.reason);
    return saved.record.id;
   });
@@ -94,6 +94,13 @@ try{
    assert.equal(await disclosure.locator('a[href="https://link.springer.com/article/10.1186/s40798-026-01108-8"]').count(),1);
    const history=disclosure.locator('.rv4-rof-audit');
    assert.equal(await history.locator('.rv4-rof-time-grid .rv4-rof-time-card').count(),2);
+   const entry=history.locator('time[datetime="2026-11-27T03:33:02.176Z"]');
+   assert.equal(await entry.count(),1);
+   assert.deepEqual(await entry.locator('span').allInnerTexts(),lang==='ja'?['2026/11/27','12:33:02']:['26 Nov 2026','22:33:02']);
+   assert.equal(await entry.locator('small').innerText(),lang==='ja'?'UTC+9':'UTC-5');
+   assert.equal(await history.locator('time[datetime="2026-11-27T04:03:00.000Z"]').count(),1);
+   assert.equal(await history.locator('.rv4-rof-time-grid .rv4-rof-time-field').count(),4);
+
    const correction=history.locator('.rv4-rof-correction');
    assert.equal(await correction.evaluate(e=>e.open),false);
    assert.equal(await correction.locator('[data-rof-correct-score]').isVisible(),false);
