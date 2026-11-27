@@ -30,9 +30,9 @@ try{
   const goto=hash=>page.goto(base+hash,{waitUntil:'networkidle'});
   await goto('#/history');
   const ids=await page.evaluate(async()=>{
-   const [c,m,g,mental,ann]=await Promise.all([
+   const [c,m,g,ann]=await Promise.all([
     import('/ui/manualRunCanonical.js'),import('/ui/manualRunStore.js'),
-    import('/ui/gpsReplayIndexedDbStore.js'),import('/ui/mentalExperience.js'),
+    import('/ui/gpsReplayIndexedDbStore.js'),
     import('/ui/annotationStore.js')]);
    const init=await c.initialize();if(!init.ok)throw Error('manual unavailable');
    const raw={date:'2026-11-09',distance:'6',hours:'',minutes:'33',seconds:'',
@@ -55,12 +55,14 @@ try{
      beforeCapturedAt:null,afterCapturedAt:null,memo:'PRIVATE-GPS-MEMO-I2'}});
    if(!gps.ok)throw Error('gps save '+gps.reason);
    const ref={sourceType:'GPS_V2',recordId:gps.summary.id};
-   const mentalReq=mental.makeMentalAppendRequest(ref,{
-    answer:'FELT',declaredPhase:'AFTER',timeBasis:'RECALLED',
-    freeText:'PRIVATE-MENTAL-I2',open:false});
-   if(!mentalReq.ok)throw Error('mental request '+mentalReq.reason);
+   // Historical private payload only: the retired UI is never imported or restored.
+   const legacyRequest={recordRef:ref,fieldKey:'mentalExperience',operation:'ADD',
+    payload:{answer:'FELT',freeText:'PRIVATE-MENTAL-I2'},
+    expectedHeadEventId:null,expectedRevision:0,
+    clientRequestId:'legacy_req_'+crypto.randomUUID(),eventId:'legacy_evt_'+crypto.randomUUID(),
+    declaredPhase:'AFTER',timeBasis:'RECALLED',assessedAt:null,enteredAt:new Date().toISOString()};
    const opened=await ann.openAnnotationStore();if(!opened.ok)throw Error('annotation store');
-   const saved=await ann.appendAnnotation(opened.value.db,mentalReq.request);opened.value.db.close();
+   const saved=await ann.appendAnnotation(opened.value.db,legacyRequest);opened.value.db.close();
    if(!saved.ok)throw Error('mental append '+saved.reason);
    const snapshot=await c.readCanonical(),gpsList=await g.readGpsV2Summaries();
    return {manualId:manual.record.id,gpsId:gps.summary.id,
@@ -111,7 +113,7 @@ try{
    assert.equal(styles.exportMenu,'none');
    assert.equal(styles.freeText,'none','private free text never prints');
    assert.equal(styles.posthoc,'none','post-hoc annotations are never permitted in print');
-   if(mental)assert.equal(styles.mental,'none','mental subjective answer always excluded');
+   assert.equal(styles.mental,null,'retired response card must be absent even with historical private data');
    // Chromium's print-to-PDF bytes are independently extracted, not only
    // checked by DOM/CSS. WebKit keeps the print style/interaction contract.
    if(engineName==='chromium'&&!mental){
