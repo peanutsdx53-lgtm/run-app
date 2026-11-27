@@ -8,18 +8,18 @@ const app=readFileSync(root,'utf8');
 const categories=[...app.matchAll(/\{id:"(0[1-7])",name:"([^"]+)",color:[^\n]+?topics:\[(.*?)\]\}/g)]
  .map(m=>({id:m[1],name:m[2],topics:[...m[3].matchAll(/"([^"]+)"/g)].map(x=>x[1])}));
 const memory=()=>{const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v)}};
-test('all seven categories and 28 topics have distinct editorial status, without pretending 18 observation guides are literature verified',()=>{
+test('all seven categories and 27 topics have distinct editorial status, without pretending 17 observation guides are literature verified',()=>{
  assert.equal(categories.length,7);
  const audit=validateExplorationCatalog(categories,Object.keys(LEARNING_TOPICS));
- assert.deepEqual(audit,{total:28,learned:10,observation:18,missing:[],unknown:[],ok:true});
- assert.equal(EXPLORATION_DRAFT_COUNT,18);
+ assert.deepEqual(audit,{total:27,learned:10,observation:17,missing:[],unknown:[],ok:true});
+ assert.equal(EXPLORATION_DRAFT_COUNT,17);
  for(const guide of Object.values(EXPLORATION_DRAFT_GUIDES)){
   assert.equal(guide.status,'design-prompt');
   for(const key of ['id','question','record','limit','next'])assert.ok(guide[key].length>=8,key);
   assert.doesNotMatch(guide.question+guide.record+guide.limit,/必ず回復|確実に予防|本人の負担を測定/);
  }
 });
-test('all 18 observation guides render self-observation, limitation and explicit source status',()=>{
+test('all 17 observation guides render self-observation, limitation and explicit source status',()=>{
  const ui=makeUi(memory());const ctx={categories,draft:{},conditions:{entries:[]}};
  for(const category of categories){for(const title of category.topics){
   const key=category.id+'|'+title;

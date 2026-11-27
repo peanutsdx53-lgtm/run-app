@@ -153,7 +153,9 @@ try{
    await page.screenshot({path:resolve(output,'explore-field-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    await page.locator('[data-ex-tab="catalog"]').click();
    assert.equal(await page.locator('.ex-count,.ex-catalog-group-head small').count(),0);
-   assert.equal(await page.locator('[data-ex-pick-topic]').count(),28,'all topics remain accessible');
+   assert.equal(await page.locator('[data-ex-pick-topic]').count(),27,'all current topics remain accessible');
+    assert.equal(await page.locator('[data-ex-pick-topic="気分・ストレス"]').count(),0,'retired topic must not return');
+    assert.equal(await page.locator('[data-ex-pick-topic="日々のコンディション"]').count(),1,'current condition topic is unique');
    await page.screenshot({path:resolve(output,'explore-catalog-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    assert.deepEqual(errors,[],'browser errors '+language+' '+width);
    measurements.push({engine,width,language,pass:true,home:boxed,guide:boxes});

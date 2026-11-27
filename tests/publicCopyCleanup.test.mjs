@@ -5,8 +5,8 @@ import {translateUiText} from '../ui/englishUi.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const pairs=[
  [
-  "任意回答が保存されたか確認できません。新しく入力せず、前回の保存結果を確認してください",
-  "The optional response save could not be verified. Check the previous save before entering a new response."
+  "保存後の照合で原本を確認しました。",
+  "The original record was verified after saving."
  ],
  [
   "保存に必要な準備ができません。保存は行っていません",
@@ -245,8 +245,8 @@ const pairs=[
   "The selected record could not be verified."
  ],
  [
-  "任意回答が保存されたか確認できませんでした。新しく保存せず、前回の保存結果を確認してください",
-  "The optional response save could not be verified. Check the previous save instead of saving again."
+  "以前のGPS保存結果を照合しました。",
+  "The Earlier GPS Save Was Verified."
  ],
  [
   "同じ元の記録に異なる内容があります",

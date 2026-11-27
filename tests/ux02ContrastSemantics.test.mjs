@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 
 const source=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
-const mental=source('ui/mentalExperience.css');
+const condition=source('ui/homeExperience.css');
 const auditor=source('tests/buttonContrastAuditBrowser.mjs');
 const matrix=source('tests/ux02ContrastMatrixBrowser.mjs');
 const html=source('index.html');
@@ -14,14 +14,11 @@ const linear=hex=>{
 };
 const contrast=(a,b)=>{const x=linear(a),y=linear(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
 
-test('the optional mental/cognitive self-report label is legible even at the brightest conservative dark-panel stop',()=>{
- const declaration=mental.match(/\.mx-label small\{[^}]*\}/)?.[0];
- assert.ok(declaration,'specific optional label must be styled');
- assert.match(declaration,/color:#c9eaf0/);
- assert.ok(contrast('#c9eaf0','#0d3d4e')>=4.5,
-  'ordinary optional field text must not inherit light-page muted ink');
- assert.match(mental,/\.mx-current\{color:#b6d6dd/,'original answer status remains legible');
- assert.match(mental,/\.mx-choice input\{accent-color:/,'radio answer control unchanged');
+test('daily condition choices and explanation retain readable contrast on the current dark palette',()=>{
+ const dark=Object.fromEntries([...condition.match(/:root\{--condition-bg:[^}]+\}/)[0].matchAll(/--condition-([\w-]+):(#[0-9a-f]{6})/gi)].map(m=>[m[1],m[2]]));
+ for(const bg of ['bg','surface','raised','selected'])assert.ok(contrast(dark.text,dark[bg])>=4.5,bg);
+ for(const bg of ['bg','surface','raised'])assert.ok(contrast(dark.secondary,dark[bg])>=4.5,bg);
+ assert.match(condition,/\.hx-daily-choices label:has\(input:checked\)\{background:var\(--condition-selected\);border-color:var\(--condition-accent\)/);
 });
 
 test('non-text icon threshold is 3:1; all seven Explore accents and Settings chevron remain distinguishable on dark cards',()=>{
@@ -41,11 +38,9 @@ test('bilingual 320/390/768/1440 and 100/200 percent Chromium/WebKit matrix rema
  assert.match(workflow,/node tests\/buttonContrastAuditBrowser\.mjs\s+node tests\/ux02ContrastMatrixBrowser\.mjs/);
 });
 
-test('new UI contrast revision is present in both loaded and offline precached CSS without stale version',()=>{
- const key='./ui/mentalExperience.css?v=20261122-ux02-contrast-v1';
- assert.ok(html.includes(key),'HTML must load the new color');
- assert.ok(precache.includes(key),'PWA must precache the matching revision');
- assert.ok(!html.includes('mentalExperience.css?v=20261108-professor-m4-v1'));
- assert.ok(!precache.includes('mentalExperience.css?v=20261108-professor-m4-v1'));
+test('retired mental styling is absent; current condition styling remains cached',()=>{
+ assert.doesNotMatch(html+precache,/mentalExperience\.css/);
+ assert.match(html,/homeExperience\.css\?v=/);
+ assert.match(precache,/\.\/ui\/homeExperience\.css/);
  assert.match(precache,/runload-ui-next-shell-20261126-cleanup-v5/);
 });

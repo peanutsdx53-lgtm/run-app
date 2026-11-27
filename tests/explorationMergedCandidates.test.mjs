@@ -17,10 +17,10 @@ const show=(cat,topic,storage=memory())=>{
  const ui=makeUi(storage);ui.selected=cat;ui.topic=topic;
  return {ui,html:render(ui,ctx),storage};
 };
-test('E7 all merged candidate targets stay inside the original 7 x 4, 10 sourced / 18 prompt catalog',()=>{
+test('E7 all merged candidate targets stay inside the current seven categories, 10 sourced / 17 prompt catalog',()=>{
  assert.equal(categories.length,7);
  assert.deepEqual(validateExplorationCatalog(categories,Object.keys(LEARNING_TOPICS)),{
-  total:28,learned:10,observation:18,missing:[],unknown:[],ok:true
+  total:27,learned:10,observation:17,missing:[],unknown:[],ok:true
  });
  const targets=[['01','気付きと次の確認'],['06','走行中の対応'],['06','ウォームアップ'],
   ['06','クールダウン・ストレッチ'],['06','無理をしない判断'],

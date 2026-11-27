@@ -1,4 +1,4 @@
-/* English Explore surface inventory for 7 categories x 28 topics.
+/* English Explore surface inventory for 7 categories / 27 topics.
  * Diagnoses untranslated SYSTEM text and accessibility labels, in each
  * normal, help and explicit-run context. Never flags user-authored text.
  * Visuals: focused screenshots for iPhone and 1024px; no edits to records.
@@ -43,7 +43,7 @@ const raw=await readFile(resolve(root,'app.js'),'utf8');
 const categories=[...raw.matchAll(/\{id:"(0[1-7])",name:"([^"]+)",color:[^\n]+?topics:\[(.*?)\]\}/g)]
  .map(m=>({id:m[1],name:m[2],topics:[...m[3].matchAll(/"([^"]+)"/g)].map(x=>x[1])}));
 assert.equal(categories.length,7);
-assert.equal(categories.reduce((n,x)=>n+x.topics.length,0),28);
+assert.equal(categories.reduce((n,x)=>n+x.topics.length,0),27);
 const bad=/[\u3041-\u30ff\u3400-\u9fff]/u;
 const reports=[],errors=[];
 async function scan(page,mode,category,topic,state){

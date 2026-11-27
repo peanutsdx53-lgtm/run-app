@@ -1,6 +1,6 @@
 import {createExplorationContext, readCourseDraft} from "./explorationReadAdapter.js";
 import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from "./explorationTopicGuides.js?v=20261111-exploration-inquiry-v1-daily-only";
-import {renderObservationGuide} from "./explorationTopicView.js?v=20261124-upr-explore-gps-v1-daily-only";
+import {renderObservationGuide} from "./explorationTopicView.js?v=20261127-daily-only";
 import {isRunId,resolveOptionalNoteRunLink,visibleTopicNotes,noteRunBackLink} from "./noteRunLink.js";
 import {renderFatigueInquiry} from "./explorationInquiry.js?v=20261109-p7-wording-v1";
 import {renderComparisonInquiry} from "./explorationComparisonInquiry.js";
