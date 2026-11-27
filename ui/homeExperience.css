@@ -635,7 +635,7 @@ body.app-dialog-open{overflow:hidden;overscroll-behavior:none}
 .hx-daily-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:8px}
 #app .hx-condition-dialog .hx-daily-choices label{display:flex;flex-direction:row;align-items:center;gap:10px;min-height:44px;padding:9px;border:1px solid var(--condition-line);border-radius:10px;background:var(--condition-raised);overflow-wrap:anywhere}
 #app .hx-condition-dialog .hx-daily-choices label:has(input:checked){background:var(--condition-selected);border-color:var(--condition-accent)}
-#app .hx-condition-dialog .hx-daily-choices input{width:20px;height:20px;min-width:20px;margin:0;padding:0}
+#app .hx-condition-dialog .hx-daily-choices input{width:20px;height:20px;min-width:20px;min-height:20px;flex:0 0 20px;margin:0;padding:0}
 .hx-daily-state details summary{min-height:44px;display:flex;align-items:center;color:var(--condition-accent);cursor:pointer}
 .hx-daily-summary{margin-top:12px}
 .hx-daily-summary>div{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}

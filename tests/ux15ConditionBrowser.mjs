@@ -42,7 +42,10 @@ try{for(const language of ['ja','en'])for(const width of [320,390,768,1440])for(
  const dialogMeasure=await dailyDialog.evaluate(el=>({doc:document.documentElement.scrollWidth,width:innerWidth,scroll:el.scrollWidth,client:el.clientWidth,fg:getComputedStyle(el.querySelector('.hx-daily-state legend')).color,bg:getComputedStyle(el).backgroundColor}));
  check(dialogMeasure.doc<=width+3&&dialogMeasure.scroll<=dialogMeasure.client+3,tag+' daily form overflow');
  row.dailyForm=dialogMeasure;
- await page.screenshot({path:resolve(out,tag+'-daily-form.png'),fullPage:true,animations:'disabled'});
+ await dailyDialog.locator('.hx-daily-state').scrollIntoViewIfNeeded();
+ await page.screenshot({path:resolve(out,tag+'-daily-form.png'),animations:'disabled'});
+ await dailyDialog.locator('[name="dailyChoices"][value="motivation"]').scrollIntoViewIfNeeded();
+ await page.screenshot({path:resolve(out,tag+'-daily-selected.png'),animations:'disabled'});
  await dailyDialog.locator('.hx-save').click();
  await dailyDialog.waitFor({state:'detached'});
  const saved=await page.evaluate(({key,date})=>JSON.parse(localStorage.getItem(key)).find(e=>e.date===date),{key:KEY,date:dailyDate});
