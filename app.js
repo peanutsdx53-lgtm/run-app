@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -71,7 +71,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v5"),
     import("./ui/gpsDynamicResult.js?v=20261126-cleanup-v5"),
     import("./ui/gpsStorageHealth.js?v=20261027-gps-storage-v40"),
-    import("./ui/resultExperience.js?v=20261126-cleanup-v5-readable-history"),
+    import("./ui/resultExperience.js?v=20261126-cleanup-v5-readable-history-compact"),
     import("./ui/runQuestionContinuation.js"),
     import("./ui/historyExperience.js?v=20261126-cleanup-v5"),
     import("./ui/settingsExperience.js?v=20261125-ux16-19-batch-v1"),
@@ -92,7 +92,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/learningExperience.js?v=20261126-cleanup-v5"),
     import("./ui/interpretationRules.js?v=20261126-cleanup-v5"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
-    import("./ui/conditionJourney.js?v=20261125-ux15-condition-v1-daily"),
+    import("./ui/conditionJourney.js?v=20261125-ux15-condition-v1-daily-compact"),
     import("./ui/conditionInsights.js?v=20261026-condition-v15")
   ]);
   // Independent IndexedDB stores can initialize together. Wait for canonical data
@@ -345,7 +345,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     return options;
   }
   let selectedRunId=null;
-  const conditionUi={days:30,method:"auto",focus:"all",selected:"",dailySelected:"",notice:"",scrollLeft:null};
+  const conditionUi={days:30,method:"auto",focus:"all",selected:"",dailySelected:"",route:null,notice:"",scrollLeft:null};
   const environmentUi=environmentExperience.newEnvironmentUi();
   const bodyUi=bodyExperience.makeUi();
   const rofUi=rofExperience.createRofUiState();
@@ -509,6 +509,10 @@ function recordExtras(){
     }
     // Condition inspection lives off the home dashboard, not inside running history.
     function condition(){
+      if(conditionUi.route!==location.hash){
+        conditionUi.route=location.hash;
+        conditionUi.dailySelected=new URLSearchParams(location.hash.split('?')[1]||'').get('date')||'';
+      }
       const conditions=homeExperience.readConditions(onboardStorage);
       const insights=conditionInsights.loadConditionInsights(onboardStorage);
       return '<section class="cj-screen" aria-label="コンディションの歩み"><header class="cj-page-head"><a href="#/home" class="cj-back" aria-label="ホームに戻る">‹</a><div><h1>コンディションの歩み</h1></div><details class="rl-screen-help"><summary aria-label="コンディションの見方">？</summary><p>保存した睡眠・在床時間と、その日の調子を日付から確認できます。本人の記録であり、睡眠や健康状態を測定・診断するものではありません。</p></details></header>'+conditionJourney.renderConditionJourney(conditions,conditionUi,insights)+'</section>';
@@ -2334,6 +2338,7 @@ function recordExtras(){
   window.addEventListener("focus",refreshForeground);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)void refreshForeground();});
   window.addEventListener("hashchange",async()=>{
+    if(currentPage()!=="condition")conditionUi.route=null;
     dismissLegalDialog();
     // P8: even outside inquiry panels, the old exploration view can hold
     // record-linked note previews and identifying context. Seal the ENTIRE

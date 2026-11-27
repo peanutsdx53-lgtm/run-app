@@ -92,12 +92,12 @@ test('UX05: CSS reflows all stage labels while both dynamic JS and CSS stay offl
   [app,'firstUseExperience.js?v='+shellGen],
   [index,'firstUseExperience.css?v='+gen],
   [index,'homeExperience.css?v=20261126-cleanup-v5-readable-daily'],
-  [index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily'],
-  [sw,'runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily'],
+  [index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact'],
+  [sw,'runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact'],
   [sw,'firstUseExperience.css?v='+gen],
   [sw,'homeExperience.css?v=20261126-cleanup-v5-readable-daily'],
   [sw,'firstUseExperience.js?v='+shellGen],
-  [sw,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily']
+  [sw,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact']
  ])assert.ok(txt.includes(fragment),'active offline version is missing: '+fragment);
  assert.match(read('.github/workflows/run-app-regression.yml'),/node tests\/ux05OnboardingHomeBrowser\.mjs/);
 });

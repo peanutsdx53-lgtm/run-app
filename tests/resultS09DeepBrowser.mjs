@@ -305,7 +305,8 @@ try{
       assert.deepEqual(audit.overflows,[],'T02: long source labels wrap inside their own rows');
       assert.ok(audit.fontPx.every(v=>v>=17.5),'T02: detailed source copy follows 200% root text size');
 
-      const reference=result.locator('.rv4-method-disclosure');
+      await result.locator('[data-tab="body"]').click();
+      const reference=result.locator('.rv4-body .rv4-method-disclosure');
       const heading=reference.locator('summary');
       const textLabel=heading.locator('.rv4-method-label');
       const label=(await textLabel.textContent()).trim();

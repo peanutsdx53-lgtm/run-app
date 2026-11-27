@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {HISTORY_STYLES} from '../ui/historyInlineStyles.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily';
+const cacheVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact';
 
 test('P14: History matches GPS card density, and Shadow DOM no longer adds blank viewport height',()=>{
  const history=HISTORY_STYLES;
@@ -65,7 +65,7 @@ test('P14: Condition shares neutral theme tokens across Home and history; Achiev
 
 test('P14: app, worker, and style versions are aligned without deleting local history data',()=>{
  const index=read('index.html'),sw=read('sw.js'),app=read('app.js');
- const v='20261110-p14-visual-v4-daily',entryV='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily',pwaV='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily';
+ const v='20261110-p14-visual-v4-daily',entryV='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact',pwaV='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact';
  assert.ok(index.includes('app.js?v='+entryV),'HTML missing app.js');
  assert.ok(sw.includes('app.js?v='+entryV),'SW missing app.js');
  assert.ok(index.includes('pwa.js?v='+pwaV),'HTML missing pwa.js');

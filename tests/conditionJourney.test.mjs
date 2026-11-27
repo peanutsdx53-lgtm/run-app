@@ -17,7 +17,8 @@ test('long-term journey lists actual dates and highlights without inferring pers
  assert.match(html,/気づきを保存する/);assert.match(html,/次の記録で確かめる/);
  assert.match(html,/朝は元気/);assert.match(html,/調子が良かった日/);
  assert.doesNotMatch(html,/data-interpret-date/,'no manual two-date selection is necessary');
- assert.match(html,/原因やランニングへの影響/);
+ assert.match(html,/<details class="cj-local-help" data-cj-comparison-help><summary>比較の見方と限界<\/summary><p>2日間の差だけから/);
+ assert.doesNotMatch(html,/class="cj-disclaimer"|違いの原因やランニングへの影響/);
 });
 test('displayed mood is categorical and day notes are escaped',()=>{
  const evil={canSave:true,entries:[record(b,450,'良い','<script>alert(1)</script>')]};
@@ -89,7 +90,7 @@ test('invalid calendar dates reject safely without changing opt-in next-check re
 test('UX15 empty state has no zero bars and retains explicit period and method selection',()=>{
  const html=renderConditionJourney({canSave:true,entries:[]},{days:7,method:'time-in-bed'});
  assert.match(html,/選択した期間・方法の記録なし/);assert.match(html,/未記録日は0時間として扱いません/);
- assert.doesNotMatch(html,/data-cj-chart|data-cj-day=/);assert.match(html,/data-cj-range="7" aria-label="7日" aria-pressed="true"/);
+ assert.doesNotMatch(html,/data-cj-chart(?=[\s=>])|data-cj-day=/);assert.match(html,/<details class="cj-local-help" data-cj-chart-help>/);assert.match(html,/data-cj-range="7" aria-label="7日" aria-pressed="true"/);
  assert.match(html,/就床から起床までの経過時間：0日分/);assert.doesNotMatch(html,/棒の基準/);
 });
 test('UX15 missing method is distinct from an absent date, and self-report symbols do not assess health',()=>{
@@ -114,3 +115,5 @@ test('UX15 composed condition labels translate only generated display text',asyn
  assert.equal(translateResidualDynamic('良い',{element:{closest:s=>s==='.cj-panel'||s==='[data-user-authored]'?{}:null}}),null);
  assert.equal(translateResidualDynamic('良い'),null);
 });
+
+test('chart and comparison limits are locally available, collapsed and not duplicated',()=>{const html=renderConditionJourney(conditions);assert.match(html,/<details class="cj-local-help" data-cj-chart-help><summary>グラフの見方<\/summary>/);assert.match(html,/<details class="cj-local-help" data-cj-comparison-help><summary>比較の見方と限界<\/summary>/);assert.equal((html.match(/2日間の差だけから/g)||[]).length,1);assert.doesNotMatch(html,/<details[^>]*(?:data-cj-chart-help|data-cj-comparison-help)[^>]*\bopen\b/);assert.match(html,/本人が入力した調子/);});
