@@ -7,7 +7,7 @@ const time='2026-11-08T00:10:00.000Z';
 let i=0;const uuid=()=>`00000000-0000-4000-8000-${String(++i).padStart(12,'0')}`;
 const make=(field,action,status,payload,options={})=>makePostHocRequest(ref,field,action,status,payload,{uuid,now:()=>time,...options});
 test('M5 independent field coverage and no unrecognized automatic fallback',()=>{
- assert.equal(POST_HOC_FIELDS.length,13);
+ assert.equal(POST_HOC_FIELDS.length,12);
  for(const x of ['unknown','pH'])assert.equal(parsePostHocPayload(x,{},parent).ok,false);
  assert.equal(operationForStatus('NO_ANSWER','SAVE'),'ADD');assert.equal(operationForStatus('ACTIVE','SAVE'),'CORRECT');assert.equal(operationForStatus('ACTIVE','RETRACT'),'RETRACT');assert.equal(operationForStatus('RETRACTED','SAVE'),'ADD');assert.equal(operationForStatus('RETRACTED','RETRACT'),null);
  assert.equal(originalFieldValue(ref,parent,'rofBefore'),'0 / 10（本人申告）');
@@ -18,10 +18,10 @@ test('M5 independent field coverage and no unrecognized automatic fallback',()=>
  assert.equal(originalFieldValue({sourceType:'GPS_V2'},{...parent,experience:{}},'rofBefore'),'未回答');
  assert.equal(originalFieldValue({sourceType:'GPS_V2'}, {...parent,experience:{rofAfter:0}},'rofAfter'),'0 / 10（本人申告）');
 });
-test('M5 empty and invalid inputs rejected; zero steps, GPS ROF 0 and optional mental explicit',()=>{
+test('M5 empty and invalid inputs rejected; zero steps, GPS ROF 0 and retired field rejected',()=>{
  assert.equal(parsePostHocPayload('mentalExperience',{answer:''},parent).ok,false);
  assert.equal(parsePostHocPayload('mentalExperience',{answer:'UNSURE',freeText:'x'.repeat(501)},parent).ok,false);
- assert.deepEqual(parsePostHocPayload('mentalExperience',{answer:'FELT',freeText:'本人の経験'},parent).payload,{answer:'FELT',freeText:'本人の経験'});
+ assert.equal(parsePostHocPayload('mentalExperience',{answer:'FELT',freeText:'本人の経験'},parent).ok,false);
  assert.deepEqual(parsePostHocPayload('stepsBundle',{steps:'0',stepsProvenance:'DEVICE_MEASURED'},parent).payload,{steps:0,stepsProvenance:'DEVICE_MEASURED'});
  assert.equal(parsePostHocPayload('stepsBundle',{steps:'',stepsProvenance:'UNKNOWN'},parent).ok,false);
  assert.equal(parsePostHocPayload('stepsBundle',{steps:'-1',stepsProvenance:'UNKNOWN'},parent).ok,false);

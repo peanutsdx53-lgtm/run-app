@@ -13,8 +13,8 @@ const pairs=[
  ],
  [
   "既存の親記録を照合しました。任意回答は結果画面から確認してください",
-  "すでに保存された元の走行記録を確認しました。任意回答は結果画面から確認してください",
-  "The original activity was confirmed as saved. Check optional responses on its results screen."
+  "既存の走行記録を照合しました。重複して保存していません。",
+  "The existing run was verified. No duplicate was saved."
  ],
  [
   "手入力の保存正本を照合できません",

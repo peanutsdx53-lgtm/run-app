@@ -9,7 +9,7 @@ test('English phrase table covers shared navigation and evidence with precise te
   ['探究','Explore'],['設定','Settings'],
   ['文献の根拠と条件','Research Source & Conditions'],
   ['出所：GPSの保存記録','Source: Saved GPS Record'],
-  ['未回答','Not answered'],['気持ち・考える面の疲れ（任意）','Mental & Cognitive Fatigue (Optional)']
+  ['未回答','Not answered'],['日々のコンディション','Daily Condition']
  ]){
   assert.equal(translateUiText(ja),en);
  }

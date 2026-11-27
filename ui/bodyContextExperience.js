@@ -40,7 +40,7 @@ ${v.paths.map(([id,path])=>{const chosen=ui.selected.includes(id),focused=ui.foc
 const icon=(type)=>({note:'✎',shoe:'◇',memo:'▤'}[type]||'•');
 const fields=[['bodyObservation','身体の自覚情報','note',500,'例：右ふくらはぎに張りを感じた'],['shoeName','使用したシューズ','shoe',100,'今回のシューズ名を入力'],['memo','走行・休養時のメモ','memo',500,'自由に記録できます']];
 function fieldCard(d,[key,label,symbol,max,placeholder]){const single=key==='shoeName';return `<section class="cx-field-card"><div class="cx-field-title"><span class="cx-field-icon">${icon(symbol)}</span><label for="cx-${key}">${label}</label></div>${single?`<input id="cx-${key}" type="text" maxlength="${max}" data-draft="${key}" placeholder="${placeholder}" value="${safe(d[key])}">`:`<textarea id="cx-${key}" maxlength="${max}" data-draft="${key}" placeholder="${placeholder}" rows="${key==='memo'?3:3}">${safe(d[key])}</textarea>`}<div class="cx-counter" data-counter="${key}">${String(d[key]??'').length}/${max}</div></section>`;}
-export function renderScreen(d={},ui=makeUi(),opts={}){
+export function renderScreen(d={},ui=makeUi()){
  const current=VIEWS.find(v=>v.key===ui.view)||VIEWS[0];
  const focus=region(ui.focusId),picked=focus&&ui.selected.includes(focus.id);
  const selected=REGIONS.filter(r=>ui.selected.includes(r.id));
@@ -61,7 +61,7 @@ ${focus?`<div class="cx-context" aria-live="polite"><div class="cx-context-kicke
 ${ui.pickerOpen?`<div class="cx-picker" role="group" aria-label="${current.title}の部位名から選ぶ"><div class="cx-picker-title">${current.title}で選べる部位 <span>${current.paths.length}件</span></div><div class="cx-picker-grid">${namedPicker}</div></div>`:''}
 <p class="cx-science-note">部位の選択だけでは保存されません。必要なら自覚情報に追加してください。</p>
 </section>
-<section class="cx-notes-column" aria-label="自覚情報と使用品の入力"><div class="cx-notes-heading"><h2>感じたこと・使用品</h2><p class="cx-notes-current"><span>図で選択中</span> <strong>${selected.length} / 12</strong><span>部位の選択だけでは記録に残りません</span></p></div>${fields.map(f=>fieldCard(d,f)).join('')}${opts.mentalHtml||''}
+<section class="cx-notes-column" aria-label="自覚情報と使用品の入力"><div class="cx-notes-heading"><h2>感じたこと・使用品</h2><p class="cx-notes-current"><span>図で選択中</span> <strong>${selected.length} / 12</strong><span>部位の選択だけでは記録に残りません</span></p></div>${fields.map(f=>fieldCard(d,f)).join('')}
 <div class="cx-transfer"><p class="cx-transfer-status" role="status">${safe(transfer.message)}</p><button type="button" data-append-name ${transfer.disabled?'disabled':''}>選択部位名を自覚情報に追加 <span aria-hidden="true">↗</span></button></div>
 </section></div>
 <footer class="cx-footer rl-record-footer"><button class="cx-apply rl-record-return" type="button" data-apply>記録に戻る <span aria-hidden="true">→</span></button></footer>

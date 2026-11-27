@@ -1,4 +1,4 @@
-/* UX02: real Chromium/WebKit contrast + reflow matrix for all three audited surfaces.
+/* UX02: real Chromium/WebKit contrast + reflow matrix for all four audited surfaces.
  * 2 languages x 4 widths x 2 text sizes x 2 engines = 32 per screen across CI.
  * Reference backgrounds are conservative documented surface stops, not pixel sampling.
  */
@@ -36,7 +36,8 @@ const colorHex=rgb=>{
 };
 const routes=[
  {name:'settings',hash:'settings',ready:'[data-settings-v2]',target:'.s2-chevron',role:'non-text-icon',floor:'#103850',min:3},
- {name:'body',hash:'record-reflection',ready:'.cx-page',target:'.mx-label small',role:'text',floor:'#0d3d4e',min:4.5},
+ {name:'body',hash:'record-reflection',ready:'.cx-page',target:'.cx-field-title label',role:'text',floor:'#0d3d4e',min:4.5,expected:3},
+ {name:'condition',hash:'home',ready:'[data-condition-open]',target:'.hx-daily-choices label span',role:'text',floor:'#393454',min:4.5,expected:8},
  {name:'explore',hash:'exploration-tree',ready:'[data-experience-v3]',target:'.ex-node-icon',role:'non-text-icon',floor:'#155563',min:3}
 ];
 const results=[];
@@ -52,13 +53,23 @@ try{
    await page.goto(base+'#/'+route.hash,{waitUntil:'networkidle'});
    await page.locator(route.ready).first().waitFor({timeout:15000});
    if(fontPercent===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
+   if(route.name==='body')assert.equal(await page.locator('.mx-label,[data-mental-input]').count(),0,'retired answer controls must not exist');
+   if(route.name==='condition'){
+    await page.locator('[data-condition-open]').click();
+    const dialog=page.locator('.hx-condition-dialog');
+    await dialog.waitFor({timeout:15000});
+    await dialog.locator('[name="dailyChoices"][value="focus"]').check();
+    assert.equal(await dialog.locator('[name="dailyChoices"][value="focus"]').isChecked(),true);
+   }
    const nodes=page.locator(route.target);
+   if(route.expected)assert.equal(await nodes.count(),route.expected,route.name+' complete current field set');
    assert.ok(await nodes.count()>=1,route.name+' has its expected visible control');
    const styles=await nodes.evaluateAll(els=>els.map(el=>{
     const c=getComputedStyle(el),r=el.getBoundingClientRect();
     return {color:c.color,font:c.fontSize,width:r.width,left:r.left,right:r.right,visible:c.display!=='none'&&c.visibility!=='hidden'};
    }).filter(x=>x.visible&&x.width>0));
    assert.ok(styles.length>=1,route.name+' visible in '+language+' '+width+' '+fontPercent);
+   if(route.expected)assert.equal(styles.length,route.expected,route.name+' all expected labels remain visible');
    const ratios=styles.map(x=>ratio(colorHex(x.color),route.floor));
    const minRatio=Math.min(...ratios);
    assert.ok(minRatio>=route.min,route.name+' '+language+' '+width+' '+fontPercent+' '+JSON.stringify({minRatio,styles}));
@@ -68,14 +79,14 @@ try{
     lowestContrast:+minRatio.toFixed(2),conservativeReferenceBackground:route.floor});
    // Inspect exactly the states assessed, including long English and 200% text.
    if(width===320||width===390||fontPercent===200){
-    if(route.name==='body')await nodes.first().scrollIntoViewIfNeeded();
+    if(route.name==='body'||route.name==='condition')await nodes.first().scrollIntoViewIfNeeded();
     await page.screenshot({path:resolve(out,engine+'-'+language+'-'+width+'-'+fontPercent+'-'+route.name+'.png'),
      animations:'disabled',fullPage:false});
    }
   }
   await ctx.close();
  }
- assert.equal(results.length,48,'16 width/language/font settings x 3 screens per engine');
+ assert.equal(results.length,64,'16 width/language/font settings x 4 screens per engine');
  await writeFile(resolve(out,'matrix.json'),JSON.stringify({engine,conditions:results.length,
   note:'Browser-computed foreground against conservative dark panel stop; real pixel/background and native device checks remain separate.',
   results},null,2));

@@ -106,3 +106,8 @@ test('Compact result and condition use only the current public wording and retai
  assert.match(condition,/<details class="cj-local-help" data-cj-comparison-help>/);
  assert.match(result,/振り返りを書く（任意）/);
 });
+
+
+test('retired per-run response terminology cannot reappear in current authoring or result UI',()=>{
+ for(const p of ['app.js','ui/recordReviewExperience.js','ui/bodyContextExperience.js','ui/measurementExperience.js','ui/resultExperience.js','ui/annotationEditor.js','ui/annotationEditorCore.js','ui/englishResultCopy.js','ui/englishSurfaceRemainders.js','ui/englishGpsExplorationCopy.js','ui/englishFinalConditions.js'])assert.doesNotMatch(read(p),/気持ち・考える面の疲れ|任意の回答だけ再試行|今回の走りについて、気持ちや考えることの面で疲れ/);
+});

@@ -59,12 +59,12 @@ test('current bilingual mobile assets are versioned and cached consistently',()=
  const v='20261122-record-return-v1',previous='20261122-gait-learning-type-v1',shell='20261126-cleanup-v5',cacheGeneration='20261126-cleanup-v5',resultVersion='20261123-ux11-result-source-v1';
  for(const [content,asset] of [
   [index,'buttonContrastSystem.css?v=20261126-cleanup-v5'],
-  [index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact'],
+  [index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only'],
   [index,'ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'],
   [app,'gaitExperience.js?v=20261126-cleanup-v5'],
   [app,'learningExperience.js?v=20261126-cleanup-v5'],
-  [app,'englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact'],
-  [english,'englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history'],
+  [app,'englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only'],
+  [english,'englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only'],
   [sw,'runload-ui-next-shell-'+cacheGeneration],
   [sw,'ui/learningExperience.js?v=20261126-cleanup-v5'],
   [sw,'ui/gaitExperience.js?v=20261126-cleanup-v5'],

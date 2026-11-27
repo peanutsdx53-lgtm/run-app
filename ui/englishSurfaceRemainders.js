@@ -95,7 +95,7 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  'シューズ':'Shoes',
  '出所：本人入力':'Source: Entered by You',
  '出所：距離・時間から算出':'Source: Calculated from Distance and Duration',
- '既定では日付・疲労感・精神面・後日申告・自由記述・GPS経路を出力しません。本人が明示的に選んだ項目だけを追加できます。':'Dates, fatigue ratings, mental responses, later reports, personal notes, and GPS routes are excluded from output by default. Only items you explicitly select are added.',
+ '既定では日付・疲労感・後日申告・自由記述・GPS経路を出力しません。本人が明示的に選んだ項目だけを追加できます。':'Dates, fatigue ratings, later reports, personal notes, and GPS routes are excluded from output by default. Only items you explicitly select are added.',
  '算出対象':'Eligible for Calculation',
  '今回の記録・疲労感（本人申告）':'This Record and Self-Reported Fatigue',
  '保存・出力':'Save & Export',

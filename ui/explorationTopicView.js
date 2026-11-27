@@ -1,4 +1,4 @@
-import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from './explorationTopicGuides.js?v=20261111-exploration-inquiry-v1';
+import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from './explorationTopicGuides.js?v=20261111-exploration-inquiry-v1-daily-only';
 // A single question leads into evidence, interpretation and optional notes.
 // The observation guide remains an editorial prompt, not a scientific lesson.
 export function renderObservationGuide(ui,ctx,cat,topic,inquiry=''){
@@ -15,7 +15,7 @@ export function renderObservationGuide(ui,ctx,cat,topic,inquiry=''){
   '<header class="ex-inquiry-start"><small>探究の入り口</small><h3>'+text(question)+'</h3></header>'+
   '<section class="ex-inquiry-stage"><h4>記録や経験を手がかりにする</h4>'+
   '<p>'+text(guide?.record||'自分の経験や記録から、気になる点を確認します。')+'</p>'+
-  ''+
+  (cat.id==='05'&&topic==='日々のコンディション'?'<a class="ex-e-compare-link" href="#/condition">コンディションの履歴を見る</a>':'')+
   (run?'<details class="ex-inquiry-details ex-run-context"><summary>選択した走行</summary><p>'+text(run.date)+'に保存した走行の情報です。ほかの記録とは自動で結びつけません。</p>'+link+'</details>':'')+
   (inquiry?'<div class="ex-inline-inquiry">'+inquiry+'</div>':'')+'</section>'+
   '<section class="ex-inquiry-stage"><h4>記録と感覚を照らし合わせる</h4>'+

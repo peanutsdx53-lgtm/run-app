@@ -7,7 +7,7 @@ import {normalizeRecordRef,encodeTypedRecordQuery} from './recordRef.js';
 import {fatigueInquiryModel} from './explorationInquiry.js';
 import {originalFieldValue,postHocValue} from './annotationEditorCore.js';
 import {validateAnnotationPayload} from './annotationSchema.js';
-import {MENTAL_PHASES,MENTAL_BASIS} from './mentalExperience.js';
+import {ANNOTATION_PHASE_LABELS,ANNOTATION_TIME_BASIS_LABELS} from './annotationEditorCore.js';
 
 export const CONDITION_INQUIRY=Object.freeze({
  id:'T05',category:'03',topic:'気温・天候',
@@ -48,8 +48,8 @@ export function conditionInquiryModel({ref=null,record=null,reads=null}={}){
    if(item.provenance!=='POST_HOC_SELF_REPORT'||!e||
       e.fieldKey!==field||!['ADD','CORRECT'].includes(e.operation)||
       e.recordRef?.sourceType!==nr.value.sourceType||e.recordRef?.recordId!==nr.value.recordId||
-      !Object.hasOwn(MENTAL_PHASES,e.declaredPhase)||
-      !Object.hasOwn(MENTAL_BASIS,e.timeBasis)||
+      !Object.hasOwn(ANNOTATION_PHASE_LABELS,e.declaredPhase)||
+      !Object.hasOwn(ANNOTATION_TIME_BASIS_LABELS,e.timeBasis)||
       !validateAnnotationPayload(field,e.payload,{ref:nr.value,record}).ok)
     return err('READ_ERROR','走行条件の追記形式・出所が不正です',{ref:nr.value});
    posthoc=postHocValue(field,e.payload);
@@ -84,8 +84,8 @@ export function renderConditionInquiry(input={}){
      '<p>元のGPS記録：該当する本人申告欄なし</p>')+
     (r.status==='ACTIVE'?
      '<p>後日追記（本人申告）：'+esc(r.posthoc)+'</p>'+
-     '<p class="ex-e-provenance">本人が指定した対象時点：'+esc(MENTAL_PHASES[r.phase])+
-     '／申告時点区分：'+esc(MENTAL_BASIS[r.basis])+'</p>':
+     '<p class="ex-e-provenance">本人が指定した対象時点：'+esc(ANNOTATION_PHASE_LABELS[r.phase])+
+     '／申告時点区分：'+esc(ANNOTATION_TIME_BASIS_LABELS[r.basis])+'</p>':
      r.status==='RETRACTED'?
      '<p>後日の追記は撤回済みです。以前の追記本文は表示しません。</p>':
      '<p>後日の追記は未回答です。条件が存在しなかった意味ではありません。</p>')+

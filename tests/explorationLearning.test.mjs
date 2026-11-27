@@ -176,7 +176,7 @@ test('distance and pace column reads only confirmed manual runs, never an unsave
  assert.match(unchanged,/6:15 分\/km/);
 });
 
-test('all ten learning sources and eighteen prompts identify origin and prohibited causal/medical overreach',async()=>{
+test('all ten learning sources and seventeen prompts identify origin and prohibited causal/medical overreach',async()=>{
  const {EXPLORATION_LEARNING_SOURCES}=await import('../ui/explorationExperience.js');
  const {EXPLORATION_DRAFT_GUIDES,EXPLORATION_DRAFT_COUNT}=await import('../ui/explorationTopicGuides.js');
  const entries=Object.entries(EXPLORATION_LEARNING_SOURCES);
@@ -188,7 +188,7 @@ test('all ten learning sources and eighteen prompts identify origin and prohibit
   assert.ok(!e.url||e.url.startsWith('https://doi.org/'),topic+' scholarly link');
   assert.doesNotMatch(e.warning,/安全な負荷を保証|傷害を予防できる|効果が確認されました/);
  }
- assert.equal(EXPLORATION_DRAFT_COUNT,18);
+ assert.equal(EXPLORATION_DRAFT_COUNT,17);
  for(const [key,g] of Object.entries(EXPLORATION_DRAFT_GUIDES)){
   assert.equal(g.status,'design-prompt',key+' must not impersonate a validated scientific lesson');
   for(const field of ['question','record','limit','next'])assert.ok(g[field]?.trim(),key+' missing '+field);

@@ -81,7 +81,7 @@ test('opt-out of personal narration includes the stated purpose, not just observ
 
 test('report scope does not promise unavailable sensitive-data inclusion controls',()=>{
  const html=renderConsultation();
- assert.match(html,/GPS詳細軌跡・個人プロフィール・精神面の回答・後日申告・身体の違和感に関する個別メモは、このレポートで選択できません/);
+ assert.match(html,/GPS詳細軌跡・個人プロフィール・個別の任意申告・後日申告・身体の違和感に関する個別メモは、このレポートで選択できません/);
  assert.match(html,/別の方法で本人が伝えてください/);
  assert.match(html,/共有先への自動送信も行いません/);
  assert.doesNotMatch(html,/明示的な追加選択が必要です|本人が選択しない限り含めず/);

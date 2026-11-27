@@ -65,7 +65,7 @@ test('P7 print report terms accurately describe choices and never add internal r
  for(const label of ['共有レポート','参考情報','算出と共有の条件','期間の履歴'])
   assert.match(s,new RegExp('cp-report-kicker[^<]*>'+label));
  assert.doesNotMatch(s,/ACTIVITY \/ (?:SHARE REPORT|REFERENCE|EXPLANATION|HISTORY)/);
- assert.match(s,/精神面の回答・後日申告/);
+ assert.match(s,/個別の任意申告・後日申告/);
  assert.match(s,/選択内容によりページ数が変わります/);
  assert.doesNotMatch(s,/記録ID：.*record\.id/);
  for(const token of ['cp-sensitive','cp-print','参考値'])assert.ok(s.includes(token));

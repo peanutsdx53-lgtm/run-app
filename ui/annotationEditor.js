@@ -3,7 +3,7 @@ import {normalizeRecordRef,resolveRecord,encodeTypedRecordQuery} from './recordR
 import {openAnnotationStore,appendAnnotation,findAnnotationByRequestId} from './annotationStore.js';
 import {readEffectiveAnnotation} from './annotationReadModel.js';
 import {validateAnnotationPayload,digestAnnotationInput} from './annotationSchema.js';
-import {EDIT_FIELDS,SURFACES,MENTAL,GRADE,SURFACE_MODE,FORMAT,esc,parsePostHocPayload,originalFieldValue,postHocValue,makePostHocRequest} from './annotationEditorCore.js';
+import {EDIT_FIELDS,SURFACES,GRADE,SURFACE_MODE,FORMAT,esc,parsePostHocPayload,originalFieldValue,postHocValue,makePostHocRequest} from './annotationEditorCore.js';
 const err=(code,reason)=>({ok:false,code,reason});
 export function parseEditorLink(hash){
  if(typeof hash!=='string'||!hash.startsWith('#/annotation?'))return err('BAD_REF','後日補完のリンク形式が正しくありません');
@@ -21,7 +21,6 @@ const textField=(name,label,max,value='')=>`<label class="ax-field"><span>${esc(
 const NUM=(name,label,val='',max='100',min='0')=>field(name,label,'number',val,`inputmode="decimal" min="${min}" max="${max}" step="any"`);
 function editForm(fieldKey,d={}){
  const x=k=>d[k]??'';
- if(fieldKey==='mentalExperience')return '<label class="ax-field"><span>今回の走りを思い出して、気持ち・考える面の疲れを感じましたか？</span><select name="answer" required><option value="" '+(!x('answer')?'selected':'')+'>選択してください（自動選択なし）</option>'+opts(MENTAL,x('answer'))+'</select></label>'+textField('freeText','補足（任意・500字以内）',500,x('freeText'))+'<p>この3択は心理尺度・診断ではありません。</p>';
  if(['bodyObservation','shoeName','memo','environmentNote','courseName'].includes(fieldKey))return textField('text','本人の言葉による追記',fieldKey==='shoeName'||fieldKey==='courseName'?100:500,x('text'));
  if(fieldKey==='temperatureC')return NUM('celsius','気温（℃）',x('celsius'),'60','-50');
  if(fieldKey==='rofBefore'||fieldKey==='rofAfter')return field('score','ROF-J（本人の申告、0も有効）','number',x('score'),'min="0" max="10" step="1" inputmode="numeric"');
@@ -53,6 +52,7 @@ const sourceLabel={MANUAL:'手入力',GPS_V2:'GPS計測'};
 export function editorLink(ref){return '#/annotation?'+encodeTypedRecordQuery(ref)}
 /** A single request is reused after an ambiguous outcome, never a new generated ID. */
 export async function commitPostHocRequest(q,{openStore=openAnnotationStore,append=appendAnnotation,byRequest=findAnnotationByRequestId,read=readEffectiveAnnotation,resolveParent=resolveRecord}={}){
+ if(!EDIT_FIELDS.some(([k])=>k===q?.fieldKey))return err('BAD_FIELD','未定義の補完項目です');
  const nr=normalizeRecordRef(q?.recordRef);if(!nr.ok)return nr;
  const parent=await resolveParent(nr.value);if(!parent?.ok)return err('UNREADABLE_PARENT','元の保存済み走行を再確認できません');
  const checked=q.operation==='RETRACT'?{ok:true}:validateAnnotationPayload(q.fieldKey,q.payload,{ref:nr.value,record:parent.value.record});

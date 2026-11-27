@@ -27,7 +27,7 @@ test('P13 learning removes duplicate menus and progress while preserving individ
  assert.match(learn,/教材の仮想例・回答は引き継がず/);
 });
 
-test('P13 transient learning entry preserves record fields and current optional mental preview',()=>{
+test('P13 transient learning entry preserves record fields and current review',()=>{
  const exploration=read('ui/explorationExperience.js'),app=read('app.js');
  assert.match(exploration,/data-ex-learning-entry role="status"/);
  assert.match(exploration,/data-ex-entry-dismiss/);
@@ -36,10 +36,10 @@ test('P13 transient learning entry preserves record fields and current optional 
  const draft={date:'2026-11-10',distance:'6',minutes:'42',activityGait:'RUNNING'};
  const html=reviewView(draft,{source:'manual',mentalSummary:'FELT'});
  assert.doesNotMatch(html,/rr-mental-preview|任意の回答を確認・編集する/);
- assert.match(html,/data-review-mental/);
- assert.match(html,/気持ち・考える面の疲れ（任意）/);
- assert.match(html,/ROF-Jとは別の本人申告/);
- assert.match(html,/FELT/);
+ assert.doesNotMatch(html,/data-review-mental/);
+ assert.doesNotMatch(html,/気持ち・考える面の疲れ（任意）/);
+ assert.doesNotMatch(html,/ROF-Jとは別の本人申告/);
+ assert.doesNotMatch(html,/FELT/);
  assert.equal((html.match(/data-review-link=/g)||[]).length,5);
  assert.doesNotMatch(reviewView(draft,{source:'manual',mentalSummary:'未回答'}),/data-review-mental/);
  assert.match(html,/data-manual-run-save/);

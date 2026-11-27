@@ -1,7 +1,7 @@
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261124-upr-explore-gps-v1';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact';
-import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261124-upr-explore-gps-v1';
+import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261121-profile-optional-right-v1';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js';
 import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js';
@@ -9,20 +9,20 @@ import {ENGLISH_CURRICULUM_ORIGIN} from './englishCurriculumCopy.js';
 import {ENGLISH_CURRICULUM_PACE} from './englishCurriculumPace.js';
 import {ENGLISH_CURRICULUM_MOTION} from './englishCurriculumMotion.js';
 import {ENGLISH_CURRICULUM_FATIGUE} from './englishCurriculumFatigue.js';
-import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js?v=20261125-ux16-19-batch-v1';
+import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js?v=20261125-ux16-19-batch-v1-daily-only';
 import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js';
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js';
 import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1';
-import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261126-cleanup-v5';
+import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261126-cleanup-v5-daily-only';
 import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1-daily-compact';
-import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261126-cleanup-v5';
-import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5';
+import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261126-cleanup-v5-daily-only';
+import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-daily-only';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
 import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261124-upr-explore-gps-v1';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
@@ -59,7 +59,6 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "前回の保存操作と入力内容が一致しません。履歴を確認してください": "The entry does not match the previous save. Check your history.",
  "記録の保存を安全に準備できないため保存を中止しました": "Saving was stopped because the record could not be prepared safely.",
  "対象の記録を確認できません": "The selected record could not be verified.",
- "任意回答が保存されたか確認できませんでした。新しく保存せず、前回の保存結果を確認してください": "The optional response save could not be verified. Check the previous save instead of saving again.",
  "同じ元の記録に異なる内容があります": "Different content exists for the same original record.",
  "対象の記録またはその種類が正しくありません": "The selected record or its type is invalid.",
  "対象の記録とその種類が一致しません": "The selected record does not match its type.",
@@ -173,7 +172,6 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "運動後": "After Activity",
  "運動前に感じた疲れ": "Fatigue Before Activity",
  "運動後に感じた疲れ": "Fatigue After Activity",
- "気持ち・考える面の疲れ（任意）": "Mental & Cognitive Fatigue (Optional)",
  "疲労感": "Perceived Fatigue",
  "ROF-J（本人回答）": "ROF-J (self-reported)",
  "手入力": "Manual Entry",

@@ -1,10 +1,9 @@
 import {createExplorationContext, readCourseDraft} from "./explorationReadAdapter.js";
-import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from "./explorationTopicGuides.js?v=20261111-exploration-inquiry-v1";
-import {renderObservationGuide} from "./explorationTopicView.js?v=20261124-upr-explore-gps-v1";
+import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from "./explorationTopicGuides.js?v=20261111-exploration-inquiry-v1-daily-only";
+import {renderObservationGuide} from "./explorationTopicView.js?v=20261127-daily-only";
 import {isRunId,resolveOptionalNoteRunLink,visibleTopicNotes,noteRunBackLink} from "./noteRunLink.js";
 import {renderFatigueInquiry} from "./explorationInquiry.js?v=20261109-p7-wording-v1";
 import {renderComparisonInquiry} from "./explorationComparisonInquiry.js";
-import {renderMentalInquiry} from "./explorationMentalInquiry.js";
 import {renderBodyInquiry} from "./explorationBodyInquiry.js";
 import {renderConditionInquiry} from "./explorationConditionInquiry.js";
 import {renderLifeInquiry} from "./explorationLifeInquiry.js";
@@ -167,7 +166,6 @@ function renderSelectedInquiry(ui,ctx,category,topic){
  const input={ref,record};
  const id=category.id+'|'+topic;
  if(id==='01|自分が感じた疲れ')return renderFatigueInquiry(input,{allowLegacyMemo:false});
- if(id==='05|気分・ストレス')return renderMentalInquiry(input);
  if(id==='04|筋肉痛・違和感')return renderBodyInquiry(input);
  if(id==='03|気温・天候')return renderConditionInquiry(input);
  if(id==='05|日々のコンディション')return renderLifeInquiry({...input,...(ctx.lifeContext||{})});

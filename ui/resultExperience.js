@@ -1,6 +1,6 @@
 import {BODY_REGION_VIEWS} from '../assets/bodyRegionVisuals.js';
 import {bodyReferenceRow,bodyReferenceEngineId,bodyReferenceColor,bodyReferenceScale,BODY_REFERENCE_GRADIENT,renderBodyReferenceLabels,referenceReliefDefs,referenceReliefOverlays,bodyReferenceSilhouetteClipDef} from './bodyReferencePresentation.js';
-import {RESULT_STYLES,RESULT_GAIT_STYLES,RESULT_VISUAL_STYLES,RESULT_BODY_LAYOUT_STYLES,RESULT_ANATOMY_RELIEF_STYLES,RESULT_GPS_GATE_STYLES,RESULT_REFLECTION_STYLES,RESULT_ROF_AUDIT_STYLES,RESULT_QUESTION_STYLES,RESULT_UI_CLEAN_STYLES,RESULT_P6B_STYLES} from './resultInlineStyles.js?v=20261119-s09-focus-controls-v1-readable-history';
+import {RESULT_STYLES,RESULT_GAIT_STYLES,RESULT_VISUAL_STYLES,RESULT_BODY_LAYOUT_STYLES,RESULT_ANATOMY_RELIEF_STYLES,RESULT_GPS_GATE_STYLES,RESULT_REFLECTION_STYLES,RESULT_ROF_AUDIT_STYLES,RESULT_QUESTION_STYLES,RESULT_UI_CLEAN_STYLES,RESULT_P6B_STYLES} from './resultInlineStyles.js?v=20261119-s09-focus-controls-v1-readable-history-daily-only';
 import {REGIONS} from './bodyContextExperience.js';
 import {comparableRunChoices,compareSavedRuns,gaitOf} from './runReflection.js';
 import {compareBodyReferenceRows} from './regionReferenceComparison.js';
@@ -36,7 +36,7 @@ export function resultImageAnnotation({gps=false,saved=false,reference=null}={})
 }
 const M6_PRIVATE_PRINT_STYLES=`
 @media print{
- .rv4-hero-report,.rv4-date,.rv4-fatigue,.rv4-mental,.rv4-history,.rv4-next-path,.rv4-export-menu,.rv4-details:not(.rv4-region-evidence){display:none!important}
+ .rv4-hero-report,.rv4-date,.rv4-fatigue,.rv4-history,.rv4-next-path,.rv4-export-menu,.rv4-details:not(.rv4-region-evidence){display:none!important}
  .rv4-posthoc-summary{display:none!important}
   .rv4-fatigue-method{display:none!important}
  .rv4-app[data-print-rof="true"] .rv4-fatigue{display:block!important}
@@ -192,7 +192,7 @@ export function mountResult(host,inputDraft={},options={}){
  const disclosureSelectors=Object.freeze([
   '.rv4-export-menu','.rv4-header-help','.rv4-hero-sources',
   '.rv4-region-evidence','.rv4-fatigue-method','.rv4-rof-time-help','.rv4-rof-revisions','.rv4-rof-correction',
-  '.rv4-mental-details','.rv4-region-compare-method','.rv4-comparison-caution',
+  '.rv4-region-compare-method','.rv4-comparison-caution',
   '.rv4-gps-compare-method','.rv4-question-continuation',
   '.rv4-run-details','.rv4-method-disclosure'
  ]);
@@ -205,7 +205,7 @@ export function mountResult(host,inputDraft={},options={}){
  let rendered=false;
  let exportDate=false,exportRof=false;
  const origin=sourceProvenance({gps:fromGps,saved:fromSaved});
- let chosen='BA-DISP-019',view='front',tab=options.showMentalPending||options.showFatigue?'fatigue':options.showCompare?'radar':'body',picker=false,showBodyNumbers=false;
+ let chosen='BA-DISP-019',view='front',tab=options.showFatigue?'fatigue':options.showCompare?'radar':'body',picker=false,showBodyNumbers=false;
  const distance=positive(draft.distance),h=number(draft.hours),m=number(draft.minutes),s=number(draft.seconds);
  const duration=h===null&&m===null&&s===null?null:(h??0)*60+(m??0)+(s??0)/60;
  const seconds=distance!==null&&duration>0?Math.round(duration*60/distance):null;
@@ -343,11 +343,6 @@ export function mountResult(host,inputDraft={},options={}){
  };
  const fatigue=()=>!hasInput?'<section class="rv4-card rv4-fatigue rv4-empty-card" data-pane="fatigue"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2></div></div><p class="rv4-empty-note">疲労感の回答はありません。</p></section>':'<section class="rv4-card rv4-fatigue" data-pane="fatigue" data-rof-time-status="unverified"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2><p class="rv4-fatigue-caption" data-source-rof>自分で回答した疲労感（0〜10）</p></div></div>'+fatigueScale()+'<details class="rv4-fatigue-method"><summary>'+(fromSaved&&options.record?.rofEvidence?'疲労感の見方・回答履歴・訂正':fromGps?'疲労感の見方・回答履歴':'疲労感の見方')+'</summary><div class="rv4-fatigue-method-content"><p><strong>疲労感の評価方法（ROF-J）</strong></p><p>感じている疲労感を0〜10で回答する日本語版の尺度です。</p><p>'+ROF_J_ANCHORS.filter(a=>Number.isInteger(a.position)).map(a=>'<span>'+clean(a.positionLabel)+'</span>: <span>'+clean(a.descriptor)+'</span>').join('<br>')+'</p><p><a href="'+clean(ROF_J_RIGHTS.scaleUrl)+'" target="_blank" rel="noopener noreferrer">'+clean(ROF_J_RIGHTS.scale)+'</a></p><p>'+(fromGps?'GPSが測定した疲労感ではなく、本人の回答です。入力操作時刻は評価・発生時刻の実測ではないため、時間的な差や原因は判定しません。':'「運動前／後」は回答区分です。入力操作時刻と本人申告の評価時刻を記録しますが、実際の時間的な順序が検証できないため、変化量や原因は判定しません。')+'未回答は「—」で、0と区別します。</p>'
  +responseHistory()+'</div></details></section>';
- const mentalCard=()=>!options.mentalRef?'':'<section class="rv4-card rv4-mental" data-mental-pane aria-label="気持ち・考える面の疲れ（任意）">'+
- '<details class="rv4-mental-details" '+(options.showMentalPending?'open':'')+'><summary><h3>気持ち・考える面の疲れ（任意）</h3><span aria-hidden="true">⌄</span></summary>'+
- '<div class="rv4-mental-response" data-mental-result role="status">'+
- (options.getMentalHtml?.()||options.mentalHtml||'本人の任意回答を確認しています…')+
- '</div></details></section>';
  const radar=()=>{
   const sameKind=(a,b)=>a.date===b.date&&a.distanceKm===b.distanceKm&&gaitOf(a)===gaitOf(b);
   const optionsHtml=choices.map(r=>{
@@ -419,7 +414,7 @@ export function mountResult(host,inputDraft={},options={}){
  };
  const resultActions=()=>!hasInput&&!options.annotationLink?'':'<div class="rv4-actions"><details class="rv4-export-menu"><summary><span>操作</span><span class="rv4-export-chevron" aria-hidden="true"></span></summary><div class="rv4-export-options">'+
    (options.annotationLink?'<a class="rv4-posthoc-entry" data-posthoc-entry href="'+clean(options.annotationLink)+'">記録に情報を追加（任意）</a>':'')+
-   (hasInput?'<p class="rv4-export-heading">保存・出力</p><button type="button" data-download '+(!(distance!==null&&duration>0)?'disabled':'')+'>画像で保存</button><button type="button" data-print>印刷</button><div class="rv4-export-privacy"><label><input type="checkbox" data-export-date '+(exportDate?'checked':'')+'>日付を画像に含める（任意）</label><label><input type="checkbox" data-export-rof '+(exportRof?'checked':'')+'>自分で回答した疲労感を画像・印刷に含める（任意）</label><small>既定では日付・疲労感・精神面・後日申告・自由記述・GPS経路を出力しません。本人が明示的に選んだ項目だけを追加できます。</small><p class="rv4-export-status" data-export-status role="status" aria-live="polite" hidden></p></div>':'')+
+   (hasInput?'<p class="rv4-export-heading">保存・出力</p><button type="button" data-download '+(!(distance!==null&&duration>0)?'disabled':'')+'>画像で保存</button><button type="button" data-print>印刷</button><div class="rv4-export-privacy"><label><input type="checkbox" data-export-date '+(exportDate?'checked':'')+'>日付を画像に含める（任意）</label><label><input type="checkbox" data-export-rof '+(exportRof?'checked':'')+'>自分で回答した疲労感を画像・印刷に含める（任意）</label><small>既定では日付・疲労感・後日申告・自由記述・GPS経路を出力しません。本人が明示的に選んだ項目だけを追加できます。</small><p class="rv4-export-status" data-export-status role="status" aria-live="polite" hidden></p></div>':'')+
    '</div></details></div>';
  const sourceDetails=()=>'<details class="rv4-hero-sources"><summary>記録の出所を確認</summary><div class="rv4-hero-source-grid">'+
  '<p><strong>距離</strong><span data-source-distance>出所：'+clean(origin.distance)+'</span></p>'+
@@ -453,7 +448,7 @@ export function mountResult(host,inputDraft={},options={}){
     if(control)draftState.set(selector,control.value);
    }
   }
-  app.innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1></div>'+resultActions()+reflectionPath()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+mentalCard()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+conditionLink()+reflectionInvite()+'</div>';
+  app.innerHTML='<div class="rv4-frame"><header class="rv4-header"><div class="rv4-header-left"><h1>結果</h1></div>'+resultActions()+reflectionPath()+'</header>'+hero()+(hasInput?'':resultNotice())+missingActivityPanel()+nav()+'<div class="rv4-grid" data-tab-state="'+tab+'">'+body()+'<div class="rv4-side">'+fatigue()+radar()+'</div></div>'+(options.getPostHocHtml?'<section class="rv4-posthoc-summary" data-posthoc-summary aria-label="記録時と後日申告の区別">'+options.getPostHocHtml()+'</section>':'')+conditionLink()+reflectionInvite()+'</div>';
   for(const [selector,open] of openState){
    const el=app.querySelector(selector);
    if(el)el.open=open;
@@ -567,7 +562,6 @@ export function mountResult(host,inputDraft={},options={}){
       root.querySelector('[data-reference-compare-region]')?.focus({preventScroll:true});
     }
   });
-  root.querySelector('[data-mental-result]')?.addEventListener('click',e=>{if(e.target.closest('[data-mental-retry]'))options.onRetryMental?.()});
   root.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;draw();root.querySelector('[data-tab="'+tab+'"]')?.focus({preventScroll:true})}));
   root.querySelector('[data-picker-toggle]')?.addEventListener('click',()=>{picker=!picker;draw();root.querySelector('[data-picker-toggle]')?.focus({preventScroll:true})});
   root.querySelector('[data-print]')?.addEventListener('click',()=>window.print());

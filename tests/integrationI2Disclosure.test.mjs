@@ -21,7 +21,7 @@ test('I2: opt-in is per-export, zero remains a value, and sensitive prose is nev
 test('I2: printable opt-in to ROF must not opt-in to evidence timestamps or correction history',()=>{
  const ui=readFileSync(new URL('../ui/resultExperience.js',import.meta.url),'utf8');
  assert.match(ui,/\.rv4-posthoc-summary\{display:none!important\}/);
- assert.match(ui,/\.rv4-mental,\.rv4-history/);
+ assert.match(ui,/\.rv4-fatigue,\.rv4-history/);assert.doesNotMatch(ui,/rv4-mental|data-mental-result/);
  assert.match(ui,/\.rv4-app\[data-print-rof="true"\] \.rv4-fatigue\{display:block!important\}/);
  assert.match(ui,/\.rv4-fatigue-method\{display:none!important\}/,
   'ROF answer permission is not permission to print individual correction reasons and timestamps');
