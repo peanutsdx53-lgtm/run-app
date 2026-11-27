@@ -290,6 +290,9 @@ try{
  await page.goto(host+'#/result?record='+encodeURIComponent(sameDayB),{waitUntil:'networkidle'});
  await page.locator('[data-tab="fatigue"]').click();
  await page.locator('.rv4-fatigue-method > summary').click();
+ const correctionToggle=page.locator('.rv4-rof-correction > summary');
+ await correctionToggle.click();
+ assert.ok(await page.locator('[data-rof-correct-phase]').isVisible(),'correction is accessible through its disclosure');
  await page.locator('[data-rof-correct-phase]').selectOption('before');
  await page.locator('[data-rof-correct-score]').fill('0');
  await page.locator('[data-rof-correct-basis]').selectOption('AT_ENTRY');
@@ -309,7 +312,13 @@ try{
  await page.reload({waitUntil:'networkidle'});
  await page.locator('[data-tab="fatigue"]').click();
  await page.locator('.rv4-fatigue-method > summary').click();
- assert.match(await page.locator('.rv4-rof-audit').innerText(),/訂正履歴 1件/);
+ assert.equal(await page.locator('.rv4-rof-revision-count strong').innerText(),'1');
+ assert.equal(await page.locator('.rv4-rof-correction').evaluate(el=>el.open),false,'form remains closed after reload');
+ await page.locator('.rv4-rof-revisions > summary').click();
+ assert.equal(await page.locator('.rv4-rof-revisions time').count(),1);
+ assert.equal(await page.locator('.rv4-rof-revisions [data-user-authored]').innerText(),'本人の回答');
+ await correctionToggle.click();
+ assert.ok(await page.locator('[data-rof-correct-phase]').isVisible(),'correction is accessible through its disclosure');
  await page.locator('[data-rof-correct-phase]').selectOption('before');
  await page.locator('[data-rof-correct-score]').fill('');
  await page.locator('[data-rof-correct-basis]').selectOption('UNKNOWN');

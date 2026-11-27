@@ -24,9 +24,7 @@ test('desktop ROF-J corrections, timestamps, and source limits translate without
  for(const phrase of phrases)assert.doesNotMatch(translateUiText(phrase),/[ぁ-ゟァ-ヿ一-龯]/);
  assert.match(translateUiText(phrases[2]),/chronological order is not verified/);
  assert.match(translateUiText(phrases[3]),/neither actual timing differences nor causes are measured/);
- assert.equal(translateUiText('訂正履歴 0件。訂正前の回答も保存されています。'),'Revision History: 0 Entries. Earlier responses are also retained.');
- const when='運動前：入力 不明／評価（本人申告） 不明／評価時点の扱い：評価時点は不明';
- assert.equal(translateUiText(when),'Before: Entered Unknown / Self-reported Assessment Unknown / Timing Basis: Assessment time unknown');
- assert.equal(translateUiText('運動開始（本人申告）：不明／運動終了（本人申告）：不明'),'Activity Start (Self-reported): Unknown / Activity End (Self-reported): Unknown');
- assert.equal(translateUiText('運動前：入力 不明／評価（本人申告） 不明／評価時点の扱い：未登録の値'),'運動前：入力 不明／評価（本人申告） 不明／評価時点の扱い：未登録の値');
+ for(const [ja,en] of [['回答履歴','Response History'],['入力日時','Entry time'],['評価日時（本人申告）','Assessment time (self-reported)'],['回答を訂正する','Correct a response'],['端末のタイムゾーンで表示しています。',"Times are shown in your device's time zone."]])assert.equal(translateUiText(ja),en);
+ const obsolete='運動前：入力 不明／評価（本人申告） 不明／評価時点の扱い：評価時点は不明';
+ assert.equal(translateUiText(obsolete),obsolete,'retired concatenated translation is not kept');
 });

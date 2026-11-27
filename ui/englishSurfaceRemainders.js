@@ -459,18 +459,5 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
   const gait={'ランニング':'Running','ウォーキング':'Walking','ジョギング':'Jogging'}[m[1]]||m[1];
   return 'Activity: '+gait+'. Average Speed: '+m[2]+' m/s. Values are calculated only for '+m[3]+' of 12 regions meeting the source-study conditions; road surface and grade do not numerically adjust them. Each color shows the difference from that region’s own study reference of 100, not danger or rankings between regions. These values do not directly measure the individual’s physical tissue load.';
  }
- // The result's desktop disclosure is assembled from verified values, never user notes.
- if((m=s.match(/^訂正履歴 (\d+)件。訂正前の回答も保存されています。$/)))
-  return 'Revision History: '+m[1]+' Entries. Earlier responses are also retained.';
- if((m=s.match(/^(運動前|運動後)：入力 ([^／]+)／評価（本人申告） ([^／]+)／評価時点の扱い：(.+)$/))){
-  const basis={'評価時点は不明':'Assessment time unknown','入力した時点で評価':'Assessed at entry','過去の状態を思い出して申告':'Retrospective self-report'}[m[4]];
-  if(!basis)return null;
-  const when=s=>s==='不明'?'Unknown':s;
-  return (m[1]==='運動前'?'Before':'After')+': Entered '+when(m[2])+' / Self-reported Assessment '+when(m[3])+' / Timing Basis: '+basis;
- }
- if((m=s.match(/^運動開始（本人申告）：([^／]+)／運動終了（本人申告）：(.+)$/))){
-  const when=s=>s==='不明'?'Unknown':s;
-  return 'Activity Start (Self-reported): '+when(m[1])+' / Activity End (Self-reported): '+when(m[2]);
- }
  return null;
 }

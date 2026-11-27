@@ -1,6 +1,6 @@
 import {BODY_REGION_VIEWS} from '../assets/bodyRegionVisuals.js';
 import {bodyReferenceRow,bodyReferenceEngineId,bodyReferenceColor,bodyReferenceScale,BODY_REFERENCE_GRADIENT,renderBodyReferenceLabels,referenceReliefDefs,referenceReliefOverlays,bodyReferenceSilhouetteClipDef} from './bodyReferencePresentation.js';
-import {RESULT_STYLES,RESULT_GAIT_STYLES,RESULT_VISUAL_STYLES,RESULT_BODY_LAYOUT_STYLES,RESULT_ANATOMY_RELIEF_STYLES,RESULT_GPS_GATE_STYLES,RESULT_REFLECTION_STYLES,RESULT_ROF_AUDIT_STYLES,RESULT_QUESTION_STYLES,RESULT_UI_CLEAN_STYLES,RESULT_P6B_STYLES} from './resultInlineStyles.js?v=20261119-s09-focus-controls-v1-readable';
+import {RESULT_STYLES,RESULT_GAIT_STYLES,RESULT_VISUAL_STYLES,RESULT_BODY_LAYOUT_STYLES,RESULT_ANATOMY_RELIEF_STYLES,RESULT_GPS_GATE_STYLES,RESULT_REFLECTION_STYLES,RESULT_ROF_AUDIT_STYLES,RESULT_QUESTION_STYLES,RESULT_UI_CLEAN_STYLES,RESULT_P6B_STYLES} from './resultInlineStyles.js?v=20261119-s09-focus-controls-v1-readable-history';
 import {REGIONS} from './bodyContextExperience.js';
 import {comparableRunChoices,compareSavedRuns,gaitOf} from './runReflection.js';
 import {compareBodyReferenceRows} from './regionReferenceComparison.js';
@@ -11,8 +11,9 @@ import {isRunId,linkedReflectionNotes} from './noteRunLink.js';
 import {resultExportDisclosure,sourceProvenance} from './resultSharingPolicy.js';
 import {englishResultImageCopy} from './englishResultExport.js';
 import {ROF_J_ANCHORS,ROF_J_RIGHTS} from './rofJScale.js';
+import {formatLocalInstant} from './localInstantDisplay.js';
 const clean=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const ROF_TIME_BASIS_DISPLAY=Object.freeze({UNKNOWN:'評価時点は不明',AT_ENTRY:'入力した時点で評価',RECALLED:'過去の状態を思い出して申告'});
+const ROF_TIME_BASIS_DISPLAY=Object.freeze({AT_ENTRY:'入力した時点で評価',RECALLED:'過去の状態を思い出して申告'});
 const number=v=>v===null||v===undefined||String(v).trim()===''?null:Number.isFinite(Number(v))?Number(v):null;
 const positive=v=>{const n=number(v);return n!==null&&n>0?n:null};
 const format=(n,d=0)=>n===null||!Number.isFinite(n)?'—':n.toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -175,7 +176,7 @@ export function mountResult(host,inputDraft={},options={}){
  // Explicitly bounded to known controls: never persist drafts or mix different runs.
  const disclosureSelectors=Object.freeze([
   '.rv4-export-menu','.rv4-header-help','.rv4-hero-sources',
-  '.rv4-region-evidence','.rv4-fatigue-method','.rv4-rof-audit details',
+  '.rv4-region-evidence','.rv4-fatigue-method','.rv4-rof-time-help','.rv4-rof-revisions','.rv4-rof-correction',
   '.rv4-mental-details','.rv4-region-compare-method','.rv4-comparison-caution',
   '.rv4-gps-compare-method','.rv4-question-continuation',
   '.rv4-details:not(.rv4-region-evidence)','.rv4-method-disclosure'
@@ -307,14 +308,26 @@ export function mountResult(host,inputDraft={},options={}){
  const fatigueScale=()=>'<div class="rv4-fatigue-scale" role="group" aria-label="自分で回答した疲労感（0〜10）">'+
    fatigueScaleRow('before',before)+fatigueScaleRow('after',after)+
    '<div class="rv4-fatigue-scale-axis" aria-hidden="true"><span>0</span><span>5</span><span>10</span></div></div>';
- const fatigue=()=>!hasInput?'<section class="rv4-card rv4-fatigue rv4-empty-card" data-pane="fatigue"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2></div></div><p class="rv4-empty-note">疲労感の回答はありません。</p></section>':'<section class="rv4-card rv4-fatigue" data-pane="fatigue" data-rof-time-status="unverified"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2><p class="rv4-fatigue-caption" data-source-rof>自分で回答した疲労感（0〜10）</p></div></div>'+fatigueScale()+'<details class="rv4-fatigue-method"><summary>'+(fromSaved&&options.record?.rofEvidence?'疲労感の見方・回答履歴・訂正':fromGps?'疲労感の見方・回答履歴':'疲労感の見方')+'</summary><div class="rv4-fatigue-method-content"><p><strong>疲労感の評価方法（ROF-J）</strong></p><p>感じている疲労感を0〜10で回答する日本語版の尺度です。</p><p>'+ROF_J_ANCHORS.filter(a=>Number.isInteger(a.position)).map(a=>'<span>'+clean(a.positionLabel)+'</span>: <span>'+clean(a.descriptor)+'</span>').join('<br>')+'</p><p><a href="'+clean(ROF_J_RIGHTS.scaleUrl)+'" target="_blank" rel="noopener noreferrer">'+clean(ROF_J_RIGHTS.scale)+'</a></p><p>'+(fromGps?'GPSが測定した疲労感ではなく、本人の回答です。入力操作時刻は評価・発生時刻の実測ではないため、時間的な差や原因は判定しません。':'「運動前／後」は回答区分です。入力操作時刻と本人申告の評価時刻を記録しますが、実際の時間的な順序が検証できないため、変化量や原因は判定しません。')+'未回答は「—」で、0と区別します。</p>'
- +(fromGps&&gps.experience?'<section class="rv4-rof-audit"><h3>GPS時の入力操作時刻</h3><p>運動前の入力：'+clean(gps.experience.beforeCapturedAt||'未回答・不明')+'</p><p>運動後の入力：'+clean(gps.experience.afterCapturedAt||'未回答・不明')+'</p></section>':'')
- +(fromSaved&&options.record?.rofEvidence?'<section class="rv4-rof-audit"><h3>保存された回答時刻・訂正履歴</h3><p>取得時刻は端末での入力操作の時刻、評価時刻は本人申告です。実測的な保証ではありません。</p>'+
- ['before','after'].map(phase=>{const e=options.record.rofCorrections?.filter(x=>x.phase===phase).at(-1)?.next||options.record.rofEvidence[phase];return '<p>'+(phase==='before'?'運動前':'運動後')+'：入力 '+clean(e?.capturedAt||'不明')+'／評価（本人申告） '+clean(e?.assessedAt||'不明')+'／評価時点の扱い：'+clean(ROF_TIME_BASIS_DISPLAY[e?.timeBasis]||'不明')+'</p>'}).join('')+
- '<p>運動開始（本人申告）：'+clean(options.record.exerciseTiming?.startedAt||'不明')+'／運動終了（本人申告）：'+clean(options.record.exerciseTiming?.endedAt||'不明')+'</p><p>訂正履歴 '+(options.record.rofCorrections?.length||0)+'件。訂正前の回答も保存されています。</p>'+
- (options.record.rofCorrections?.length?'<details><summary>訂正履歴を開く</summary>'+options.record.rofCorrections.map(x=>'<p>'+clean(x.changedAt)+' '+clean(x.phase==='before'?'運動前':'運動後')+'：'+clean(x.from??'未回答')+' → '+clean(x.to??'未回答')+'／'+clean(x.reason||'理由未記入')+'</p>').join('')+'</details>':'')+
+ const instant=value=>{
+  const display=formatLocalInstant(value,{language:document.documentElement.lang==='en'?'en':'ja'});
+  return display?'<time datetime="'+clean(value)+'"><span>'+clean(display.date)+'</span> <span>'+clean(display.time)+'</span> <small>'+clean(display.offset)+'</small></time>':'<span>不明</span>';
+ };
+ const timeField=(label,value)=>'<div class="rv4-rof-time-field"><dt>'+label+'</dt><dd>'+instant(value)+'</dd></div>';
+ const responseTimeCard=(phase,e,score,gpsOnly=false)=>'<section class="rv4-rof-time-card"><h4><span>'+(phase==='before'?'運動前':'運動後')+'</span><strong>'+(score===null?'未回答':clean(score)+' / 10')+'</strong></h4><dl>'+timeField('入力日時',e?.capturedAt)+(gpsOnly?'':timeField('評価日時（本人申告）',e?.assessedAt)+(ROF_TIME_BASIS_DISPLAY[e?.timeBasis]?'<div class="rv4-rof-time-field"><dt>評価方法</dt><dd>'+ROF_TIME_BASIS_DISPLAY[e.timeBasis]+'</dd></div>':''))+'</dl></section>';
+ const correctionForm=()=>'<details class="rv4-rof-correction"><summary>回答を訂正する</summary>'+
  '<div class="rv4-rof-correct-form"><label>訂正する区分<select data-rof-correct-phase><option value="before">運動前</option><option value="after">運動後</option></select></label><label>訂正後の値（空欄は未回答）<input data-rof-correct-score type="number" min="0" max="10" step="1" placeholder="未回答"></label>'+
- '<label>評価時点（本人申告）<select data-rof-correct-basis><option value="UNKNOWN">不明</option><option value="AT_ENTRY">今、この画面で評価した</option><option value="RECALLED">過去の状態を思い出して入力</option></select></label><label>過去の評価日時（任意・本人申告）<input data-rof-correct-assessed type="datetime-local"></label><label>訂正理由（任意）<input data-rof-correct-reason maxlength="140"></label><button type="button" data-rof-correct-save>訂正して履歴を保存</button></div></section>':'')+'</div></details></section>';
+ '<label>評価時点（本人申告）<select data-rof-correct-basis><option value="UNKNOWN">不明</option><option value="AT_ENTRY">今、この画面で評価した</option><option value="RECALLED">過去の状態を思い出して入力</option></select></label><label>過去の評価日時（任意・本人申告）<input data-rof-correct-assessed type="datetime-local"></label><label>訂正理由（任意）<input data-rof-correct-reason maxlength="140"></label><button type="button" data-rof-correct-save>訂正して履歴を保存</button></div>'+'</details>';
+ const responseHistory=()=>{
+  if(fromGps&&gps.experience)return '<section class="rv4-rof-audit"><h3>GPS時の入力操作時刻</h3><p>端末のタイムゾーンで表示しています。</p><div class="rv4-rof-time-grid">'+responseTimeCard('before',{capturedAt:gps.experience.beforeCapturedAt},before,true)+responseTimeCard('after',{capturedAt:gps.experience.afterCapturedAt},after,true)+'</div></section>';
+  if(!fromSaved||!options.record?.rofEvidence)return '';
+  const record=options.record,corrections=record.rofCorrections||[];
+  const evidence=phase=>corrections.filter(x=>x.phase===phase).at(-1)?.next||record.rofEvidence[phase];
+  const scoreText=value=>value===null||value===undefined?'<span>未回答</span>':'<span>'+clean(value)+' / 10</span>';
+  return '<section class="rv4-rof-audit"><h3>回答履歴</h3><details class="rv4-rof-time-help"><summary>日時の見方</summary><p>入力日時は端末に回答を入力した日時です。評価日時は本人が申告した日時です。運動との実際の前後関係は確認されていません。</p></details><div class="rv4-rof-time-grid">'+responseTimeCard('before',evidence('before'),before)+responseTimeCard('after',evidence('after'),after)+'</div><section class="rv4-rof-time-card rv4-rof-exercise"><h4>運動日時（本人申告）</h4><dl>'+timeField('開始',record.exerciseTiming?.startedAt)+timeField('終了',record.exerciseTiming?.endedAt)+'</dl></section><p class="rv4-rof-zone">端末のタイムゾーンで表示しています。</p><div class="rv4-rof-revision-count"><span>訂正履歴</span><strong>'+corrections.length+'</strong></div>'+
+   (corrections.length?'<details class="rv4-rof-revisions"><summary>訂正履歴を開く</summary><p>訂正前の回答も保存されています。</p>'+corrections.map(x=>'<section class="rv4-rof-time-card"><h4>'+(x.phase==='before'?'運動前':'運動後')+'</h4><dl>'+timeField('訂正日時',x.changedAt)+'<div class="rv4-rof-time-field"><dt>訂正した値</dt><dd>'+scoreText(x.from)+' → '+scoreText(x.to)+'</dd></div><div class="rv4-rof-time-field"><dt>訂正理由</dt><dd>'+(x.reason?'<span data-user-authored>'+clean(x.reason)+'</span>':'<span>理由未記入</span>')+'</dd></div></dl></section>').join('')+'</details>':'')+correctionForm()+'</section>';
+ };
+ const fatigue=()=>!hasInput?'<section class="rv4-card rv4-fatigue rv4-empty-card" data-pane="fatigue"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2></div></div><p class="rv4-empty-note">疲労感の回答はありません。</p></section>':'<section class="rv4-card rv4-fatigue" data-pane="fatigue" data-rof-time-status="unverified"><div class="rv4-card-heading"><span class="rv4-icon warm">'+icon('fatigue')+'</span><div><h2>疲労感の記録</h2><p class="rv4-fatigue-caption" data-source-rof>自分で回答した疲労感（0〜10）</p></div></div>'+fatigueScale()+'<details class="rv4-fatigue-method"><summary>'+(fromSaved&&options.record?.rofEvidence?'疲労感の見方・回答履歴・訂正':fromGps?'疲労感の見方・回答履歴':'疲労感の見方')+'</summary><div class="rv4-fatigue-method-content"><p><strong>疲労感の評価方法（ROF-J）</strong></p><p>感じている疲労感を0〜10で回答する日本語版の尺度です。</p><p>'+ROF_J_ANCHORS.filter(a=>Number.isInteger(a.position)).map(a=>'<span>'+clean(a.positionLabel)+'</span>: <span>'+clean(a.descriptor)+'</span>').join('<br>')+'</p><p><a href="'+clean(ROF_J_RIGHTS.scaleUrl)+'" target="_blank" rel="noopener noreferrer">'+clean(ROF_J_RIGHTS.scale)+'</a></p><p>'+(fromGps?'GPSが測定した疲労感ではなく、本人の回答です。入力操作時刻は評価・発生時刻の実測ではないため、時間的な差や原因は判定しません。':'「運動前／後」は回答区分です。入力操作時刻と本人申告の評価時刻を記録しますが、実際の時間的な順序が検証できないため、変化量や原因は判定しません。')+'未回答は「—」で、0と区別します。</p>'
+ +responseHistory()+'</div></details></section>';
  const mentalCard=()=>!options.mentalRef?'':'<section class="rv4-card rv4-mental" data-mental-pane aria-label="気持ち・考える面の疲れ（任意）">'+
  '<details class="rv4-mental-details" '+(options.showMentalPending?'open':'')+'><summary><h3>気持ち・考える面の疲れ（任意）</h3><span aria-hidden="true">⌄</span></summary>'+
  '<div class="rv4-mental-response" data-mental-result role="status">'+

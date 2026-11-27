@@ -26,7 +26,7 @@ const evidence=[];
 const forbidden=/RunLoad|ランロード|研究Current|研究用の出典台帳|Reference-100|モデル内の原著ID|研究台帳参照|試行教材|補助教材（試行版）/i;
 try{
  for(const width of [320,390,414,768,1440])for(const lang of ['ja','en']){
-  const ctx=await browser.newContext({viewport:{width,height:900},locale:lang==='ja'?'ja-JP':'en-US',reducedMotion:'reduce',serviceWorkers:'block'});
+  const ctx=await browser.newContext({viewport:{width,height:900},locale:lang==='ja'?'ja-JP':'en-US',timezoneId:lang==='ja'?'Asia/Tokyo':'America/New_York',reducedMotion:'reduce',serviceWorkers:'block'});
   await ctx.addInitScript(language=>{
    localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language}));
    localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({language,textSize:'standard',motion:'system'}));
@@ -36,7 +36,7 @@ try{
   const id=await page.evaluate(async()=>{
    const [canonical,manual]=await Promise.all([import('./ui/manualRunCanonical.js'),import('./ui/manualRunStore.js')]);
    const init=await canonical.refresh();if(!init.ok)throw Error(init.reason);
-   const saved=await canonical.mutate(s=>manual.saveManualRun(s,{date:'2026-11-26',distance:'5',hours:'',minutes:'30',seconds:'',activityGait:'RUNNING',runningFormat:'UNKNOWN',rofBefore:3,rofAfter:7,stepsProvenance:'UNKNOWN'}));
+   const saved=await canonical.mutate(s=>manual.saveManualRun(s,{date:'2026-11-26',distance:'5',hours:'',minutes:'30',seconds:'',activityGait:'RUNNING',runningFormat:'UNKNOWN',rofBefore:3,rofAfter:7,stepsProvenance:'UNKNOWN',rofEntryEvidence:{before:{capturedAt:'2026-11-27T03:33:02.176Z',assessedAt:null,timeBasis:'UNKNOWN'},after:{capturedAt:'2026-11-27T03:33:04.476Z',assessedAt:null,timeBasis:'UNKNOWN'}},exerciseTimingDraft:{startedAt:'2026-11-27T03:33:00.000Z',endedAt:'2026-11-27T04:03:00.000Z'}}));
    if(!saved.ok)throw Error(saved.reason);
    return saved.record.id;
   });
@@ -88,11 +88,27 @@ try{
    assert.doesNotMatch(await fatigue.innerText(),forbidden);
    await fatigue.scrollIntoViewIfNeeded();
    await page.screenshot({path:resolve(out,'fatigue-'+suffix+'.png'),fullPage:true,animations:'disabled'});
-   await disclosure.locator('summary').click();
+   await disclosure.locator(':scope > summary').click();
    assert.equal(await disclosure.evaluate(el=>el.open),true);
    assert.match(await disclosure.innerText(),/ROF-J/);
    assert.equal(await disclosure.locator('a[href="https://link.springer.com/article/10.1186/s40798-026-01108-8"]').count(),1);
-   assert.ok(await disclosure.locator('[data-rof-correct-score]').isVisible(),'correction remains available');
+   const history=disclosure.locator('.rv4-rof-audit');
+   assert.equal(await history.locator('.rv4-rof-time-grid .rv4-rof-time-card').count(),2);
+   const entry=history.locator('time[datetime="2026-11-27T03:33:02.176Z"]');
+   assert.equal(await entry.count(),1);
+   assert.deepEqual(await entry.locator('span').allInnerTexts(),lang==='ja'?['2026/11/27','12:33:02']:['26 Nov 2026','22:33:02']);
+   assert.equal(await entry.locator('small').innerText(),lang==='ja'?'UTC+9':'UTC-5');
+   assert.equal(await history.locator('time[datetime="2026-11-27T04:03:00.000Z"]').count(),1);
+   assert.equal(await history.locator('.rv4-rof-time-grid .rv4-rof-time-field').count(),4);
+
+   const correction=history.locator('.rv4-rof-correction');
+   assert.equal(await correction.evaluate(e=>e.open),false);
+   assert.equal(await correction.locator('[data-rof-correct-score]').isVisible(),false);
+   assert.doesNotMatch(await history.innerText(),/\d{4}-\d{2}-\d{2}T\d{2}:|\.\d{3}Z|評価時点は不明/);
+   if(lang==='en')assert.doesNotMatch(await history.innerText(),/[ぁ-ゟァ-ヿ一-龯]/,'history labels must translate');
+   await page.screenshot({path:resolve(out,'fatigue-history-'+suffix+'.png'),fullPage:true,animations:'disabled'});
+   await correction.locator(':scope > summary').click();
+   assert.ok(await correction.locator('[data-rof-correct-score]').isVisible(),'correction remains available on request');
    const anchors=await disclosure.locator('.rv4-fatigue-method-content>p').allInnerTexts();
    if(lang==='en')assert.doesNotMatch(anchors.join(' '),/[ぁ-ゟァ-ヿ一-龯]/,'English scale description and limits must be translated');
    const fatigueLayout=await fatigue.evaluate(el=>{
@@ -102,7 +118,8 @@ try{
    assert.ok(fatigueLayout.left>=-2&&fatigueLayout.right<=width+2&&fatigueLayout.scroll<=fatigueLayout.client+2&&fatigueLayout.document<=width+2&&fatigueLayout.body<=width+2,'fatigue disclosure clipped '+JSON.stringify(fatigueLayout));
    await page.screenshot({path:resolve(out,'fatigue-detail-'+suffix+'.png'),fullPage:true,animations:'disabled'});
    evidence.push({width,lang,zoom,layout,fatigueLayout,pass:true});
-   await disclosure.locator('summary').click();
+   await correction.locator(':scope > summary').click();
+   await disclosure.locator(':scope > summary').click();
   }
   assert.deepEqual(errors,[],'browser errors '+lang+' '+width);
   await ctx.close();
