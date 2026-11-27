@@ -146,6 +146,43 @@ try{
     }
    }
   }
+  // Stage 3: explicitly choose an independent day with no sleep input.
+  // Verify the real English DOM and the exact-day link rather than a static copy fixture.
+  if(width===390){
+   const saved=await page.evaluate(async()=>{
+    const home=await import('/ui/homeExperience.js');
+    const result=home.saveCondition(localStorage,{date:'2026-11-19',sleepMinutes:null,feeling:'',memo:'良い',dailyState:{choices:['focus','motivation'],recordedAt:'2026-11-19T01:02:03.000Z'}});
+    if(!result.ok)throw Error(result.reason);
+    return localStorage.getItem(home.CONDITION_KEY);
+   });
+   const query=new URLSearchParams({category:'05',topic:'日々のコンディション',source:'manual',record:selectedRun});
+   await page.goto(base+'#/exploration-tree?'+query.toString(),{waitUntil:'networkidle'});
+   const panel=page.locator('[data-e-life-inquiry="T06"]');
+   await page.waitForFunction(()=>document.querySelector('[data-e-life-inquiry="T06"]')?.dataset.eState==='NEED_SELECTION');
+   assert.equal(await panel.locator('[data-user-authored]').count(),0);
+   assert.doesNotMatch(await panel.innerText(),/Difficulty concentrating|Low motivation/);
+   await panel.locator('[data-e-life-date]').fill('2026-11-19');
+   await panel.locator('[data-e-life-kind="life"]').click();
+   await page.waitForFunction(()=>document.querySelector('[data-e-life-inquiry="T06"]')?.dataset.eState==='READY'&&document.querySelector('[data-e-life-evidence]')?.textContent.includes('Selected daily record'));
+   assert.equal(await panel.locator('[data-e-life-date]').inputValue(),'2026-11-19');
+   assert.equal(await panel.locator('[data-user-authored]').innerText(),'良い');
+   const generated=await panel.locator('[data-e-life-evidence]').evaluate(el=>{
+    const copy=el.cloneNode(true);copy.querySelectorAll('[data-user-authored]').forEach(n=>n.remove());return copy.textContent;
+   });
+   assert.doesNotMatch(generated,/[\u3041-\u30ff\u3400-\u9fff]|MANUAL|GPS_V2/);
+   for(const label of ['Selected run','Selected daily record','2026-11-19','Not Entered','Difficulty concentrating','Low motivation','Response saved at'])assert.ok(generated.includes(label),label);
+   const link=panel.locator('a[href="#/condition?date=2026-11-19"]');
+   assert.equal(await link.count(),1);
+   assert.equal(await page.locator('.ex-focus a[href="#/condition"]').count(),0);
+   await panel.screenshot({path:resolve(out,'stage3-selected-life-en-390.png'),animations:'disabled'});
+   await link.click();
+   await page.locator('[data-cj-daily-date]').waitFor({state:'visible'});
+   assert.equal(await page.locator('[data-cj-daily-date]').inputValue(),'2026-11-19');
+   assert.equal(await page.locator('.cj-daily-record [data-user-authored]').innerText(),'良い');
+   assert.equal(await page.evaluate(()=>localStorage.getItem('runload-v2-life-condition-v1')),saved);
+   await page.locator('.cj-daily-history').screenshot({path:resolve(out,'stage3-exact-day-en-390.png'),animations:'disabled'});
+   console.log('STAGE3 DAILY COPY PASS '+engine+' selected day, English, raw note, exact-day link, unchanged source');
+  }
   await context.close();
  }
  // UX13: all 16 language/width/root-font states per engine, with the same

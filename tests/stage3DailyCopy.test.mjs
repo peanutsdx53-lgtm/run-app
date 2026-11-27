@@ -1,0 +1,53 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {lifeInquiryModel,renderLifeInquiry} from '../ui/explorationLifeInquiry.js';
+import {signals} from '../ui/explorationExperience.js';
+import {renderObservationGuide} from '../ui/explorationTopicView.js';
+import {conditionPanel,conditionCard} from '../ui/homeExperience.js';
+import {renderConditionJourney} from '../ui/conditionJourney.js';
+import {translateUiText} from '../ui/englishUi.js';
+const id='run-v1-11111111-1111-4111-8111-111111111111';
+const ref={sourceType:'MANUAL',recordId:id};
+const record={id,source:'manual',type:'run',schema:2,date:'2026-11-08',rofBefore:0,rofAfter:null};
+const day='2026-11-07',instant='2026-11-07T00:00:00.000Z';
+const daily={date:day,sleepMinutes:null,feeling:'',memo:'良い',dailyState:{choices:['focus','motivation'],recordedAt:instant}};
+const conditions={canSave:true,entries:[daily]};
+const input={ref,record,conditions,selection:{kind:'life',date:day}};
+const storage={getItem:k=>k==='runload-v2-life-condition-v1'?JSON.stringify(conditions.entries):null,setItem:()=>{throw Error('unexpected write')}};
+const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+test('a day with only daily choices and no sleep is a legitimate explicitly selected record',()=>{
+ const before=JSON.stringify(input),m=lifeInquiryModel(input),html=renderLifeInquiry(input);
+ assert.equal(m.status,'READY');assert.equal(m.sleepSource,'not-recorded');assert.equal(m.sleepMinutes,null);
+ assert.match(html,/<strong>睡眠<\/strong>：<span>未入力<\/span>/);
+ assert.match(html,/<strong>その日の疲れ・気分<\/strong>：<span>集中しにくい<\/span> ／ <span>やる気が出にくい<\/span>/);
+ assert.match(html,/<time datetime="2026-11-07T00:00:00.000Z">/);
+ assert.match(html,/<span data-user-authored>良い<\/span>/);
+ assert.match(html,/value="2026-11-07" aria-describedby="ex-e-life-date-hint"/);
+ assert.equal((html.match(/href="#\/condition\?date=2026-11-07"/g)||[]).length,1);
+ assert.doesNotMatch(html,/href="#\/condition"|MANUAL|GPS_V2|値の意味を確定できません/);
+ assert.equal(JSON.stringify(input),before);
+});
+test('daily records are suggested by existence and date only, never joined to a chosen run',()=>{
+ const s=signals(null,conditions);assert.equal(s.sources.get('05'),'saved-life');assert.equal(s.conditionDate,day);
+ assert.doesNotMatch(JSON.stringify([...s.linked]),/集中しにくい|やる気が出にくい|良い/);
+ assert.equal(signals(null,conditions,{ok:true,records:[]},id).linked.has('05'),false);
+ const bad={canSave:true,entries:[{...daily,dailyState:{choices:['none','focus'],recordedAt:instant}}]};
+ assert.equal(signals(null,bad).linked.has('05'),false);
+ assert.equal(signals(null,{canSave:false,entries:[daily]}).linked.has('05'),false);
+ const unselected=renderLifeInquiry({...input,selection:null});assert.doesNotMatch(unselected,/集中しにくい|やる気が出にくい|data-user-authored/);
+ const missing=renderLifeInquiry({...input,selection:{kind:'life',date:'2026-11-06'}});assert.match(missing,/data-e-state="MISSING"/);assert.doesNotMatch(missing,/集中しにくい|2026-11-07/);
+});
+test('only one relevant condition navigation link; historical date wording shared by entry and history',()=>{
+ const html=renderObservationGuide({notes:[]},{focusRunId:id,focusRun:record},{id:'05'},'日々のコンディション',renderLifeInquiry(input));
+ assert.equal((html.match(/href="#\/condition(?:\?date=[^"]+)?"/g)||[]).length,1);
+ const standalone=renderObservationGuide({notes:[]},{},{id:'05'},'日々のコンディション','');
+ assert.equal((standalone.match(/href="#\/condition"/g)||[]).length,1);
+ assert.match(conditionPanel(storage,day),/その日の疲れ・気分（任意）/);
+ assert.match(renderConditionJourney(conditions,{dailySelected:day}),/その日の疲れ・気分/);
+});
+test('exact English labels use current wording and leave an authored value unchanged',()=>{
+ for(const [ja,en] of [['その日の疲れ・気分','Fatigue and mood for this day'],['その日の疲れ・気分（任意）','Fatigue and mood for this day (optional)'],['部位の文献基準100との差','vs. This Region’s Source-Study Baseline of 100'],['選択した生活記録','Selected daily record'],['選択中の走行','Selected run'],['休養日のメモ','Rest-day notes']])assert.equal(translateUiText(ja),en);
+ assert.equal(translateUiText('良い',{element:{closest:sel=>sel==='[data-user-authored]'}}),'良い');
+ for(const p of ['ui/homeExperience.js','ui/conditionJourney.js','ui/explorationLifeInquiry.js','ui/englishFinalHomeData.js','ui/englishSurfaceRemainders.js'])assert.doesNotMatch(read(p),/今日の疲れ・気分|Fatigue and mood today|Reference 100/);
+});
