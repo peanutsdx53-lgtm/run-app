@@ -58,7 +58,7 @@ test('ROF-J results and image export do not manufacture time-eligible before/aft
  assert.equal((js.match(/<details class="rv4-fatigue-method"/g)||[]).length,1,'one unified disclosure');
  assert.doesNotMatch(js,/<details class="rv4-rof-audit"/,'audit lives inside the disclosure');
  assert.match(js,/疲労感の見方・回答履歴・訂正/);
- assert.match(js,/回答時点と解釈上の注意を確認/);
+ assert.match(js,/fromGps\?'疲労感の見方・回答履歴':'疲労感の見方'/,'GPS and unsaved disclosures retain plain-language access');
   assert.match(js,/個人の身体負荷を直接測定した値ではありません。/,'reference caveat remains in details');
   assert.match(js,/この部位の参考値は比較できません/,'ineligible comparison remains visible');
  assert.match(js,/data-rof-correct-save/,'saved correction action remains');
