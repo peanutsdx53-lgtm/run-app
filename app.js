@@ -1119,6 +1119,11 @@ function recordExtras(){
       const advance=app.querySelector("[data-onboard-next]");if(advance)advance.disabled=!(onboardingState.termsAccepted&&onboardingState.privacyConfirmed);
       return;
     }
+    if(event.target.matches('[data-condition-form] [name="dailyChoices"]')){
+      const target=event.target,exclusive=['none','unsure'];
+      if(target.checked)for(const input of target.form.querySelectorAll('[name="dailyChoices"]'))if(input!==target&&(exclusive.includes(target.value)||exclusive.includes(input.value)))input.checked=false;
+      return;
+    }
     if(event.target.matches('[data-condition-form] [name="date"]')){
       if(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(event.target.value)){
         homeUi.conditionDate=event.target.value;homeUi.deletePendingDate=null;render();
@@ -1198,7 +1203,8 @@ function recordExtras(){
       memo:String(fields.get("memo")||""),sleepMode:String(fields.get("sleepMode")||""),
       bedTime:String(fields.get("bedTime")||""),wakeTime:String(fields.get("wakeTime")||""),
       bedDayRule:String(fields.get("bedDayRule")||"auto"),
-      durationHours:String(fields.get("durationHours")??""),durationMinutes:String(fields.get("durationMinutes")??"")
+      durationHours:String(fields.get("durationHours")??""),durationMinutes:String(fields.get("durationMinutes")??""),
+      dailyChoices:fields.getAll("dailyChoices")
     });
     const saved=result.ok?homeExperience.saveCondition(homePreferenceStorage,result.entry):result;
     if(!saved.ok){
