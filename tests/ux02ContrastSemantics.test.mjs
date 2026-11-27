@@ -44,3 +44,13 @@ test('retired mental styling is absent; current condition styling remains cached
  assert.match(precache,/\.\/ui\/homeExperience\.css/);
  assert.match(precache,/runload-ui-next-shell-20261126-cleanup-v5/);
 });
+
+
+test('contrast matrix samples only the live body and daily condition labels, including all eight choices',()=>{
+ assert.match(matrix,/target:'\.cx-field-title label'/);
+ assert.match(matrix,/target:'\.hx-daily-choices label span'/);
+ assert.match(matrix,/expected:3/);
+ assert.match(matrix,/expected:8/);
+ assert.match(matrix,/results\.length,64/);
+ assert.doesNotMatch(matrix,/target:'\.mx-label/);
+});
