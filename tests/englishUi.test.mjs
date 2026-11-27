@@ -375,14 +375,15 @@ test('linked-note presentation translates without exposing machine terminology',
  ])assert.equal(translateUiText(ja),en);
 });
 
-test('record/history dictionary contains only definitions not superseded by later exact-copy dictionaries',async()=>{
+test('cleaned dictionaries contain only definitions not superseded by later exact-copy dictionaries',async()=>{
  const source=readFileSync(new URL('../ui/englishUi.js',import.meta.url),'utf8');
  const imports=new Map();
  for(const m of source.matchAll(/import \{([^}]+)\} from '\.\/([^'?]+)(?:\?[^']*)?';/g)){
   for(const name of m[1].split(',').map(s=>s.trim()))if(name.startsWith('ENGLISH_'))imports.set(name,m[2]);
  }
  const order=[...source.matchAll(/^\s*\.\.\.(ENGLISH_\w+)/gm)].map(m=>m[1]);
- const current='ENGLISH_RECORD_HISTORY_COPY',index=order.indexOf(current);
+ for(const current of ['ENGLISH_RECORD_HISTORY_COPY','ENGLISH_SETTINGS_COPY','ENGLISH_GUIDE_COPY','ENGLISH_LEARNING_COPY']){
+ const index=order.indexOf(current);
  assert.ok(index>=0&&index<order.length-1);
  const target=(await import(new URL('../ui/'+imports.get(current),import.meta.url)))[current];
  const later=new Set();
@@ -391,6 +392,7 @@ test('record/history dictionary contains only definitions not superseded by late
   const dict=(await import(new URL('../ui/'+imports.get(name),import.meta.url)))[name];
   for(const key of Object.keys(dict))later.add(key);
  }
- assert.deepEqual(Object.keys(target).filter(key=>later.has(key)),[],'do not restore overwritten record/history phrases');
+ assert.deepEqual(Object.keys(target).filter(key=>later.has(key)),[],'do not restore overwritten phrases: '+current);
  for(const [key,value] of Object.entries(target))assert.equal(ENGLISH_UI_TEXT[key],value,key);
+ }
 });
