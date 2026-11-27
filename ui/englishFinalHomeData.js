@@ -10,8 +10,6 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "開く ›": "Open ›",
  "睡眠・就床の記録": "Sleep and Time-in-Bed Records",
  "記録した日のみ表示します。未記録日は空欄です。": "Only recorded days are shown; missing days remain blank.",
- "睡眠・体調の記録を見る": "View Sleep & Condition Records",
- "睡眠・体調の記録を確認する": "Review Sleep & Condition Records",
  "実績を確認できません": "Milestones Cannot Be Read",
  "保存済みの手入力走行はまだありません。新たな走行を記録すると確認できます。": "No manual runs have been saved. Record a run to view milestones.",
  "気になるテーマを自由に調べられます。メモは任意です。": "Explore topics freely. Notes are optional.",

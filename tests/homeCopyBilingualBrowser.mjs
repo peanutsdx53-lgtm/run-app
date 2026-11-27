@@ -28,13 +28,13 @@ const url='http://127.0.0.1:'+server.address().port+'/#/home',measurements=[];
 const expected={
  ja:{
   title:'ホーム',empty:'走行記録はまだありません',cta:'走行を記録する',
-  link:'睡眠・体調の記録を見る',heading:'ホームの使い方',
+  link:'コンディションの履歴を見る',heading:'ホームの使い方',
   steps:['走行を記録する','保存した走行を見る','ホームを編集する'],
   note:'「コンディション」の「開く」から、睡眠・就床時間や起床時の調子を記録・確認できます。'
  },
  en:{
   title:'Home',empty:'No Running Records Yet',cta:'Record a Run',
-  link:'View Sleep & Condition Records',heading:'How to Use Home',
+  link:'View Condition History',heading:'How to Use Home',
   steps:['Record a Run','Review Saved Runs','Customize Home'],
   note:'Select Open in Condition to record or review sleep, time in bed, and how you felt on waking.'
  }

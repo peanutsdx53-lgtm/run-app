@@ -50,7 +50,7 @@ async function scan(page,mode,category,topic,state){
  await page.waitForTimeout(45);
  const res=await page.locator('[data-experience-v3]').evaluate((root)=>{
   const re=/[\u3041-\u30ff\u3400-\u9fff]/u,out=[],attrs=[],japanese=content=>re.test(content||'');
-  const skipped=el=>!!el.closest('[data-user-authored],.ex-note-preview,.ex-saved,textarea,[contenteditable],[data-report-purpose]');
+  const skipped=el=>!!el.closest('[data-user-authored],textarea,[contenteditable],[data-report-purpose]');
   const displayed=el=>{
    if(!el||skipped(el))return false;
    if(el.closest('details:not([open])'))return false;
@@ -182,6 +182,40 @@ try{
    assert.equal(await page.evaluate(()=>localStorage.getItem('runload-v2-life-condition-v1')),saved);
    await page.locator('.cj-daily-history').screenshot({path:resolve(out,'stage3-exact-day-en-390.png'),animations:'disabled'});
    console.log('STAGE3 DAILY COPY PASS '+engine+' selected day, English, raw note, exact-day link, unchanged source');
+   // Stage 3 note provenance: protect only the user's text, not its interface.
+   await page.goto(base+'#/exploration-tree?category=05&topic='+encodeURIComponent('日々のコンディション'),{waitUntil:'networkidle'});
+   await page.waitForFunction(()=>document.documentElement.lang==='en');
+   const noteRaw=await page.evaluate(()=>{
+    const key='runload-v2-exploration-notes-v1',note={id:'stage3-copy-note',category:'05',topicId:'life-daily',text:'良い',createdAt:'2026-11-20T00:00:00.000Z',updatedAt:'2026-11-21T00:00:00.000Z',revisions:[{text:'削除',editedAt:'2026-11-21T00:00:00.000Z'}]};
+    if(localStorage.getItem(key)!==null)throw Error('fixture must not overwrite existing notes');
+    const raw=JSON.stringify([note]);localStorage.setItem(key,raw);return raw;
+   });
+   await page.reload({waitUntil:'networkidle'});
+   await page.locator('.ex-note-preview [data-user-authored]').waitFor();
+   assert.equal(await page.locator('.ex-note-preview [data-user-authored]').innerText(),'良い');
+   await page.locator('[data-ex-action="memories"]').click();
+   const dialog=page.locator('.ex-dialog'),card=dialog.locator('.ex-saved');
+   await page.waitForFunction(()=>document.querySelector('.ex-saved [data-ex-edit]')?.textContent==='Edit');
+   assert.match(await card.innerText(),/Standalone Note/);
+   assert.match(await card.innerText(),/Edited/);
+   assert.equal(await card.locator('[data-user-authored]').innerText(),'良い');
+   assert.equal(await card.locator('[data-ex-edit]').getAttribute('aria-label'),'Edit This Note');
+   assert.equal(await card.locator('[data-ex-delete]').innerText(),'Delete');
+   await dialog.screenshot({path:resolve(out,'stage3-note-memory-en-390.png'),animations:'disabled'});
+   await card.locator('[data-ex-edit]').click();
+   await dialog.locator('details summary').click();
+   assert.equal(await dialog.locator('details [data-user-authored]').innerText(),'削除');
+   assert.equal(await dialog.locator('textarea').inputValue(),'良い');
+   await dialog.screenshot({path:resolve(out,'stage3-note-revision-en-390.png'),animations:'disabled'});
+   await dialog.locator('[data-ex-action="close"]').click();
+   await page.locator('[data-ex-action="memories"]').click();
+   await card.locator('[data-ex-delete]').click();
+   assert.equal(await dialog.locator('blockquote[data-user-authored]').innerText(),'良い');
+   await dialog.screenshot({path:resolve(out,'stage3-note-deletion-en-390.png'),animations:'disabled'});
+   await dialog.locator('[data-ex-action="cancel-delete-note"]').click();
+   assert.equal(await page.evaluate(()=>localStorage.getItem('runload-v2-exploration-notes-v1')),noteRaw);
+   await dialog.locator('[data-ex-action="close"]').click();
+   console.log('STAGE3 NOTE COPY PASS '+engine+' labels, authored text, revision, delete cancellation, unchanged note');
   }
   await context.close();
  }

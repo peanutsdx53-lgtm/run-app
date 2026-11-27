@@ -84,7 +84,7 @@ export const ENGLISH_EXPLORE_UI=Object.freeze({
 });
 export function translateExploreDynamic(raw,{element=null}={}){
  if(!element?.closest?.('.ex-page'))return null;
- if(element.closest('[data-user-authored],.ex-note-preview,.ex-saved,textarea,input,[contenteditable]'))return null;
+ if(element.closest('[data-user-authored],textarea,input,[contenteditable]'))return null;
  const s=String(raw??'').trim();
  if(Object.hasOwn(ENGLISH_EXPLORE_UI,s))return ENGLISH_EXPLORE_UI[s];
  let m;

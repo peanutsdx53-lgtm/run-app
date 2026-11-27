@@ -84,7 +84,7 @@ try{
   assert.deepEqual(purpose.fragments,[1,1],'purpose label must not split a word '+width);
   assert.equal(purpose.fits,true,'purpose label must not clip '+width);
   const guide=await page.locator('.ex-observation-guide').innerText();
-  assert.match(guide,/観察ガイド/);assert.match(guide,/専門解説は出典審査前/);
+  assert.match(guide,/観察ガイド/);assert.match(guide,/研究出典に基づく専門解説ではありません/);
   assert.match(guide,/情報の出所と限界/);assert.match(guide,/気づきを残す/);
   const dimensions=await page.evaluate(()=>({body:document.body.scrollWidth,html:document.documentElement.scrollWidth,inner:innerWidth,panels:[...document.querySelectorAll('.ex-inquiry-stage')].map(el=>({w:el.getBoundingClientRect().width,scroll:el.scrollWidth}))}));
   assert.ok(dimensions.body<=width+2&&dimensions.html<=width+2,'page has no horizontal overflow: '+JSON.stringify(dimensions));
@@ -92,7 +92,7 @@ try{
   await page.screenshot({path:resolve(root,'screenshots',prefix+'-observation-guide.png'),fullPage:true});
   await page.locator('.ex-learning [data-ex-action="learn-help"]').click();
   await page.locator('.ex-dialog').waitFor();
-  assert.match(await page.locator('.ex-dialog').innerText(),/科学的な解説としての出典審査はまだ完了していません/);
+  assert.match(await page.locator('.ex-dialog').innerText(),/研究出典に基づく専門解説ではありません/);
   assert.equal(await page.evaluate(()=>document.activeElement?.dataset?.exAction),'close','opening modal moves focus inside');
   // Only one interactive control on this unreviewed theme: Tab must not leave the dialog.
   for(let n=0;n<3;n++){

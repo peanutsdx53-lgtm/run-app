@@ -1,6 +1,7 @@
 import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from './explorationTopicGuides.js?v=20261111-exploration-inquiry-v1-daily-only';
 // A single question leads into evidence, interpretation and optional notes.
 // The observation guide remains an editorial prompt, not a scientific lesson.
+export const OBSERVATION_GUIDE_BOUNDARY='観察ガイド：自分の経験を見直すための問いです。研究出典に基づく専門解説ではありません。';
 export function renderObservationGuide(ui,ctx,cat,topic,inquiry=''){
  const guide=EXPLORATION_DRAFT_GUIDES[cat.id+'|'+topic];
  const text=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -20,12 +21,12 @@ export function renderObservationGuide(ui,ctx,cat,topic,inquiry=''){
   (inquiry?'<div class="ex-inline-inquiry">'+inquiry+'</div>':'')+'</section>'+
   '<section class="ex-inquiry-stage"><h4>記録と感覚を照らし合わせる</h4>'+
   '<p>記録された情報と、そのときの感じ方を区別して考えます。</p>'+
-  '<details class="ex-inquiry-details"><summary>情報の出所と限界</summary><p>'+text(guide?.limit||'記録だけから原因や身体の状態を断定しません。')+'</p><p>観察ガイド：このテーマの専門解説は出典審査前です。</p></details>'+
-  '<button type="button" class="ex-help-link" data-ex-action="learn-help">観察ガイドの根拠と注意点</button>'+
+  '<details class="ex-inquiry-details"><summary>情報の出所と限界</summary><p>'+text(guide?.limit||'記録だけから原因や身体の状態を断定しません。')+'</p><p>'+text(OBSERVATION_GUIDE_BOUNDARY)+'</p></details>'+
+  '<button type="button" class="ex-help-link" data-ex-action="learn-help">観察ガイドの注意点</button>'+
   '</section>'+
   '<section class="ex-inquiry-stage ex-inquiry-last"><h4>気づきを残す</h4>'+
   '<div class="ex-note-invite"><div><strong>自分の言葉で書く</strong><p>印象に残ったことや、次の確認事項を任意で残せます。</p></div>'+
   '<button type="button" data-ex-action="note">書いてみる <span aria-hidden="true">＋</span></button></div>'+
-  (saved.length?'<div class="ex-note-preview"><strong>以前に書いたこと</strong>'+saved.map(n=>'<p>'+text(n.text)+'</p>').join('')+'</div>':'')+
+  (saved.length?'<div class="ex-note-preview"><strong>以前に書いたこと</strong>'+saved.map(n=>'<p data-user-authored>'+text(n.text)+'</p>').join('')+'</div>':'')+
   '</section></div>';
 }

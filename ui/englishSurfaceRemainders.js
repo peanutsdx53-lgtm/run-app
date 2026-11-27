@@ -150,7 +150,6 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  '必要なときだけ、本人の言葉で保存できます。':'You can save reflections in your own words whenever you choose.',
  '次回の走る前に何を確かめたいですか？':'What would you like to check before your next run?',
  '特定の準備運動の効果や傷害予防を、本アプリでは検証していません。':'This application has not verified the effects of any specific warm-up or its ability to prevent injury.',
- '観察ガイド｜専門解説は出典審査前':'Observation Guide | Specialist Explanations Have Not Yet Passed Source Review',
  '走る前に何をしていたか、自分の習慣を整理しましょう。':'Reflect on what you did before running and consider your usual habits.',
  '運動前の本人の疲労感やメモを確認することができます。':'You can review your self-reported pre-activity fatigue and notes.',
  '自分の記録から考える':'Reflect Using Your Own Records',
