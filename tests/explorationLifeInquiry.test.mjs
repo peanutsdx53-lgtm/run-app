@@ -77,3 +77,5 @@ test('E6 HTML escaping, no sleep-to-ROF conversion or identity mutation',()=>{
  assert.doesNotMatch(html,/改善した|診断結果|睡眠のおかげで/);
  assert.equal(JSON.stringify(input),before);
 });
+
+test('T06 keeps interpretive limitations in a closed disclosure, not an always-visible block',()=>{const html=renderLifeInquiry();assert.match(html,/<details class="ex-e-boundary"><summary>記録の選択と出所<\/summary>/);assert.doesNotMatch(html,/<div class="ex-e-boundary">/);});

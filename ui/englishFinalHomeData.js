@@ -75,7 +75,6 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "日をタップするとメモを確認できます": "Tap a Day to Review Notes.",
  "まだ気づきの記録はありません。書きたいときだけ残せます。": "No Observations Yet. Add One Only if You Wish.",
  "最近の2件で確認できること": "What the Two Most Recent Records Show",
- "違いの原因やランニングへの影響は、この記録だけでは分かりません。": "These records alone cannot determine causes or effects on running.",
  "同じ方法の記録が増えると、最近の違いも確認できます。": "More records using the same method allow comparison of recent differences.",
  "この記録について気づいたこと（任意）": "Observations About This Record (Optional)",
  "気づきを保存する": "Save Observation",
@@ -89,7 +88,6 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "睡眠とランニングの知識": "Sleep and Running Knowledge",
  "自分の気づき": "Your Observations",
  "2日間の差だけから原因や健康状態、走行能力の良し悪しは判定しません。": "Differences between two days do not determine causes, health status or running ability.",
- "調子やランニングへの影響の原因は、この比較だけでは分かりません。": "This comparison alone cannot determine causes or effects on running.",
  "見比べて気づいたこと（任意）": "Observations From the Comparison (Optional)",
  "記録を詳しく見る": "View Record Details",
  "確認事項を削除": "Delete Follow-up Item",
@@ -145,5 +143,9 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "疲労を多面的に捉える研究を参考にした独自の記録項目です。": "These original logging options are informed by multidimensional fatigue research.",
  "疲労の研究（参考）": "Fatigue research (reference)",
  "疲労に関する調査票（参考）": "Fatigue questionnaire (reference)",
- "この日の生活記録はありません。": "No daily record for this date."
+ "この日の生活記録はありません。": "No daily record for this date.",
+ "グラフの見方": "How to read the chart",
+ "比較の見方と限界": "How to read the comparison",
+ "期間や入力方法を切り替えられます。": "Change the period or input method.",
+ "日をタップするとメモを確認できます。": "Tap a day to review its notes."
 });

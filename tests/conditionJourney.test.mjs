@@ -17,7 +17,8 @@ test('long-term journey lists actual dates and highlights without inferring pers
  assert.match(html,/気づきを保存する/);assert.match(html,/次の記録で確かめる/);
  assert.match(html,/朝は元気/);assert.match(html,/調子が良かった日/);
  assert.doesNotMatch(html,/data-interpret-date/,'no manual two-date selection is necessary');
- assert.match(html,/原因やランニングへの影響/);
+ assert.match(html,/<details class="cj-local-help" data-cj-comparison-help><summary>比較の見方と限界<\/summary><p>2日間の差だけから/);
+ assert.doesNotMatch(html,/class="cj-disclaimer"|違いの原因やランニングへの影響/);
 });
 test('displayed mood is categorical and day notes are escaped',()=>{
  const evil={canSave:true,entries:[record(b,450,'良い','<script>alert(1)</script>')]};
@@ -114,3 +115,5 @@ test('UX15 composed condition labels translate only generated display text',asyn
  assert.equal(translateResidualDynamic('良い',{element:{closest:s=>s==='.cj-panel'||s==='[data-user-authored]'?{}:null}}),null);
  assert.equal(translateResidualDynamic('良い'),null);
 });
+
+test('chart and comparison limits are locally available, collapsed and not duplicated',()=>{const html=renderConditionJourney(conditions);assert.match(html,/<details class="cj-local-help" data-cj-chart-help><summary>グラフの見方<\/summary>/);assert.match(html,/<details class="cj-local-help" data-cj-comparison-help><summary>比較の見方と限界<\/summary>/);assert.equal((html.match(/2日間の差だけから/g)||[]).length,1);assert.doesNotMatch(html,/<details[^>]*(?:data-cj-chart-help|data-cj-comparison-help)[^>]*\bopen\b/);assert.match(html,/本人が入力した調子/);});

@@ -894,3 +894,10 @@
 .ex-page .ex-catalog,.ex-page .ex-orbit-workspace,.ex-page .ex-catalog-grid,.ex-page .ex-catalog-items,.ex-page .ex-catalog-items button,.ex-page .ex-catalog-items button strong{min-width:0;max-width:100%}
 .ex-page .ex-catalog-items button strong{overflow-wrap:anywhere}
 .ex-page .ex-catalog-group-head{flex-wrap:wrap}
+
+/* T06: retain evidence boundaries as an optional disclosure. */
+details.ex-e-boundary>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:8px;list-style:none;font-weight:700}
+details.ex-e-boundary>summary::-webkit-details-marker{display:none}
+details.ex-e-boundary>summary::after{content:"⌄";margin-left:auto;flex:none}
+details.ex-e-boundary[open]>summary::after{transform:rotate(180deg)}
+details.ex-e-boundary>summary:focus-visible{outline:2px solid currentColor;outline-offset:2px}

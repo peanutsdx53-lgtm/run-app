@@ -78,11 +78,11 @@ export function renderLifeInquiry(input={}){
   }
   detail='<div class="ex-e-life-evidence" data-e-life-evidence>'+
    '<p>選択中の走行：'+esc(m.current.date)+'／出所：'+esc(m.current.kind)+'。</p>'+
-   detail+'</div><div class="ex-e-boundary"><strong>この並びから判断できないこと</strong>'+
-   '<p>日付が同じでも、走行と生活・休養の出来事が同時だったとは限りません。日付や時刻だけで両者を自動結合せず、睡眠・休養が疲労感、回復、走行結果を変えた原因とも判定しません。</p></div>'+
+   detail+'</div><details class="ex-e-boundary"><summary>この並びから判断できないこと</summary>'+
+   '<p>日付が同じでも、走行と生活・休養の出来事が同時だったとは限りません。日付や時刻だけで両者を自動結合せず、睡眠・休養が疲労感、回復、走行結果を変えた原因とも判定しません。</p></details>'+
    '<p class="ex-e-prompt">この走行を思い返すとき、選んだ生活・休養の情報から次に確かめたいことは何ですか？</p>';
  }else detail='<p data-e-life-evidence role="status">'+esc(m.reason)+'</p>'+
-  '<div class="ex-e-boundary"><strong>記録の選択と出所</strong><p>同じ日付というだけで生活と走行を結び付けたり、別の記録を自動選択したりしません。</p></div>';
+  '<details class="ex-e-boundary"><summary>記録の選択と出所</summary><p>同じ日付というだけで生活と走行を結び付けたり、別の記録を自動選択したりしません。</p></details>';
  const controls=m.current?
   '<div class="ex-e-life-choice"><label for="ex-e-life-date">自分で確認したい生活・休養の日付</label>'+
   '<input id="ex-e-life-date" data-e-life-date type="date" aria-describedby="ex-e-life-date-hint">'+
