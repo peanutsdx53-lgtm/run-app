@@ -278,7 +278,6 @@ export function translateUiText(text,context={}){
  if(trimmed==='手入力'&&context.element?.matches?.('.hx-source-controls button[data-record-source="MANUAL"]'))return raw.replace(trimmed,'Manual');
  // Only on Course editor: preserve long wording elsewhere and full surface aria-labels.
  const e=context.element;
- if(trimmed==='分'&&e?.matches?.('.hx-latest-fig em'))return raw.replace(trimmed,'min');
  if(trimmed==='GPS測定はスマートフォン専用です'&&e?.closest?.('.gps-platform-unavailable'))return raw.replace(trimmed,'GPS: Smartphones Only');
  // UX14: the seven full category names have one canonical display spelling.
  // Prefer that spelling for composed node names, even when a legacy exact

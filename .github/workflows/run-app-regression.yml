@@ -64,6 +64,16 @@ jobs:
           path: audit-output/onboarding-${{ matrix.engine }}/
           if-no-files-found: warn
           retention-days: 7
+      - name: Check latest-run layout and fatigue disclosure across languages and text sizes
+        run: node tests/homeFatigueReadabilityBrowser.mjs
+      - name: Preserve home and fatigue readability screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: home-fatigue-readability-${{ matrix.engine }}
+          path: audit-output/home-fatigue-readability-${{ matrix.engine }}/
+          if-no-files-found: error
+          retention-days: 7
       - name: Inspect Japanese and English Home cards and guide across viewports
         run: node tests/homeCopyBilingualBrowser.mjs
       - name: Preserve Home copy screenshots for visual inspection

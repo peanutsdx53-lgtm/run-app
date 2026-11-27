@@ -92,12 +92,12 @@ test("legacy entries persist alongside new v2 entries and edit without forced co
 test("latest saved manual run displays minutes without appended seconds",()=>{
  const record={id:"run-v1-11111111-1111-4111-8111-111111111111",source:"manual",type:"run",distanceKm:5,durationSeconds:2100};
  const card=latestCard(record);
- assert.match(card,/35分/);
+ assert.match(card,/35<\/strong><em>分<\/em>/);
  assert.doesNotMatch(card,/35分00秒|35分0秒/);
  assert.match(card,/7:00/);
  assert.match(card,/5\.00/);
  const fractional=latestCard({...record,durationSeconds:1950});
- assert.match(fractional,/32\.5分/);
+ assert.match(fractional,/32\.5<\/strong><em>分<\/em>/);
  assert.doesNotMatch(fractional,/30秒/);
  assert.match(fractional,/6:30/);
 });
