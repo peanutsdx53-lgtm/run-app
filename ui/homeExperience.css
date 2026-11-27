@@ -614,7 +614,8 @@ body.app-dialog-open{overflow:hidden;overscroll-behavior:none}
 .home-v3 .hx-condition .hx-bar{background:var(--condition-accent);box-shadow:none}
 .home-v3 .hx-condition .hx-bar.hx-missing{background:transparent}
 .home-v3 .hx-condition .hx-bar-col{border-bottom-color:var(--condition-line)}
-.home-v3 .hx-condition .hx-condition-explore:focus-visible{outline-color:var(--condition-accent)}
+.home-v3 .hx-condition .hx-condition-explore:focus-visible,.home-v3 .hx-condition .hx-title-button:focus-visible .hx-right{outline-color:var(--condition-accent)}
+.home-v3 .hx-condition .hx-title-button:hover .hx-right,.home-v3 .hx-condition .hx-condition-explore:hover{background:var(--condition-selected);color:var(--condition-text);border-color:var(--condition-accent)}
 #app .hx-dialog.hx-condition-dialog{background:var(--condition-surface);border:1px solid var(--condition-line);color:var(--condition-text)}
 #app .hx-condition-dialog :is(h2,h3,label,legend){color:var(--condition-text)}
 #app .hx-condition-dialog :is(form input,form select,form textarea,.hx-time-control,.hx-sleep-modes,.hx-day-options){background:var(--condition-bg);color:var(--condition-text);border-color:var(--condition-line);color-scheme:dark}

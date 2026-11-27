@@ -62,7 +62,7 @@
 @media(max-width:480px){.cj-panel{margin:12px 8px 25px;padding:17px 13px;border-radius:23px}.cj-controls label{flex-basis:100%}.cj-chart-viewport{padding:8px 4px}.cj-day{min-width:40px}}
 @media(prefers-reduced-motion:reduce){.cj-panel *{scroll-behavior:auto!important;transition:none!important}}
 
-.cj-next-step{margin:16px 0 0;border-top:1px solid var(--condition-line);padding-top:12px}.cj-next-step button{border:1px solid var(--condition-line);border-radius:12px;color:var(--condition-text);background:var(--condition-raised);font-weight:650;padding:12px 15px;min-height:44px}.cj-next-step p{color:#bcd9df;font-size:.88rem}
+.cj-next-step{margin:16px 0 0;border-top:1px solid var(--condition-line);padding-top:12px}.cj-next-step button{border:1px solid var(--condition-line);border-radius:12px;color:var(--condition-text);background:var(--condition-raised);font-weight:650;padding:12px 15px;min-height:44px}.cj-next-step p{color:var(--condition-secondary);font-size:.88rem}
 
 /* Dedicated condition screen. Keep main history exactly as designed. */
 .app-shell:has(.cj-screen) .topbar{display:none}
@@ -75,6 +75,9 @@
 .cj-back{display:inline-flex;align-items:center;min-height:44px;padding:5px 12px;border:1px solid var(--condition-line);background:var(--condition-raised);color:var(--condition-accent);border-radius:11px;text-decoration:none;font-size:.9rem;font-weight:650}
 .cj-back:focus-visible{outline:3px solid var(--condition-accent);outline-offset:3px}
 .cj-screen .cj-panel{max-width:100%;margin:0 6px 28px;box-shadow:0 14px 30px #00142055}
+.cj-screen .rl-screen-help>summary{background:var(--condition-raised);color:var(--condition-accent);border-color:var(--condition-line)}
+.cj-screen .rl-screen-help[open]>summary{background:var(--condition-selected);border-color:var(--condition-accent)}
+.cj-screen .rl-screen-help>p{border-color:var(--condition-line);background:var(--condition-surface);color:var(--condition-text)}
 .cj-screen .cj-title>div>small{display:none}
 .cj-screen .cj-title h2{font-size:1.15rem;margin:2px 0 8px}
 .cj-chart-days{min-width:100%}

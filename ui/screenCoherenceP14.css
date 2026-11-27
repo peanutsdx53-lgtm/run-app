@@ -114,75 +114,6 @@
  }
 }
 
-/* Home Condition card is indigo. Its journey must use the same palette.
-   Keep emotion indicators in their established distinguishable colors. */
-.app-shell:has(.cj-screen) .main-frame{
- background:radial-gradient(ellipse at 92% -7%,#7563ac38,transparent 49%),
- linear-gradient(145deg,#13192e,#211f3e 52%,#10192b)
-}
-.app-shell:has(.cj-screen) .main-content{color:#f5f1ff}
-.cj-screen .cj-panel{
- border-color:#8072b6;
- background:radial-gradient(ellipse at 98% 0%,#b29afa29,transparent 55%),
- linear-gradient(145deg,#322e53,#262746 63%,#19253b);
- color:#f4f0ff;
- box-shadow:0 14px 28px #080b1f55
-}
-.cj-screen .cj-title h2,.cj-screen .cj-panel h3{color:#f9f6ff}
-.cj-screen .cj-title small,.cj-screen .cj-muted,
-.cj-screen .cj-hint,.cj-screen .cj-disclaimer,
-.cj-screen .cj-intro,.cj-screen .cj-legend,
-.cj-screen .cj-controls label{color:#d1caeb}
-.cj-screen .cj-page-head h1{color:#f9f6ff}
-.cj-screen .cj-back{
- color:#e9dfff;background:#3b355d;border-color:#a697d4
-}
-.cj-screen .rl-screen-help>summary{
- background:#4a426c;color:#f0e9ff;border-color:#ada0d4
-}
-.cj-screen .rl-screen-help[open]>summary{background:#5b4c89;border-color:#d5c1ff}
-.cj-screen .rl-screen-help>p{
- border-color:#a492d5;background:#2b294b;color:#f4f0ff
-}
-.cj-screen .cj-range button,.cj-screen .cj-write button,
-.cj-screen .cj-insight-item button,.cj-screen .cj-home-actions>*,
-.cj-screen .cj-next-step button{
- color:#f5f0ff;background:#4c4277;border-color:#a08dca
-}
-.cj-screen .cj-range button[aria-pressed="true"]{
- background:linear-gradient(125deg,#7d62c4,#5b50a1);
- border-color:#c7b6f2;color:#fff
-}
-.cj-screen .cj-controls select,.cj-screen .cj-controls select option{
- background:#222440;color:#f9f6ff;border-color:#9186bd;color-scheme:dark
-}
-.cj-screen .cj-chart-viewport{
- background:#1c2841;border-color:#726b9e;
- scrollbar-color:#9182c3 #242440
-}
-.cj-screen .cj-bar{
- background:linear-gradient(#c9b7ff,#8b78ce)
-}
-.cj-screen .cj-day{color:#ddd7f3}
-.cj-screen .cj-day--selected{background:#403765;border-color:#bd9fff}
-.cj-screen .cj-detail,.cj-screen .cj-context,.cj-screen .cj-saved{
- background:#272842;border-color:#746b9b
-}
-.cj-screen .cj-observation{border-left-color:#b7a5ee}
-.cj-screen .cj-context a,.cj-screen .cj-home-shortcut a{color:#e1ccff}
-.cj-screen .cj-write textarea{
- background:#1e2039;color:#fff;border-color:#9a8bc5
-}
-.cj-screen .cj-insight-item,.cj-screen .cj-home-pair>div{
- background:#333252;border-color:#726a99
-}
-.cj-screen .cj-home-pair small,.cj-screen .cj-insight-item small,
-.cj-screen .cj-detail-time small{color:#cbc4e8}
-.cj-screen .cj-panel button:focus-visible,.cj-screen .cj-panel a:focus-visible,
-.cj-screen .cj-panel select:focus-visible,.cj-screen .cj-panel textarea:focus-visible{
- outline:3px solid #ddc3ff;outline-offset:3px
-}
-
 /* P14.3: the Home Edit control is text, not a 20px help glyph. Make
    its lettering comfortably legible on a 320px screen without shrinking
    touch targets or changing the approved Edit -> Help order. */
@@ -197,21 +128,22 @@
  }
 }
 
-/* The same cool, high-contrast Open affordance on both cards.
-   It contrasts with the violet Condition and copper Achievement surfaces;
-   card background palettes remain distinct and do not encode scores. */
+/* Shared Open control geometry; feature palettes are independent. */
 .home-v3 .hx-condition .hx-title-button .hx-right,
 .home-v3 .hx-achievement .hx-title-button .hx-right{
  display:inline-flex;align-items:center;justify-content:center;gap:5px;
  margin-left:auto;min-height:36px;padding:8px 13px;
  border-radius:11px;font-size:.76rem;font-weight:850;
  line-height:1.25;box-sizing:border-box;
- background:linear-gradient(125deg,#195b70,#204d79);
- border:1px solid #9be8f3;color:#f2fcff;
- box-shadow:0 3px 10px #0003,inset 0 1px #ffffff22;
+ border-width:1px;border-style:solid;
+
  transition:background-color .15s,border-color .15s,transform .15s
 }
-.home-v3 .hx-condition .hx-title-button:hover .hx-right,
+.home-v3 .hx-achievement .hx-title-button .hx-right{
+ background:linear-gradient(125deg,#195b70,#204d79);
+ border-color:#9be8f3;color:#f2fcff;
+ box-shadow:0 3px 10px #0003,inset 0 1px #ffffff22
+}
 .home-v3 .hx-achievement .hx-title-button:hover .hx-right{
  background:#2a6b85;border-color:#d2f8fb
 }
