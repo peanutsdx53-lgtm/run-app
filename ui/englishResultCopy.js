@@ -137,7 +137,7 @@ export const ENGLISH_RESULT_COPY=Object.freeze({
  "保存した走行の文献適用条件を確認します": "Study applicability is checked using the saved activity record.",
  "文献参考値：算出対象外": "Research Reference: Outside Calculation Scope",
  "参考値の見方": "Understanding Reference Values",
- "運動前後の疲労感は本人の任意回答でありGPSでは測定しません。": "Fatigue before and after activity is reported voluntarily by the user; GPS does not measure fatigue."
+ "運動前後の疲労感は本人の任意回答でありGPSでは測定しません。": "Fatigue before and after activity is reported voluntarily by the user; GPS does not measure fatigue.",
  "回答履歴": "Response History",
  "日時の見方": "Understanding the times",
  "入力日時は端末に回答を入力した日時です。評価日時は本人が申告した日時です。運動との実際の前後関係は確認されていません。": "Entry time is when you entered the response on your device. Assessment time is the time you reported. Actual timing relative to exercise is unverified.",
@@ -150,6 +150,6 @@ export const ENGLISH_RESULT_COPY=Object.freeze({
  "訂正日時": "Correction time",
  "訂正した値": "Corrected rating",
  "訂正理由": "Reason for correction",
- "理由未記入": "No reason entered",
  "回答を訂正する": "Correct a response",
+ "終了": "End",
 });

@@ -348,10 +348,13 @@ try{
      if(await rofDraft.count()){
       const method=result.locator('.rv4-fatigue-method');
       await method.evaluate(el=>el.open=true);
+      const correction=method.locator('.rv4-rof-correction');
+      await correction.evaluate(el=>el.open=true);
       await rofDraft.evaluate(el=>el.value='4');
       await toggle.press('Enter');
       assert.equal(await rofDraft.inputValue(),'4','unsaved ROF-J correction is not discarded by a body redraw');
       assert.equal(await method.evaluate(el=>el.open),true,'ROF-J explanation remains open without submitting a correction');
+      assert.equal(await correction.evaluate(el=>el.open),true,'correction disclosure remains open across same-record redraw');
      }
      const path=result.locator('.rv4-body-svg [data-region]').first();
      const regionId=await path.getAttribute('data-region');
