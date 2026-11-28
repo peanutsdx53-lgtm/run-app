@@ -4,7 +4,7 @@
  */
 import { checkRecordDraft,checkManualRequiredFields } from './recordDraftReview.js';
 import { courseSummary } from './recordExperience.js';
-import {recordIcon as icon} from './recordIcons.js?v=20261101-review-density-v1';
+import {recordIcon as icon} from './recordIcons.js?v=20261101-review-density-v1-design2';
 import {saveReviewScope} from './saveReviewShared.js?v=20261116-gps-stage4-v1';
 const present=x=>x!==null&&x!==undefined&&String(x).trim()!=='';
 const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

@@ -175,17 +175,17 @@ export function deleteCondition(storage,date){
 function escape(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function icon(which){
  const shape={
- run:'<path d="m13 5 2-2 3 2-2 3-3-3ZM11 9l4 3 4 1M11 9 8 14l-4 1M15 12l-3 4-1 5M11 9l3 1-3 4-5 6"/>',
- moon:'<path d="M20.5 14a9 9 0 0 1-10.5-10.5A9 9 0 1 0 20.5 14Z"/>',
- trophy:'<path d="M8 3h8v8a4 4 0 0 1-8 0V3ZM8 5H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4M12 15v4M8 21h8"/>',
+ run:'<circle cx="15.5" cy="4" r="1.8"/><path d="m13 8-3 5 4 3-2 5m-2-8-4 5H3m10-10 4 3 4-3m-8 0-4-1-3 3"/>',
+ moon:'<path d="M20.5 14a8.5 8.5 0 0 1-10.5-10.5A9 9 0 1 0 20.5 14Z"/><path d="M17 3v4m-2-2h4"/>',
+ trophy:'<path d="M8 3h8v8a4 4 0 0 1-8 0V3ZM8 5H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4M12 15v5M8 21h8"/>',
  bolt:'<path d="m13 2-9 12h7l-1 8 10-13h-7Z"/>',
- chart:'<path d="M3 20h18M5 16v-4h4v4M11 16V5h4v11M17 16V9h4v7"/>',
+ chart:'<path d="M3 21h18"/><rect x="4" y="12" width="4" height="6" rx="1"/><rect x="10" y="5" width="4" height="13" rx="1"/><rect x="16" y="9" width="4" height="9" rx="1"/>',
  leaf:'<path d="M12 21v-8m0 7C7 19 4 16 4 12c4-1 8 0 8 5m0-4c0-6 3-9 8-10 1 5-1 10-8 12"/>',
  map:'<path d="M3 6 9 3l6 3 6-3v15l-6 3-6-3-6 3V6ZM9 3v15M15 6v15"/>',
- learn:'<path d="M3 5h7c2 0 3 1 3 3v13c0-2-2-3-4-3H3z"/><path d="M21 5h-7c-2 0-3 1-3 3v13c0-2 2-3 4-3h6z"/>',
+ learn:'<path d="M12 6C9 3 5 4 3 5v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-2-1-6-2-9 1Zm0 0v14"/>',
  share:'<path d="M7 12 17 6M7 12l10 6"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="19" cy="19" r="2"/>'
  }[which]||'';
- return '<svg viewBox="0 0 24 24" aria-hidden="true" class="hx-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round">'+shape+'</svg>';
+ return '<svg viewBox="0 0 24 24" aria-hidden="true" class="hx-icon" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">'+shape+'</svg>';
 }
 
 function designMedal(active){const c=active?['#ffedbd','#98713c','#e5c486','#674925']:['#b9c2c5','#58636a','#a8b3b8','#38444b'];return '<svg viewBox="0 0 96 96" aria-hidden="true"><defs><linearGradient id="design-metal" x2=".8" y2="1"><stop stop-color="'+c[0]+'"/><stop offset=".3" stop-color="'+c[1]+'"/><stop offset=".55" stop-color="'+c[2]+'"/><stop offset="1" stop-color="'+c[3]+'"/></linearGradient></defs><path d="M48 5 68 10 85 27 91 48 85 69 68 86 48 91 28 86 11 69 5 48 11 27 28 10Z" fill="url(#design-metal)" stroke="'+c[0]+'"/><circle cx="48" cy="48" r="35" fill="#252b30" stroke="'+c[2]+'" stroke-width="2"/><circle cx="48" cy="48" r="30" fill="none" stroke="'+c[2]+'" stroke-dasharray="1 3" opacity=".7"/><path d="M48 26 54 41 70 42 58 52 62 68 48 59 34 68 38 52 26 42 42 41Z" fill="url(#design-metal)" stroke="'+c[0]+'" stroke-width=".8"/></svg>'}

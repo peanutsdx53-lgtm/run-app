@@ -1,7 +1,7 @@
 // Presentation and interaction helpers for the current record screens.
 // Not a replacement for the authoritative v1 record/scientific storage contract.
 import {checkManualRequiredFields} from './recordDraftReview.js';
-import {recordIcon} from './recordIcons.js?v=20261101-review-density-v1';
+import {recordIcon} from './recordIcons.js?v=20261101-review-density-v1-design2';
 export const SURFACES = Object.freeze([
  ['paved','舗装路'],['track','陸上トラック'],['treadmill','トレッドミル'],
  ['soil','締まった土道'],['trail','不整地トレイル'],['naturalGrass','天然芝'],

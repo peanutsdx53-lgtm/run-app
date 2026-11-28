@@ -50,14 +50,14 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   ]=await Promise.all([
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
-    import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2-readable-daily-stage3-copy-notes-copy-design1"),
+    import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2-readable-daily-stage3-copy-notes-copy-design1-design2"),
     import("./ui/rofExperience.js?v=20261126-cleanup-v5"),
     import("./ui/recordDraftReview.js"),
-    import("./ui/recordReviewExperience.js?v=20261126-cleanup-v5-daily-only"),
+    import("./ui/recordReviewExperience.js?v=20261126-cleanup-v5-daily-only-design2"),
     import("./ui/manualRunStore.js?v=20261126-cleanup-v5"),
     import("./ui/manualRunLock.js"),
     import("./ui/manualRunCanonical.js"),
-    import("./ui/recordExperience.js?v=20261126-cleanup-v5"),
+    import("./ui/recordExperience.js?v=20261126-cleanup-v5-design2"),
     import("./ui/coursePresetStore.js?v=20261126-cleanup-v5"),
     import("./ui/gaitExperience.js?v=20261126-cleanup-v5"),
     import("./ui/environmentExperience.js?v=20261123-ux09-environment-states-v1"),
@@ -323,15 +323,15 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   const currentPage=()=>{const raw=location.hash.replace(/^#\/?/,"");const path=raw.split("?")[0];return path==="history"&&raw.includes("life=1")?"condition":pageLabels[path]?path:"home"};
   const navIcon=function navIcon(name){
   const shapes={
-   home:'<path d="m3 10 9-7 9 7v11H3z"/><path d="M9 21v-9h6v9"/>',
-   record:'<path d="M7 3h10v3H7zM5 6h14v15H5z"/><path d="M9 11h6M9 15h6"/>',
-   result:'<rect x="3" y="10" width="4" height="11" rx="1"/><rect x="10" y="3" width="4" height="18" rx="1"/><rect x="17" y="12" width="4" height="9" rx="1"/>',
-   history:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4.5 3"/>',
-    learning:'<path d="M3 5h7c2 0 3 1 3 3v13c0-2-2-3-4-3H3z"/><path d="M21 5h-7c-2 0-3 1-3 3v13c0-2 2-3 4-3h6z"/>',
-   "exploration-tree":'<path d="M4 10c2-5 6-6 8-1 2-5 6-4 8 1-1 5-5 6-8 10-3-4-7-5-8-10z"/><path d="M12 20V10"/>',
-   settings:'<circle cx="12" cy="12" r="3"/><path d="m9 2 1 3h4l1-3 4 2-1 3 3 3-1 4 3 1-2 5-3-1-3 2-1 3H9l-1-3-3-2-3 1-2-5 3-1-1-4 3-3-1-3z"/>'
+   home:'<path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/>',
+   record:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 10h6M9 14h6M9 18h3"/>',
+   result:'<path d="M3 21h18"/><rect x="4" y="12" width="4" height="6" rx="1"/><rect x="10" y="5" width="4" height="13" rx="1"/><rect x="16" y="9" width="4" height="9" rx="1"/>',
+   history:'<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/>',
+   learning:'<path d="M12 6C9 3 5 4 3 5v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-2-1-6-2-9 1Zm0 0v14"/>',
+   "exploration-tree":'<circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5M10.5 7v7M7 10.5h7"/>',
+   settings:'<circle cx="12" cy="12" r="3"/><path d="m10 3 4 0 .8 3 2 .9 2.7-1.5 2 3.5-2 2.2v2l2 2.2-2 3.5-2.7-1.5-2 .9-.8 3h-4l-.8-3-2-.9-2.7 1.5-2-3.5 2-2.2v-2l-2-2.2 2-3.5 2.7 1.5 2-.9Z"/>'
   };
-  return `<svg class="nav-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[name]||shapes.home}</svg>`;
+  return `<svg class="nav-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[name==="record-start"?"record":name]||shapes.home}</svg>`;
 };
   const navHtml=(items,page,mobile)=>items.map(([path,icon,label])=>`<a class="${mobile?"mobile-link":"side-link"} ${page===path?"is-active":""}" href="#/${path}" data-ui-copy-key="nav.${path}" data-ui-action-kind="navigate" ${page===path?'aria-current="page"':""}><span class="nav-icon">${navIcon(path)}</span>${label}</a>`).join("");
   // S02 optional screen-specific guidance. Does not write user data.
