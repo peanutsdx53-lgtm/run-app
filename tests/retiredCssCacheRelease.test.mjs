@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('retired CSS release activates a fresh cache, keeps unrelated caches and matches page release',async()=>{
  const source=read('sw.js'),html=read('index.html');
- const release='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2-searchfix-copyfix',current='runload-ui-next-shell-'+release,previous='runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2-searchfix';
+ const release='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2-searchfix-copyfix-ux109-terms-focusfix',current='runload-ui-next-shell-'+release,previous='runload-ui-next-shell-20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2-searchfix-copyfix-ux109-terms';
  assert.equal(source.match(/const CACHE="([^"]+)"/)[1],current);
  assert.match(html,new RegExp('pwa\\.js\\?v='+release+'"'));
  assert.doesNotMatch(html,/(?:interpretationExperience|resultExperience)\\.css/);

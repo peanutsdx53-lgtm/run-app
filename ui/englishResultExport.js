@@ -23,10 +23,10 @@ export function englishResultImageAnnotation(evidence){
 export function englishResultImageDisclosure(disclosure){
  const date=disclosure?.includeDate===true?String(disclosure.dateText??''):'Date Omitted (Default)';
  const rof=disclosure?.includeRof===true?String(disclosure.rofText??''):'';
- const matches=rof.match(/^ROF-J（本人回答）：運動前 (未回答|\d+) ／ 運動後 (未回答|\d+)$/);
+ const matches=rof.match(/^疲労感（本人回答）：運動前 (未回答|\d+) ／ 運動後 (未回答|\d+)$/);
  return Object.freeze({
   dateText:date,
-  rofText:disclosure?.includeRof===true?(matches?'ROF-J (Self-Report): Before '+readScore(matches[1])+' / After '+readScore(matches[2]):'ROF-J (Self-Report): Timing and Scores Unverified'):'ROF-J Responses Omitted (Default)',
+  rofText:disclosure?.includeRof===true?(matches?'Fatigue (Self-Report): Before '+readScore(matches[1])+' / After '+readScore(matches[2]):'Fatigue (Self-Report): Timing and Scores Unverified'):'Fatigue Responses Omitted (Default)',
   includeRof:disclosure?.includeRof===true
  });
 }

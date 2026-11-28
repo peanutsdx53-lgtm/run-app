@@ -53,7 +53,7 @@ export function localizeConsultationAfterDraw(host,{mode,group,single,scienceRun
  }
  setText(host,'[data-report-overview-label]',period?'Activities in the Selected Period':'Activity Summary');
  setText(host,'[data-activity-source]',sourceLabel);
- setText(host,'[data-rof-heading]',hasRof?'Before/After Fatigue (ROF-J: '+date(rof.date)+')':'Before/After Fatigue (ROF-J)');
+ setText(host,'[data-rof-heading]',hasRof?'Before/After Fatigue ('+date(rof.date)+')':'Before/After Fatigue');
  const rofMeaning='These 0–10 scores are self-reported; 0 is valid, and unanswered is —. Before/after are response categories. Neither entry timestamps nor recalled assessment times verify actual chronological order relative to activity. The application does not infer a within-activity temporal change or directly measured physical load.';
  const rofNote=hasRof?englishReportRecordContext(rof,mode)+'. '+rofMeaning:
   period?'No manual record in this period contains valid responses for both categories. This is not a period average.':'The selected record does not contain valid responses for both before/after categories.';

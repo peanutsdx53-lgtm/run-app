@@ -9,7 +9,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,dirname,extname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {chromium,webkit} from 'playwright';
-import {EXPLORE_LEGACY} from '../ui/explorationRedesign.js';
+import {EXPLORE_LEGACY,EXPLORE_GROUPS,EXPLORE_THEMES} from '../ui/explorationRedesign.js';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const engine=process.env.RUNLOAD_BROWSER_ENGINE==='webkit'?'webkit':'chromium';
 const out=resolve(root,'audit-output','explore-copy-'+engine);
@@ -240,35 +240,50 @@ try{
    await page.goto(base+'#/exploration-tree?'+query.toString(),{waitUntil:'networkidle'});
    await page.locator('.ex-inquiry-start h3').waitFor({state:'visible',timeout:14000});
    if(percent===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
-   const expected=language==='en'?['Running and daily context','Topics','Uphill Movement','A way to understand','Interpretation limits','Sources and study context']:['走行条件と生活','読むテーマ','上りの動き','理解の手掛かり','読み取り上の注意','参考文献・研究条件'];
+   const expected=language==='en'?['Running and daily context','Choose a topic','Uphill Movement','A way to understand','Interpretation limits','Sources and study context']:['走行条件と生活','テーマを選ぶ','上りの動き','理解の手掛かり','読み取り上の注意','参考文献・研究条件'];
    await page.waitForFunction(labels=>{
     const q=s=>document.querySelector(s)?.textContent.trim();
-    return q('.ex-focus h2')===labels[0]&&q('.ex-topic-controls>strong')===labels[1]&&q('.ex-direction-card>strong')===labels[2]&&q('.ex-inquiry-stage>h4')===labels[3]&&q('.ex-reading-limit>strong')===labels[4]&&q('.ex-knowledge-reference>summary')===labels[5];
+    return q('.ex-focus h2')===labels[0]&&document.querySelector('.ex-main-topic-set')?.getAttribute('aria-label')===labels[1]&&q('.ex-direction-card>strong')===labels[2]&&q('.ex-inquiry-stage>h4')===labels[3]&&q('.ex-reading-limit>summary')===labels[4]&&q('.ex-knowledge-reference>summary')===labels[5];
    },expected,{timeout:14000});
    const geometry=await page.locator('[data-experience-v3]').evaluate(el=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,font:parseFloat(getComputedStyle(document.documentElement).fontSize),areas:el.querySelectorAll('.ex-area-choice').length,questions:el.querySelectorAll('.ex-inquiry-start h3').length,stages:el.querySelectorAll('.ex-inquiry-stage').length,stepper:el.querySelectorAll('[data-ex-topic-step]').length,note:el.querySelectorAll('[data-ex-action="note"]').length,share:el.querySelectorAll('[data-ex-consultation]').length,history:el.querySelectorAll('[data-ex-action="memories"]').length}));
    assert.ok(geometry.scroll<=width+3,'UX13 whole page overflow '+JSON.stringify({language,width,percent,geometry}));
    assert.equal(geometry.font,percent===200?32:16,'UX13 root font');
-   assert.deepEqual([geometry.areas,geometry.questions,geometry.stages,geometry.stepper,geometry.note,geometry.share,geometry.history],[4,1,4,2,1,1,1],'UX13 preserves discovery and optional actions');
+   assert.deepEqual([geometry.areas,geometry.questions,geometry.stages,geometry.stepper,geometry.note,geometry.share,geometry.history],[4,1,4,0,1,1,1],'UX13 preserves discovery and optional actions');
    const filename='ux13-'+language+'-'+width+'-'+percent+'.png';
    await page.screenshot({path:resolve(out,filename),fullPage:true,animations:'disabled',timeout:20000});
    ux13Matrix.push({engine,language,width,percent,filename,expected,...geometry});
    const g=await ux14Geometry(page);
    const actions=[];
-   // Test the exact same four actual controls using real pointer clicks, not synthetic dispatch.
-   // Failed/occluded targets are observations, not silently bypassed with force clicks.
+   // The unified discovery screen keeps focus on the selected area so that
+   // repeated selections and keyboard traversal do not jump down to the article.
+   // Search-result activation still moves focus to the matching content heading.
+   const areaState=async id=>{
+    const group=EXPLORE_GROUPS.find(g=>g.id===id),lang=language==='en'?1:0;
+    const heading=group.name[lang],titles=group.themes.map(key=>EXPLORE_THEMES[key].title[lang]);
+    await page.waitForFunction(({heading,titles})=>document.querySelector('.ex-focus h2')?.textContent.trim()===heading&&JSON.stringify([...document.querySelectorAll('.ex-main-topic-set strong')].map(n=>n.textContent.trim()))===JSON.stringify(titles),{heading,titles},{timeout:5000});
+    // Sample after the render/translation frame, including the fixed navigation.
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    return page.evaluate(id=>{
+     const active=document.activeElement,selected=[...document.querySelectorAll('.ex-area-choice[aria-pressed="true"]')];
+     const bounds=active?.getBoundingClientRect(),nav=document.querySelector('.mobile-nav');
+     const navTop=nav?.getBoundingClientRect().top;
+     const bottom=nav&&getComputedStyle(nav).display!=='none'&&navTop>0?Math.min(innerHeight,navTop):innerHeight;
+     return {id,selected:selected.map(n=>n.dataset.exGroup),active:active?.dataset.exGroup||null,activeIsSelected:selected.length===1&&active===selected[0],visible:!!bounds&&bounds.top>=-1&&bounds.bottom<=bottom+1,heading:document.querySelector('.ex-focus h2')?.textContent.trim(),topicCount:document.querySelectorAll('.ex-main-topic-set button').length};
+    },id);
+   };
+   // Use actual pointer clicks; never force activation of occluded controls.
    for(const id of ['A','B','C','D']){
     const n=page.locator('.ex-area-choice[data-ex-group="'+id+'"]');
-    try{await n.click({timeout:2200});await page.locator('.ex-area-choice[data-ex-group="'+id+'"][aria-pressed="true"]').waitFor({timeout:2200});const state=await page.evaluate(()=>({active:document.activeElement?.getAttribute('data-ex-group')||document.activeElement?.tagName,activeIsHeading:document.activeElement===document.querySelector('.ex-focus h2'),heading:document.querySelector('.ex-focus h2')?.textContent,focusTop:document.querySelector('.ex-focus')?.getBoundingClientRect().top,scrollY:scrollY,selected:document.querySelector('.ex-area-choice[aria-pressed="true"]')?.dataset.exGroup}));actions.push({id,ok:state.selected===id,...state});}catch(e){actions.push({id,ok:false,error:String(e).split('\n')[0].slice(0,300)})}
+    await n.click({timeout:5000});
+    actions.push(await areaState(id));
    }
    const keyboard=[];
-   for(const id of ['C','D']){const n=page.locator('.ex-area-choice[data-ex-group="'+id+'"]');await n.focus();await page.keyboard.press('Enter');keyboard.push(await page.evaluate(id=>({id,selected:document.querySelector('.ex-area-choice[aria-pressed="true"]')?.dataset.exGroup,activeTag:document.activeElement?.tagName,activeIsHeading:document.activeElement===document.querySelector('.ex-focus h2'),headingTop:document.querySelector('.ex-focus h2')?.getBoundingClientRect().top,headingBottom:document.querySelector('.ex-focus h2')?.getBoundingClientRect().bottom,activeCategory:document.activeElement?.dataset?.exGroup||null,focusTop:document.querySelector('.ex-focus')?.getBoundingClientRect().top}),id))}
-   let disclosure=null;
-   {
-    const toggle=page.locator('[data-ex-action="toggle-map"]'),map=page.locator('.ex-area-grid'),before=await ux14Geometry(page);
-    await toggle.click();const closed=await map.isHidden(),expandedClosed=await toggle.getAttribute('aria-expanded'),focusClosed=await toggle.evaluate(e=>e===document.activeElement);
-    await page.locator('[data-ex-action="change-area"]').click();const open=await map.isVisible(),expandedOpen=await toggle.getAttribute('aria-expanded'),active=await page.evaluate(()=>document.activeElement?.dataset?.exGroup),selected=await page.locator('.ex-area-choice[aria-pressed="true"]').getAttribute('data-ex-group');
-    disclosure={closed,expandedClosed,focusClosed,open,expandedOpen,active,selected};
+   for(const [id,key] of [['C','Enter'],['D','Space']]){
+    const n=page.locator('.ex-area-choice[data-ex-group="'+id+'"]');
+    await n.focus();await page.keyboard.press(key);keyboard.push({...await areaState(id),key});
    }
+   const disclosure={open:await page.locator('.ex-area-grid').isVisible(),obsolete:await page.locator('[data-ex-action="toggle-map"],[data-ex-action="change-area"],[data-ex-tab]').count()};
+   assert.equal(await page.locator('.ex-reading-limit[open],.ex-knowledge-reference[open]').count(),0,'details closed by default');
    // UPR-02: absence of the old preview, then real saved-run provenance and geometry.
    await page.locator('.ex-heading [data-ex-action="field-help"]').click();const help=await page.locator('.ex-dialog').innerText();await page.keyboard.press('Escape');
    assert.equal(await page.locator('[data-ex-action="sample"]').count(),0,'No simulated highlight control');
@@ -290,9 +305,10 @@ try{
     assert.deepEqual(g.clipped,[],'C clipped '+label);assert.deepEqual(g.collisions,[],'C collision '+label);assert.deepEqual(g.brokenWords,[],'C mid-word wrap '+label);
     assert.ok(g.scrollWidth<=width+3,'C page overflow '+label);
     assert.ok(g.nodes.every(n=>n.box.w>=44&&n.box.h>=44&&n.aria&&n.aria.includes(n.fullTitle)),'C control geometry or full accessible label '+label);
-    assert.equal(actions.filter(x=>x.ok&&x.activeIsHeading).length,4,'C pointer focus '+label);
-    assert.equal(keyboard.filter(x=>x.selected===x.id&&x.activeIsHeading&&x.headingTop>=-1&&x.headingBottom<=900).length,2,'C keyboard focus '+label);
-    assert.ok(disclosure.closed&&disclosure.expandedClosed==='false'&&disclosure.focusClosed&&disclosure.open&&disclosure.expandedOpen==='true'&&disclosure.active===disclosure.selected,'C map disclosure '+label);
+    const validAreaState=x=>x.selected.length===1&&x.selected[0]===x.id&&x.active===x.id&&x.activeIsSelected&&x.visible&&x.topicCount===EXPLORE_GROUPS.find(g=>g.id===x.id).themes.length;
+    assert.equal(actions.filter(validAreaState).length,4,'C pointer focus and topic selection '+label+JSON.stringify(actions));
+    assert.equal(keyboard.filter(validAreaState).length,2,'C keyboard focus and topic selection '+label+JSON.stringify(keyboard));
+    assert.ok(disclosure.open&&disclosure.obsolete===0,'C map disclosure '+label);
     assert.ok(realGeometry.relatedCount===3&&realGeometry.clipped.length===0&&realGeometry.collisions.length===0&&realGeometry.brokenWords.length===0,'Real highlight geometry '+label);
     assert.ok(realGeometry.nodes.every(n=>n.aria&&n.aria.includes(n.fullTitle)),'Real highlight accessible names '+label);
     assert.deepEqual(realGeometry.nodes.filter(n=>n.source==='saved-run').map(n=>n.id),['A','B','C'],'Real saved-run provenance '+label);

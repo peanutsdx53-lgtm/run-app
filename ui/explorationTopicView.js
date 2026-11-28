@@ -1,4 +1,4 @@
-import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from './explorationTopicGuides.js?v=20261111-exploration-inquiry-v1-daily-only';
+import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from './explorationTopicGuides.js?v=20261111-exploration-inquiry-v1-daily-only-ux109';
 // A single question leads into evidence, interpretation and optional notes.
 // The observation guide remains an editorial prompt, not a scientific lesson.
 export const OBSERVATION_GUIDE_BOUNDARY='観察ガイド：自分の経験を見直すための問いです。研究出典に基づく専門解説ではありません。';

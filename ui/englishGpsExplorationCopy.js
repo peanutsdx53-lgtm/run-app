@@ -33,7 +33,7 @@ export const ENGLISH_GPS_EXPLORATION_COPY=Object.freeze({
  "違和感の原因や病名、けがの有無を判定する機能ではありません。強い痛みや持続する症状は医療者に相談してください。": "This does not determine a symptom's cause, a diagnosis, or whether an injury exists. Seek medical advice for severe or persistent pain.",
  "過去の走行日時や本人の疲労感を、事実と主観に分けて確認します。": "Review dates and self-reported fatigue while keeping recorded facts and feelings separate.",
  "休んだことで回復したと証明するものではなく、最適な休養日数を指示しません。": "The record does not prove that rest caused recovery or prescribe an ideal number of rest days.",
- "ROF-Jの運動前・運動後と、本人が記録した生活コンディションを別々に確認できます。": "Review ROF-J before/after response categories separately from your lifestyle condition records.",
+ "運動前後の疲労感と、本人が記録した生活コンディションを別々に確認できます。": "Review before/after fatigue ratings separately from your lifestyle condition records.",
  "関連する記録を並べても疲れの原因や身体の状態は断定できません。": "Placing related records side by side does not establish the cause of fatigue or bodily condition.",
  "現行の走行記録に食事量を測定する機能はありません。気付いたことだけを任意で記録します。": "The current run record does not measure dietary intake. You can optionally record what stood out.",
  "摂取量の不足や個人に必要な栄養・水分量を判定する機能ではありません。": "This does not identify inadequate intake or prescribe personal nutrition or hydration amounts.",

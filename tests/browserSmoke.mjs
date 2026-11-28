@@ -1629,7 +1629,7 @@ try{
   await savedResult.locator('[data-label-toggle]').click();
   assert.ok(await savedResult.locator('[data-body-reference-label]').count()>0);
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-manual-result-gait-repaired.png'),fullPage:false});
-  await checkSavedResultPng(page,savedResult,mode,'eligible',['文献参考値：','/12 部位算出','各部位自身の文献基準を100','ROF-J等の本人回答は非掲載（既定）'],['算出対象外','身体の部位別の参考値はまだありません','ROF-J（本人回答）：運動前']);
+  await checkSavedResultPng(page,savedResult,mode,'eligible',['文献参考値：','/12 部位算出','各部位自身の文献基準を100','疲労感などの本人回答は非掲載（既定）'],['算出対象外','身体の部位別の参考値はまだありません','疲労感（本人回答）：運動前']);
   const classification=await page.evaluate(async()=>{
    const content=JSON.parse((await (await import('/ui/manualRunCanonical.js')).readCanonical()).raw);
    return {revision:content.revision,count:content.records.length,

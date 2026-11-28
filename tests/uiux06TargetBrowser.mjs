@@ -76,7 +76,7 @@ try{
   const bytes=await readFile(path);
   assert.ok(bytes.length>12000&&bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'valid PNG signature');
   const drawn=await page.evaluate(()=>window.__uiux06DrawnText);
-  assert.ok(drawn.some(x=>x.includes('ROF-J等の本人回答は非掲載（既定）')),'default image excludes subjective answers');
+  assert.ok(drawn.some(x=>x.includes('疲労感などの本人回答は非掲載（既定）')),'default image excludes subjective answers');
   assert.ok(!drawn.some(x=>x.includes('運動前 0')||x.includes('2026-10-30')),'default image excludes personal ROF-J and date');
   assert.ok(!drawn.some(x=>x.includes('評価時刻未記録')),'image must not claim timestamp absence');
   assert.ok(drawn.some(x=>x.includes('本人の身体負荷の実測値ではありません')));
@@ -86,7 +86,7 @@ try{
   const [opted]=await Promise.all([page.waitForEvent('download'),result.locator('[data-download]').click()]);
   assert.equal(opted.suggestedFilename(),'走行結果.png');
   const chosen=await page.evaluate(()=>window.__uiux06DrawnText);
-  assert.ok(chosen.some(x=>x.includes('ROF-J（本人回答）：運動前 0 ／ 運動後 7')),'explicitly opted-in ROF has attribution');
+  assert.ok(chosen.some(x=>x.includes('疲労感（本人回答）：運動前 0 ／ 運動後 7')),'explicitly opted-in ROF has attribution');
   assert.ok(chosen.some(x=>x.includes('2026-10-30')),'date appears only after explicit choice');
   assert.ok(chosen.includes('回答の実際の時間的前後差は判定しません'),'opted-in ROF retains timing limits');
   if(engine==='chromium'){

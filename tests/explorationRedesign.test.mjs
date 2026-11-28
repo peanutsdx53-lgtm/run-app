@@ -62,3 +62,29 @@ test('catalog resolves all 27 legacy perspectives in Japanese and English withou
  assert.equal((catalogCards(categories,'  sLeEp  ').match(/data-ex-pick-topic="睡眠"/g)||[]).length,1);
  assert.match(catalogCards(categories,'no-matching-theme-xyz'),/ex-catalog-empty/);
 });
+
+test('single navigation and a collapsed interpretation limit on every legacy perspective',()=>{
+ for(const v of availableViews(categories)){
+  const ui=makeUi(memory());Object.assign(ui,{selected:v.category,topic:v.topic});const html=render(ui,ctx);
+  assert.equal((html.match(/data-ex-search/g)||[]).length,1);
+  assert.doesNotMatch(html,/data-ex-tab=|data-ex-topic-step=|data-ex-action="(?:toggle-map|change-area|try|know)"/);
+  assert.match(html,/<details class="ex-inquiry-details ex-reading-limit"><summary>読み取り上の注意<\/summary>/);
+  assert.doesNotMatch(html,/<details class="ex-inquiry-details ex-reading-limit"[^>]*\bopen\b/);
+  if(v.main==='B1')assert.doesNotMatch(html,/class="ex-view-switch"/);
+ }
+});
+test('body note highlights the body-motion theme, not fatigue or pain by inference',()=>{
+ const ui=makeUi(memory());Object.assign(ui,{selected:'02',topic:'足・膝・股関節'});
+ const html=render(ui,{...ctx,draft:{bodyObservation:'本人が入力したメモ'}});
+ const row=topic=>html.match(new RegExp('<button[^>]*data-ex-topic="'+topic+'"[^>]*>[\\s\\S]*?<\\/button>'))?.[0];
+ assert.match(row('足・膝・股関節'),/ex-related-marker/);
+ assert.doesNotMatch(row('自分が感じた疲れ'),/ex-related-marker/);
+ assert.doesNotMatch(row('筋肉痛・違和感'),/ex-related-marker/);
+ const missing=render(ui,{...ctx,draft:{bodyObservation:'本人が入力したメモ'},focusRunId:'missing',focusRun:null});
+ assert.doesNotMatch(missing,/class="ex-area-choice is-related|class="ex-related-marker"/);
+});
+
+test('fatigue-related copy uses plain language and preserves translations of validation messages',()=>{
+ const phrases=[['運動前の疲労感','Fatigue Before Activity'],['運動後の疲労感','Fatigue After Activity'],['運動前後の疲労感','Before/After Fatigue'],['手入力の疲労感は結果画面から訂正してください','Correct manually entered fatigue in Results.'],['疲労感は0〜10の整数です','Fatigue must be a whole number from 0 to 10.'],['疲労感は0〜10の整数で入力してください','Enter fatigue as a whole number from 0 to 10.']];
+ for(const [ja,en] of phrases)assert.equal(translateUiText(ja),en);
+});

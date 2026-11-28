@@ -4,7 +4,7 @@ export const EDIT_FIELDS=Object.freeze([
  ['shoeName','シューズ'],['memo','走行時のメモ'],['environmentNote','環境メモ'],
  ['courseName','コース名'],['temperatureC','気温（℃）'],['stepsBundle','歩数・取得方法'],
  ['gradeBundle','坂道・傾斜'],['surfaceBundle','路面の割合'],['runWalkBundle','走行と歩行'],
- ['rofBefore','運動前のROF-J'],['rofAfter','運動後のROF-J']
+ ['rofBefore','運動前の疲労感'],['rofAfter','運動後の疲労感']
 ]);
 export const POST_HOC_FIELDS=EDIT_FIELDS.map(x=>x[0]);
 export const SURFACES=Object.freeze({paved:'舗装路',track:'陸上トラック',treadmill:'トレッドミル',soil:'締まった土道',trail:'不整地トレイル',naturalGrass:'天然芝',artificialTurf:'人工芝',sand:'砂地'});
@@ -34,7 +34,7 @@ export function parsePostHocPayload(field,data,parent){
   const celsius=number(f(data,'celsius'),-50,60);return celsius!==null?ok({celsius}):fail('気温は−50〜60℃の数値で入力してください');
  }
  if(field==='rofBefore'||field==='rofAfter'){
-  const score=number(f(data,'score'),0,10,true);return score!==null?ok({score}):fail('ROF-Jは0〜10の整数で入力してください');
+  const score=number(f(data,'score'),0,10,true);return score!==null?ok({score}):fail('疲労感は0〜10の整数で入力してください');
  }
  if(field==='stepsBundle'){
   const steps=number(f(data,'steps'),0,10000000,true),stepsProvenance=f(data,'stepsProvenance');

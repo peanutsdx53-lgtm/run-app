@@ -1,5 +1,5 @@
 /** GPS user journey: only real (mock-received) GPS points are measured;
- * ROF-J responses stay separate and survive saving + page reload.
+ * fatigue responses stay separate and survive saving + page reload.
  */
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';

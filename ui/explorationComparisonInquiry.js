@@ -50,7 +50,7 @@ export function renderComparisonInquiry(input={}){
   (m.unavailable.length?'<p>両方の回答がそろわず差を確認できない項目：'+esc(m.unavailable.join('、'))+'。</p>':'')+
   '<p>ここでは値の比較表を複製しません。数値と文献参考値の同一部位・同一指標・同一計算方法の適格性は結果画面で確認してください。</p>'+
   '<a class="ex-e-compare-link" data-e-compare-return href="'+link+'&compare='+encodeURIComponent(m.previous.id)+'">2件の比較結果と条件を確認する</a>'+
-  '<div class="ex-e-boundary"><strong>差からは言えないこと</strong><p>入力された日付は実際の走行順を証明しません。ROF-Jの回答区分から時間的な前後変化を確定せず、違いの原因・能力の向上・身体負荷・安全性を判定しません。</p></div>'+
+  '<div class="ex-e-boundary"><strong>差からは言えないこと</strong><p>入力された日付は実際の走行順を証明しません。疲労感の回答区分から時間的な前後変化を確定せず、違いの原因・能力の向上・身体負荷・安全性を判定しません。</p></div>'+
   '<p class="ex-e-prompt">この2回で、どんな状況や感覚を次に確かめたいですか？</p>'+
   '<details class="ex-inquiry-details ex-e-extra"><summary>任意のメモについて</summary><p>必要なら下の既存テーマにある「メモを書く」から任意で記述できます。メモは今回の手入力走行にのみ関連づき、比較相手の記録は変更しません。</p></details>':
   '<p data-e-evidence="unavailable" role="status">'+esc(m.reason)+'</p>'+

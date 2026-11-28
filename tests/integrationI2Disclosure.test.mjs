@@ -9,11 +9,11 @@ test('I2: opt-in is per-export, zero remains a value, and sensitive prose is nev
  const d=resultExportDisclosure(input);
  assert.equal(d.includeDate,false);assert.equal(d.includeRof,false);
  assert.equal(d.dateText,'日付は非掲載（既定）');
- assert.equal(d.rofText,'ROF-J等の本人回答は非掲載（既定）');
+ assert.equal(d.rofText,'疲労感などの本人回答は非掲載（既定）');
  assert.doesNotMatch(JSON.stringify(d),/2026-11-09|PRIVATE-MEMO|PRIVATE-MENTAL|PRIVATE-POSTHOC|37\.123|運動前 0/);
  const explicit=resultExportDisclosure({...input,includeDate:true,includeRof:true});
  assert.equal(explicit.dateText,'2026-11-09');
- assert.equal(explicit.rofText,'ROF-J（本人回答）：運動前 0 ／ 運動後 未回答');
+ assert.equal(explicit.rofText,'疲労感（本人回答）：運動前 0 ／ 運動後 未回答');
  assert.doesNotMatch(JSON.stringify(explicit),/PRIVATE-|37\.123/);
  for(const invalid of [-1,11,3.4,'0',NaN])
    assert.match(resultExportDisclosure({before:invalid,includeRof:true}).rofText,/運動前 未回答/);

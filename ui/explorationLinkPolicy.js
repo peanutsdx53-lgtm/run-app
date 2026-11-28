@@ -31,7 +31,7 @@ export function resolveExplorationContext(hash,{manual,gpsV2}={}){
 // verified manual ID. No user text, record payload, GPS data or share choices.
 export function captureConsultationFromExplore(route,ui,sources){
  const resolved=resolveExplorationContext(route,sources);
- const selection=Object.fromEntries(['selected','topic','tab','mapExpanded','bodyChoice','toolChoice','lifeA','lifeB','trialDistance','trialMinutes'].map(k=>[k,ui[k]]));
+ const selection=Object.fromEntries(['selected','topic','bodyChoice','toolChoice'].map(k=>[k,ui[k]]));
  return {route,selection,recordId:resolved.ok&&resolved.value.kind==='MANUAL'?resolved.value.record.id:null};
 }
 export function gpsInquiryBridge(ctx,{topic=null,lifeContext=null}={}){
@@ -47,6 +47,6 @@ export function gpsInquiryBridge(ctx,{topic=null,lifeContext=null}={}){
  const otherTopic=bodyTopic||conditionTopic||lifeTopic;
  const generalCategory=lifeTopic?'05':conditionTopic?'03':bodyTopic?'04':FATIGUE_TOPIC.category;
  const generalTopic=lifeTopic?'日々のコンディション':conditionTopic?'気温・天候':bodyTopic?'筋肉痛・違和感':FATIGUE_TOPIC.topic;
- const rof=`<p>ROF-J（本人回答）：運動前 ${before??'未回答'}／運動後 ${after??'未回答'}。回答区分・操作時点から変化の原因は分かりません。</p>`;
+ const rof=`<p>運動前後の疲労感（本人回答）：運動前 ${before??'未回答'}／運動後 ${after??'未回答'}。回答区分・操作時点から変化の原因は分かりません。</p>`;
  return '<section class="ex-page ex-gps-bridge" data-gps-inquiry-bridge role="region" aria-label="GPS保存記録を確認"><h1>この走行の記録を確認する</h1><p>記録日：'+safe(r.date||'不明')+'／距離：'+safe(Number(r.distanceKm).toFixed(2))+' km（GPS計測値）。</p>'+(otherTopic?'':rof)+(lifeTopic?renderLifeInquiry({ref:ctx.ref,record:r,...(lifeContext||{})}):conditionTopic?renderConditionInquiry({ref:ctx.ref,record:r}):bodyTopic?renderBodyInquiry({ref:ctx.ref,record:r}):renderFatigueInquiry({ref:ctx.ref,record:r}))+'<p>そのときの経験について何が気になりますか？ 数字だけから疲労の理由や健康状態は判定できません。</p><p>このGPS記録を既存の手入力専用探究メモへ自動的には関連づけません。一般テーマは、記録との個別連動を解除して開けます。</p><div><a href="'+safe(returnUrl)+'">このGPS記録へ戻る</a><a href="'+safe(explorationHref(null,generalCategory,generalTopic))+'">記録と関連づけず一般テーマを見る</a></div></section>';
 }

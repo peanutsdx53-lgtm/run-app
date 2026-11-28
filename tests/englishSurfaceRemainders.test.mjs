@@ -19,7 +19,7 @@ test('desktop ROF-J corrections, timestamps, and source limits translate without
   '今回の記録・保存コース',
   '訂正して履歴を保存',
   '「運動前／後」は回答区分です。入力操作時刻と本人申告の評価時刻を記録しますが、実際の時間的な順序が検証できないため、変化量や原因は判定しません。未回答は「—」で、0と区別します。',
-  '出所：ROF-J／本人回答。数値が同じ場合も経験が同じとは限らず、前後差や原因の測定ではありません。'
+  '出所：疲労感／本人回答。数値が同じ場合も経験が同じとは限らず、前後差や原因の測定ではありません。'
  ];
  for(const phrase of phrases)assert.doesNotMatch(translateUiText(phrase),/[ぁ-ゟァ-ヿ一-龯]/);
  assert.match(translateUiText(phrases[2]),/chronological order is not verified/);

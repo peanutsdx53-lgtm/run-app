@@ -106,7 +106,7 @@ try{
    assert.equal(await page.locator('[data-gps-inquiry-bridge]').count(),1);
    assert.equal(await page.locator('[data-gps-inquiry-bridge] [data-ex-action="note"]').count(),0);
    assert.match(await page.locator('[data-gps-inquiry-bridge] a').last().getAttribute('href'),/category=04/);
-   assert.doesNotMatch(content,/ROF-J（本人回答）：運動前/);
+   assert.doesNotMatch(content,/(?:ROF-J|疲労感)（本人回答）：運動前/);
   }
   assert.match(content,new RegExp('E4-POSTHOC-PRIVATE-'+ref.sourceType));
   assert.match(content,/対象とした時点：走った後/);

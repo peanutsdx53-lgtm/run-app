@@ -18,7 +18,7 @@ test('explicit-run date, fatigue and distance composites translate without chang
   ['本人の疲労感：運動前 未回答 ／ 運動後 0','Perceived Fatigue: Before Unanswered / After 0'],
   ['経過時間：35分00秒','Elapsed Time: 35 min 00 sec'],
   ['保存された手入力走行は2件です。2件以上あれば結果画面から記録を選んで比較できます。','2 saved manual runs. Select two or more in Results to compare.'],
-  ['2026-11-20 に保存したROF-Jの入力に関連','Related to self-reported ROF-J saved on 2026-11-20']
+  ['2026-11-20 に保存した運動前後の疲労感に関連','Related to self-reported fatigue before/after exercise saved on 2026-11-20']
  ]){
   assert.equal(translateExploreDynamic(raw,{element:english}),translation,raw);
  }
@@ -60,7 +60,7 @@ test('UX14 category names agree across plain and related accessible labels',()=>
   ['身体のしくみ','How the Body Works','入力中の身体に関するメモに関連','Related to Unsaved Body Notes'],
   ['コースと環境','Course & Environment','入力中の上り坂・下り坂の情報に関連','Related to Unsaved Uphill and Downhill Data'],
   ['疲れと回復','Fatigue & Recovery','入力中の運動前後の疲れに関連','Related to Unsaved Perceived Fatigue'],
-  ['疲れと回復','Fatigue & Recovery','2026-11-11 に保存したROF-Jの入力に関連','Related to self-reported ROF-J saved on 2026-11-11'],
+  ['疲れと回復','Fatigue & Recovery','2026-11-11 に保存した運動前後の疲労感に関連','Related to self-reported fatigue before/after exercise saved on 2026-11-11'],
   ['暮らしと気持ち','Life & Feelings','2026-11-20 の生活コンディション記録に関連','Related to the Daily Condition Entry on 2026-11-20']
  ])assert.equal(translateUiText(ja+'、'+reason,ctx),en+', '+description);
  const authored='走りの記録、入力中の走行距離・時間などに関連';
@@ -70,7 +70,7 @@ test('UX14 category names agree across plain and related accessible labels',()=>
 });
 
 test('redesigned provenance composites preserve date, source and unsaved distinction without translating authored text',()=>{
- for(const [ja,en] of [['走行距離と時間','running distance and duration'],['坂道の入力','entered hill conditions'],['ROF-Jの入力','self-reported ROF-J'],['身体に関するメモ','body observation notes']]){
+ for(const [ja,en] of [['走行距離と時間','running distance and duration'],['坂道の入力','entered hill conditions'],['運動前後の疲労感','self-reported fatigue before/after exercise'],['身体に関するメモ','body observation notes']]){
   for(const date of ['2026-11-20','2025-01-02']){
    const raw=date+' に保存した'+ja+'に関連。保存した手入力の情報との対応です。';
    const expected='Related to '+en+' saved on '+date+'. Based on a saved manual entry.';

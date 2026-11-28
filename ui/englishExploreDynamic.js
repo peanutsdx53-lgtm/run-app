@@ -91,14 +91,14 @@ export function translateExploreDynamic(raw,{element=null}={}){
  if(element.matches?.('.ex-note-count')&&(m=s.match(/^(\d+)件$/)))return m[1]+(m[1]==='1'?' note':' notes');
  if((m=s.match(/^(\d{4}-\d\d-\d\d) の生活コンディション記録に関連$/)))
   return 'Related to the Daily Condition Entry on '+m[1];
- if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|ROF-Jの入力|身体に関するメモ)に関連$/))){
-  const labels={'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','ROF-Jの入力':'self-reported ROF-J','身体に関するメモ':'body observation notes'};
+ if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|運動前後の疲労感|身体に関するメモ)に関連$/))){
+  const labels={'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','運動前後の疲労感':'self-reported fatigue before/after exercise','身体に関するメモ':'body observation notes'};
   return 'Related to '+labels[m[2]]+' saved on '+m[1];
  }
  // The redesign displays interpretation limits separately. Translate the
  // shortened generated provenance composites without changing the stored date.
- if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|ROF-Jの入力|身体に関するメモ)に関連。保存した手入力の情報との対応です。(入力途中の値はこのテーマの計算に用いていません。)?$/))){
-  const labels={'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','ROF-Jの入力':'self-reported ROF-J','身体に関するメモ':'body observation notes'};
+ if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|運動前後の疲労感|身体に関するメモ)に関連。保存した手入力の情報との対応です。(入力途中の値はこのテーマの計算に用いていません。)?$/))){
+  const labels={'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','運動前後の疲労感':'self-reported fatigue before/after exercise','身体に関するメモ':'body observation notes'};
   return 'Related to '+labels[m[2]]+' saved on '+m[1]+'. Based on a saved manual entry.'+(m[3]?' Unsaved values are not used in this calculation.':'');
  }
  if((m=s.match(/^(入力中の走行距離・時間などに関連|入力中の上り坂・下り坂の情報に関連|入力中の運動前後の疲れに関連|入力中の身体に関するメモに関連)。入力途中の内容であり、保存済み記録ではありません。$/)))
@@ -143,8 +143,8 @@ export function translateExploreDynamic(raw,{element=null}={}){
  if((m=s.match(/^([\d:]+) 分\/km$/)))return m[1]+' min/km';
  if((m=s.match(/^：運動前 (未回答|\d{1,2}) ／ 運動後 (未回答|\d{1,2})。保存済みの本人の回答です。$/)))
   return ': Before '+(m[1]==='未回答'?'Unanswered':m[1])+' / After '+(m[2]==='未回答'?'Unanswered':m[2])+'. Saved self-reported ratings.';
- if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|ROF-Jの入力|身体に関するメモ)に関連。保存した手入力の情報との対応です。(入力途中の値はこのテーマの計算に用いていません。)?この関連だけから原因や身体の状態は判断できません。$/)))
-  return 'Related to '+({'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','ROF-Jの入力':'ROF-J self-reports','身体に関するメモ':'body notes'}[m[2]])+' saved on '+m[1]+'. This association does not establish causes or physical condition.';
+ if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|運動前後の疲労感|身体に関するメモ)に関連。保存した手入力の情報との対応です。(入力途中の値はこのテーマの計算に用いていません。)?この関連だけから原因や身体の状態は判断できません。$/)))
+  return 'Related to '+({'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','運動前後の疲労感':'self-reported fatigue before/after exercise','身体に関するメモ':'body notes'}[m[2]])+' saved on '+m[1]+'. This association does not establish causes or physical condition.';
  if((m=s.match(/^入力中の走行距離・時間などに関連。入力途中の内容であり、保存済み記録ではありません。この関連だけから原因や身体の状態は判断できません。$/)))
   return 'Related to unsaved running distance and duration. This is not a saved record and does not establish causes or physical condition.';
  if((m=s.match(/^入力中の上り坂・下り坂の情報に関連。入力途中の内容であり、保存済み記録ではありません。この関連だけから原因や身体の状態は判断できません。$/)))

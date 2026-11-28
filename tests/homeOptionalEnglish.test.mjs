@@ -32,8 +32,9 @@ test('discovery header and generated date translate while the user-authored note
  assert.equal(translateUiText(date,generated('.hx-discovery-date')),'Observation you saved on 2026-11-21.');
  assert.equal(translateUiText('保存済み手入力走行の距離（活動1件ごと）'),'Saved Manual Running Distances (Per Activity)');
 });
-test('center only the Explore label, preserving fixed orb anchor and size',()=>{
+test('unified Explore area choices have no constellation anchor and use readable aligned labels',()=>{
  const css=readFileSync(new URL('../ui/explorationExperience.css',import.meta.url),'utf8');
- assert.match(css,/\.ex-page \.ex-constellation \.ex-core > span\{[^}]+text-align:center/);
- assert.match(css,/\.ex-page \.ex-constellation \.ex-core\{[\s\S]*?top:49%;left:50%/);
+ assert.match(css,/\.ex-page \.ex-area-choice strong\{[^}]+line-height:1.45/);
+ assert.match(css,/\.ex-page \.ex-area-grid\{[^}]+grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+ assert.doesNotMatch(css,/\.ex-page \.ex-constellation \.ex-core\{[^}]+top:49%/);
 });

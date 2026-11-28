@@ -26,3 +26,11 @@ export function runningPhaseDiagram(){
  };
  return `<figure class="ex-edu-figure ex-phase-example"><div class="ex-phase-pair"><div><strong>接地している脚</strong>${panel(false)}<small>身体を支え、進む動きに関わる</small></div><div><strong>地面を離れた脚</strong>${panel(true)}<small>次の接地へ向かう</small></div></div><figcaption>同じ脚の動きを考える模式図。関節角度や負荷を測定した図ではありません。</figcaption></figure>`;
 }
+
+// Hypothetical reported categories, not a measurement of temporal change.
+export function fatigueResponseExample(){
+ return '<figure class="ex-edu-figure ex-fatigue-example"><figcaption>説明用の仮想例</figcaption><div class="ex-fatigue-pair">'+[[1,5],[4,5]].map((values,i)=>'<div><strong>走行 '+(i?'B':'A')+'</strong><dl>'+values.map((v,j)=>'<div><dt>'+(j?'運動後':'運動前')+'</dt><dd>'+v+'<span> / 10</span></dd></div>').join('')+'</dl></div>').join('')+'</div><figcaption>後の回答は同じでも、前の回答は異なります。回答区分は実際の評価時刻を証明しません。</figcaption></figure>';
+}
+export function sleepTimeExample(){
+ return '<figure class="ex-edu-figure ex-sleep-example"><figcaption>説明用の仮想例</figcaption><div class="ex-sleep-labels"><span>23:00</span><span>07:00</span></div><div class="ex-sleep-track"><span>就床から起床まで：8時間</span></div><div class="ex-sleep-unknown">実際に眠った時間：不明</div></figure>';
+}

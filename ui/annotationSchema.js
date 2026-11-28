@@ -45,7 +45,7 @@ export const annotationUtf8Bytes=text=>new TextEncoder().encode(text).length;
 export function validateAnnotationPayload(field,payload,{ref,record}={}){
  if(!FIELDS.includes(field))return fail('BAD_FIELD','未定義の追記項目です');
  if(['rofBefore','rofAfter'].includes(field)&&ref?.sourceType==='MANUAL')
-  return fail('BAD_FIELD','手入力ROF-Jは既存の正規訂正APIを使用してください');
+  return fail('BAD_FIELD','手入力の疲労感は結果画面から訂正してください');
  if(!payload||typeof payload!=='object'||Array.isArray(payload))return fail('BAD_VALUE','回答の形式が正しくありません');
  const fieldText={bodyObservation:500,shoeName:100,environmentNote:500,memo:500,courseName:100};
  if(has(fieldText,field))
@@ -57,7 +57,7 @@ export function validateAnnotationPayload(field,payload,{ref,record}={}){
  if(field==='temperatureC')
   return keysExactly(payload,['celsius'])&&num(payload.celsius,-50,60)?ok(payload):fail('BAD_VALUE','気温の値または単位が正しくありません');
  if(field==='rofBefore'||field==='rofAfter')
-  return keysExactly(payload,['score'])&&int(payload.score,0,10)?ok(payload):fail('BAD_VALUE','ROF-Jは0〜10の整数です');
+  return keysExactly(payload,['score'])&&int(payload.score,0,10)?ok(payload):fail('BAD_VALUE','疲労感は0〜10の整数です');
  if(field==='stepsBundle')
   return keysExactly(payload,['steps','stepsProvenance'])&&int(payload.steps,0,10000000)&&
    ['UNKNOWN','DEVICE_MEASURED','ESTIMATED'].includes(payload.stepsProvenance)?
@@ -115,7 +115,7 @@ export function validateAppendRequest(request,{record}={}){
  const nr=normalizeRecordRef(request.recordRef);if(!nr.ok)return nr;
  if(!FIELDS.includes(request.fieldKey))return fail('BAD_FIELD','未知の項目に追記できません');
  if(['rofBefore','rofAfter'].includes(request.fieldKey)&&nr.value.sourceType==='MANUAL')
-  return fail('BAD_FIELD','手入力ROF-Jの変更は正規訂正APIのみです');
+  return fail('BAD_FIELD','手入力の疲労感は結果画面から訂正してください');
  if(!OPS.includes(request.operation)||!int(request.expectedRevision,0,ANNOTATION_MAX_EVENTS)||
   !(request.expectedHeadEventId===null||idPattern.test(request.expectedHeadEventId))||
   !idPattern.test(request.eventId)||!idPattern.test(request.clientRequestId)||
