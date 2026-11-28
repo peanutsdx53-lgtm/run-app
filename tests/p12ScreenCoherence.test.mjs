@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const cacheVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1';
+const cacheVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2';
 
 test('P12: Home guide, learning header, History and Exploration controls preserve behavior',()=>{
  const home=read('app.js');
@@ -26,7 +26,7 @@ test('P12: Home guide, learning header, History and Exploration controls preserv
 
 test('P12: newest stylesheet, module imports and PWA precache share one release version',()=>{
  const html=read('index.html'),sw=read('sw.js'),css=read('ui/screenCoherenceP12.css'),app=read('app.js');
- const version='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1',pwaVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1',presentationVersion='20261110-p14-visual-v4-daily';
+ const version='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2',pwaVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2',presentationVersion='20261110-p14-visual-v4-daily';
  const previous='20261110-p12-card-help-v1';
  assert.ok(html.indexOf('unifiedLearningShell.css')<html.indexOf('screenCoherenceP12.css'));
  assert.ok(html.indexOf('screenCoherenceP12.css')<html.indexOf('screenRefinementP13.css'));

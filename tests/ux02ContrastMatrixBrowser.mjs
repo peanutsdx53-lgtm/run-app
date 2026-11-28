@@ -38,7 +38,7 @@ const routes=[
  {name:'settings',hash:'settings',ready:'[data-settings-v2]',target:'.s2-chevron',role:'non-text-icon',floor:'#103850',min:3},
  {name:'body',hash:'record-reflection',ready:'.cx-page',target:'.cx-field-title label',role:'text',floor:'#0d3d4e',min:4.5,expected:3},
  {name:'condition',hash:'home',ready:'[data-condition-open]',target:'.hx-daily-choices label span',role:'text',floor:'#393454',min:4.5,expected:8},
- {name:'explore',hash:'exploration-tree',ready:'[data-experience-v3]',target:'.ex-node-icon',role:'non-text-icon',floor:'#155563',min:3}
+ {name:'explore',hash:'exploration-tree',ready:'[data-experience-v3]',target:'.ex-area-symbol',role:'non-text-icon',floor:'#294a58',min:3,expected:4}
 ];
 const results=[];
 try{

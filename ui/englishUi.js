@@ -1,3 +1,4 @@
+import {ENGLISH_EXPLORE_REDESIGN} from './explorationRedesign.js?v=20261128-inquiry2';
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261128-dictionary';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact-remaining-copy';
@@ -246,6 +247,7 @@ export const ENGLISH_UI_TEXT=Object.freeze({
 export function translateUiText(text,context={}){
  const raw=String(text??'');const trimmed=raw.trim();
  if(context.element?.closest?.('[data-user-authored]'))return raw;
+ if(context.element?.closest?.('.ex-page')&&Object.hasOwn(ENGLISH_EXPLORE_REDESIGN,trimmed))return raw.replace(trimmed,ENGLISH_EXPLORE_REDESIGN[trimmed]);
  // S09 T10: this card describes one selected region. The conditions screen
  // uses the same Japanese words for a multiple-region picker, so its plural
  // English dictionary entry must remain untouched.

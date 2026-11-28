@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {themeFor,ENGLISH_EXPLORE_REDESIGN} from '../ui/explorationRedesign.js';
 import {makeUi,render,LEARNING_TOPICS} from '../ui/explorationExperience.js';
 import {EXPLORATION_STARTING_QUESTIONS,EXPLORATION_DRAFT_GUIDES} from '../ui/explorationTopicGuides.js';
 import {ENGLISH_GPS_EXPLORATION_COPY} from '../ui/englishGpsExplorationCopy.js';
@@ -21,14 +22,14 @@ test('all 27 themes share one question and a three-section inquiry flow, with En
  for(const cat of categories)for(const topic of cat.topics){
   const key=cat.id+'|'+topic,ui=makeUi(storage);
   ui.selected=cat.id;ui.topic=topic;
-  const page=render(ui,ctx),q=EXPLORATION_STARTING_QUESTIONS[key];
+  const page=render(ui,ctx),q=themeFor(cat.id,topic).question[0];
   assert.ok(q&&q.endsWith('？'),key+' must have one intentional opening question');
-  assert.ok(ENGLISH_GPS_EXPLORATION_COPY[q],key+' must have an English question');
+  assert.ok(ENGLISH_EXPLORE_REDESIGN[q],key+' must have an English question');
   assert.equal((page.match(/class="ex-inquiry-start"/g)||[]).length,1,key+' must have a single question header');
-  for(const label of ['探究の入り口','記録や経験を手がかりにする','記録と感覚を照らし合わせる','気づき・疑問を残す']){
+  for(const label of ['探究の入り口','理解の手掛かり','記録と感覚を照らし合わせる','気づき・疑問を残す']){
    assert.ok(page.includes(label),key+' missing '+label);
   }
-  assert.ok(page.indexOf('記録や経験を手がかりにする')<page.indexOf('記録と感覚を照らし合わせる'),key);
+  assert.ok(page.indexOf('理解の手掛かり')<page.indexOf('記録と感覚を照らし合わせる'),key);
   assert.ok(page.indexOf('記録と感覚を照らし合わせる')<page.indexOf('気づき・疑問を残す'),key);
   assert.equal((page.match(/data-ex-action="note"/g)||[]).length,1,key+' must offer a single optional note');
   if(!LEARNING_TOPICS[key])assert.ok(EXPLORATION_DRAFT_GUIDES[key],key+' must keep observation scope');
@@ -38,10 +39,10 @@ test('UX13 compact discovery headings retain all controls and distinguish unknow
  const ui=makeUi(storage);ui.selected='01';ui.topic='過去の走りとの比較';
  const normal=render(ui,ctx);
  assert.equal((normal.match(/気になることから/g)||[]).length,1);
- assert.match(normal,/<span>7つの分野<\/span><strong>探究<\/strong>/);
+ assert.match(normal,/aria-label="4つの分野から探す"/);
  assert.doesNotMatch(normal,/記録からも広がる発見|テーマを切り替える/);
  assert.match(normal,/<strong>読むテーマ<\/strong>/);
- assert.equal((normal.match(/data-ex-category=/g)||[]).length,7);
+ assert.equal((normal.match(/data-ex-category=/g)||[]).length,4);
  assert.equal((normal.match(/data-ex-topic-step=/g)||[]).length,2);
  assert.match(normal,/保存された手入力走行は0件/);
  assert.doesNotMatch(normal,/走行は未選択です/);
@@ -74,7 +75,7 @@ test('specialist inquiry stays out of general themes and appears only with expli
   assert.ok(selected.includes('class="ex-inline-inquiry"'),category+'|'+topic);
   assert.doesNotMatch(selected,/class="ex-e-kicker"|class="ex-e-prompt"|id="ex-e-t0[2-8]-title"/,
    'embedded inquiry must not repeat a second question');
-  assert.match(selected,/class="ex-inquiry-details"/,'science caveat remains accessible in source disclosure');
+  assert.match(selected,/class="ex-reading-limit"/,'science caveat remains visible');
  }
  const ui=makeUi(storage);ui.selected='03';ui.topic='気温・天候';
  const html=render(ui,ctx);
@@ -84,7 +85,8 @@ test('source help and original research content are still available on knowledge
  const ui=makeUi(storage);ui.selected='01';ui.topic='距離・時間・ペース';
  const html=render(ui,ctx);
  assert.match(html,/class="ex-inquiry-details ex-knowledge-reference"/);
- assert.match(html,/data-ex-action="learn-help"/);
+ assert.doesNotMatch(html,/data-ex-action="learn-help"/);
+ assert.match(html,/参考文献・研究条件|設計の参考文献|計算の根拠|文献参考値の根拠/);
  assert.match(html,/data-ex-consultation/);
  assert.doesNotMatch(html,/class="ex-learning-lead"/);
 });
@@ -92,8 +94,8 @@ test('source help and original research content are still available on knowledge
 test('Browse Topics omits numeric badges but retains all topics and search filtering',()=>{
  const ui=makeUi(storage);ui.tab='catalog';
  const html=render(ui,ctx);
- assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,7);
- assert.equal((html.match(/data-ex-pick-topic=/g)||[]).length,27);
+ assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,4);
+ assert.equal((html.match(/data-ex-pick-topic=/g)||[]).length,12);
  assert.doesNotMatch(html,/class="ex-count"|<small>\d+ テーマ<\/small>/);
  ui.search='睡眠';
  const filtered=render(ui,ctx);

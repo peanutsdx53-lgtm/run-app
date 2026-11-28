@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -82,7 +82,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/firstUseExperience.js?v=20261126-cleanup-v5"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
     import("./ui/consultationExperience.js?v=20261126-cleanup-v5-daily-only-usability1"),
-    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only-stage3-copy-notes-copy-usability1"),
+    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only-stage3-copy-notes-copy-usability1-inquiry2"),
     import("./ui/learningExperience.js?v=20261126-cleanup-v5"),
     import("./ui/interpretationRules.js?v=20261126-cleanup-v5"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
@@ -228,6 +228,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   let lastExploreRoute=null;
   const exploreConsultationRoute='#/consultation?from=explore';
   let exploreConsultation=null;
+  let exploreLearningReturn=null;
   const consultationEntry=()=>location.hash===exploreConsultationRoute?{fromExplore:true,recordId:exploreConsultation?.recordId||null,returnHref:exploreConsultation?.route||'#/exploration-tree'}:{};
   const explorationUi=explorationExperience.makeUi((()=>{try{return window.localStorage}catch{return null}})());
   // Return keyboard users to the inquiry control that opened a modal, after re-rendering.
@@ -500,6 +501,10 @@ function recordExtras(){
           if(explorationUi.modal==='memories'){const fresh=explorationExperience.makeUi(onboardStorage);explorationUi.notes=fresh.notes;explorationUi.canSave=fresh.canSave;explorationUi.emptyNotesRaw=fresh.emptyNotesRaw;explorationUi.notice=fresh.notice;explorationReturnAction='memories';}
         }
       }
+      if(exploreLearningReturn?.route===route){
+        Object.assign(explorationUi,exploreLearningReturn.selection,{modal:""});
+        exploreLearningReturn=null;
+      }
       if(exploreConsultation?.route===route){
         const fresh=explorationExperience.makeUi(onboardStorage);
         Object.assign(explorationUi,exploreConsultation.selection,{modal:"",notes:fresh.notes,canSave:fresh.canSave,emptyNotesRaw:fresh.emptyNotesRaw,notice:fresh.notice});
@@ -594,6 +599,7 @@ function recordExtras(){
  app.innerHTML=`<div class="app-shell ${page==="consultation"?"cp-app":""}" data-mobile-view="edit" data-mode-preview="single"><aside class="sidebar"><nav class="side-nav" aria-label="メニュー">${navHtml(desktopNav,navPage,false)}</nav></aside><div class="main-frame"><header class="topbar" hidden aria-hidden="true"></header><main class="main-content">${languageNotice}${state.toast?`<div class="toast-notice">${esc(state.toast)}</div>`:""}${detailContent}</main></div><nav class="mobile-nav" aria-label="スマートフォンのメニュー">${navHtml(mobileNav,page==="condition"?"home":["record","record-start","record-review","record-course","record-rof","record-more","record-compare","record-reflection","record-environment","measurement","gps-review","gps-rof"].includes(page)?"record-start":page,true)}</nav></div>${onboardingState.open?onboardingView():""}${gpsConsentMarkup}`;
  if(page==="learning"){
   learningExperience.mountLearning(app.querySelector("#learning-root"),new URLSearchParams(location.hash.split("?")[1]||""));
+  if(exploreLearningReturn){const back=document.createElement("a");back.className="ex-learning-return";back.setAttribute("data-ex-learning-return","");back.href=exploreLearningReturn.route;back.textContent=settingsUi.display.language==='en'?"Return to Explore":"探究に戻る";app.querySelector("#learning-root")?.before(back); }
  }
  if(page==="consultation"){
   consultationExperience.mountConsultation(app.querySelector('#consultation-root'),consultationExperience.consultationSources({
@@ -1982,6 +1988,12 @@ function recordExtras(){
       commitHomeLayout(next);
       render();window.scrollTo(0,y);return;
     }
+    const relatedLearning=event.target.closest("[data-ex-related-learning]");
+    if(relatedLearning&&currentPage()==="exploration-tree"){
+      const captured=explorationLinkPolicy.captureConsultationFromExplore(location.hash,explorationUi,{manual:manualRunStore.readManualRuns(onboardStorage),gpsV2:gpsV2Cache});
+      exploreLearningReturn={route:captured.route,selection:captured.selection};
+      return;
+    }
     const exploreSelect=event.target.closest("[data-ex-category]");
     if(exploreSelect){
       const id=exploreSelect.dataset.exCategory,c=CATEGORIES.find(c=>c.id===id);
@@ -1996,7 +2008,7 @@ function recordExtras(){
     const exploreTopicStep=event.target.closest("[data-ex-topic-step]");
     if(exploreTopicStep){
       const tabs=[...app.querySelectorAll('.ex-topic-set [data-ex-topic]')];
-      const current=tabs.findIndex(tab=>tab.dataset.exTopic===explorationUi.topic);
+      const current=tabs.findIndex(tab=>tab.dataset.exTopic===explorationUi.topic&&(!tab.dataset.exTopicCategory||tab.dataset.exTopicCategory===explorationUi.selected));
       const visible=tabs.findIndex(tab=>tab.classList.contains('is-picked'));
       const selectedIndex=current>=0?current:visible>=0?visible:0;
       tabs[selectedIndex+Number(exploreTopicStep.dataset.exTopicStep)]?.click();
@@ -2006,8 +2018,13 @@ function recordExtras(){
     if(exploreTopic){
        const before=exploreTopic.closest('.ex-topic-set');
        const oldLeft=before?.scrollLeft||0;
-       explorationUi.topic=exploreTopic.dataset.exTopic;explorationUi.followup="";
+       const nextCategory=exploreTopic.dataset.exTopicCategory||explorationUi.selected;
+       const nextTopic=exploreTopic.dataset.exTopic;
+       if(!CATEGORIES.some(c=>c.id===nextCategory&&c.topics.includes(nextTopic)))return;
+       const view=exploreTopic.dataset.exView,scrollY=window.scrollY;
+       explorationUi.selected=nextCategory;explorationUi.topic=nextTopic;explorationUi.followup="";
        render();
+       if(view){[...app.querySelectorAll('[data-ex-view]')].find(el=>el.dataset.exView===view)?.focus({preventScroll:true});window.scrollTo(0,scrollY);return;}
        const rail=app.querySelector('.ex-topic-set'),active=rail?.querySelector('.ex-topic.is-picked');
        if(rail&&active){
          const r=rail.getBoundingClientRect(),b=active.getBoundingClientRect();
@@ -2041,7 +2058,7 @@ function recordExtras(){
       }
       if(action==="change-area"){
         explorationUi.mapExpanded=true;render();
-        app.querySelector('.ex-node[aria-pressed="true"]')?.focus();return;
+        app.querySelector('.ex-area-choice[aria-pressed="true"]')?.focus();return;
       }
       if(action==="close"){const deleting=explorationUi.modal==="delete-note";const id=explorationUi.deletingNoteId;explorationUi.modal=deleting?"memories":"";explorationUi.editingNoteId=null;explorationUi.deletingNoteId=null;render();if(deleting)[...app.querySelectorAll('[data-ex-delete]')].find(el=>el.dataset.exDelete===id)?.focus({preventScroll:true});else restoreExplorationFocus();return;}
       if(action==="cancel-delete-note"){const id=explorationUi.deletingNoteId;explorationUi.deletingNoteId=null;explorationUi.modal="memories";render();[...app.querySelectorAll('[data-ex-delete]')].find(el=>el.dataset.exDelete===id)?.focus({preventScroll:true});return;}
@@ -2232,6 +2249,8 @@ function recordExtras(){
   window.addEventListener("hashchange",async()=>{
     const destination=location.hash;
     const returningFromConsultation=!!exploreConsultation&&destination===exploreConsultation.route;
+    const returningFromLearning=!!exploreLearningReturn&&destination===exploreLearningReturn.route;
+    if(currentPage()!=="learning"&&!returningFromLearning)exploreLearningReturn=null;
     if(location.hash!==exploreConsultationRoute&&!returningFromConsultation)exploreConsultation=null;
     if(currentPage()!=="condition")conditionUi.route=null;
     dismissLegalDialog();

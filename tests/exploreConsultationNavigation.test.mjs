@@ -19,7 +19,7 @@ test('all 27 Explore topics have one optional note action and one genuine consul
   assert.equal((html.match(/data-ex-action="memories"/g)||[]).length,1,topic);
   assert.doesNotMatch(html,/自分の言葉で書く|相談用にまとめる|data-ex-action="share"/);
   assert.match(html,/任意で記録できます/);
-  assert.match(html,/情報の出所と限界/);
+  assert.match(html,/読み取り上の注意/);
  }
 });
 test('consultation from Explore selects only the explicitly verified manual record, never an alternative',()=>{
