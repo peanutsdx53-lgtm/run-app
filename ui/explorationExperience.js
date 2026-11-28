@@ -1,6 +1,6 @@
 import {EXPLORE_THEMES,EXPLORE_LEGACY,EXPLORE_GROUPS,ENGLISH_EXPLORE_REDESIGN,themeFor,availableViews} from "./explorationRedesign.js?v=20261128-inquiry2-ux109";
-import {translateUiText} from './englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2-copyfix-ux109-terms';
-import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy-usability1-ux109';
+import {translateUiText} from './englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2-copyfix-ux109-terms-retirednav';
+import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy-usability1-ux109-retirednav';
 import {runningJointDiagram,paceDiagram,runningPhaseDiagram,fatigueResponseExample,sleepTimeExample} from "./explorationDiagrams.js?v=20261128-inquiry2-ux109";
 import {createExplorationContext, readCourseDraft} from "./explorationReadAdapter.js";
 import {validEntry} from "./homeExperience.js";

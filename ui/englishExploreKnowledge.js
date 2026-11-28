@@ -3,7 +3,6 @@
  * diagnosis, load-measurement or time-order claims. */
 export const ENGLISH_EXPLORE_KNOWLEDGE=Object.freeze({
  "強調表示の意味":"Meaning of Highlighting",
- "選んだ分野と強調表示の説明":"About the Selected Category and Highlighting",
  "表示の説明":"About This Display",
  "情報の限界・出所":"Sources and Limitations",
  "関連の出所と限界":"Record Sources and Limitations",
@@ -12,7 +11,6 @@ export const ENGLISH_EXPLORE_KNOWLEDGE=Object.freeze({
  "任意のメモについて":"About Optional Notes",
  "記録の選択と出所":"Record Selection and Sources",
  "同じ日付というだけで生活と走行を結び付けたり、別の記録を自動選択したりしません。":"A matching date does not automatically link running and daily records or select another record.",
- "テーマは左右にスワイプするか、矢印で切り替えられます。":"Swipe between topics or use the arrow buttons.",
  "メモを読み取れません。保存済みのデータは変更していません。":"Saved notes could not be read. Existing data was not changed.",
  "平均ペースと平均速度の見方":"Understanding Average Pace and Speed",
  "平均ペースは1 km進むためにかかる平均時間です。平均速度は1時間に進む平均距離です。どちらも記録した距離と経過時間から求められます。":"Average pace is the average time required to cover 1 km. Average speed is the average distance covered in an hour. Both are calculated from recorded distance and elapsed time.",
