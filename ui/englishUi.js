@@ -2,9 +2,9 @@ import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stab
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261128-dictionary';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy';
-import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261121-profile-optional-right-v1';
-import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js';
-import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js';
+import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261128-guide-learning-settings-copy';
+import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js?v=20261128-guide-learning-settings-copy';
+import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js?v=20261128-guide-learning-settings-copy';
 import {ENGLISH_CURRICULUM_ORIGIN} from './englishCurriculumCopy.js';
 import {ENGLISH_CURRICULUM_PACE} from './englishCurriculumPace.js';
 import {ENGLISH_CURRICULUM_MOTION} from './englishCurriculumMotion.js';
