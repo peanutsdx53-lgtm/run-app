@@ -261,10 +261,14 @@ try{
     const group=EXPLORE_GROUPS.find(g=>g.id===id),lang=language==='en'?1:0;
     const heading=group.name[lang],titles=group.themes.map(key=>EXPLORE_THEMES[key].title[lang]);
     await page.waitForFunction(({heading,titles})=>document.querySelector('.ex-focus h2')?.textContent.trim()===heading&&JSON.stringify([...document.querySelectorAll('.ex-main-topic-set strong')].map(n=>n.textContent.trim()))===JSON.stringify(titles),{heading,titles},{timeout:5000});
+    // Sample after the render/translation frame, including the fixed navigation.
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     return page.evaluate(id=>{
      const active=document.activeElement,selected=[...document.querySelectorAll('.ex-area-choice[aria-pressed="true"]')];
-     const bounds=active?.getBoundingClientRect();
-     return {id,selected:selected.map(n=>n.dataset.exGroup),active:active?.dataset.exGroup||null,activeIsSelected:selected.length===1&&active===selected[0],visible:!!bounds&&bounds.top>=-1&&bounds.bottom<=innerHeight+1,heading:document.querySelector('.ex-focus h2')?.textContent.trim(),topicCount:document.querySelectorAll('.ex-main-topic-set button').length};
+     const bounds=active?.getBoundingClientRect(),nav=document.querySelector('.mobile-nav');
+     const navTop=nav?.getBoundingClientRect().top;
+     const bottom=nav&&getComputedStyle(nav).display!=='none'&&navTop>0?Math.min(innerHeight,navTop):innerHeight;
+     return {id,selected:selected.map(n=>n.dataset.exGroup),active:active?.dataset.exGroup||null,activeIsSelected:selected.length===1&&active===selected[0],visible:!!bounds&&bounds.top>=-1&&bounds.bottom<=bottom+1,heading:document.querySelector('.ex-focus h2')?.textContent.trim(),topicCount:document.querySelectorAll('.ex-main-topic-set button').length};
     },id);
    };
    // Use actual pointer clicks; never force activation of occluded controls.

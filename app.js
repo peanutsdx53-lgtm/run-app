@@ -1994,7 +1994,23 @@ function recordExtras(){
       const id=exploreSelect.dataset.exCategory,c=CATEGORIES.find(c=>c.id===id);
       if(c){const fromSearch=!!exploreSelect.closest(".ex-inline-search");explorationUi.search="";explorationUi.selected=id;explorationUi.topic=exploreSelect.dataset.exPickTopic||c.topics[0]||"";explorationUi.notice="";render();
         const heading=app.querySelector(".ex-focus h2"),map=app.querySelector(".ex-map-card");
-        if(fromSearch)heading?.focus({preventScroll:true});else app.querySelector('.ex-area-choice[aria-pressed="true"]')?.focus({preventScroll:true});
+        if(fromSearch)heading?.focus({preventScroll:true});else {
+          const selected=app.querySelector('.ex-area-choice[aria-pressed="true"]');
+          selected?.focus({preventScroll:true});
+          // Replacing the article and translating it may reflow the selected card.
+          // Keep the focused card within the unobscured viewport after layout.
+          const keepAreaVisible=()=>{
+            if(!selected?.isConnected||document.activeElement!==selected)return;
+            const rect=selected.getBoundingClientRect(),nav=app.querySelector('.mobile-nav');
+            const navTop=nav?.getBoundingClientRect().top;
+            const bottom=nav&&getComputedStyle(nav).display!=='none'&&navTop>0?Math.min(innerHeight,navTop):innerHeight;
+            const top=8,limit=bottom-8;
+            const delta=rect.height>limit-top||rect.top<top?rect.top-top:rect.bottom>limit?rect.bottom-limit:0;
+            if(Math.abs(delta)>0.5)window.scrollTo({top:window.scrollY+delta,behavior:'instant'});
+          };
+          keepAreaVisible();
+          requestAnimationFrame(keepAreaVisible);
+        }
         // In a stacked layout the selected content follows the map; do not infer
         // columns from viewport width alone (root-font enlargement can reflow desktop).
         if(fromSearch&&heading&&map&&(heading.getBoundingClientRect().top>=map.getBoundingClientRect().bottom-1||heading.getBoundingClientRect().top<0||heading.getBoundingClientRect().bottom>innerHeight))heading.scrollIntoView({block:"start",behavior:"instant"});}
