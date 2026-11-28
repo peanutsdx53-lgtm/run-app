@@ -1,5 +1,5 @@
 import {EXPLORE_THEMES,EXPLORE_LEGACY,EXPLORE_GROUPS,ENGLISH_EXPLORE_REDESIGN,themeFor,availableViews} from "./explorationRedesign.js?v=20261128-inquiry2";
-import {translateUiText} from './englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2';
+import {translateUiText} from './englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2-copyfix';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy-usability1';
 import {runningJointDiagram,paceDiagram,runningPhaseDiagram} from "./explorationDiagrams.js?v=20261128-inquiry2";
 import {createExplorationContext, readCourseDraft} from "./explorationReadAdapter.js";

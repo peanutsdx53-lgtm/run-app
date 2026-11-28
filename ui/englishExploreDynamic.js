@@ -95,6 +95,18 @@ export function translateExploreDynamic(raw,{element=null}={}){
   const labels={'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','ROF-Jの入力':'self-reported ROF-J','身体に関するメモ':'body observation notes'};
   return 'Related to '+labels[m[2]]+' saved on '+m[1];
  }
+ // The redesign displays interpretation limits separately. Translate the
+ // shortened generated provenance composites without changing the stored date.
+ if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|ROF-Jの入力|身体に関するメモ)に関連。保存した手入力の情報との対応です。(入力途中の値はこのテーマの計算に用いていません。)?$/))){
+  const labels={'走行距離と時間':'running distance and duration','坂道の入力':'entered hill conditions','ROF-Jの入力':'self-reported ROF-J','身体に関するメモ':'body observation notes'};
+  return 'Related to '+labels[m[2]]+' saved on '+m[1]+'. Based on a saved manual entry.'+(m[3]?' Unsaved values are not used in this calculation.':'');
+ }
+ if((m=s.match(/^(入力中の走行距離・時間などに関連|入力中の上り坂・下り坂の情報に関連|入力中の運動前後の疲れに関連|入力中の身体に関するメモに関連)。入力途中の内容であり、保存済み記録ではありません。$/)))
+  return translateExploreDynamic(m[1],{element})+'. This is an unsaved entry, not a saved record.';
+ if((m=s.match(/^(\d{4}-\d\d-\d\d) の生活コンディション記録に関連。保存済みの生活記録から確認できます。$/)))
+  return 'Related to the daily condition entry on '+m[1]+'. You can review it in saved daily records.';
+ if(s==='入力途中の坂道情報があるため（まだ保存していない入力）')return 'Related to entered hill conditions (unsaved entry).';
+ if(s==='保存済みの生活記録に睡眠の入力があるため（保存済みの生活記録）')return 'Related to sleep information in saved daily records.';
  if((m=s.match(/^(\d{4}-\d\d-\d\d)の保存した走行$/)))return 'Saved Run on '+m[1];
  if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した走行距離と時間に関連。保存した手入力の情報との対応です。(入力途中の値はこのテーマの計算に用いていません。)?この関連だけから原因や身体の状態は判断できません。$/)))
   return 'Related to saved running distance and duration on '+m[1]+'. This does not establish causes or physical condition.';
