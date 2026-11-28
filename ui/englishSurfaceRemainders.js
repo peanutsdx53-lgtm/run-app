@@ -204,6 +204,17 @@ export function translateResidualDynamic(text,{element=null,attribute=null}={}){
  // rendering contexts. Do not process textarea/input values or user-entered
  // course names, notes, dates, region annotations, or saved record bodies.
  const inView=selector=>!!element?.closest?.(selector);
+ // Generated home condition copy only; leave user-authored text and values unchanged.
+ if(inView('.hx-condition-dialog')||inView('.hx-condition')){
+  if(!inView('[data-user-authored]')){
+   if((s==='良い'||s==='ふつう')&&(element?.matches?.('option')||element?.matches?.('.hx-condition-stats strong')))return s==='良い'?'Good':'Normal';
+   if((m=s.match(/^(\d+)時間(\d{2})分$/)))return m[1]+' h '+m[2]+' min';
+   if((m=s.match(/^起床 (\d{2}:\d{2})$/)))return 'Wake-up '+m[1];
+   if(attribute==='aria-label'&&(m=s.match(/^(\d{4}-\d{2}-\d{2}) (?:(就床|睡眠) (\d+)時間(\d{2})分|(未入力))$/)))return m[1]+' '+(m[5]?'Not entered':(m[2]==='就床'?'Time in bed':'Sleep')+' '+m[3]+' h '+m[4]+' min');
+   if((m=s.match(/^選択した(\d{4}-\d{2}-\d{2})の生活記録だけを削除します。関連する気づきや問いは他の保存先に残りますが、元の記録がない旨を表示します。$/)))return 'Only the selected daily record for '+m[1]+' will be deleted. Related observations and questions remain in their separate stores, but will indicate that the original record is missing.';
+  }
+ }
+
 
  // UX15: translate only generated condition-history labels, never the user's notes.
  if(inView('.cj-panel')&&!inView('[data-user-authored]')){

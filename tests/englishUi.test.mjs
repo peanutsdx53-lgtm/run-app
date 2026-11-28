@@ -403,3 +403,19 @@ test('cleaned dictionaries contain only definitions not superseded by later exac
  const inline=source.slice(source.indexOf('export const ENGLISH_UI_TEXT=Object.freeze({'),source.indexOf(' ...'+order[0]));
  for(const m of inline.matchAll(/^\s*("(?:[^"\\]|\\.)*")\s*:/gm))assert.ok(!allKeys.has(JSON.parse(m[1])),'do not restore shadowed inline phrase '+m[1]);
 });
+
+
+test('daily-condition English copy preserves source, date, user notes and input values',()=>{
+ const element={closest:s=>s==='.hx-condition-dialog'?{}:null,matches:s=>s==='option'};
+ const ctx={element};
+ for(const [ja,en] of [['就寝','Bedtime'],['☀ 起床','☀ Wake-up'],['就寝時刻','Bedtime'],['起床時刻','Wake-up time'],['睡眠時間（時間）','Sleep duration (hours)'],['良い','Good'],['ふつう','Normal'],['7時間30分','7 h 30 min'],['起床 06:30','Wake-up 06:30']])assert.equal(translateUiText(ja,ctx),en);
+ assert.equal(translateUiText('2026-11-28 就床 7時間30分',{element,attribute:'aria-label'}),'2026-11-28 Time in bed 7 h 30 min');
+ assert.equal(translateUiText('2026-11-28 睡眠 7時間30分',{element,attribute:'aria-label'}),'2026-11-28 Sleep 7 h 30 min');
+ assert.equal(translateUiText('2026-11-28 未入力',{element,attribute:'aria-label'}),'2026-11-28 Not entered');
+ const confirmation='選択した2026-11-28の生活記録だけを削除します。関連する気づきや問いは他の保存先に残りますが、元の記録がない旨を表示します。';
+ assert.match(translateUiText(confirmation,ctx),/Only the selected daily record for 2026-11-28.*Related observations and questions remain.*original record is missing/);
+ assert.equal(translateUiText(confirmation),confirmation);
+ assert.equal(translateUiText('7時間30分'),'7時間30分');
+ assert.equal(translateUiText('就寝',{element:{closest:q=>q==='[data-user-authored]'?{}:null}}),'就寝');
+ assert.equal(translateUiText('良い'), '良い');
+});
