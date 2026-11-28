@@ -132,14 +132,6 @@ export function translateExploreDynamic(raw,{element=null}={}){
   return (m[1]==='入力途中'?'Unsaved Entry':'Saved Run')+' Proportions: Uphill '+m[2]+'% / Downhill '+m[3]+'% / Flat '+m[4]+'%. Route proportions, not a GPS elevation profile, study slope angle or road grade.';
  if((m=s.match(/^(\d{4}-\d\d-\d\d)に保存した走行の情報です。ほかの記録とは自動で結びつけません。$/)))
   return 'Information saved for the '+m[1]+' run, not automatically linked to other records.';
- const areas={'走りの記録':'Your Running Records','身体のしくみ':'How the Body Works',
-  'コースと環境':'Course & Environment','疲れと回復':'Fatigue & Recovery',
-  '暮らしと気持ち':'Life & Feelings','走る前後の工夫':'Before & After Runs',
-  '目的と楽しみ方':'Goals & Enjoyment'};
- if(element.matches?.('.ex-node')&&(m=s.match(/^([^、]+)、(.+)$/))&&areas[m[1]]){
-  const description=translateExploreDynamic(m[2],{element});
-  if(description)return areas[m[1]]+', '+description;
- }
  if((m=s.match(/^([\d:]+) 分\/km$/)))return m[1]+' min/km';
  if((m=s.match(/^：運動前 (未回答|\d{1,2}) ／ 運動後 (未回答|\d{1,2})。保存済みの本人の回答です。$/)))
   return ': Before '+(m[1]==='未回答'?'Unanswered':m[1])+' / After '+(m[2]==='未回答'?'Unanswered':m[2])+'. Saved self-reported ratings.';

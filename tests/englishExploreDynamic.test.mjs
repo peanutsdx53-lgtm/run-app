@@ -24,7 +24,7 @@ test('explicit-run date, fatigue and distance composites translate without chang
  }
 });
 test('UX13 visible system headings have concise correct English and preserve authored text',()=>{
- for(const [ja,en] of [['7つの分野','7 Areas'],['読むテーマ','Topics'],['選んだ分野','Category'],['走る前後の工夫','Before & After Runs'],['上りの動き','Uphill Movement'],['下りの動き','Downhill Movement'],['押して進む','Push Uphill'],['記録や経験を手がかりにする','Use Records or Experience as Clues'],['情報の出所と限界','Sources & Limits'],['参考知識と研究出典','Background & Research Sources']]){
+ for(const [ja,en] of [['走る前後の工夫','Before & After Runs'],['上りの動き','Uphill Movement'],['下りの動き','Downhill Movement'],['押して進む','Push Uphill'],['記録や経験を手がかりにする','Use Records or Experience as Clues'],['情報の出所と限界','Sources & Limits'],['参考知識と研究出典','Background & Research Sources']]){
   assert.equal(translateUiText(ja,{element:english}),en,ja);
   assert.equal(translateUiText(ja,{element:el(true,true)}),ja,'authored text must stay unchanged');
  }
@@ -37,7 +37,7 @@ test('non-Explore and authored records are never translated',()=>{
  assert.equal(translateUiText('昨日、膝が痛い',{element:el(true,true)}),'昨日、膝が痛い');
 });
 test('new modal help, research sources and state captions have exact English equivalents',()=>{
- for(const k of ['強調表示の意味','選んだ分野と強調表示の説明','情報の限界・出所',
+ for(const k of ['強調表示の意味','情報の限界・出所',
   '平均ペースと平均速度の見方','走るとき、脚の関節はどう働く？',
   '文献の参考値をどう読めばよい？','日本語版ROF-Jは大学生85人と大学運動部員35人などで検討された、主観的な疲労感を記録する尺度です。初心者ランナー全員での妥当性や傷害リスクの予測を保証するものではありません。原著で運動前後を比較した大学運動部員35人の研究手順と、本アプリで本人が後から入力する記録は同じではありません。本人が回答した0と未回答を区別します。「運動前／後」は回答区分であり、記録した時点や運動との客観的な時間的順序を証明するものではありません。同一走行内の時間的な前後差は判定しません。'])
   assert.ok(ENGLISH_EXPLORE_KNOWLEDGE[k],k);
@@ -45,28 +45,19 @@ test('new modal help, research sources and state captions have exact English equ
  assert.equal(translateUiText('強調表示の意味',{element:english}),'Meaning of Highlighting');
 });
 
-// UX14: the same full category name must appear in visible titles and
-// accessible names, including the real draft/saved provenance suffixes.
-test('UX14 category names agree across plain and related accessible labels',()=>{
- const node={...english,matches:selector=>selector==='.ex-node'};
+// Current area buttons expose the name separately from the related-record description.
+// Old category names remain available for existing saved notes.
+test('current areas and legacy note labels retain translations and preserve authored text',()=>{
+ const node={...english,matches:selector=>selector==='.ex-area-choice'};
  const ctx={element:node,attribute:'aria-label'};
- for(const [ja,en] of [['走りの記録','Your Running Records'],['身体のしくみ','How the Body Works'],['コースと環境','Course & Environment'],['疲れと回復','Fatigue & Recovery'],['暮らしと気持ち','Life & Feelings'],['走る前後の工夫','Before & After Runs'],['目的と楽しみ方','Goals & Enjoyment']]){
-  assert.equal(translateUiText(ja,{element:node}),en);
+ for(const [ja,en] of [['記録を読み解く','Understanding records'],['身体と感覚','Body and sensations'],['走行条件と生活','Running and daily context'],['経験を振り返る','Reflecting on your experience'],['走りの記録','Your Running Records'],['身体のしくみ','How the Body Works'],['コースと環境','Course & Environment'],['疲れと回復','Fatigue & Recovery'],['暮らしと気持ち','Life & Feelings'],['走る前後の工夫','Before & After Runs'],['目的と楽しみ方','Goals & Enjoyment']]){
   assert.equal(translateUiText(ja,ctx),en);
   assert.equal(translateUiText(ja,{element:el(true,true)}),ja);
  }
- for(const [ja,en,reason,description] of [
-  ['走りの記録','Your Running Records','入力中の走行距離・時間などに関連','Related to Unsaved Running Distance and Duration'],
-  ['身体のしくみ','How the Body Works','入力中の身体に関するメモに関連','Related to Unsaved Body Notes'],
-  ['コースと環境','Course & Environment','入力中の上り坂・下り坂の情報に関連','Related to Unsaved Uphill and Downhill Data'],
-  ['疲れと回復','Fatigue & Recovery','入力中の運動前後の疲れに関連','Related to Unsaved Perceived Fatigue'],
-  ['疲れと回復','Fatigue & Recovery','2026-11-11 に保存した運動前後の疲労感に関連','Related to self-reported fatigue before/after exercise saved on 2026-11-11'],
-  ['暮らしと気持ち','Life & Feelings','2026-11-20 の生活コンディション記録に関連','Related to the Daily Condition Entry on 2026-11-20']
- ])assert.equal(translateUiText(ja+'、'+reason,ctx),en+', '+description);
- const authored='走りの記録、入力中の走行距離・時間などに関連';
- assert.equal(translateUiText(authored,{element:el(true,true),attribute:'aria-label'}),authored);
- assert.equal(translateUiText('目的と楽しみ方、不明な説明',ctx),'目的と楽しみ方、不明な説明');
- assert.equal(translateExploreDynamic('目的と楽しみ方、入力中の身体に関するメモに関連',{element:node}),'Goals & Enjoyment, Related to Unsaved Body Notes');
+ for(const [reason,description] of [['入力中の走行距離・時間などに関連','Related to Unsaved Running Distance and Duration'],['入力中の身体に関するメモに関連','Related to Unsaved Body Notes'],['入力中の上り坂・下り坂の情報に関連','Related to Unsaved Uphill and Downhill Data'],['入力中の運動前後の疲れに関連','Related to Unsaved Perceived Fatigue'],['2026-11-11 に保存した運動前後の疲労感に関連','Related to self-reported fatigue before/after exercise saved on 2026-11-11'],['2026-11-20 の生活コンディション記録に関連','Related to the Daily Condition Entry on 2026-11-20']]){
+  assert.equal(translateUiText(reason,{element:node}),description);
+  assert.equal(translateUiText(reason,{element:el(true,true)}),reason);
+ }
 });
 
 test('redesigned provenance composites preserve date, source and unsaved distinction without translating authored text',()=>{
@@ -86,4 +77,11 @@ test('redesigned provenance composites preserve date, source and unsaved distinc
  assert.equal(translateUiText('2026-11-20 の生活コンディション記録に関連。保存済みの生活記録から確認できます。',{element:english}),'Related to the daily condition entry on 2026-11-20. You can review it in saved daily records.');
  assert.equal(translateUiText('入力途中の坂道情報があるため（まだ保存していない入力）',{element:english}),'Related to entered hill conditions (unsaved entry).');
  assert.equal(translateUiText('保存済みの生活記録に睡眠の入力があるため（保存済みの生活記録）',{element:english}),'Related to sleep information in saved daily records.');
+});
+
+test('retired navigation phrases stay out of active dictionaries and authored text remains untouched',()=>{
+ for(const phrase of ["分野図を閉じる", "分野図を開く", "分野を変更", "7つの分野", "読むテーマ", "テーマを切り替える", "テーマの前後移動", "前のテーマ", "次のテーマ", "テーマを左右にスワイプするか、矢印を押してください。", "読むテーマ（左右にスワイプして選ぶ）", "7つの分野から探す", "気になることから", "テーマから探す", "選んだ分野のテーマへ", "選んだ分野", "選んだ分野と強調表示の説明", "テーマは左右にスワイプするか、矢印で切り替えられます。"]){
+  assert.equal(translateUiText(phrase,{element:english}),phrase);
+  assert.equal(translateUiText(phrase,{element:el(true,true)}),phrase);
+ }
 });

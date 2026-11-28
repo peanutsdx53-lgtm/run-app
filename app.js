@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2-copyfix-ux109-terms';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2-copyfix-ux109-terms-retirednav';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -82,7 +82,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/firstUseExperience.js?v=20261126-cleanup-v5"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
     import("./ui/consultationExperience.js?v=20261126-cleanup-v5-daily-only-usability1-terms"),
-    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only-stage3-copy-notes-copy-usability1-inquiry2-searchfix-copyfix-ux109-terms"),
+    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only-stage3-copy-notes-copy-usability1-inquiry2-searchfix-copyfix-ux109-terms-retirednav"),
     import("./ui/learningExperience.js?v=20261126-cleanup-v5"),
     import("./ui/interpretationRules.js?v=20261126-cleanup-v5"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
