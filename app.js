@@ -50,7 +50,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   ]=await Promise.all([
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
-    import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2-readable-daily-stage3-copy-notes-copy"),
+    import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2-readable-daily-stage3-copy-notes-copy-design1"),
     import("./ui/rofExperience.js?v=20261126-cleanup-v5"),
     import("./ui/recordDraftReview.js"),
     import("./ui/recordReviewExperience.js?v=20261126-cleanup-v5-daily-only"),

@@ -97,6 +97,10 @@ try{
   assert.equal((await edit.innerText()).trim(),lang==='en'?'Edit':'編集');
   for(const route of ['course','learning','consultation'])
    assert.equal(await page.locator('.hx-shortcuts a[href="#/'+route+'"]').count(),1,'original Home shortcut '+route);
+  if(width===390&&zoom===100){
+   const cols=await page.locator('.hx-condition-stats').evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length);
+   assert.equal(cols,3,'standard phone condition metrics must align in three columns');
+  }
   if(width<=390&&zoom===200){
    // Check actual rendered text line boxes, not just document overflow.
    const headings=await page.evaluate(()=>{
