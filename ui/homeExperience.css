@@ -842,3 +842,38 @@ html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
   white-space:normal;overflow-wrap:anywhere;line-height:1.4;
  }
 }
+
+/* Design prototype: existing semantics and text remain unchanged. */
+.home-v3 .hx-card{--surface-accent:#83d5df;background-image:linear-gradient(135deg,#ffffff0b,transparent 45%,#06101825),repeating-radial-gradient(ellipse at 115% 5%,transparent 0 19px,#ffffff08 20px 21px,transparent 22px 37px);border-color:#68818c;box-shadow:inset 0 1px 0 #ffffff2b,inset 0 -1px 0 #0003,0 8px 22px #0003;}
+.home-v3 .hx-latest{background-color:#193743;}.home-v3 .hx-latest:before,.home-v3 .hx-latest:after{display:none}
+.home-v3 .hx-condition{--surface-accent:var(--condition-accent);background-color:var(--condition-surface);border-color:var(--condition-line)}
+.home-v3 .hx-shortcuts,.home-v3 .hx-optional{background-color:#1a3441}
+.home-v3 .hx-symbol,.home-v3 .hx-shortcut span{box-shadow:inset 0 1px 0 #ffffff2b,0 2px 4px #0003;border:1px solid #ffffff24;background-image:linear-gradient(150deg,#ffffff12,transparent 75%)}
+.home-v3 .hx-latest-fig>div,.home-v3 .hx-condition-stats>div,.home-v3 .hx-shortcut{box-shadow:inset 0 1px 0 #ffffff10,0 2px 4px #0002}
+.home-v3 .hx-achievement{background-color:#26292c;background-image:linear-gradient(145deg,#c3a67919,transparent 43%,#0003),repeating-linear-gradient(117deg,#dfc39006 0 1px,transparent 1px 8px);border-color:#9d8867}
+.home-v3 .hx-achievement .hx-symbol{color:#e7c38c;background-color:#a58a5426}
+#app .home-v3 .hx-achievement .hx-title-button .hx-right{background:#302e2c;border:1px solid #a78d65;color:#f3dfbb;box-shadow:inset 0 1px 0 #ffffff1a}
+.home-v3 .hx-medal,.home-v3 .hx-medal.hx-unearned{background:none;clip-path:none;filter:none;opacity:1;width:76px;height:76px;flex-basis:76px;}
+.home-v3 .hx-medal svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 4px #0005)}
+.home-v3 .hx-ach-data strong{font-size:clamp(1.35rem,6vw,2rem);font-variant-numeric:tabular-nums;line-height:1.2}
+.home-v3 .hx-ach-data strong em{font-size:.83rem;white-space:normal}
+.home-v3 .hx-progress{background:#11191e;border:1px solid #796e594d;box-shadow:inset 0 2px 3px #0007;height:10px}
+.home-v3 .hx-progress span{background:linear-gradient(180deg,#eed49b,#c59d56);box-shadow:inset 0 1px 0 #fff5}
+.home-v3 .hx-awards .hx-award-item{border-color:#a093784d;background:#ffffff06;box-shadow:inset 0 1px 0 #ffffff08}
+.home-v3 .hx-awards .hx-award-item.won{background:linear-gradient(135deg,#a9894a24,#ffffff03);border-color:#b8a07888}
+.home-v3 .hx-awards .hx-award-item .hx-award-symbol,#app .hx-ach-dialog .hx-ach-milestone-symbol{background:#141c2280;border:1px solid #b99d685c;color:#e3c58d;box-shadow:inset 0 1px 0 #ffffff12}
+.home-v3 .hx-awards .hx-award-item.locked .hx-award-symbol,#app .hx-ach-dialog .hx-ach-milestone.is-unearned .hx-ach-milestone-symbol{color:#b6b6b2;border-color:#8c92934d;background:#11182055}
+.hx-award-symbol svg,.hx-ach-milestone-symbol svg{width:18px;height:18px;display:block;}
+#app .hx-dialog.hx-ach-dialog{background:linear-gradient(145deg,#343433,#20282e);border-color:#9d8867;box-shadow:inset 0 1px 0 #fff3,0 20px 70px #000a}
+#app .hx-ach-dialog .hx-ach-summary>div,#app .hx-ach-dialog .hx-ach-milestone{background:#ffffff06;border-color:#a0937866;box-shadow:inset 0 1px 0 #ffffff15}
+#app .hx-ach-dialog .hx-ach-milestone.is-earned{background:linear-gradient(130deg,#a9894a24,#ffffff04);border-color:#b8a07888}
+#app .hx-condition-dialog .hx-sleep-modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:7px;background:var(--condition-bg);box-shadow:inset 0 1px 4px #0002;border:1px solid var(--condition-line);border-radius:14px}
+#app .hx-condition-dialog .hx-sleep-modes>button{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:44px;padding:10px 6px;border:1px solid var(--condition-line);border-radius:9px;background:var(--condition-raised);color:var(--condition-text);box-shadow:inset 0 1px 0 #ffffff1a,0 1px 3px #0002;line-height:1.45}
+#app .hx-condition-dialog .hx-sleep-modes>button:last-child{grid-column:1/-1}
+#app .hx-condition-dialog .hx-sleep-modes>button.is-selected{background:var(--condition-accent);color:var(--condition-on-accent);border-color:var(--condition-accent);box-shadow:inset 0 1px 0 #ffffff45,0 2px 5px #0003}
+#app .hx-condition-dialog .hx-sleep-modes>button svg{width:18px;height:18px;flex:none}
+@media(max-width:360px){.home-v3 .hx-medal,.home-v3 .hx-medal.hx-unearned{width:60px;height:60px;flex-basis:60px}}
+:root[data-theme="light"] .home-v3 .hx-condition{background-color:var(--condition-surface);background-image:linear-gradient(130deg,#fff5,transparent),repeating-radial-gradient(ellipse at 115% 5%,transparent 0 19px,#5d4d8910 20px 21px,transparent 22px 37px)}
+
+/* Keep individual sleep controls legible at enlarged text; no layout lock. */
+@media(max-width:360px){#app .hx-condition-dialog .hx-sleep-modes>button{padding-inline:5px;overflow-wrap:anywhere}}

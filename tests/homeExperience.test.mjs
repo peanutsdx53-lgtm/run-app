@@ -209,3 +209,21 @@ test("concise Home labels preserve the running data and same-day trend points",(
  }
  assert.match(achievementPanel({ok:true,records:[run]}),/健康状態・走力の判定や達成の推奨ではありません/);
 });
+
+// Presentation-only symbols must not add a new milestone or replace state text.
+test("decorative achievement SVGs retain all four named milestone states",()=>{
+ const record={source:"manual",type:"run",id:"design-test",distanceKm:10,durationSeconds:3300};
+ for(const records of [[],[record],[{...record,distanceKm:100}]]){
+  const state={ok:true,records};
+  const card=achievementCard(state),panel=achievementPanel(state);
+  const cardMarks=[...card.matchAll(/class="hx-award-symbol" aria-hidden="true">(<svg[^]*?<\/svg>)/g)].map(m=>m[1]);
+  const panelMarks=[...panel.matchAll(/class="hx-ach-milestone-symbol" aria-hidden="true">(<svg[^]*?<\/svg>)/g)].map(m=>m[1]);
+  assert.equal(new Set(cardMarks).size,4);
+  assert.deepEqual(panelMarks,cardMarks);
+  assert.equal((card.match(/hx-award-item won/g)||[]).length,achievementSummary(state).count);
+  assert.equal((panel.match(/hx-ach-milestone is-earned/g)||[]).length,achievementSummary(state).count);
+  assert.match(card,/role="progressbar"/);
+  assert.match(panel,/健康状態・走力の判定や達成の推奨ではありません/);
+ }
+ assert.doesNotMatch(achievementCard({ok:false,reason:"error"}),/role="progressbar"/);
+});

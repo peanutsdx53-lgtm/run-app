@@ -109,9 +109,9 @@ try{
   const achDialog=page.locator('.hx-ach-dialog');
   await achDialog.waitFor();
   const achTone=await achDialog.evaluate(el=>({border:getComputedStyle(el).borderTopColor,background:getComputedStyle(el).backgroundImage,closeBg:getComputedStyle(el.querySelector('.hx-dialog-head button')).backgroundColor}));
-  assert.equal(achTone.border,'rgb(199, 148, 91)','achievement detail border should be gold');
+  assert.equal(achTone.border,'rgb(157, 136, 103)','achievement detail uses the muted metal border');
   assert.equal(achTone.closeBg,'rgb(91, 67, 53)','achievement detail close action should be warm brown');
-  assert.match(achTone.background,/rgb\(59, 45, 39\)/,'achievement detail uses dark orange/brown background');
+  assert.match(achTone.background,/rgb\(52, 52, 51\).*rgb\(32, 40, 46\)/,'achievement detail uses the approved dark metallic surface');
   assert.equal(await achDialog.locator('.hx-dialog-head [data-home-close]').evaluate(el=>document.activeElement===el),true,'achievement dialog receives keyboard focus');
   assert.equal(await achDialog.locator('.hx-ach-milestone').count(),4,'four visible and explicitly named milestones');
   const geometry=await achDialog.evaluate(el=>{

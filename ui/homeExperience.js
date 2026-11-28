@@ -187,6 +187,10 @@ function icon(which){
  }[which]||'';
  return '<svg viewBox="0 0 24 24" aria-hidden="true" class="hx-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round">'+shape+'</svg>';
 }
+
+function designMedal(active){const c=active?['#ffedbd','#98713c','#e5c486','#674925']:['#b9c2c5','#58636a','#a8b3b8','#38444b'];return '<svg viewBox="0 0 96 96" aria-hidden="true"><defs><linearGradient id="design-metal" x2=".8" y2="1"><stop stop-color="'+c[0]+'"/><stop offset=".3" stop-color="'+c[1]+'"/><stop offset=".55" stop-color="'+c[2]+'"/><stop offset="1" stop-color="'+c[3]+'"/></linearGradient></defs><path d="M48 5 68 10 85 27 91 48 85 69 68 86 48 91 28 86 11 69 5 48 11 27 28 10Z" fill="url(#design-metal)" stroke="'+c[0]+'"/><circle cx="48" cy="48" r="35" fill="#252b30" stroke="'+c[2]+'" stroke-width="2"/><circle cx="48" cy="48" r="30" fill="none" stroke="'+c[2]+'" stroke-dasharray="1 3" opacity=".7"/><path d="M48 26 54 41 70 42 58 52 62 68 48 59 34 68 38 52 26 42 42 41Z" fill="url(#design-metal)" stroke="'+c[0]+'" stroke-width=".8"/></svg>'}
+function designMark(i){const p=['<path d="M5 20V4m0 1h13l-3 4 3 4H5"/>','<circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/>','<path d="M4 18 9 6l5 9 6-4M4 21h16"/>','<path d="M5 18V7l7-3 7 3v11l-7 3Z M9 12l2 2 4-4"/>'][i];return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>'}
+
 function head(title,which,extra){
  return '<div class="hx-head"><span class="hx-symbol">'+icon(which)+'</span><h2>'+title+'</h2>'+(extra||"")+'</div>';
 }
@@ -244,10 +248,10 @@ export function achievementSummary(savedRuns){
 }
 export function achievementCard(savedRuns={ok:true,records:[]}){
  const result=achievementSummary(savedRuns);
- const track=!result.ok?'<div class="hx-ach-main"><div class="hx-medal hx-unearned" aria-hidden="true">☆</div><div class="hx-ach-data"><strong>実績を確認できません</strong><small>'+escape(result.reason)+'</small></div></div>'
- :'<div class="hx-ach-main"><div class="hx-medal '+(result.count?'':'hx-unearned')+'" aria-hidden="true">'+(result.count?'★':'☆')+'</div><div class="hx-ach-data"><strong>'+result.distance.toFixed(1)+' <em>/ '+result.target+' km</em></strong><div class="hx-progress" role="progressbar" aria-label="累計走行距離の節目" aria-valuemin="0" aria-valuemax="'+result.target+'" aria-valuenow="'+Math.min(result.distance,result.target).toFixed(1)+'"><span style="width:'+result.progress+'%"></span></div><small>'+(result.runs?'累計走行距離 '+result.distance.toFixed(1)+' km':'記録を保存すると実績を確認できます')+'</small></div></div><div class="hx-awards" role="list" aria-label="保存済み走行による実績4項目">'+result.achieved.map((yes,i)=>
+ const track=!result.ok?'<div class="hx-ach-main"><div class="hx-medal hx-unearned" aria-hidden="true">'+designMedal(false)+'</div><div class="hx-ach-data"><strong>実績を確認できません</strong><small>'+escape(result.reason)+'</small></div></div>'
+ :'<div class="hx-ach-main"><div class="hx-medal '+(result.count?'':'hx-unearned')+'" aria-hidden="true">'+designMedal(result.count>0)+'</div><div class="hx-ach-data"><strong>'+result.distance.toFixed(1)+' <em>/ '+result.target+' km</em></strong><div class="hx-progress" role="progressbar" aria-label="累計走行距離の節目" aria-valuemin="0" aria-valuemax="'+result.target+'" aria-valuenow="'+Math.min(result.distance,result.target).toFixed(1)+'"><span style="width:'+result.progress+'%"></span></div><small>'+(result.runs?'累計走行距離 '+result.distance.toFixed(1)+' km':'記録を保存すると実績を確認できます')+'</small></div></div><div class="hx-awards" role="list" aria-label="保存済み走行による実績4項目">'+result.achieved.map((yes,i)=>
  '<div class="hx-award-item '+(yes?'won':'locked')+'" role="listitem" aria-label="'+['初回の走行','30分以上の走行','累計50 km','累計100 km'][i]+' '+(yes?'達成':'未達成')+'">'+
- '<span class="hx-award-symbol" aria-hidden="true">'+(yes?'★':'◇')+'</span><div class="hx-award-copy"><strong>'+['初回の走行','30分以上','累計50 km','累計100 km'][i]+'</strong><small>'+(yes?'達成':'未達成')+'</small></div></div>'
+ '<span class="hx-award-symbol" aria-hidden="true">'+designMark(i)+'</span><div class="hx-award-copy"><strong>'+['初回の走行','30分以上','累計50 km','累計100 km'][i]+'</strong><small>'+(yes?'達成':'未達成')+'</small></div></div>'
  ).join('')+'</div>';
  return '<section class="hx-card hx-achievement"><button type="button" class="hx-title-button" data-achievement-open aria-label="実績の詳細を開く">'+head("実績","trophy",'<span class="hx-right">開く ›</span>')+'</button>'+track+'</section>';
 }
@@ -341,7 +345,7 @@ export function achievementPanel(savedRuns={ok:true,records:[]}){
  '<h3 class="hx-ach-section-title">4つの節目</h3>'+
  '<div class="hx-ach-grid hx-ach-milestones" role="list" aria-label="走行記録に基づく4つの節目">'+labels.map((label,i)=>
  '<div class="hx-ach-milestone '+(r.achieved[i]?'is-earned':'is-unearned')+'" role="listitem" aria-label="'+label+'（'+(r.achieved[i]?'達成':'未達成')+'）">'+
- '<div class="hx-ach-milestone-symbol" aria-hidden="true">'+(r.achieved[i]?'★':'◇')+'</div>'+
+ '<div class="hx-ach-milestone-symbol" aria-hidden="true">'+designMark(i)+'</div>'+
  '<strong class="hx-ach-milestone-label">'+shortLabels[i]+'</strong>'+
  '<small class="hx-ach-milestone-status">'+(r.achieved[i]?'達成':'未達成')+'</small></div>').join('')+'</div>'+
  ''+
