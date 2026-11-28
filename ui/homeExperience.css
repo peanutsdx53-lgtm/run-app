@@ -877,3 +877,15 @@ html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
 
 /* Keep individual sleep controls legible at enlarged text; no layout lock. */
 @media(max-width:360px){#app .hx-condition-dialog .hx-sleep-modes>button{padding-inline:5px;overflow-wrap:anywhere}}
+
+/* Match the latest-run three-metric row when readable; retain reflow for enlarged text. */
+.home-v3 .hx-condition{container:condition-metrics / inline-size}
+#app .home-v3 .hx-condition-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#app .home-v3 .hx-condition-stats > div:last-child{grid-column:1/-1}
+#app .home-v3 .hx-condition-stats > div{min-width:0;text-align:center}
+#app .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){white-space:normal;overflow-wrap:anywhere;line-height:1.4}
+@media(max-width:640px){#app .home-v3 .hx-condition-stats{gap:6px}}
+@container condition-metrics (min-width:15rem){
+ #app .home-v3 .hx-condition-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ #app .home-v3 .hx-condition-stats > div:last-child{grid-column:auto}
+}
