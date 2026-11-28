@@ -1,7 +1,7 @@
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261128-dictionary';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact-remaining-copy';
-import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy';
+import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy-usability1';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261128-guide-learning-settings-copy';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js?v=20261128-guide-learning-settings-copy';
 import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js?v=20261128-guide-learning-settings-copy';
@@ -20,9 +20,9 @@ import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-dail
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js?v=20261128-remaining-copy';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
-import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy';
+import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy-usability1';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy-condition-copy';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy-condition-copy-usability1';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.

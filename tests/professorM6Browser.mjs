@@ -132,18 +132,15 @@ try{
  assert.equal(sensitive.ok,true,sensitive.reason);
  assert.ok(sensitive.detailBytes>250,'GPS detailed route must be persisted');
  await page.goto(base+'#/exploration-tree?category=01&topic='+encodeURIComponent('自分が感じた疲れ'),{waitUntil:'networkidle'});
- await page.locator('[data-ex-action="share"]').waitFor({timeout:20000});
- await page.evaluate(()=>{
-  window.__m7Copied=null;
-  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{window.__m7Copied=String(value);}}});
- });
- await page.locator('[data-ex-action="share"]').click();
- await page.locator('[data-ex-action="copy"]').click();
- await page.waitForFunction(()=>typeof window.__m7Copied==='string',{timeout:12000});
- const copied=await page.evaluate(()=>window.__m7Copied);
- assert.match(copied,/話したいテーマ|相談したいこと/);
- assert.doesNotMatch(copied,/PRIVATE-MENTAL-DO-NOT-COPY|139\.91|37\.5/);
- console.log(JSON.stringify({gate:'M7-exact-counterexample',caseId:'T-085',engine:engineName,status:'PASS',mentalStored:true,routeStored:true,copyPrivate:false}));
+ await page.locator('[data-ex-consultation]').click();
+ await page.locator('#consultation-root').waitFor({timeout:20000});
+ assert.equal(await page.locator('#cp-target').inputValue(),'','general Explore never selects a different record');
+ for(const k of ['rof','notes','condition'])assert.equal(await page.locator('[data-share="'+k+'"]').isChecked(),false);
+ for(const id of ['purpose','observation','question'])assert.equal(await page.locator('#cp-'+id).inputValue(),'');
+ assert.doesNotMatch(await page.locator('#consultation-root').innerText(),/PRIVATE-|139\.55|139\.91/);
+ await page.locator('.cp-back').click();
+ await page.locator('[data-ex-consultation]').waitFor({timeout:20000});
+ console.log(JSON.stringify({gate:'M7-exact-counterexample',caseId:'T-085',engine:engineName,status:'PASS',mentalStored:true,routeStored:true,consultationCopiesPrivate:false}));
  await page.goto(base+'#/consultation',{waitUntil:'networkidle'});
  const gpsOpt=page.locator('[data-consultation-gps-v2]');
  await gpsOpt.waitFor({timeout:20000});assert.equal(await gpsOpt.isChecked(),false);

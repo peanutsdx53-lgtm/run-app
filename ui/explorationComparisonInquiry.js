@@ -52,7 +52,7 @@ export function renderComparisonInquiry(input={}){
   '<a class="ex-e-compare-link" data-e-compare-return href="'+link+'&compare='+encodeURIComponent(m.previous.id)+'">2件の比較結果と条件を確認する</a>'+
   '<div class="ex-e-boundary"><strong>差からは言えないこと</strong><p>入力された日付は実際の走行順を証明しません。ROF-Jの回答区分から時間的な前後変化を確定せず、違いの原因・能力の向上・身体負荷・安全性を判定しません。</p></div>'+
   '<p class="ex-e-prompt">この2回で、どんな状況や感覚を次に確かめたいですか？</p>'+
-  '<details class="ex-inquiry-details ex-e-extra"><summary>任意のメモについて</summary><p>必要なら下の既存テーマにある「書いてみる」から任意で記述できます。メモは今回の手入力走行にのみ関連づき、比較相手の記録は変更しません。</p></details>':
+  '<details class="ex-inquiry-details ex-e-extra"><summary>任意のメモについて</summary><p>必要なら下の既存テーマにある「メモを書く」から任意で記述できます。メモは今回の手入力走行にのみ関連づき、比較相手の記録は変更しません。</p></details>':
   '<p data-e-evidence="unavailable" role="status">'+esc(m.reason)+'</p>'+
   '<div class="ex-e-boundary"><strong>記録の選択と比較の範囲</strong><p>別の走行や数値に自動で差し替えません。比較は結果画面で本人が選んだ記録に限ります。</p></div>'+
   (current?'<a class="ex-e-compare-link" href="'+link+'">結果画面で比較相手を明示的に選ぶ</a>':

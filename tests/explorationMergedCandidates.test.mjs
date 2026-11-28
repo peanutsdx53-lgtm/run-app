@@ -37,7 +37,7 @@ test('E7 all merged candidate targets stay inside the current seven categories, 
 test('E7 T01: impressions use sourced existing reflection and optional writing; no mandatory question',()=>{
  const {html}=show('01','気付きと次の確認');
  assert.match(html,/data-ex-learning="voluntary-reflection"/);
- assert.match(html,/気づきを残す/);
+ assert.match(html,/気づき・疑問を残す/);
  const ui=makeUi(memory());ui.selected='01';ui.topic='気付きと次の確認';ui.modal='learn-help';
  const source=render(ui,ctx);
  assert.match(source,/中断|再開/,'origin and applicability belong to the existing sourced information panel');
@@ -55,7 +55,7 @@ test('E7 T07 & T09: mid-run practices and goal/enjoyment remain independent non-
   assert.match(h,/研究出典に基づく専門解説ではありません/);
    assert.doesNotMatch(h,/出典審査前/);
   assert.match(h,/情報の出所と限界/);
-  assert.match(h,/気づきを残す/);
+  assert.match(h,/気づき・疑問を残す/);
   assert.match(h,/data-ex-action="note"/);
   assert.doesNotMatch(h,/data-e-inquiry="T07"|data-e-inquiry="T09"|正答率|心理状態を診断した/);
  }

@@ -33,7 +33,7 @@ export const ENGLISH_FINAL_INQUIRY=Object.freeze({
  "差からは言えないこと": "What Differences Cannot Establish",
  "入力された日付は実際の走行順を証明しません。ROF-Jの回答区分から時間的な前後変化を確定せず、違いの原因・能力の向上・身体負荷・安全性を判定しません。": "Entered dates do not prove actual activity order. ROF-J categories do not establish temporal change. The comparison does not determine causes, improvement, tissue load or safety.",
  "この2回で、どんな状況や感覚を次に確かめたいですか？": "Which Conditions or Sensations Would You Like to Check Across These Two Runs?",
- "必要なら下の既存テーマにある「書いてみる」から任意で記述できます。メモは今回の手入力走行にのみ関連づき、比較相手の記録は変更しません。": "You can optionally write in the existing topic below. Any note is linked only to the current manual run; the comparison record is not modified.",
+ "必要なら下の既存テーマにある「メモを書く」から任意で記述できます。メモは今回の手入力走行にのみ関連づき、比較相手の記録は変更しません。": "Use Write a Note below if you wish. Any note is linked only to the current manual run; the comparison record is not modified.",
  "結果画面で比較相手を明示的に選ぶ": "Choose the Comparison Record Explicitly in Results",
  "保存済み記録を確認する": "Check Saved Records",
  "記録がなくても、一般的な過去比較の説明と既存の観察ガイドを読むことはできます。": "General comparison guidance and observation prompts remain available without saved records.",

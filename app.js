@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -76,13 +76,13 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/explorationBodyInquiry.js"),
     import("./ui/explorationConditionInquiry.js"),
     import("./ui/recordRef.js"),
-    import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1-daily-only"),
+    import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1-daily-only-usability1"),
     import("./ui/annotationEditor.js?v=20261126-cleanup-v5-daily-only"),
     import("./ui/dataManagementUi.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/firstUseExperience.js?v=20261126-cleanup-v5"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
-    import("./ui/consultationExperience.js?v=20261126-cleanup-v5-daily-only"),
-    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only-stage3-copy-notes-copy"),
+    import("./ui/consultationExperience.js?v=20261126-cleanup-v5-daily-only-usability1"),
+    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only-stage3-copy-notes-copy-usability1"),
     import("./ui/learningExperience.js?v=20261126-cleanup-v5"),
     import("./ui/interpretationRules.js?v=20261126-cleanup-v5"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
@@ -226,6 +226,9 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
   let gpsHistoryExpanded=false,gpsHistoryManageExpanded=false;
   let learningEntryHintShown=false;
   let lastExploreRoute=null;
+  const exploreConsultationRoute='#/consultation?from=explore';
+  let exploreConsultation=null;
+  const consultationEntry=()=>location.hash===exploreConsultationRoute?{fromExplore:true,recordId:exploreConsultation?.recordId||null,returnHref:exploreConsultation?.route||'#/exploration-tree'}:{};
   const explorationUi=explorationExperience.makeUi((()=>{try{return window.localStorage}catch{return null}})());
   // Return keyboard users to the inquiry control that opened a modal, after re-rendering.
   let explorationReturnAction="";
@@ -497,6 +500,11 @@ function recordExtras(){
           if(explorationUi.modal==='memories'){const fresh=explorationExperience.makeUi(onboardStorage);explorationUi.notes=fresh.notes;explorationUi.canSave=fresh.canSave;explorationUi.emptyNotesRaw=fresh.emptyNotesRaw;explorationUi.notice=fresh.notice;explorationReturnAction='memories';}
         }
       }
+      if(exploreConsultation?.route===route){
+        const fresh=explorationExperience.makeUi(onboardStorage);
+        Object.assign(explorationUi,exploreConsultation.selection,{modal:"",notes:fresh.notes,canSave:fresh.canSave,emptyNotesRaw:fresh.emptyNotesRaw,notice:fresh.notice});
+        exploreConsultation=null;
+      }
       const focusRun=resolved.ok&&resolved.value.kind==='MANUAL'?resolved.value.record:null;
       const focusRunId=focusRun?.id||deletedManualId||null;
       // L6 C-02: learning transfers the topic only, never an implicit run.
@@ -535,7 +543,7 @@ function recordExtras(){
    return rofExperience.rofPage(gpsSelfReport,gpsRofUi,{gps:true});
  }
    if(page==="course")return recordCourse(true);
- if(page==="consultation")return consultationExperience.renderConsultation();
+ if(page==="consultation")return consultationExperience.renderConsultation(consultationEntry());
  // The legacy body-part detail hash must never display fixed demo numbers as
  // if they came from a saved run. The real 12-region evidence lives in Result.
  const params=new URLSearchParams(location.hash.split('?')[1]||'');
@@ -590,7 +598,7 @@ function recordExtras(){
  if(page==="consultation"){
   consultationExperience.mountConsultation(app.querySelector('#consultation-root'),consultationExperience.consultationSources({
    manual:manualRunStore.readManualRuns(onboardStorage),gpsV2:gpsV2Cache,conditions:homeExperience.readConditions(onboardStorage)
-  }));
+  }),consultationEntry());
  }
  if(page==="annotation")void annotationEditor.mountAnnotationEditor(app.querySelector("#annotation-editor-root"),location.hash);
  if(page==="result"){
@@ -2017,6 +2025,13 @@ function recordExtras(){
     if(slopeChoice){const y=window.scrollY;explorationUi.toolChoice=slopeChoice.dataset.exSlope;render();window.scrollTo(0,y);return;}
     const nextChoice=event.target.closest("[data-ex-next]");
     if(nextChoice){explorationReturnAction="note";const prompts={"02|足・膝・股関節":["次は走るときの股関節の動きを意識してみたい","足首の動きについてもう少し調べたい"],"03|上り坂・下り坂":["次は上りと下りで感じ方を確かめたい","坂道のある日とない日の記録を見比べたい"],"05|睡眠":["次は起床時の調子も記録してみたい","睡眠の記録を数日分見返してみたい"]};const options=prompts[explorationUi.selected+"|"+explorationUi.topic]||[];explorationUi.followup=options[Number(nextChoice.dataset.exNext)]||"";explorationUi.modal="note";render();app.querySelector("#ex-note")?.focus();return;}
+    const consultationLink=event.target.closest('[data-ex-consultation]');
+    if(consultationLink&&currentPage()==='exploration-tree'){
+      if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+      event.preventDefault();
+      exploreConsultation=explorationLinkPolicy.captureConsultationFromExplore(location.hash,explorationUi,{manual:manualRunStore.readManualRuns(onboardStorage),gpsV2:gpsV2Cache});
+      location.hash=exploreConsultationRoute;return;
+    }
     const exploreAction=event.target.closest("[data-ex-action]");
     if(exploreAction){
       const action=exploreAction.dataset.exAction;
@@ -2056,11 +2071,6 @@ function recordExtras(){
         explorationUi.notice=result.ok?"書いたことを保存しました":result.reason;if(result.ok)explorationUi.followup="";
         if(result.ok)explorationUi.modal="";
         render();if(result.ok)restoreExplorationFocus();return;
-      }
-      if(action==="copy"){
-        const value=app.querySelector("[data-ex-draft-text]")?.innerText||"";
-        if(navigator.clipboard?.writeText){navigator.clipboard.writeText(value).then(()=>{const n=app.querySelector(".ex-dialog");if(n){const p=document.createElement("p");p.setAttribute("role","status");p.textContent="コピーしました";n.appendChild(p);}}).catch(()=>{const n=app.querySelector(".ex-dialog");if(n){const p=document.createElement("p");p.setAttribute("role","alert");p.textContent="コピーできませんでした";n.appendChild(p);}})}
-        return;
       }
       explorationReturnAction=action;
       explorationUi.modal=action;explorationUi.notice="";render();app.querySelector(".ex-dialog-head button")?.focus();return;
@@ -2220,6 +2230,9 @@ function recordExtras(){
   window.addEventListener("focus",refreshForeground);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)void refreshForeground();});
   window.addEventListener("hashchange",async()=>{
+    const destination=location.hash;
+    const returningFromConsultation=!!exploreConsultation&&destination===exploreConsultation.route;
+    if(location.hash!==exploreConsultationRoute&&!returningFromConsultation)exploreConsultation=null;
     if(currentPage()!=="condition")conditionUi.route=null;
     dismissLegalDialog();
     // P8: even outside inquiry panels, the old exploration view can hold
@@ -2255,11 +2268,12 @@ function recordExtras(){
       panel.dataset.eState='ROUTE_CHANGING';
     });
     await canonical.refresh();
+    if(location.hash!==destination)return;
     if(currentPage()!=="home")homeUi.guideOpen=false;
     gpsConsentAction="";
     if(currentPage()!=='measurement'&&gpsController?.state.phase==='running'){gpsController.pause();refreshGpsTicker();releaseGpsWakeLock();}
     // GPS saves and deletes show toast; do not immediately erase them on navigation.
-    render();state.toast='';if(location.hash.includes("life=1"))app.querySelector("#interpret-life")?.scrollIntoView({block:"start",behavior:"instant"});else window.scrollTo(0,0)});
+    render();state.toast='';if(returningFromConsultation){exploreConsultation=null;const link=app.querySelector('[data-ex-consultation]');link?.focus({preventScroll:true});link?.scrollIntoView({block:'center',behavior:'instant'});return;}if(location.hash.includes("life=1"))app.querySelector("#interpret-life")?.scrollIntoView({block:"start",behavior:"instant"});else window.scrollTo(0,0)});
   render();
   window.appBoot?.ready();
 })().catch(error=>{

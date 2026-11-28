@@ -212,12 +212,12 @@ test('topic layout scales and reflection has one way to review',()=>{
  assert.match(html,/class="ex-topic-set"/);
  assert.equal((html.match(/data-ex-action="memories"/g)||[]).length,1);
  assert.doesNotMatch(html,/class="ex-memories"/);
- assert.match(html,/書いてみる/);
+ assert.match(html,/メモを書く/);
  assert.doesNotMatch(html,/メモを残す|メモを見る|自分のメモ/);
  ui.modal='note';
  const note=render(ui,{categories:extra,draft:{},conditions:{entries:[]}});
- assert.match(note,/書き残す内容（500文字まで）/);
- assert.match(note,/気づきを書く/);
+ assert.match(note,/メモ（500文字まで）/);
+ assert.match(note,/メモを書く/);
 });
 
 test('learning help distinguishes numerical definitions, ROF-J self-reports and literature reference instead of presenting a false generic arithmetic source',()=>{

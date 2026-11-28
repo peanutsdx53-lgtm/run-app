@@ -198,21 +198,20 @@ try{
   await page.locator('input[data-share=rof]').waitFor({timeout:20000});
   for(const k of ['rof','notes','condition'])assert.equal(await page.locator('input[data-share="'+k+'"]').isChecked(),false);
   assert.equal(await page.locator('input[data-consultation-gps-v2]').isChecked(),false);
-  // A denied clipboard must report failure and must not add user information.
+  // Direct consultation navigation must not add user information.
   await goto('#/exploration-tree?category=01&topic='+encodeURIComponent('自分が感じた疲れ'));
-  await page.locator('[data-ex-action="share"]').waitFor();
-  await page.evaluate(()=>{
-   Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw Error('clipboard denied by browser');}}});
-  });
-  await page.locator('[data-ex-action=share]').click();
-  await page.locator('[data-ex-action=copy]').click();
-  await page.locator('.ex-dialog [role=alert]').waitFor({timeout:10000});
-  assert.match(await page.locator('.ex-dialog [role=alert]').innerText(),/コピーできませんでした/);
-  assert.doesNotMatch(await page.locator('[data-ex-draft-text]').innerText(),/PRIVATE-|139\.55|37\.7/);
-  assert.deepEqual(await snapshot(),baseline,'failure and clipboard handling cannot edit the parents or private annotations');
+ await page.locator('[data-ex-consultation]').click();
+ await page.locator('#consultation-root').waitFor({timeout:20000});
+ assert.equal(await page.locator('#cp-target').inputValue(),'','general Explore never selects a different record');
+ for(const k of ['rof','notes','condition'])assert.equal(await page.locator('[data-share="'+k+'"]').isChecked(),false);
+ for(const id of ['purpose','observation','question'])assert.equal(await page.locator('#cp-'+id).inputValue(),'');
+ assert.doesNotMatch(await page.locator('#consultation-root').innerText(),/PRIVATE-|139\.55|139\.91/);
+ await page.locator('.cp-back').click();
+ await page.locator('[data-ex-consultation]').waitFor({timeout:20000});
+  assert.deepEqual(await snapshot(),baseline,'navigation cannot edit the parents or private annotations');
   assert.deepEqual(errors,[],'I2 test must not generate uncaught JavaScript errors');
   console.log(JSON.stringify({gate:'I2-PRIVATE-EXPORT',engine:engineName,width,status:'PASS',
-   defaultPrivate:true,explicitOnly:true,gpsOriginalRof:true,failedPngVisible:true,clipboardDeniedSafe:true}));
+   defaultPrivate:true,explicitOnly:true,gpsOriginalRof:true,failedPngVisible:true,consultationNavigationSafe:true}));
   await context.close();
  }
 }finally{await browser.close();await new Promise(done=>server.close(done));}

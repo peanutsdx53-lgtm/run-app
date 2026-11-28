@@ -25,11 +25,11 @@ test('all 27 themes share one question and a three-section inquiry flow, with En
   assert.ok(q&&q.endsWith('？'),key+' must have one intentional opening question');
   assert.ok(ENGLISH_GPS_EXPLORATION_COPY[q],key+' must have an English question');
   assert.equal((page.match(/class="ex-inquiry-start"/g)||[]).length,1,key+' must have a single question header');
-  for(const label of ['探究の入り口','記録や経験を手がかりにする','記録と感覚を照らし合わせる','気づきを残す']){
+  for(const label of ['探究の入り口','記録や経験を手がかりにする','記録と感覚を照らし合わせる','気づき・疑問を残す']){
    assert.ok(page.includes(label),key+' missing '+label);
   }
   assert.ok(page.indexOf('記録や経験を手がかりにする')<page.indexOf('記録と感覚を照らし合わせる'),key);
-  assert.ok(page.indexOf('記録と感覚を照らし合わせる')<page.indexOf('気づきを残す'),key);
+  assert.ok(page.indexOf('記録と感覚を照らし合わせる')<page.indexOf('気づき・疑問を残す'),key);
   assert.equal((page.match(/data-ex-action="note"/g)||[]).length,1,key+' must offer a single optional note');
   if(!LEARNING_TOPICS[key])assert.ok(EXPLORATION_DRAFT_GUIDES[key],key+' must keep observation scope');
  }
@@ -85,7 +85,7 @@ test('source help and original research content are still available on knowledge
  const html=render(ui,ctx);
  assert.match(html,/class="ex-inquiry-details ex-knowledge-reference"/);
  assert.match(html,/data-ex-action="learn-help"/);
- assert.match(html,/data-ex-action="share"/);
+ assert.match(html,/data-ex-consultation/);
  assert.doesNotMatch(html,/class="ex-learning-lead"/);
 });
 

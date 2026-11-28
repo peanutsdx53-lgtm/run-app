@@ -1,7 +1,7 @@
 import {createExplorationContext, readCourseDraft} from "./explorationReadAdapter.js";
 import {validEntry} from "./homeExperience.js";
 import {EXPLORATION_DRAFT_GUIDES,EXPLORATION_STARTING_QUESTIONS} from "./explorationTopicGuides.js?v=20261111-exploration-inquiry-v1-daily-only";
-import {renderObservationGuide,OBSERVATION_GUIDE_BOUNDARY} from "./explorationTopicView.js?v=20261127-daily-only-stage3-copy-notes-copy";
+import {renderObservationGuide,renderReflectionActions,OBSERVATION_GUIDE_BOUNDARY} from "./explorationTopicView.js?v=20261127-daily-only-stage3-copy-notes-copy-usability1";
 import {isRunId,resolveOptionalNoteRunLink,visibleTopicNotes,noteRunBackLink} from "./noteRunLink.js";
 import {renderFatigueInquiry} from "./explorationInquiry.js?v=20261109-p7-wording-v1";
 import {renderComparisonInquiry} from "./explorationComparisonInquiry.js";
@@ -88,7 +88,6 @@ export function signals(draft,conditions,manualRuns=null,requestedId=null){
 function relevance(ui,ctx){
  return signals(ctx.focusRunId?null:ctx.draft,ctx.conditions,ctx.manualRuns,ctx.focusRunId||null);
 }
-function buttonAction(name,label,kind="") {return `<button type="button" class="ex-action ${kind}" data-ex-action="${name}">${label}</button>`;}
 
 function art(links){
  const stars=Array.from({length:72},(_,i)=>{const x=(i*73+31)%760,y=(i*47+(i%5)*37+17)%520,r=i%7===0?1.75:.85;return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#c4efff" opacity="'+(i%4===0?.52:.16)+'"/>';}).join("");
@@ -271,12 +270,7 @@ function experience(ui,ctx,cat,topic,inquiry=''){
   '<details class="ex-inquiry-details ex-knowledge-reference"><summary>参考知識と研究出典</summary><h5>'+h(entry.heading)+'</h5><p>'+h(entry.lead)+'</p>'+
   '<button type="button" class="ex-help-link" data-ex-action="learn-help">研究の対象と適用条件を確認</button></details>'+
   '</section>'+
-  '<section class="ex-inquiry-stage ex-inquiry-last"><h4>気づきを残す</h4>'+
-  '<div class="ex-note-invite"><div><strong>自分の言葉で書く</strong><p>印象に残ったことや次の確認事項を任意で残せます。</p></div>'+
-  '<button type="button" data-ex-action="note">書いてみる <span aria-hidden="true">＋</span></button></div>'+
-  buttonAction('share','相談用にまとめる','quiet')+
-  (saved.length?'<div class="ex-note-preview"><strong>以前に書いたこと</strong>'+saved.map(n=>'<p data-user-authored>'+h(n.text)+'</p>').join('')+'</div>':'')+
-  '</section></div>';
+  renderReflectionActions(saved)+'</div>';
 }
 
 function field(ui,ctx){
@@ -328,8 +322,8 @@ export function render(ui,ctx){
  (ui.notice?'<p class="ex-notice" role="status">'+esc(ui.notice)+'</p>':'')+
  '<div class="ex-switch" role="group" aria-label="探し方"><button type="button" data-ex-tab="field" aria-pressed="'+(ui.tab==="field")+'">気になることから</button><button type="button" data-ex-tab="catalog" aria-pressed="'+(ui.tab==="catalog")+'">テーマから探す</button></div>'+
  (ui.tab==="catalog"?catalog(ui,ctx):field(ui,ctx))+
- '<section class="ex-reflection-footer" aria-label="ふり返りノート"><div><strong>ふり返りノート</strong></div>'+
- '<button type="button" class="ex-header-memo" data-ex-action="memories">ふり返り <span>'+(ui.canSave?(ctx.focusRunId?ui.notes.filter(n=>n.recordId===ctx.focusRunId).length:ui.notes.length):'確認不可')+'</span></button></section>'+modal(ui,ctx)+'</section>';
+ '<section class="ex-reflection-footer" aria-label="ふり返りノート">'+
+ '<button type="button" class="ex-header-memo" data-ex-action="memories"><strong>ふり返りノート</strong><span class="ex-note-count">'+(ui.canSave?(ctx.focusRunId?ui.notes.filter(n=>n.recordId===ctx.focusRunId).length:ui.notes.length)+'件':'確認不可')+'</span><span class="ex-note-chevron" aria-hidden="true">›</span></button></section>' +modal(ui,ctx)+'</section>';
 }
 function modal(ui,ctx){if(!ui.modal)return "";const category=ctx.categories.find(c=>c.id===ui.selected)||ctx.categories[0],title=ui.topic||category.topics[0]||category.name,links=relevance(ui,ctx);let body="";
  if(ui.modal==="field-help")body='<div class="ex-help-signal"><span class="ex-legend-glow" aria-hidden="true"></span><p>強調表示は、現在入力している情報や保存した走行・生活記録と関連する分野を示します。優先順位や身体への負担の大きさを示すものではありません。</p></div><p>記録がなくても、どの分野も自由に選べます。</p><p>テーマは左右にスワイプするか、矢印で切り替えられます。</p>';
@@ -341,7 +335,7 @@ function modal(ui,ctx){if(!ui.modal)return "";const category=ctx.categories.find
  }
  if(ui.modal==="know")body=`<p>「${esc(title)}」に関連する知識を確認する場所です。</p><div class="ex-dialog-block"><strong>自分の情報との接点</strong><p>${esc(links.linked.get(category.id)||"このテーマを調べるのに記録は必要ありません。")}</p></div><div class="ex-dialog-block"><strong>読み取るときの注意</strong><p>記録や感覚の違いだけでは、原因や身体の状態を判断できません。</p></div><p class="ex-muted">この画面では個別の医学的な判断は行いません。</p>`;
  if(ui.modal==="try")body=`<p>距離と時間を動かして、平均ペースと平均速度の関係を確かめられます。</p><div class="ex-range-label"><label for="ex-distance">距離</label><output data-ex-distance-value>${ui.trialDistance.toFixed(1)} km</output></div><input id="ex-distance" type="range" min="1" max="15" step=".5" value="${ui.trialDistance}" data-ex-distance/><div class="ex-range-label"><label for="ex-minutes">時間</label><output data-ex-minutes-value>${ui.trialMinutes} 分</output></div><input id="ex-minutes" type="range" min="10" max="100" step="1" value="${ui.trialMinutes}" data-ex-minutes/><div class="ex-metric-grid"><div><small>平均ペース</small><strong data-ex-pace>—</strong><em>分/km</em></div><div><small>平均速度</small><strong data-ex-speed>—</strong><em>km/h</em></div></div><p class="ex-muted">算術計算のみ。個人の将来の走りや身体への負荷・ケガを予測するものではありません。</p>`;
- if(ui.modal==="note")body=`<p>「${esc(title)}」について、感じたことや次に試したいことを自由に書けます。あとから画面下部の「ふり返り」で読み返せます。</p>${ctx.focusRunId?(ctx.focusRun?"<p>この走行に関連づけて記録します。</p>":"<p>指定した走行が見つからず、関連づけた保存はできません。</p>"):"<p>走行記録には自動で関連づけません。</p>"}<label class="ex-form-label" for="ex-note">書き残す内容（500文字まで）</label><textarea id="ex-note" maxlength="500" rows="4" placeholder="例：上り坂は思っていたより息が上がった。次回はペースを意識してみたい。">${esc(ui.followup||"")}</textarea>${followups[LEARNING_TOPICS[category.id+"|"+title]]?.length?'<div class="ex-note-prompts"><small>書く内容に迷ったら</small>'+followups[LEARNING_TOPICS[category.id+"|"+title]].map((t,i)=>'<button type="button" data-ex-next="'+i+'">'+esc(t)+'</button>').join('')+'</div>':''}<div class="ex-dialog-actions"><button type="button" data-ex-action="save-note" ${!ui.canSave?"disabled":""}>保存する</button></div>${!ui.canSave?'<p class="ex-muted">保存されたメモを安全に読み取れないため、上書き防止のため保存を停止しています。</p>':""}`;
+ if(ui.modal==="note")body=`<p class="ex-note-topic"><span>テーマ：</span><strong>${esc(title)}</strong></p><p>保存したメモはふり返りノートから読み返せます。</p>${ctx.focusRunId?(ctx.focusRun?"<p>この走行に関連づけて記録します。</p>":"<p>指定した走行が見つからず、関連づけた保存はできません。</p>"):"<p>走行記録には自動で関連づけません。</p>"}<label class="ex-form-label" for="ex-note">メモ（500文字まで）</label><textarea id="ex-note" maxlength="500" rows="4" placeholder="例：上り坂は思っていたより息が上がった。次回はペースを意識してみたい。">${esc(ui.followup||"")}</textarea>${followups[LEARNING_TOPICS[category.id+"|"+title]]?.length?'<div class="ex-note-prompts"><small>書く内容に迷ったら</small>'+followups[LEARNING_TOPICS[category.id+"|"+title]].map((t,i)=>'<button type="button" data-ex-next="'+i+'">'+esc(t)+'</button>').join('')+'</div>':''}<div class="ex-dialog-actions"><button type="button" data-ex-action="save-note" ${!ui.canSave?"disabled":""}>保存する</button></div>${!ui.canSave?'<p class="ex-muted">保存されたメモを安全に読み取れないため、上書き防止のため保存を停止しています。</p>':""}`;
  if(ui.modal==="edit-note"){
   const current=ui.notes.find(n=>n.id===ui.editingNoteId);
   const linked=current?noteRunBackLink(current,ctx.manualRuns):null;
@@ -364,8 +358,8 @@ function modal(ui,ctx){if(!ui.modal)return "";const category=ctx.categories.find
   const target=ui.notes.find(n=>n.id===ui.deletingNoteId);
   body=target?'<div class="ex-delete-confirm" role="group" aria-label="削除するメモを確認"><p>このメモだけを削除します。削除後は元に戻せません。走行記録や別のメモは変更しません。</p><blockquote data-user-authored>'+esc(target.text)+'</blockquote><div class="ex-dialog-actions"><button type="button" data-ex-action="cancel-delete-note">削除しない</button><button type="button" class="ex-delete-danger" data-ex-action="confirm-delete-note">このメモを削除する</button></div></div>':'<p role="alert">削除対象のメモが見つかりません。保存済みの内容は変更しません。</p>';
  }
- if(ui.modal==="share")body=`<p>相談したいことを整理するための下書きです。自動で送信されません。</p><div class="ex-dialog-block" data-ex-draft-text><strong>話したいテーマ：${esc(title)}</strong><p>参考にした分野：${esc(category.name)}</p><p>記録との接点：${esc(links.linked.get(category.id)||"記録との直接的な接点はありません")}</p><p>相談したいこと：</p></div><div class="ex-dialog-actions"><button type="button" data-ex-action="copy">文章をコピー</button></div><p class="ex-muted">個人の走行データやメモを自動で共有しません。</p>`;
- return `<div class="ex-backdrop" data-ex-overlay><section class="ex-dialog" role="dialog" aria-modal="true" aria-labelledby="ex-dialog-title"><div class="ex-dialog-head"><div><small>${esc(category.name)}</small><h2 id="ex-dialog-title">${esc({know:"知る",try:"試す",note:"気づきを書く",share:"相談用にまとめる","learn-help":KNOWLEDGE[title]?"研究の出典と注意点":"観察ガイドの注意点","field-help":"強調表示の意味",memories:"ふり返りノート","edit-note":"メモを修正","delete-note":"メモの削除を確認"}[ui.modal]||ui.modal)}</h2></div><button type="button" data-ex-action="close" aria-label="閉じる">×</button></div>${body}</section></div>`;
+
+ return `<div class="ex-backdrop" data-ex-overlay><section class="ex-dialog" role="dialog" aria-modal="true" aria-labelledby="ex-dialog-title"><div class="ex-dialog-head"><div><small>${esc(category.name)}</small><h2 id="ex-dialog-title">${esc({know:"知る",try:"試す",note:"メモを書く","learn-help":KNOWLEDGE[title]?"研究の出典と注意点":"観察ガイドの注意点","field-help":"強調表示の意味",memories:"ふり返りノート","edit-note":"メモを修正","delete-note":"メモの削除を確認"}[ui.modal]||ui.modal)}</h2></div><button type="button" data-ex-action="close" aria-label="閉じる">×</button></div>${body}</section></div>`;
 }
 export function updatePace(root){const d=root.querySelector("[data-ex-distance]"),m=root.querySelector("[data-ex-minutes]");if(!d||!m)return;const distance=Number(d.value),minutes=Number(m.value);root.querySelector("[data-ex-distance-value]").textContent=`${distance.toFixed(1)} km`;root.querySelector("[data-ex-minutes-value]").textContent=`${minutes} 分`;const seconds=Math.round(minutes/distance*60),mm=Math.floor(seconds/60),ss=seconds%60;root.querySelector("[data-ex-pace]").textContent=`${mm}:${String(ss).padStart(2,"0")}`;root.querySelector("[data-ex-speed]").textContent=(distance/(minutes/60)).toFixed(1);}
 export function saveNote(ui,text,{focusRunId=null,manualRuns=null}={}){

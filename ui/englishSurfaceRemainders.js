@@ -130,7 +130,6 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  '自分のコース入力を確認 ›':'Review Your Course Entry ›',
  'ふり返り':'Reflections',
  'テーマから探す':'Browse Topics',
- '書いてみる':'Write a Reflection',
  '選んだ分野のテーマへ':'Topics in This Category',
  'どれから読んでみる？':'Where Would You Like to Start?',
  '上りでは重力に逆らって身体を持ち上げる必要があり、平坦路とは動きや力の使い方が異なります。':'Running uphill requires lifting the body against gravity, so movement and force application differ from level running.',
@@ -154,9 +153,6 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  '運動前の本人の疲労感やメモを確認することができます。':'You can review your self-reported pre-activity fatigue and notes.',
  '自分の記録から考える':'Reflect Using Your Own Records',
  '例：上り坂は思っていたより息が上がった。次回はペースを意識してみたい。':'Example: Uphill running felt harder than expected. Next time I want to pay attention to my pace.',
- '気づきを書く':'Write a Reflection',
- '書き残す内容（500文字まで）':'What to Save (Up to 500 Characters)',
- '「ウォームアップ」について、感じたことや次に試したいことを自由に書けます。あとから画面下部の「ふり返り」で読み返せます。':'You may write about what you noticed or would like to try next regarding warm-ups. You can review it later under Reflections at the bottom of this screen.',
  // Daily condition and dated records
  'ホームに戻る':'Return to Home',
  '学習の一覧へ戻る':'Back to Learning',

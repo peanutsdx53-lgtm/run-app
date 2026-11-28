@@ -27,6 +27,13 @@ export function resolveExplorationContext(hash,{manual,gpsV2}={}){
  if(ref.sourceType==='GPS_V2'&&!(record.schema===2&&typeof record.activeSeconds==='number'&&record.finalReference))return fail('SOURCE_MISMATCH','GPS記録の形式を確認できません。');
  return ok({kind:ref.sourceType==='MANUAL'?'MANUAL':'GPS_READONLY',ref,record});
 }
+// Ephemeral navigation context: only the route, selected controls and a
+// verified manual ID. No user text, record payload, GPS data or share choices.
+export function captureConsultationFromExplore(route,ui,sources){
+ const resolved=resolveExplorationContext(route,sources);
+ const selection=Object.fromEntries(['selected','topic','tab','mapExpanded','bodyChoice','toolChoice','lifeA','lifeB','trialDistance','trialMinutes'].map(k=>[k,ui[k]]));
+ return {route,selection,recordId:resolved.ok&&resolved.value.kind==='MANUAL'?resolved.value.record.id:null};
+}
 export function gpsInquiryBridge(ctx,{topic=null,lifeContext=null}={}){
  const ref=normalizeRecordRef(ctx?.ref);
  if(!ref.ok||ref.value.sourceType!=='GPS_V2'||ctx.record?.id!==ref.value.recordId)throw new TypeError('Invalid GPS bridge');
