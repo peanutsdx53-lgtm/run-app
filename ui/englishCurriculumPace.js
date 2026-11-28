@@ -151,7 +151,6 @@ export const ENGLISH_CURRICULUM_PACE=Object.freeze({
  "記録の出所・欠測・後日申告を学ぶ": "Learn About Record Sources and Missing Data",
  "この授業はまだ利用できません": "This Lesson Is Not Available Yet",
  "未公開の教材や不明なリンクを、別の授業へ置き換えずにお知らせします。": "Unreleased content or unknown lesson links are not silently redirected to another lesson.",
- "学習の一覧へ戻る": "Back to Learning",
  "基礎教材": "Foundations Lesson",
  "知識の復習": "Knowledge Review",
  "‹ 学習の一覧へ": "‹ Back to Learning Catalogue",

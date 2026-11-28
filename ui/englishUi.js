@@ -1,23 +1,23 @@
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261128-dictionary';
-import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact';
-import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy';
+import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact-remaining-copy';
+import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261128-guide-learning-settings-copy';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js?v=20261128-guide-learning-settings-copy';
 import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js?v=20261128-guide-learning-settings-copy';
-import {ENGLISH_CURRICULUM_ORIGIN} from './englishCurriculumCopy.js';
-import {ENGLISH_CURRICULUM_PACE} from './englishCurriculumPace.js';
-import {ENGLISH_CURRICULUM_MOTION} from './englishCurriculumMotion.js';
-import {ENGLISH_CURRICULUM_FATIGUE} from './englishCurriculumFatigue.js';
-import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js?v=20261125-ux16-19-batch-v1-daily-only';
-import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js';
-import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js';
-import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1';
-import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261126-cleanup-v5-daily-only';
-import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1-daily-compact-stage3-copy-notes-copy';
-import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261126-cleanup-v5-daily-only';
+import {ENGLISH_CURRICULUM_ORIGIN} from './englishCurriculumCopy.js?v=20261128-remaining-copy';
+import {ENGLISH_CURRICULUM_PACE} from './englishCurriculumPace.js?v=20261128-remaining-copy';
+import {ENGLISH_CURRICULUM_MOTION} from './englishCurriculumMotion.js?v=20261128-remaining-copy';
+import {ENGLISH_CURRICULUM_FATIGUE} from './englishCurriculumFatigue.js?v=20261128-remaining-copy';
+import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js?v=20261125-ux16-19-batch-v1-daily-only-remaining-copy';
+import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js?v=20261128-remaining-copy';
+import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js?v=20261128-remaining-copy';
+import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1-remaining-copy';
+import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261126-cleanup-v5-daily-only-remaining-copy';
+import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1-daily-compact-stage3-copy-notes-copy-remaining-copy';
+import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261126-cleanup-v5-daily-only-remaining-copy';
 import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-daily-only';
-import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js';
+import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js?v=20261128-remaining-copy';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
 import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy';
@@ -68,8 +68,6 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "関連する走行記録あり": "Linked to an activity",
  "関連する走行記録を確認できません": "The linked activity could not be verified",
  "走行記録に関連づけていないメモ": "Note not linked to an activity",
- "修正後の文章（1〜500文字）": "Revised note (1–500 characters)",
- "修正を保存する": "Save revision",
  "メモを修正": "Edit note",
  "分野図を閉じる": "Hide Area Map",
  "分野図を開く": "Show Area Map",
@@ -85,9 +83,6 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "履歴": "History",
  "学習": "Learning",
  "補助教材": "Supplementary Lesson",
- "速さと配分": "Speed & Pacing",
- "身体の動き": "Body Movement",
- "疲労と休養": "Fatigue & Rest",
  "設定": "Settings",
  "コンディションの歩み": "Condition History",
  "記録を始める": "Start Recording",
@@ -99,7 +94,6 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "測定": "Measurement",
  "GPSの疲労感": "GPS Fatigue Response",
  "コース設計": "Course Planning",
- "相談・共有": "Consultation & Sharing",
  "部位詳細": "Body Region Details",
  "メニュー": "Menu",
  "スマートフォンのメニュー": "Mobile menu",
@@ -157,21 +151,10 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "変更可能": "Adjustable",
  "案内": "Information",
  "この端末に保存されます": "Stored on this device",
- "距離": "Distance",
  "時間": "Time",
- "走行時間": "Running Time",
- "経過時間": "Elapsed Time",
  "歩数": "Steps",
- "活動種別": "Activity Type",
- "走歩混在": "Mixed Running & Walking",
- "コース": "Course",
- "走行条件": "Running Conditions",
  "記録日": "Record Date",
  "走行距離": "Distance Recorded",
- "運動前": "Before Activity",
- "運動後": "After Activity",
- "運動前に感じた疲れ": "Fatigue Before Activity",
- "運動後に感じた疲れ": "Fatigue After Activity",
  "疲労感": "Perceived Fatigue",
  "ROF-J（本人回答）": "ROF-J (self-reported)",
  "手入力": "Manual Entry",
@@ -185,7 +168,6 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "結果を開く　›": "Open Results ›",
  "記録はありません": "No records yet",
  "部位の参考値": "Region Reference Values",
- "文献参考値": "Research Reference Values",
  "文献の根拠と条件": "Research Source & Conditions",
  "文献条件にもとづく参考情報": "Reference information subject to study conditions",
  "部位を選ぶ": "Select a Region",
@@ -199,22 +181,18 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "比較する記録": "Comparison Record",
  "今回の記録": "Current Record",
  "比較する部位": "Select Region",
- "参考値の差": "Reference Value Difference",
  "比較値の算出条件と限界": "Calculation Conditions & Limits",
  "比較できない理由": "Why Comparison Is Unavailable",
  "同一部位": "Same Region",
  "前後の疲れ": "Before & After Fatigue",
  "比較する記録はありません": "No comparison record selected",
  "今後の記録を振り返れます": "You can review future records",
- "メモなし": "No notes",
- "比較できません": "Cannot compare",
  "後で": "Later",
  "更新する": "Update",
  "再読み込み": "Reload",
  "画面を準備しています": "Preparing the screen",
  "画面の準備を続けています": "Still preparing the screen",
  "通常より時間がかかっています": "This is taking longer than usual",
- "画面を開けませんでした": "Could not open the screen",
  "ホーム画面に追加する": "Add to Home Screen",
  "インストールする": "Install",
  "履歴を見る": "View History",
@@ -226,9 +204,7 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "保存しない": "Do Not Save",
  "GPSが測定した疲労感ではなく、本人の回答です。入力操作時刻は評価・発生時刻の実測ではないため、時間的な差や原因は判定しません。未回答は「—」で、0と区別します。": "Fatigue is self-reported, not measured by GPS. Input timestamps do not establish when fatigue occurred. Timing differences or causes cannot be inferred. Unanswered (—) is distinct from a valid zero.",
  "この部位の参考値は算出できません": "No reference value is available for this region",
- "文献参考値：算出対象外": "Research reference: outside calculation scope",
  "保存前：部位別値は未表示": "Before saving: no region values shown",
- "保存した走行の文献適用条件を確認します": "Study applicability is checked for the saved activity",
  "文献参考値の適用条件": "Research reference applicability",
  "医学的な診断ではありません": "Not a medical diagnosis",
  "身体負荷の実測ではありません": "Not a direct measurement of physical load",

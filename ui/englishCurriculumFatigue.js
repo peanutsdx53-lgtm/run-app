@@ -120,7 +120,6 @@ export const ENGLISH_CURRICULUM_FATIGUE=Object.freeze({
  "から運動終了後30分の安静回復に至る場面などを研究しました。": " through 30 minutes of seated recovery after exercise.",
  "Micklewrightら（2017）": "Micklewright et al. (2017)",
  "Experiment 3（自転車運動・安静回復）／": " Experiment 3 (cycling and seated recovery) / ",
- "Suzuki・Arai（2026）": "Suzuki and Arai (2026)",
  "Methods p.4–5、Discussion p.7–8。ROFとROF-Jの調査設計は異なります。": " Methods pp. 4–5 and Discussion pp. 7–8. The ROF and ROF-J study designs are not identical.",
  "したがって本教材は": "Accordingly, this lesson does not prescribe ",
  "といった処方を提示しません。睡眠・日常生活の条件を、走行経験を理解する際の文脈として学びます。": ". Sleep and daily-life conditions are explored as context for reflecting on running experience.",

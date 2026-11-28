@@ -6,7 +6,7 @@ import {gaitPage,gaitValidation} from '../ui/gaitExperience.js';
 import {rofPage,createRofUiState} from '../ui/rofExperience.js';
 import {environmentPage,newEnvironmentUi,toggleWeather,environmentSelectionState,applyEnvironmentSelections} from '../ui/environmentExperience.js';
 import {renderScreen,makeUi} from '../ui/bodyContextExperience.js';
-import {ENGLISH_FINAL_RECORDING} from '../ui/englishFinalRecording.js';
+import {ENGLISH_UI_TEXT} from '../ui/englishUi.js';
 
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const course={gradeMode:'UNKNOWN',surfaceMode:'UNKNOWN',courseName:'',upPercent:'',downPercent:''};
@@ -93,10 +93,10 @@ test('Body-like accent button is shared, responsive, and translated in both lang
  assert.match(css,/@media\(max-width:520px\)/);
  assert.match(css,/\.e4-leave-warning\[hidden\]\{display:none!important\}/);
  assert.ok(css.includes('.e4-bottom:has(.e4-leave-warning:not([hidden]))>.e4-done'));
- assert.equal(ENGLISH_FINAL_RECORDING['記録に戻る'],'Back to Recording');
- assert.equal(ENGLISH_FINAL_RECORDING['条件を反映して記録に戻る'],'Apply Conditions & Return');
- assert.equal(ENGLISH_FINAL_RECORDING['反映して戻る'],'Apply & Return');
- assert.equal(ENGLISH_FINAL_RECORDING['反映せず戻る'],'Return Without Applying');
+ assert.equal(ENGLISH_UI_TEXT['記録に戻る'],'Back to Recording');
+ assert.equal(ENGLISH_UI_TEXT['条件を反映して記録に戻る'],'Apply Conditions & Return');
+ assert.equal(ENGLISH_UI_TEXT['反映して戻る'],'Apply & Return');
+ assert.equal(ENGLISH_UI_TEXT['反映せず戻る'],'Return Without Applying');
  const idx=read('index.html'),sw=read('sw.js'),app=read('app.js');
  const ver='20261122-record-return-v1',shell='20261126-cleanup-v5';
  assert.ok(idx.includes('ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'));
