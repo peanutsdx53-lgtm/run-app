@@ -16,7 +16,7 @@ test('same-gait saved run comparison shows facts, true zero and provenance safel
 test('saved ROF-J comparisons disclose missing individual assessment timestamps',()=>{
  const result=compareSavedRuns(run(2),run(1));
  assert.equal(result.status,'ready');
- assert.match(result.uncertainty,/ROF-Jの回答操作時刻・本人申告の評価時刻があっても運動開始・終了との前後関係を実測で確認していない/);
+ assert.match(result.uncertainty,/疲労感の回答操作時刻・本人申告の評価時刻があっても運動開始・終了との前後関係を実測で確認していない/);
  assert.match(result.uncertainty,/時間的な前後変化量は判定しません/);
  // Differences between two entered scores remain descriptive, not temporal eligibility.
  assert.equal(result.rows.find(x=>x.key==='rofBefore').change,0);

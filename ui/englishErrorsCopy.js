@@ -1,6 +1,9 @@
 /* UI-only error and warning translations. Never overwrite records, ignore
  * read failures, collapse unanswered to zero, or silently retry destructive saves. */
 export const ENGLISH_ERRORS_COPY=Object.freeze({
+ "手入力の疲労感は結果画面から訂正してください": "Correct manually entered fatigue in Results.",
+ "疲労感は0〜10の整数です": "Fatigue must be a whole number from 0 to 10.",
+ "疲労感は0〜10の整数で入力してください": "Enter fatigue as a whole number from 0 to 10.",
  "この端末は画面の点灯保持に対応していません。GPS計測は続きます。": "This device does not support keeping the screen awake. GPS measurement will continue.",
  "画面の点灯保持を利用できませんでした。GPS計測は続きます。": "Could not keep the screen awake. GPS measurement will continue.",
  "再試行後も保存を確認できませんでした": "The save could not be verified after retrying",

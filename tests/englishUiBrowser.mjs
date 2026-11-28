@@ -102,7 +102,7 @@ try{
   assert.ok(pngLines.some(s=>s.includes('Study References:')),'PNG scientific eligibility is in English');
   assert.ok(pngLines.some(s=>s.includes('Not a Direct Measurement')),'PNG scientific caveat remains');
   assert.ok(pngLines.includes('Date Omitted (Default)'),'date defaults to private');
-  assert.ok(pngLines.includes('ROF-J Responses Omitted (Default)'),'fatigue defaults to private');
+  assert.ok(pngLines.includes('Fatigue Responses Omitted (Default)'),'fatigue defaults to private');
   assert.doesNotMatch(pngLines.join(' '),/[ぁ-ゟァ-ヿ一-龯]/,'English PNG must not draw Japanese interface copy');
   const nextRaw=await page.evaluate(async()=>{const c=await import('/ui/manualRunCanonical.js');return (await c.readCanonical()).raw});
   assert.equal(nextRaw,starting.raw,'view changes cannot alter canonical saved run');

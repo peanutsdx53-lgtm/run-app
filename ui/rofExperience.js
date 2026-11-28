@@ -166,7 +166,7 @@ export function rofPage(d,ui,options={}){
  <div class="rv4-rail" aria-label="評価軸と対応する代表イラスト"><div class="rv4-rail-top"><strong>代表イラスト</strong></div>
  <div class="rv4-anchor-row" aria-label="原版の5つの代表位置">${anchors}</div>
  <div class="rv4-description" aria-live="polite" aria-atomic="true"><small>イラストの説明 <span data-rof-v4-position>（目安：${esc(anchor.positionLabel)}）</span></small><strong data-rof-v4-anchor-meaning>${anchorDescriptionMarkup(anchor.descriptor)}</strong></div>
- <div class="rv4-axis" aria-label="0から10の一直線の評価軸"><div class="rv4-ticks">${ticks}</div><div class="rv4-track"><input type="range" data-rof-v4-range aria-label="${ui.phase==='before'?'運動前':'運動後'}のROF-J疲労感、0から10まで1ずつ" min="0" max="10" step="1" value="${hasScore?n:5}"></div></div>
+ <div class="rv4-axis" aria-label="0から10の一直線の評価軸"><div class="rv4-ticks">${ticks}</div><div class="rv4-track"><input type="range" data-rof-v4-range aria-label="${ui.phase==='before'?'運動前':'運動後'}の疲労感、0から10まで1ずつ" min="0" max="10" step="1" value="${hasScore?n:5}"></div></div>
  <div class="rv4-axis-ends"><span>0：まったく疲れていない</span><span>10：完全な疲労困憊</span></div>
  <div class="rv4-tools"><div class="rv4-adjust"><button type="button" data-rof-v4-step="-1" aria-label="疲労感を1下げる">−</button><span>1ずつ調整</span><button type="button" data-rof-v4-step="1" aria-label="疲労感を1上げる">＋</button></div><button type="button" data-rof-v4-clear ${hasScore?'':'disabled'}>選択を消す</button></div></div>
  <aside class="rv4-aside"><details class="rv4-rights"><summary>尺度・イラストの出典</summary><p>尺度：${esc(ROF_J_RIGHTS.scale)}。図：${esc(ROF_J_RIGHTS.images)}。</p><a href="${esc(ROF_J_RIGHTS.scaleUrl)}" target="_blank" rel="noopener">尺度の出典</a><a href="${esc(ROF_J_RIGHTS.imagesUrl)}" target="_blank" rel="noopener">図の出典</a></details></aside></div></section><footer class="rv4-next-actions rl-record-footer"><a class="rv4-done rl-record-return" href="${backHref}">${gpsMode?'GPSに戻る':'記録に戻る'} <span aria-hidden="true">→</span></a></footer></div>`;
@@ -190,7 +190,7 @@ export function reflectRofPage(root,d,ui){
  update('[data-rof-v4-caption]',selected?'選択値：'+n+' / 10':'横軸で数値を選択してください');
  page.querySelectorAll('[data-rof-v4-anchor]').forEach(el=>el.setAttribute('aria-pressed',String(Number(el.dataset.rofV4Anchor)===ui.focusedAnchor)));
  page.querySelectorAll('[data-rof-v4-tick]').forEach(el=>el.classList.toggle('is-selected',selected&&Number(el.dataset.rofV4Tick)===n));
- const range=page.querySelector('[data-rof-v4-range]');if(range){range.value=selected?String(n):'5';range.setAttribute('aria-label',(ui.phase==='before'?'運動前':'運動後')+'のROF-J疲労感、0から10まで1ずつ');}
+ const range=page.querySelector('[data-rof-v4-range]');if(range){range.value=selected?String(n):'5';range.setAttribute('aria-label',(ui.phase==='before'?'運動前':'運動後')+'の疲労感、0から10まで1ずつ');}
  update('[data-rof-v4-position]','（目安：'+a.positionLabel+'）');
  const anchorText=page.querySelector('[data-rof-v4-anchor-meaning]');
  if(anchorText)anchorText.innerHTML=anchorDescriptionMarkup(a.descriptor);

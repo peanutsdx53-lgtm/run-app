@@ -12,7 +12,7 @@ test('English PNG preserves scientific ineligibility, distinct zero and missing,
  assert.match(hidden.dateText,/Omitted/);
  assert.doesNotMatch(JSON.stringify(hidden),/2026-11-11|Before 0|After Unanswered/);
  const shown=englishResultImageDisclosure(resultExportDisclosure({date:'2026-11-11',before:0,after:null,includeRof:true,includeDate:true}));
- assert.equal(shown.rofText,'ROF-J (Self-Report): Before 0 / After Unanswered');
+ assert.equal(shown.rofText,'Fatigue (Self-Report): Before 0 / After Unanswered');
  assert.equal(shown.dateText,'2026-11-11');
  assert.equal(shown.includeRof,true);
 });

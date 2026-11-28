@@ -1,29 +1,29 @@
-import {ENGLISH_EXPLORE_REDESIGN} from './explorationRedesign.js?v=20261128-inquiry2';
+import {ENGLISH_EXPLORE_REDESIGN} from './explorationRedesign.js?v=20261128-inquiry2-ux109';
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261128-dictionary';
-import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact-remaining-copy';
-import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy-usability1';
+import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact-remaining-copy-terms';
+import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy-usability1-ux109';
 import {ENGLISH_SETTINGS_COPY} from './englishSettingsCopy.js?v=20261128-guide-learning-settings-copy';
 import {ENGLISH_GUIDE_COPY} from './englishGuideCopy.js?v=20261128-guide-learning-settings-copy';
 import {ENGLISH_LEARNING_COPY} from './englishLearningCopy.js?v=20261128-guide-learning-settings-copy';
-import {ENGLISH_CURRICULUM_ORIGIN} from './englishCurriculumCopy.js?v=20261128-remaining-copy';
+import {ENGLISH_CURRICULUM_ORIGIN} from './englishCurriculumCopy.js?v=20261128-remaining-copy-terms';
 import {ENGLISH_CURRICULUM_PACE} from './englishCurriculumPace.js?v=20261128-remaining-copy';
 import {ENGLISH_CURRICULUM_MOTION} from './englishCurriculumMotion.js?v=20261128-remaining-copy';
-import {ENGLISH_CURRICULUM_FATIGUE} from './englishCurriculumFatigue.js?v=20261128-remaining-copy';
-import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js?v=20261125-ux16-19-batch-v1-daily-only-remaining-copy';
-import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js?v=20261128-remaining-copy';
+import {ENGLISH_CURRICULUM_FATIGUE} from './englishCurriculumFatigue.js?v=20261128-remaining-copy-terms';
+import {ENGLISH_SHARING_COPY} from './englishSharingCopy.js?v=20261125-ux16-19-batch-v1-daily-only-remaining-copy-terms';
+import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js?v=20261128-remaining-copy-terms';
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js?v=20261128-remaining-copy';
 import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1-remaining-copy';
 import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261126-cleanup-v5-daily-only-remaining-copy';
 import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1-daily-compact-stage3-copy-notes-copy-remaining-copy-condition-copy';
 import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261126-cleanup-v5-daily-only-remaining-copy';
-import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-daily-only';
-import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js?v=20261128-remaining-copy';
+import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-daily-only-terms';
+import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js?v=20261128-remaining-copy-terms';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
-import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy-usability1-copyfix';
+import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy-usability1-copyfix-ux109';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy-condition-copy-usability1';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy-condition-copy-usability1-terms';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.
@@ -87,7 +87,6 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "設定": "Settings",
  "コンディションの歩み": "Condition History",
  "記録を始める": "Start Recording",
- "運動前後の疲労感": "Before/After Fatigue",
  "追加情報": "Additional Information",
  "環境": "Environment",
  "動的結果": "Dynamic GPS Results",
@@ -157,7 +156,7 @@ export const ENGLISH_UI_TEXT=Object.freeze({
  "記録日": "Record Date",
  "走行距離": "Distance Recorded",
  "疲労感": "Perceived Fatigue",
- "ROF-J（本人回答）": "ROF-J (self-reported)",
+ "運動前後の疲労感（本人回答）": "Before/After Fatigue (self-reported)",
  "手入力": "Manual Entry",
  "GPS測定": "GPS Measurement",
  "保存して続ける": "Save & Continue",

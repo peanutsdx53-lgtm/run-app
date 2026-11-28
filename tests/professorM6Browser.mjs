@@ -75,7 +75,7 @@ try{
  const t02Manual=page.locator('[data-e-inquiry="T02"]');
  assert.equal(await t02Manual.getAttribute('data-e-state'),'VERIFIED');
  assert.equal(await t02Manual.getAttribute('data-e-source'),'MANUAL');
- assert.match(await t02Manual.innerText(),/ROF-J（本人回答）/);
+ assert.match(await t02Manual.innerText(),/疲労感（本人回答）/);
  assert.match(await t02Manual.innerText(),/実際の評価時刻/);
  assert.match(await t02Manual.innerText(),/正解・不正解はありません/);
  await page.locator('.ex-learning [data-ex-action="note"]').click();

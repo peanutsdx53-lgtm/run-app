@@ -148,8 +148,8 @@ const pairs=[
  ],
  [
   "後日申告は本人が書いた内容です。記録時の計測値・ROF-Jの正本・12部位の文献参考値・過去比較は変更しません。申告時刻は端末の操作時刻で、体験が生じた時刻を保証しません。",
-  "後日申告は本人が書いた内容です。記録時の計測値・ROF-Jの回答・12部位の文献参考値・過去比較は変更しません。申告時刻は端末の操作時刻で、体験が生じた時刻を保証しません。",
-  "Retrospective entries are user-authored. They do not change original measurements, original ROF-J responses, 12 regional references or past comparisons. The time of entry does not establish when the experience occurred."
+  "後日申告は本人が書いた内容です。記録時の計測値・疲労感の回答・12部位の文献参考値・過去比較は変更しません。申告時刻は端末の操作時刻で、体験が生じた時刻を保証しません。",
+  "Retrospective entries are user-authored. They do not change original measurements, original fatigue responses, 12 regional references or past comparisons. The time of entry does not establish when the experience occurred."
  ]
 ];
 test('only available curriculum courses remain, with no unreleased translations',()=>{

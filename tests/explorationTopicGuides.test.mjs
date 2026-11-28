@@ -26,7 +26,7 @@ test('all 17 observation guides render self-observation, limitation and explicit
   if(LEARNING_TOPICS[key])continue;
   ui.selected=category.id;ui.topic=title;
   const page=render(ui,ctx);
-  for(const label of ['探究の入り口','理解の手掛かり','読み取り上の注意','気づき・疑問を残す'])assert.ok(page.includes(label),key+': '+label);
+  for(const label of ['理解の手掛かり','読み取り上の注意','気づき・疑問を残す'])assert.ok(page.includes(label),key+': '+label);
   assert.match(page,/参考文献・研究条件|設計の参考文献|計算の根拠|文献参考値の根拠|研究出典に基づく専門解説ではありません/);
   assert.doesNotMatch(page,/href="https?:|data-ex-action="learn-help"/);
   assert.ok(page.includes('data-ex-action="note"'));

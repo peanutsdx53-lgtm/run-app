@@ -82,6 +82,6 @@ test('UX09 versioned environment modules and dictionary are precached without ov
  assert.ok(index.includes('recordReturnActions.css?v='+v));
  assert.ok(sw.includes('recordReturnActions.css?v='+v));
  assert.ok(sw.includes('englishFinalConditions.js?v=20261126-cleanup-v5'));
- assert.ok(app.includes('rofExperience.js?v=20261126-cleanup-v5'));
+ assert.ok(app.includes('rofExperience.js?v=20261126-cleanup-v5-terms'));
  assert.ok(app.includes('recordExperience.js?v=20261126-cleanup-v5'));
 });

@@ -66,7 +66,7 @@ test('consultation explains V2 ROF-J provenance without a temporal difference',(
  for(const phrase of ['0は有効な回答','未回答','回答区分','入力操作時刻','本人申告の評価日時','客観的に検証されていません','時間的な前後差は判定しません'])assert.ok(note.includes(phrase),phrase);
  assert.doesNotMatch(note,/個別の評価時刻がないため|前後の変化量は測定/);
  const html=renderConsultation();
- assert.match(html,/運動前・運動後の回答（ROF-J）/);
+ assert.match(html,/運動前・運動後の疲労感/);
  assert.match(html,/回答区分別の主観値/);
  assert.match(html,/時間的な変化量は判定しません/);
  assert.doesNotMatch(html,/疲労感の変化（ROF-J）|運動後 − 運動前/);

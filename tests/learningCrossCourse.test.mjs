@@ -46,7 +46,7 @@ test('L6 running lesson roles, distinct knowledge tasks, and 4 valid legacy expl
  assert.ok(QUIZ.some(q=>/ペース|km/.test(q.prompt)));
  assert.ok(MOTION_QUESTIONS.some(q=>/支持期と遊脚期/.test(q.prompt)));
  assert.ok(FATIGUE_QUESTIONS.some(q=>/睡眠/.test(q.prompt)));
- assert.ok(ORIGIN_QUIZ.some(q=>/欠測|出所|ROF-J/.test(q.question)));
+ assert.ok(ORIGIN_QUIZ.some(q=>/欠測|出所|疲労感/.test(q.question)));
  // Optional cross-course paths never inherit a personal RecordRef.
  for(const id of ['running-motion-basics','effort-fatigue-recovery'])
   assert.ok(catalog.innerHTML.includes('href="#/learning?lesson='+id+'"'));

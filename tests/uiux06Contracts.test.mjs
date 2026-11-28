@@ -37,7 +37,7 @@ test('UIUX06 S20: exported PNG does not falsely assert timestamp absence',()=>{
  assert.match(js,/resultExportDisclosure/,'PNG uses explicit privacy choice');
  const privacy=readFileSync(new URL('../ui/resultSharingPolicy.js',import.meta.url),'utf8');
  assert.match(privacy,/includeRof:false/,'ROF is hidden by default');
- assert.match(privacy,/ROF-J（本人回答）/,'opted-in ROF retains its provenance');
+ assert.match(privacy,/疲労感（本人回答）/,'opted-in ROF retains its provenance');
  assert.equal(resultImageAnnotation({saved:true,reference:{count:9}}).status,'文献参考値：9/12 部位算出');
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8'),sw=readFileSync(new URL('../sw.js',import.meta.url),'utf8'),html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
  assert.match(app,/resultExperience\.js\?v=20261126-cleanup-v5/);

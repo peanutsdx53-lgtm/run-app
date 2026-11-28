@@ -70,7 +70,7 @@ try{
    await panel.waitFor({state:'visible'});
    assert.equal(await panel.getAttribute('data-rof-time-status'),'unverified');
    const caption=panel.locator('.rv4-fatigue-caption');
-   assert.match(await caption.innerText(),/出所：ROF-J／本人回答/,'foreground the actual self-report and source');
+   assert.match(await caption.innerText(),/出所：疲労感／本人回答/,'foreground the actual self-report and source');
    const size=await caption.evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
    assert.ok(size>=12,'approved understated ROF-J caption remains readable: '+size);
    const method=panel.locator('.rv4-fatigue-method');

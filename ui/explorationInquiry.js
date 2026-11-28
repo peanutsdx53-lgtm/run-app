@@ -22,7 +22,7 @@ export function renderFatigueInquiry(input={},options={}){
   '<p data-e-evidence="empty">走行記録を指定していません。本人の数値を推測せず、記録がなくてもこの問いを考えられます。</p>':
   m.state==='UNVERIFIED'?
   '<p data-e-evidence="unverified" role="status">指定された記録を安全に照合できません。ほかの走行の値で代用しません。</p>':
-  '<p data-e-evidence="rof"><strong>ROF-J（本人回答）</strong>：運動前 '+(m.before??'未回答')+
+  '<p data-e-evidence="rof"><strong>運動前後の疲労感（本人回答）</strong>：運動前 '+(m.before??'未回答')+
   ' ／ 運動後 '+(m.after??'未回答')+'。'+(m.hasAnswer?'保存済みの本人の回答です。':'この記録には確認できる回答がありません。')+'</p>';
  const sourceLabel={MANUAL:'本人が手入力した走行',GPS_V2:'GPSの保存記録'};
  const canWrite=options.allowLegacyMemo===true&&(m.state==='NO_RECORD'||m.state==='VERIFIED'&&m.source==='MANUAL');

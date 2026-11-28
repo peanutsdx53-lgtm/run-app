@@ -106,7 +106,7 @@ try{
   assert.doesNotMatch(await panel.innerText(),/睡眠のおかげ|回復した|睡眠によって改善|原因と判定/);
   if(item.source!=='manual'){
    assert.equal(await page.locator('[data-gps-inquiry-bridge]').count(),1);
-   assert.doesNotMatch(await page.locator('[data-gps-inquiry-bridge]').innerText(),/ROF-J（本人回答）：運動前/);
+   assert.doesNotMatch(await page.locator('[data-gps-inquiry-bridge]').innerText(),/(?:ROF-J|疲労感)（本人回答）：運動前/);
    assert.match(await page.locator('[data-gps-inquiry-bridge] a').last().getAttribute('href'),/category=05/);
   }else{
    assert.equal(await page.locator('.ex-observation-guide').count(),1);

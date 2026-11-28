@@ -68,8 +68,8 @@ export const EXPLORE_THEMES={
    ]
   ],
   "example": [
-   "仮想例：同じ5 km・30分でも、ある日は余裕があり、別の日はきつく感じることがあります。",
-   "Hypothetical example: Two 5 km runs taking 30 minutes may feel easy on one day and difficult on another."
+   "説明用の例：Aは5 km・30分で余裕があった。Bは5 km・29分で最後がきつかった。Bの平均ペースは速くても、走りやすさが増したとは限りません。",
+   "Illustrative example: A was 5 km in 30 min and felt comfortable. B was 5 km in 29 min and felt difficult at the end. B was faster on average, but may not have felt easier."
   ]
  },
  "A3": {
@@ -102,6 +102,10 @@ export const EXPLORE_THEMES={
     "研究の根拠：部位ごとに測定量・適用条件が異なります。結果画面で該当する文献と条件を確認できます。",
     "Research basis: measures and applicable conditions differ by region; see Results for the relevant study and conditions."
    ]
+  ],
+  "example": [
+   "例：同じ部位・指標・基準で100と120なら、後者は参照基準の1.2倍に相当します。本人の身体への負荷が20％増えたという意味ではありません。",
+   "Example: for the same region, measure and reference basis, 120 corresponds to 1.2 times the reference of 100. It does not mean your own tissue load increased by 20%."
   ]
  },
  "B1": {
@@ -110,16 +114,16 @@ export const EXPLORE_THEMES={
    "Fatigue and how running felt"
   ],
   "question": [
-   "走っているときのきつさと、走った後の疲れは、どのように感じましたか？",
-   "How did the effort of running and the fatigue you felt afterwards compare?"
+   "走り終えたときの疲労感が同じでも、走った経験は同じでしょうか？",
+   "If two runs have the same after-exercise fatigue rating, were the experiences the same?"
   ],
   "insight": [
-   "運動のきつさ（努力感）と疲労感は区別して考えることができます。ROFの研究では、自転車運動中は両者が対応していましたが、安静回復中は同じ変化を示しませんでした。ROF-Jは本人が感じる疲労感を記録する日本語尺度です。",
-   "Perceived exertion and fatigue can be considered separately. In ROF research they corresponded during cycling exercise, but not during resting recovery. ROF-J is a Japanese scale for recording subjective fatigue."
+   "坂道で息が上がる「運動のきつさ」と、止まって休んでいるときにも残る「疲労感」は、同じとは限りません。自転車運動の研究では、運動中は両者が対応しましたが、休んでいる間は同じ変化を示しませんでした。",
+   "Effort, such as feeling out of breath on a hill, and fatigue that may remain while resting are not necessarily the same. In a cycling study they corresponded during exercise but did not follow the same pattern while resting."
   ],
   "review": [
-   "本人のROF-J回答と、覚えている場面・申告方法を確認しましょう。0は有効な回答で、未回答ではありません。",
-   "Review your ROF-J answers and the circumstances you remember, including how the answers were recorded. Zero is a valid answer, not a missing response."
+   "運動前後の疲労感と、覚えている場面・入力方法を確認しましょう。0は有効な回答で、未回答ではありません。",
+   "Review your before/after fatigue ratings and the circumstances you remember, including how the answers were recorded. Zero is a valid answer, not a missing response."
   ],
   "consider": [
    "疲れの数字だけでは表せない感じ方はありますか？",
@@ -140,8 +144,8 @@ export const EXPLORE_THEMES={
    ]
   ],
   "example": [
-   "例：走っている間のきつさと、走り終えて休んでいるときの疲れ。区別しにくい場合もあります。",
-   "Example: effort while running and fatigue while resting afterwards. They may be difficult to distinguish."
+   "説明用の例：運動前の回答が1と4、運動後がどちらも5なら、後の回答だけでは前の回答の違いは分かりません。0という回答も未回答とは異なります。",
+   "Illustrative example: before-exercise answers of 1 and 4 can both have an after-exercise answer of 5. Looking at the latter alone hides the difference in the earlier answers. A response of 0 is different from no response."
   ]
  },
  "B2": {
@@ -203,8 +207,8 @@ export const EXPLORE_THEMES={
   ],
   "sources": [],
   "example": [
-   "記述例（実際の症状ではありません）：場所＝膝周辺、時期＝走行中、感じ方＝張る感じ。",
-   "Example note (not an actual symptom): location = around the knee; timing = during the run; sensation = tightness."
+   "記述例：走行中に膝周辺が張る感じがした。翌朝は別の場所が気になった。覚えている場所・時期・感覚を分けると、あとから読み返したときの手掛かりになります。",
+   "Example note: tightness around the knee during a run; another area caught my attention the next morning. Separating remembered location, timing and sensation gives you something more specific to revisit."
   ]
  },
  "C1": {
@@ -253,8 +257,8 @@ export const EXPLORE_THEMES={
    "What differences did you feel when running in different locations or weather?"
   ],
   "insight": [
-   "入力した気温・天候・屋内外と、本人の暑さ・寒さ・走りやすさの感覚は別の情報です。同じ気温の記録でも、ほかの条件や体感が同じとは限りません。",
-   "Entered temperature, weather and indoor/outdoor setting are distinct from your feelings of heat, cold or ease of running. The same recorded temperature does not establish that other conditions or sensations matched."
+   "気温が同じ日でも、日差しのある道路、日陰、風のある場所、室内では経験した条件が異なり得ます。気温の記録と、その場の暑さや走りやすさを思い出すことは別の手掛かりです。",
+   "Even at the same recorded temperature, a sunny road, shade, wind and an indoor location can involve different conditions. The temperature entry and your remembered heat or ease of running offer different clues."
   ],
   "review": [
    "走行条件の本人入力や後日申告を確認しましょう。",
@@ -270,8 +274,8 @@ export const EXPLORE_THEMES={
   ],
   "sources": [],
   "example": [
-   "観察の例：日差し、風、日陰、屋内外。記録がない場合は覚えている範囲で考えます。",
-   "Examples to consider: sunlight, wind, shade, indoor or outdoor setting. If these were not recorded, consider only what you remember."
+   "説明用の例：同じ20℃と入力した2回の走行。一方は日陰の公園、もう一方は日差しのある道路だったと覚えているなら、気温以外の状況も見返せます。",
+   "Illustrative example: two runs both recorded as 20°C. If you remember one being in a shaded park and the other on a sunny road, you have more context to review than temperature alone."
   ]
  },
  "C3": {
@@ -306,8 +310,8 @@ export const EXPLORE_THEMES={
    ]
   ],
   "example": [
-   "仮想例：23時に就床し7時に起床した場合、就床から起床までの時間は8時間ですが、実際に8時間眠ったとは限りません。",
-   "Hypothetical example: Going to bed at 23:00 and getting up at 07:00 gives eight hours in bed, not necessarily eight hours asleep."
+   "説明用の例：23時に就床し7時に起床した場合、就床から起床までは8時間です。眠るまでにかかった時間や途中で起きた時間は、この入力だけでは分かりません。",
+   "Illustrative example: going to bed at 23:00 and getting up at 07:00 gives eight hours in bed. This entry alone does not reveal how long it took to fall asleep or time awake during the night."
   ]
  },
  "C4": {
@@ -369,8 +373,8 @@ export const EXPLORE_THEMES={
    ]
   ],
   "example": [
-   "例：距離を伸ばすこと、楽しさ、気分転換、生活に合うこと。どれかを選ぶ必要はありません。",
-   "Examples: running farther, enjoyment, a change of mood or fitting running into daily life. There is no need to choose one."
+   "説明用の例：距離の目標には届かなかったが、初めての道を楽しめた日。予定どおり走れなかったが、生活に合う時間帯を見つけた日。数字とは別に、自分にとって意味のあったことを見つけられます。",
+   "Illustrative examples: a run fell short of a distance goal but you enjoyed a new route; a plan changed but you discovered a time that fits your life. You can notice what mattered to you beyond the numbers."
   ]
  },
  "D2": {
@@ -563,12 +567,20 @@ export const EXPLORE_VARIANTS={
    "腕の振りや上半身の感覚が気になった場面を、覚えている範囲で整理できます。",
    "Consider any moments when you noticed your arms or upper body, as far as you remember."
   ],
-  "sources": []
+  "sources": [],
+  "question": [
+   "脚以外では、肩や腕、上半身の動きで何が気になりましたか？",
+   "Apart from your legs, what caught your attention about your shoulders, arms or trunk?"
+  ],
+  "example": [
+   "観察例：肩に力を入れていたように感じたが、実際の腕の振りは見ていない。感じたことと観察できたことを区別して振り返れます。",
+   "Observation example: you felt your shoulders tense, but did not observe your actual arm swing. Consider what you felt and what you actually observed separately."
+  ]
  },
  "course-surface": {
   "insight": [
-   "舗装・未舗装などの分類は、路面の硬さや滑りやすさを測った値ではありません。",
-   "Categories such as paved or unpaved are not measurements of hardness or slipperiness."
+   "同じ未舗装路でも、締まった土・砂・凹凸など、路面の状態は一様ではありません。種類を選んだだけでは硬さや滑りやすさは分かりません。足元の感覚や速度を変えた場面は別の手掛かりです。",
+   "Unpaved surfaces can include compacted dirt, sand or uneven ground. A surface category alone does not measure hardness or slipperiness. Remembered footing and moments when you adjusted speed provide other clues."
   ],
   "review": [
    "コース入力に路面があれば見返し、足元の凹凸や着地の感覚、速度を調整した場面を思い出してみましょう。",
@@ -578,7 +590,15 @@ export const EXPLORE_VARIANTS={
    "路面の記録だけから部位別負荷や傷害リスクは判断できません。",
    "Surface records alone cannot establish regional loading or injury risk."
   ],
-  "sources": []
+  "sources": [],
+  "question": [
+   "いつもの舗装路と違う路面で、足元の感覚や速度の調整は変わりましたか？",
+   "On a different surface from your usual paved route, did your footing or pacing feel different?"
+  ],
+  "example": [
+   "観察例：舗装路では着地を意識しなかったが、凹凸のある道では足元をよく見て速度を調整した。違いを感じなかった場合も、そのまま振り返れます。",
+   "Observation example: you paid little attention to landing on a paved route but watched your footing and changed speed on uneven ground. Not noticing a difference is also a valid observation."
+  ]
  },
  "course-location": {
   "review": [
@@ -599,19 +619,47 @@ export const EXPLORE_VARIANTS={
    "食事量・水分摂取量を測定していません。脱水、栄養不足、必要摂取量や走行への効果を判定しません。",
    "Food and fluid intake are not measured. The app does not determine dehydration, nutrient deficiency, required intake or effects on running."
   ],
-  "example": null,
-  "sources": []
+  "example": [
+   "観察例：走る前に飲み物を飲んだことは覚えているが量は覚えていない。摂取量を推測せず、覚えていることだけを手掛かりにできます。",
+   "Observation example: you remember drinking something before running but not how much. Use what you remember without guessing the amount."
+  ],
+  "sources": [],
+  "question": [
+   "走る前後に口にしたものと、そのときの感覚を覚えていますか？",
+   "Do you remember what you ate or drank around a run and how you felt?"
+  ],
+  "consider": [
+   "摂取した時期や内容の記憶はありますか？ 量や成分が分からなければ、分からないままにしておけます。",
+   "Do you remember what you consumed and when? If the amount or composition is unknown, it can remain unknown."
+  ]
  },
  "life-daily": {
   "review": [
    "生活履歴で日付を選び、本人の疲れ・気分、起床時の調子と入力方式を確認できます。",
    "Choose a date in daily history and review your reported fatigue, mood, waking condition and input method."
-  ]
+  ],
+  "question": [
+   "同じ朝の調子と回答した日でも、一日を通して同じように感じましたか？",
+   "On days with the same waking-condition answer, did you feel the same throughout the day?"
+  ],
+  "insight": [
+   "起床時の調子は朝の回答であり、その日の疲れ・気分は別の記録です。朝の調子が似ていても、一日の中で感じ方が変わったことを思い出す場合があります。",
+   "Waking condition is a morning response, while fatigue and mood are recorded separately. Similar waking responses need not capture how you remember feeling throughout the day."
+  ],
+  "consider": [
+   "朝の調子とその日の疲れ・気分のうち、走った経験を振り返る手掛かりになったものはありますか？",
+   "Which, if any, of your waking condition, daily fatigue or mood helped you reflect on the run?"
+  ],
+  "example": [
+   "説明用の例：起床時は良いと回答していても、夕方には眠気があったと覚えている日。朝の回答だけで一日の状態を代表させません。",
+   "Illustrative example: a day when you reported feeling good on waking but remember feeling sleepy in the evening. A morning response does not represent the entire day."
+  ],
+  "sources": []
  },
  "recovery-context": {
   "review": [
-   "ROF-Jの回答と、本人が選んだ生活記録・走行条件を別々に見返せます。",
-   "Review ROF-J answers and any daily records or running conditions you choose separately."
+   "運動前後の疲労感と、本人が選んだ生活記録・走行条件を別々に見返せます。",
+   "Review before/after fatigue ratings and any daily records or running conditions you choose separately."
   ]
  },
  "personal-record-use": {
@@ -657,7 +705,11 @@ export const EXPLORE_VARIANTS={
    "休む前後で、感じ方に変化がありましたか？",
    "Did you notice any change in how you felt before and after resting?"
   ],
-  "sources": []
+  "sources": [],
+  "example": [
+   "説明用の例：走らなかった日でも疲れを感じた日と、休んだと感じた日があり得ます。記録がないことを休養した証拠にはしません。",
+   "Illustrative example: a day without running may be one when you felt tired or one when you felt rested. A missing run record does not establish that you rested."
+  ]
  },
  "practice-warmup": {
   "question": [
@@ -680,7 +732,11 @@ export const EXPLORE_VARIANTS={
    "準備の内容と走り始めの感覚で、覚えていることは何ですか？",
    "What do you remember about your preparation and how starting felt?"
   ],
-  "sources": []
+  "sources": [],
+  "example": [
+   "観察例：歩いてから走り始めた日と、すぐに走り始めた日。走り始めの感覚を思い出し、距離や時間帯など異なった条件も見返せます。",
+   "Observation example: a day when you walked before running and a day when you began running immediately. Recall how the start felt and other differing conditions, such as distance or time of day."
+  ]
  },
  "practice-during": {
   "question": [
@@ -703,7 +759,11 @@ export const EXPLORE_VARIANTS={
    "速さを変える前に感じたことと、変えた理由は区別できますか？",
    "Can you distinguish what you felt before changing pace from why you changed it?"
   ],
-  "sources": []
+  "sources": [],
+  "example": [
+   "観察例：交差点で止まった、坂道で速さを落とした、途中で予定を短くした。平均値だけではその判断の場面は分かりません。",
+   "Observation examples: stopping at a crossing, slowing on a hill or shortening a planned run. An average alone does not capture those decisions."
+  ]
  },
  "practice-after": {
   "question": [
@@ -726,7 +786,11 @@ export const EXPLORE_VARIANTS={
    "走り終えたときと、後から感じたことを区別できますか？",
    "Can you distinguish how you felt immediately after the run from how you felt later?"
   ],
-  "sources": []
+  "sources": [],
+  "example": [
+   "観察例：走った直後に歩いたり、帰宅後にストレッチをしたりしたときの記憶。行動の時期とそのときの感覚を分けて振り返れます。",
+   "Observation example: walking right after running or stretching after returning home. Recall the timing of the action separately from how you felt."
+  ]
  },
  "practice-boundaries": {
   "question": [
@@ -749,7 +813,11 @@ export const EXPLORE_VARIANTS={
    "何を手掛かりに中断や変更を決めたか、覚えている範囲で考えてみましょう。",
    "Consider what led you to stop or change the run, as far as you remember."
   ],
-  "sources": []
+  "sources": [],
+  "example": [
+   "観察例：予定の距離を短くした日。数字だけでは、時間の都合、天候、感じ方のどれが理由だったのか分かりません。",
+   "Observation example: a day when you shortened the planned distance. The numbers alone do not tell whether time, weather or how you felt was the reason."
+  ]
  }
 };
 export const EXPLORE_GROUPS=[
@@ -796,7 +864,7 @@ export const EXPLORE_GROUPS=[
  {
   "id": "D",
   "name": [
-   "自分の経験を振り返る",
+   "経験を振り返る",
    "Reflecting on your experience"
   ],
   "themes": [
@@ -820,7 +888,7 @@ const labels=[
   "Running and daily context"
  ],
  [
-  "自分の経験を振り返る",
+  "経験を振り返る",
   "Reflecting on your experience"
  ],
  [
@@ -989,6 +1057,7 @@ labels.push(
  ["100は安全・健康の基準ではありません。","100 is not a safety or health threshold."],
  ["読み取り上の注意","Interpretation limits"]
 );
+labels.push(["テーマを検索","Search topics"],["履歴で選ぶ","Select in History"],["指定された記録を安全に照合できません。ほかの走行の値で代用しません。","The selected record could not be verified. Other runs are not substituted."],["指定した元の走行記録を安全に照合できません。ほかの記録に自動で切り替えません。","The original run could not be verified. The app does not automatically switch to another record."],["元の走行記録を安全に照合できません。別の記録に自動で切り替えません。","The original run could not be verified. The app does not automatically switch to another record."],["走行 A","Run A"],["走行 B","Run B"],["後の回答は同じでも、前の回答は異なります。回答区分は実際の評価時刻を証明しません。","The after-exercise answers match but the before-exercise answers differ. Response categories do not establish the actual assessment time."],["就床から起床まで：8時間","Time in bed: 8 hours"],["実際に眠った時間：不明","Actual time asleep: unknown"],["準備","Preparation"],["運動後","After exercise"],["テーマを選ぶ","Choose a topic"],["腕・体幹","Arms & trunk"],["坂道","Hills"],["日々の調子","Daily condition"],["走る前","Before running"],["走行中","During running"],["走った後","After running"],["休養","Rest"],["中断・変更","Stop or adjust"],["分野とテーマを選ぶか、検索で探せます。淡い丸印は関連する記録があることを示し、枠線は選択中の項目です。記録と記述は任意です。個別の医学的判断は行いません。","Choose an area and topic, or search. A pale dot marks related records; an outline marks the selection. Recording and writing are optional. The app does not make individual medical judgments."]);
 const pairs=[...labels,...Object.values(EXPLORE_THEMES).flatMap(t=>Object.entries(t).flatMap(([k,v])=>k==="sources"?v:v?[v]:[])),...Object.values(EXPLORE_VARIANTS).flatMap(t=>Object.entries(t).flatMap(([k,v])=>k==="sources"?v:v?[v]:[]))];
 export const ENGLISH_EXPLORE_REDESIGN=Object.freeze(Object.fromEntries(pairs));
 export function themeFor(category,topic){const link=EXPLORE_LEGACY[category+"|"+topic];return link?{...EXPLORE_THEMES[link.main],...(EXPLORE_VARIANTS[link.id]||{}),...link}:null;}

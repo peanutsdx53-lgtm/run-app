@@ -26,7 +26,7 @@ test('all 27 themes share one question and a three-section inquiry flow, with En
   assert.ok(q&&q.endsWith('？'),key+' must have one intentional opening question');
   assert.ok(ENGLISH_EXPLORE_REDESIGN[q],key+' must have an English question');
   assert.equal((page.match(/class="ex-inquiry-start"/g)||[]).length,1,key+' must have a single question header');
-  for(const label of ['探究の入り口','理解の手掛かり','記録と感覚を照らし合わせる','気づき・疑問を残す']){
+  for(const label of ['理解の手掛かり','記録と感覚を照らし合わせる','気づき・疑問を残す']){
    assert.ok(page.includes(label),key+' missing '+label);
   }
   assert.ok(page.indexOf('理解の手掛かり')<page.indexOf('記録と感覚を照らし合わせる'),key);
@@ -38,12 +38,12 @@ test('all 27 themes share one question and a three-section inquiry flow, with En
 test('UX13 compact discovery headings retain all controls and distinguish unknown records from zero',()=>{
  const ui=makeUi(storage);ui.selected='01';ui.topic='過去の走りとの比較';
  const normal=render(ui,ctx);
- assert.equal((normal.match(/気になることから/g)||[]).length,1);
+ assert.doesNotMatch(normal,/気になることから|data-ex-tab=/);
  assert.match(normal,/aria-label="4つの分野から探す"/);
  assert.doesNotMatch(normal,/記録からも広がる発見|テーマを切り替える/);
- assert.match(normal,/<strong>読むテーマ<\/strong>/);
+ assert.match(normal,/aria-label="テーマを選ぶ"/);
  assert.equal((normal.match(/data-ex-category=/g)||[]).length,4);
- assert.equal((normal.match(/data-ex-topic-step=/g)||[]).length,2);
+ assert.doesNotMatch(normal,/data-ex-topic-step=/);
  assert.match(normal,/保存された手入力走行は0件/);
  assert.doesNotMatch(normal,/走行は未選択です/);
  const learning=render(ui,{...ctx,learningEntry:true});
@@ -68,14 +68,14 @@ test('specialist inquiry stays out of general themes and appears only with expli
   assert.doesNotMatch(general,/class="ex-inline-inquiry"/);
   const explicit={...ctx,focusRunId:'run-v2-audit',focusRun:{id:'run-v2-audit',source:'manual',type:'run',schema:2,date:'2026-11-20',distanceKm:5,durationSeconds:2100,draft:{}}};
   const selected=render(ui,explicit);
-  const discovery=selected.indexOf('class="ex-switch"'),focus=selected.indexOf('class="ex-focus"');
+  const discovery=selected.indexOf('class="ex-area-grid"'),focus=selected.indexOf('class="ex-focus"');
   const pos=selected.indexOf(selector);
   assert.ok(discovery>=0&&focus>discovery&&pos>focus,category+'|'+topic+' inquiry must stay inside focus card');
   assert.equal((selected.match(new RegExp(selector,'g'))||[]).length,1,category+'|'+topic);
   assert.ok(selected.includes('class="ex-inline-inquiry"'),category+'|'+topic);
   assert.doesNotMatch(selected,/class="ex-e-kicker"|class="ex-e-prompt"|id="ex-e-t0[2-8]-title"/,
    'embedded inquiry must not repeat a second question');
-  assert.match(selected,/class="ex-reading-limit"/,'science caveat remains visible');
+  assert.match(selected,/<details class="ex-inquiry-details ex-reading-limit"><summary>読み取り上の注意<\/summary>/,'science caveat remains available, collapsed by default');
  }
  const ui=makeUi(storage);ui.selected='03';ui.topic='気温・天候';
  const html=render(ui,ctx);
@@ -92,14 +92,14 @@ test('source help and original research content are still available on knowledge
 });
 
 test('Browse Topics omits numeric badges but retains all topics and search filtering',()=>{
- const ui=makeUi(storage);ui.tab='catalog';
+ const ui=makeUi(storage);
  const html=render(ui,ctx);
- assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,4);
- assert.equal((html.match(/data-ex-pick-topic=/g)||[]).length,12);
+ assert.equal((html.match(/class="ex-area-choice /g)||[]).length,4);
+ assert.match(html,/class="ex-catalog-grid" hidden/);
  assert.doesNotMatch(html,/class="ex-count"|<small>\d+ テーマ<\/small>/);
  ui.search='睡眠';
  const filtered=render(ui,ctx);
  assert.ok(filtered.includes('data-ex-pick-topic="睡眠"'));
- assert.equal((filtered.match(/data-ex-pick-topic=/g)||[]).length,1);
+ assert.equal((filtered.match(/data-ex-main="C3"/g)||[]).length,1);
  assert.doesNotMatch(filtered,/class="ex-count"|<small>\d+ テーマ<\/small>/);
 });

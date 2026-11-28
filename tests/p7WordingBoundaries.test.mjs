@@ -39,8 +39,8 @@ test('P7 all 23 active design targets retain a source/wording entry, with cross-
 });
 test('P7 knowledge quiz is readable and 0, no response, read error remain different states',()=>{
  const html=originMarkup();
- assert.match(html,/ROF-J：0（有効な回答）/);
- assert.match(html,/ROF-J：未回答（値なし）/);
+ assert.match(html,/疲労感：0（有効な回答）/);
+ assert.match(html,/疲労感：未回答（値なし）/);
  assert.match(html,/読取失敗/);
  assert.match(html,/回答0・未回答・読取失敗の保存上の区別/);
  assert.doesNotMatch(html,/ROF-J\s*=\s*null|ROF-J\s*=\s*0/);

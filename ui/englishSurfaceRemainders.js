@@ -7,7 +7,7 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  '今回の記録・保存コース':'Current Record and Saved Courses',
  '訂正して履歴を保存':'Save Correction and Revision History',
  '「運動前／後」は回答区分です。入力操作時刻と本人申告の評価時刻を記録しますが、実際の時間的な順序が検証できないため、変化量や原因は判定しません。未回答は「—」で、0と区別します。':'Before/after are response categories. Entry times and self-reported assessment times may be recorded, but their actual chronological order is not verified, so changes or causes cannot be determined. An unanswered item (—) is distinct from a valid zero.',
- '出所：ROF-J／本人回答。数値が同じ場合も経験が同じとは限らず、前後差や原因の測定ではありません。':'Source: ROF-J self-report. Equal scores do not establish identical experiences, and neither actual timing differences nor causes are measured.',
+ '出所：疲労感／本人回答。数値が同じ場合も経験が同じとは限らず、前後差や原因の測定ではありません。':'Source: fatigue self-report. Equal scores do not establish identical experiences, and neither actual timing differences nor causes are measured.',
 
  // Home and first-launch background
  'コンディションの歩みを開き、長期の変化とメモを確認':'Open condition history to review longer-term changes and notes',
@@ -55,8 +55,8 @@ export const ENGLISH_SURFACE_REMAINDERS=Object.freeze({
  // Fatigue rating and timing safeguards
  '疲労感を1上げる':'Increase fatigue rating by 1',
  '疲労感を1下げる':'Decrease fatigue rating by 1',
- '運動前のROF-J疲労感、0から10まで1ずつ':'Before-activity ROF-J rating, 0 to 10 in steps of 1',
- '運動後のROF-J疲労感、0から10まで1ずつ':'After-activity ROF-J rating, 0 to 10 in steps of 1',
+ '運動前の疲労感、0から10まで1ずつ':'Before-activity fatigue rating, 0 to 10 in steps of 1',
+ '運動後の疲労感、0から10まで1ずつ':'After-activity fatigue rating, 0 to 10 in steps of 1',
  '運動終了時刻':'Activity End Time',
  '運動開始時刻':'Activity Start Time',
  '任意の運動時刻':'Optional Activity Times',

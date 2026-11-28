@@ -158,7 +158,7 @@ try{
    const bridge=page.locator('[data-gps-inquiry-bridge]');
    assert.equal(await bridge.count(),1);
    assert.match(await bridge.locator('a').last().getAttribute('href'),/category=03/);
-   assert.doesNotMatch(await bridge.innerText(),/ROF-J（本人回答）：運動前/);
+   assert.doesNotMatch(await bridge.innerText(),/(?:ROF-J|疲労感)（本人回答）：運動前/);
   }
   await page.emulateMedia({media:'print'});
   assert.equal(await panel.evaluate(el=>getComputedStyle(el).display),'none');

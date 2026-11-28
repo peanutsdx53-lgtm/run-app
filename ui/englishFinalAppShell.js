@@ -39,7 +39,7 @@ export const ENGLISH_FINAL_APP_SHELL=Object.freeze({
  "走歩混在の記録では、単一活動の12部位文献参考値は算出しません。走った距離・時間は本人が入力した区間情報としてのみ記録します。": "Mixed running/walking records do not receive the single-activity 12-region reference values. Running distance and duration remain user-entered segment information only.",
  "身体・使用したもの・メモ": "Body, Equipment and Notes",
  "自覚したことやシューズなど（任意）": "Optional Observations and Shoes",
- "身体の自覚情報はROF-Jや12部位の計算結果とは別に扱います。選んだ部位は、必要に応じて文章として記録できます。": "Body observations are separate from ROF-J and regional calculations. Selected regions can optionally be added to a written report.",
+ "身体の自覚情報は疲労感の回答や12部位の計算結果とは別に扱います。選んだ部位は、必要に応じて文章として記録できます。": "Body observations are separate from fatigue responses and regional calculations. Selected regions can optionally be added to a written report.",
  "身体の気づき（自由記述）": "Body Observations (Free Text)",
  "今回のシューズ": "Shoes Used",
  "手入力した走行は、確認画面から端末に保存できます。": "Save a manual run on this device from the Review screen.",

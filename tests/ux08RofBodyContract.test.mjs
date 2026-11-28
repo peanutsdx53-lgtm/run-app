@@ -83,10 +83,10 @@ test('UX08: the live ROF and body modules, styles, English dictionary and PWA sh
  const shell='20261126-cleanup-v5',resultVersion='20261123-ux11-result-source-v1';
  const app=read('app.js'),index=read('index.html'),sw=read('sw.js'),en=read('ui/englishUi.js');
  const items=[
-  [app,'rofExperience.js?v=20261126-cleanup-v5'],[app,'bodyContextExperience.js?v=20261126-cleanup-v5'],
+  [app,'rofExperience.js?v=20261126-cleanup-v5-terms'],[app,'bodyContextExperience.js?v=20261126-cleanup-v5'],
   [app,'englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact'],[index,'rofExperience.css?v='+version],
   [index,'bodyContextExperience.css?v=20261126-cleanup-v5'],[index,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact'],
-  [sw,'runload-ui-next-shell-'+shell],[sw,'rofExperience.js?v=20261126-cleanup-v5'],
+  [sw,'runload-ui-next-shell-'+shell],[sw,'rofExperience.js?v=20261126-cleanup-v5-terms'],
   [sw,'bodyContextExperience.js?v=20261126-cleanup-v5'],[sw,'rofExperience.css?v='+version],
   [sw,'bodyContextExperience.css?v=20261126-cleanup-v5'],[sw,'englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact'],
   [sw,'englishFinalRecording.js?v='+resultVersion],[en,'englishFinalRecording.js?v='+resultVersion]

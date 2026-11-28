@@ -45,7 +45,7 @@ try{
    return (await (await import('./ui/manualRunCanonical.js')).mutate(s=>m.saveManualRun(s,{date:'2026-10-27',distance:'5',hours:'',minutes:'30',seconds:'',rofBefore:0,rofAfter:6,rofEntryEvidence:{before:{capturedAt:'2026-10-27T10:00:00.000Z',assessedAt:'2026-10-27T10:00:00.000Z',timeBasis:'AT_ENTRY'},after:{capturedAt:'2026-10-27T11:00:00.000Z',assessedAt:'2026-10-27T10:45:00.000Z',timeBasis:'RECALLED'}},steps:'',stepsProvenance:'UNKNOWN',activityGait:'RUNNING',runningFormat:'UNKNOWN',courseName:'川沿い',shoeName:'シューズ',memo:'記録'})));
   });
   assert.equal(saved.ok,true,`${name}: fixture save ${saved.reason||''}`);
-  assert.equal(saved.record.rofBefore,0,`${name}: real zero remains a valid ROF-J response`);
+  assert.equal(saved.record.rofBefore,0,`${name}: real zero remains a valid fatigue response`);
   assert.equal(saved.record.rofEvidence.after.timeBasis,'RECALLED',`${name}: V2 self-reported assessment provenance persisted`);
   await page.reload({waitUntil:'networkidle'});
   assert.match(await page.locator('[data-metric2-val]').first().innerText(),/5\.00 km/);
@@ -55,7 +55,7 @@ try{
   assert.match(rofText,/同一走行内の時間的な前後差は判定しません/);
   assert.doesNotMatch(rofText,/個別の評価時刻がないため/);
   assert.equal(await page.locator('.cp-bubble').first().innerText(),'0');
-  assert.match(await page.locator('.cp-explain-card').filter({hasText:'運動前・運動後の回答（ROF-J）'}).innerText(),/時間的な変化量は判定しません/);
+  assert.match(await page.locator('.cp-explain-card').filter({hasText:'運動前・運動後の疲労感'}).innerText(),/時間的な変化量は判定しません/);
   assert.match(await page.locator('[data-output-section="body"] .cp-info-note').innerText(),/選択した1記録.*手入力/);
   await page.locator('#cp-purpose').fill('指導者に伝えたいこと');
   await page.locator('#cp-observation').fill('個人的な気づきの非公開試験');

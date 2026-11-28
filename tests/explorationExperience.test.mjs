@@ -56,8 +56,8 @@ test('field terminology names seven fields and makes relevance explicit without 
 });
 test('purpose label is one translatable text node with its full accessible name',()=>{
  const html=render(makeUi(memory()),{categories,draft:{},conditions:{entries:[]}});
- assert.match(html,/<strong>自分の経験を振り返る<\/strong>/);
- assert.match(html,/aria-label="自分の経験を振り返る"/);
+ assert.match(html,/<strong>経験を振り返る<\/strong>/);
+ assert.match(html,/aria-label="経験を振り返る"/);
  assert.doesNotMatch(html,/目的と<wbr>楽しみ方/);
  assert.doesNotMatch(html,/好きな星|どの星|光る星/);
 });
@@ -74,9 +74,9 @@ test('exploration versioned assets agree across HTML, app and service worker',()
  }
 });
 test('unregistered topics cannot silently masquerade as approved themes',()=>{
- const ui=makeUi(memory());ui.tab='catalog';const extended=categories.map(c=>({...c,topics:[...c.topics]}));
+ const ui=makeUi(memory());ui.search='地形と路面';const extended=categories.map(c=>({...c,topics:[...c.topics]}));
  extended[2].topics.push('コース選び','地形と路面');const r=render(ui,{categories:extended,draft:{},conditions:{entries:[]}});
- assert.equal((r.match(/data-ex-pick-topic=/g)||[]).length,7);assert.doesNotMatch(r,/class="ex-count"|<small>[0-9]+ テーマ<\/small>|コース選び|地形と路面/);
+ assert.equal((r.match(/data-ex-pick-topic=/g)||[]).length,4);assert.match(r,/class="ex-catalog-empty"/);assert.doesNotMatch(r,/data-ex-pick-topic="(?:コース選び|地形と路面)"/);
 });
 test('notes are opt-in, persisted only to isolated key, deletion works',()=>{
  const storage=memory(),ui=makeUi(storage);ui.selected='03';
@@ -128,7 +128,7 @@ test('user note contents are escaped, including markup and HTML attributes',()=>
 test('beginner exploration removes duplicate navigation and hides citations under help',()=>{
  const u=makeUi(memory()),base={categories,draft:{},conditions:{entries:[]}};
  const html=render(u,base);
- assert.equal((html.match(/data-ex-tab="catalog"/g)||[]).length,1);
+ assert.equal((html.match(/data-ex-search/g)||[]).length,1);assert.doesNotMatch(html,/data-ex-tab=/);
  assert.doesNotMatch(html,/すべてのテーマを見る|data-ex-action="catalog"|ex-selected-topic|これまでの気づき|探究フィールド/);
  assert.match(html,/気になる分野を選ぶ/);
  assert.match(html,/ふり返り/);
@@ -144,10 +144,11 @@ test('beginner exploration removes duplicate navigation and hides citations unde
  assert.doesNotMatch(help,/href="https?:|role="dialog"/);
 });
 test('topic catalog groups questions by field and filters without duplicating buttons',()=>{
- const u=makeUi(memory());u.tab='catalog';
+ const u=makeUi(memory());u.search='睡眠';
  const html=render(u,{categories,draft:{},conditions:{entries:[]}});
- assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,4);
- assert.equal((html.match(/data-ex-pick-topic=/g)||[]).length,7);
+ assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,1);
+ assert.equal((html.match(/class="ex-area-choice /g)||[]).length,4);
+ assert.match(html,/data-ex-main="C3"/);
  assert.match(html,/data-ex-search/);
 });
 
@@ -189,9 +190,9 @@ test('discovery orbit and searchable catalog are structurally different',()=>{
  assert.match(orbit,/data-ex-group="A"/);
  assert.match(orbit,/data-ex-group="D"/);
  assert.match(orbit,/data-ex-source="draft"/);
- u.tab='catalog';
+ u.search='睡眠';
  const lookup=render(u,ctx);
- assert.doesNotMatch(lookup,/class="ex-area-grid"/);
+ assert.match(lookup,/class="ex-area-grid"/);assert.match(lookup,/data-ex-main="C3"/);assert.doesNotMatch(lookup,/data-ex-tab=/);
  assert.match(lookup,/class="ex-catalog-grid"/);
  assert.match(lookup,/data-ex-search/);
 });
@@ -202,14 +203,14 @@ test('topic layout scales and reflection has one way to review',()=>{
  extra[1]={...extra[1],topics:['足・膝・股関節','姿勢と走る動作','体幹と腕の動き','12部位の参考値の見方','もうひとつのテーマ','さらに追加のテーマ']};
  ui.selected='02';ui.topic='足・膝・股関節';
  const html=render(ui,{categories:extra,draft:{},conditions:{entries:[]}});
- assert.equal((html.match(/data-ex-topic=/g)||[]).length,5);
- assert.equal((html.match(/data-ex-view=/g)||[]).length,3);
- assert.match(html,/<strong>読むテーマ<\/strong>/);
+ assert.equal((html.match(/data-ex-topic=/g)||[]).length,4);
+ assert.equal((html.match(/data-ex-view=/g)||[]).length,2);
+ assert.match(html,/aria-label="テーマを選ぶ"/);
  assert.doesNotMatch(html,/テーマを切り替える/);
  assert.doesNotMatch(html,/class="ex-topic-instruction"/);
- assert.match(html,/2 \/ 2/);
- assert.equal((html.match(/data-ex-topic-step=/g)||[]).length,2);
- assert.match(html,/data-ex-topic-step="-1" aria-label="前のテーマ"/);
+ assert.doesNotMatch(html,/ex-topic-position/);
+ assert.doesNotMatch(html,/data-ex-topic-step=/);
+ assert.match(html,/class="ex-main-title"/);
  assert.doesNotMatch(html,/横に動かして選ぶ|どれから読んでみる|記録がなくても自由に選べます/);
  assert.match(html,/class="ex-topic-set ex-main-topic-set"/);
  assert.equal((html.match(/data-ex-action="memories"/g)||[]).length,1);
@@ -222,7 +223,7 @@ test('topic layout scales and reflection has one way to review',()=>{
  assert.match(note,/メモを書く/);
 });
 
-test('learning help distinguishes numerical definitions, ROF-J self-reports and literature reference instead of presenting a false generic arithmetic source',()=>{
+test('learning help distinguishes numerical definitions, fatigue self-reports and literature reference instead of presenting a false generic arithmetic source',()=>{
  const all=[...categories];
  all[0]={...all[0],topics:['距離・時間・ペース','自分が感じた疲れ']};
  all[1]={...all[1],topics:['12部位の参考値の見方']};
@@ -245,12 +246,12 @@ test('learning help distinguishes numerical definitions, ROF-J self-reports and 
 test('Selected-area topics have navigable previous/next controls without the obsolete jump shortcut',()=>{
  const html=render(makeUi(memory()),{categories,draft:{},conditions:{entries:[]}});
  assert.equal((html.match(/data-ex-action="jump-topics"/g)||[]).length,0);
- assert.equal((html.match(/data-ex-topic-step=/g)||[]).length,2);
+ assert.doesNotMatch(html,/data-ex-topic-step=/);
  assert.match(html,/id="ex-topic-content"/);
  assert.equal((html.match(/class="ex-area-choice /g)||[]).length,4);
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  assert.doesNotMatch(app,/action==="jump-topics"/);
- assert.match(app,/data-ex-topic-step/);
+ assert.doesNotMatch(app,/data-ex-topic-step/);
  assert.match(app,/\.ex-topic\.is-picked/);
  assert.match(app,/preventScroll:true/);
  assert.doesNotMatch(html,/まずは知ってみよう|書き残した気づきや問いを、あとから確認できます|確定できる坂道の割合はありません/);

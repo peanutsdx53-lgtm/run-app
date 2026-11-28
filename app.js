@@ -1,6 +1,6 @@
 import * as restDayStore from './ui/restDayStore.js';
 import {gpsSummariesToHistoryRows} from './ui/historyGpsAdapter.js?v=20261116-gps-stage5-v1';
-import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2-copyfix';
+import {startEnglishUi,translateUiText} from './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2-copyfix-ux109-terms';
 import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-v1';
 (async function appMain(){
   "use strict";
@@ -51,7 +51,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/homeDashboardLayout.js"),
     import("./ui/homeDashboardDrag.js"),
     import("./ui/homeExperience.js?v=20261121-home-core-i18n-v2-readable-daily-stage3-copy-notes-copy-design1-design2"),
-    import("./ui/rofExperience.js?v=20261126-cleanup-v5"),
+    import("./ui/rofExperience.js?v=20261126-cleanup-v5-terms"),
     import("./ui/recordDraftReview.js"),
     import("./ui/recordReviewExperience.js?v=20261126-cleanup-v5-daily-only-design2"),
     import("./ui/manualRunStore.js?v=20261126-cleanup-v5"),
@@ -76,13 +76,13 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
     import("./ui/explorationBodyInquiry.js"),
     import("./ui/explorationConditionInquiry.js"),
     import("./ui/recordRef.js"),
-    import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1-daily-only-usability1"),
-    import("./ui/annotationEditor.js?v=20261126-cleanup-v5-daily-only"),
+    import("./ui/explorationLinkPolicy.js?v=20261108-professor-m6-v1-daily-only-usability1-ux109"),
+    import("./ui/annotationEditor.js?v=20261126-cleanup-v5-daily-only-terms"),
     import("./ui/dataManagementUi.js?v=20261125-ux16-19-batch-v1"),
     import("./ui/firstUseExperience.js?v=20261126-cleanup-v5"),
     import("./ui/legalDocuments.js?v=20261028-first-use-v1"),
-    import("./ui/consultationExperience.js?v=20261126-cleanup-v5-daily-only-usability1"),
-    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only-stage3-copy-notes-copy-usability1-inquiry2-searchfix-copyfix"),
+    import("./ui/consultationExperience.js?v=20261126-cleanup-v5-daily-only-usability1-terms"),
+    import("./ui/explorationExperience.js?v=20261126-cleanup-v5-daily-only-stage3-copy-notes-copy-usability1-inquiry2-searchfix-copyfix-ux109-terms"),
     import("./ui/learningExperience.js?v=20261126-cleanup-v5"),
     import("./ui/interpretationRules.js?v=20261126-cleanup-v5"),
     import("./ui/actionIntentStore.js?v=20261026-interpret-v14"),
@@ -275,7 +275,7 @@ import {setSaveReviewBusy} from './ui/saveReviewShared.js?v=20261116-gps-stage4-
         const v=await model.readEffectiveAnnotation(opened.value.db,ref,field);
         if(!v.ok)throw Error('annotation readback failed');
         if(v.value.status!=='ACTIVE')continue;
-        const label={bodyObservation:'身体の観察',rofBefore:'運動前ROF-J',rofAfter:'運動後ROF-J'}[field];
+        const label={bodyObservation:'身体の観察',rofBefore:'運動前の疲労感',rofAfter:'運動後の疲労感'}[field];
         rows.push('<div class="rv4-posthoc-row"><strong>'+esc(label)+'</strong>'+
          '<span>記録時（原本）：'+esc(core.originalFieldValue(ref,parent.value.record,field))+'</span>'+
          '<span>後日申告（科学計算に未使用）：'+esc(core.postHocValue(field,v.value.latest.payload))+'</span></div>');
@@ -427,7 +427,7 @@ function recordExtras(){
  <div class="record-extra-grid">${num("temperatureC","気温（℃）",{min:-50,max:60,step:.1})}<label class="record-extra-field"><span>環境メモ</span><textarea data-draft="environmentNote" rows="2" maxlength="500" placeholder="天気、湿度、向かい風など">${field("environmentNote")}</textarea></label></div>
  </div></details>
  <details class="record-extra-section" data-record-section="reflection"><summary><span class="record-extra-step">4</span><span><strong>身体・使用したもの・メモ</strong><small>自覚したことやシューズなど（任意）</small></span><span class="record-extra-chevron" aria-hidden="true">⌄</span></summary>
- <div class="record-extra-content"><p class="record-extra-help">身体の自覚情報はROF-Jや12部位の計算結果とは別に扱います。選んだ部位は、必要に応じて文章として記録できます。</p><label class="record-extra-field"><span>身体の気づき（自由記述）</span><textarea data-draft="bodyObservation" rows="2" maxlength="500" placeholder="気になった部位、違和感など">${field("bodyObservation")}</textarea></label><label class="record-extra-field"><span>今回のシューズ</span><input type="text" data-draft="shoeName" maxlength="100" placeholder="未入力" value="${field("shoeName")}"></label><label class="record-extra-field"><span>走行・休養時のメモ</span><textarea data-draft="memo" rows="3" maxlength="500" placeholder="自分が感じたことを記入">${field("memo")}</textarea></label></div></details>`;
+ <div class="record-extra-content"><p class="record-extra-help">身体の自覚情報は疲労感の回答や12部位の計算結果とは別に扱います。選んだ部位は、必要に応じて文章として記録できます。</p><label class="record-extra-field"><span>身体の気づき（自由記述）</span><textarea data-draft="bodyObservation" rows="2" maxlength="500" placeholder="気になった部位、違和感など">${field("bodyObservation")}</textarea></label><label class="record-extra-field"><span>今回のシューズ</span><input type="text" data-draft="shoeName" maxlength="100" placeholder="未入力" value="${field("shoeName")}"></label><label class="record-extra-field"><span>走行・休養時のメモ</span><textarea data-draft="memo" rows="3" maxlength="500" placeholder="自分が感じたことを記入">${field("memo")}</textarea></label></div></details>`;
 }
   function record(){return recordExperience.manualPage(state);}
   function recordReview(){return recordReviewExperience.reviewView(state.recordDraft,{
@@ -497,7 +497,7 @@ function recordExtras(){
         lastExploreRoute=route;
         const cat=CATEGORIES.find(c=>c.id===params.get('category'));
         if(cat&&cat.topics.includes(params.get('topic'))){
-          explorationUi.selected=cat.id;explorationUi.topic=params.get('topic');explorationUi.tab='field';explorationUi.modal=params.get('memories')==='1'?'memories':'';
+          explorationUi.selected=cat.id;explorationUi.topic=params.get('topic');explorationUi.modal=params.get('memories')==='1'?'memories':'';
           if(explorationUi.modal==='memories'){const fresh=explorationExperience.makeUi(onboardStorage);explorationUi.notes=fresh.notes;explorationUi.canSave=fresh.canSave;explorationUi.emptyNotesRaw=fresh.emptyNotesRaw;explorationUi.notice=fresh.notice;explorationReturnAction='memories';}
         }
       }
@@ -791,7 +791,6 @@ function recordExtras(){
   for(const id of state.recordOpenSections){const el=app.querySelector('.record-extra-section[data-record-section="'+id+'"]');if(el)el.open=true}
  }
  if(page==="exploration-tree"){
-   explorationExperience.updatePace(app);
    const entryHint=app.querySelector('[data-ex-learning-entry]');
    if(entryHint){
      if(learningEntryHintShown)entryHint.remove();
@@ -926,13 +925,9 @@ function recordExtras(){
       const input=event.target;
       explorationUi.search=input.value;
       const list=app.querySelector(".ex-catalog-grid");
-      if(list)list.innerHTML=explorationExperience.catalogCards(CATEGORIES,input.value);
+      if(list){list.hidden=!input.value.trim();list.innerHTML=list.hidden?"":explorationExperience.catalogCards(CATEGORIES,input.value);}
       return;
     }
-    if(event.target.matches("[data-ex-life]")){
-      const y=window.scrollY;explorationUi[event.target.dataset.exLife==="a"?"lifeA":"lifeB"]=event.target.value;render();window.scrollTo(0,y);return;
-    }
-    if(event.target.matches("[data-ex-distance],[data-ex-minutes]")){explorationExperience.updatePace(app);return;}
     const target=event.target,ui=state.recordCourseUi,d=state.recordDraft;
     if(target.matches('.hx-time-control input[type=time]')){
       const visual=target.closest('.hx-time-control')?.querySelector('[data-time-display]');
@@ -1997,27 +1992,16 @@ function recordExtras(){
     const exploreSelect=event.target.closest("[data-ex-category]");
     if(exploreSelect){
       const id=exploreSelect.dataset.exCategory,c=CATEGORIES.find(c=>c.id===id);
-      if(c){explorationUi.selected=id;explorationUi.topic=exploreSelect.dataset.exPickTopic||c.topics[0]||"";explorationUi.tab="field";explorationUi.notice="";explorationUi.mapExpanded=true;render();
+      if(c){const fromSearch=!!exploreSelect.closest(".ex-inline-search");explorationUi.search="";explorationUi.selected=id;explorationUi.topic=exploreSelect.dataset.exPickTopic||c.topics[0]||"";explorationUi.notice="";render();
         const heading=app.querySelector(".ex-focus h2"),map=app.querySelector(".ex-map-card");
-        heading?.focus({preventScroll:true});
+        if(fromSearch)heading?.focus({preventScroll:true});else app.querySelector('.ex-area-choice[aria-pressed="true"]')?.focus({preventScroll:true});
         // In a stacked layout the selected content follows the map; do not infer
         // columns from viewport width alone (root-font enlargement can reflow desktop).
-        if(heading&&map&&(heading.getBoundingClientRect().top>=map.getBoundingClientRect().bottom-1||heading.getBoundingClientRect().top<0||heading.getBoundingClientRect().bottom>innerHeight))heading.scrollIntoView({block:"start",behavior:"instant"});}
-      return;
-    }
-    const exploreTopicStep=event.target.closest("[data-ex-topic-step]");
-    if(exploreTopicStep){
-      const tabs=[...app.querySelectorAll('.ex-topic-set [data-ex-topic]')];
-      const current=tabs.findIndex(tab=>tab.dataset.exTopic===explorationUi.topic&&(!tab.dataset.exTopicCategory||tab.dataset.exTopicCategory===explorationUi.selected));
-      const visible=tabs.findIndex(tab=>tab.classList.contains('is-picked'));
-      const selectedIndex=current>=0?current:visible>=0?visible:0;
-      tabs[selectedIndex+Number(exploreTopicStep.dataset.exTopicStep)]?.click();
+        if(fromSearch&&heading&&map&&(heading.getBoundingClientRect().top>=map.getBoundingClientRect().bottom-1||heading.getBoundingClientRect().top<0||heading.getBoundingClientRect().bottom>innerHeight))heading.scrollIntoView({block:"start",behavior:"instant"});}
       return;
     }
     const exploreTopic=event.target.closest("[data-ex-topic]");
     if(exploreTopic){
-       const before=exploreTopic.closest('.ex-topic-set');
-       const oldLeft=before?.scrollLeft||0;
        const nextCategory=exploreTopic.dataset.exTopicCategory||explorationUi.selected;
        const nextTopic=exploreTopic.dataset.exTopic;
        if(!CATEGORIES.some(c=>c.id===nextCategory&&c.topics.includes(nextTopic)))return;
@@ -2027,15 +2011,11 @@ function recordExtras(){
        if(view){[...app.querySelectorAll('[data-ex-view]')].find(el=>el.dataset.exView===view)?.focus({preventScroll:true});window.scrollTo(0,scrollY);return;}
        const rail=app.querySelector('.ex-topic-set'),active=rail?.querySelector('.ex-topic.is-picked');
        if(rail&&active){
-         const r=rail.getBoundingClientRect(),b=active.getBoundingClientRect();
-         rail.scrollLeft=Math.max(0,oldLeft+b.left-r.left-(r.width-b.width)/2);
          // S12: topic switches replace the learning card; keep focus on its selected topic.
          active.focus({preventScroll:true});
        }
        return;
      }
-    const exploreTab=event.target.closest("[data-ex-tab]");
-    if(exploreTab){const tab=exploreTab.dataset.exTab;if(tab===explorationUi.tab)return;const y=window.scrollY;explorationUi.tab=tab;explorationUi.notice="";render();app.querySelector(`[data-ex-tab="${tab}"]`)?.focus({preventScroll:true});window.scrollTo(0,y);return;}
     const bodyChoice=event.target.closest("[data-ex-body]");
     if(bodyChoice){const y=window.scrollY;explorationUi.bodyChoice=bodyChoice.dataset.exBody;render();window.scrollTo(0,y);return;}
     const slopeChoice=event.target.closest("[data-ex-slope]");
@@ -2052,14 +2032,6 @@ function recordExtras(){
     const exploreAction=event.target.closest("[data-ex-action]");
     if(exploreAction){
       const action=exploreAction.dataset.exAction;
-      if(action==="toggle-map"){
-        explorationUi.mapExpanded=explorationUi.mapExpanded===false;render();
-        app.querySelector('[data-ex-action="toggle-map"]')?.focus();return;
-      }
-      if(action==="change-area"){
-        explorationUi.mapExpanded=true;render();
-        app.querySelector('.ex-area-choice[aria-pressed="true"]')?.focus();return;
-      }
       if(action==="close"){const deleting=explorationUi.modal==="delete-note";const id=explorationUi.deletingNoteId;explorationUi.modal=deleting?"memories":"";explorationUi.editingNoteId=null;explorationUi.deletingNoteId=null;render();if(deleting)[...app.querySelectorAll('[data-ex-delete]')].find(el=>el.dataset.exDelete===id)?.focus({preventScroll:true});else restoreExplorationFocus();return;}
       if(action==="cancel-delete-note"){const id=explorationUi.deletingNoteId;explorationUi.deletingNoteId=null;explorationUi.modal="memories";render();[...app.querySelectorAll('[data-ex-delete]')].find(el=>el.dataset.exDelete===id)?.focus({preventScroll:true});return;}
       if(action==="confirm-delete-note"){
@@ -2070,7 +2042,6 @@ function recordExtras(){
         explorationUi.notice=success?"選択したメモを削除しました":"削除できませんでした。保存データは保護しています。";
         explorationUi.deletingNoteId=null;explorationUi.modal="memories";render();app.querySelector('.ex-dialog-head button')?.focus({preventScroll:true});return;
       }
-       if(action==="catalog"){explorationUi.tab="catalog";render();return;}
       if(action==="save-edited-note"){
         const revised=await manualRunLock.withManualRunWriteLock(()=>explorationExperience.editNote(
           explorationUi,explorationUi.editingNoteId,app.querySelector("#ex-note-edit")?.value));
@@ -2106,7 +2077,7 @@ function recordExtras(){
       render();app.querySelector('[data-ex-action="cancel-delete-note"]')?.focus({preventScroll:true});return;
     }
     const openTopic=event.target.closest("[data-open-topic]");
-    if(openTopic){const [cat,topic]=openTopic.dataset.openTopic.split("|");if(CATEGORIES.some(c=>c.id===cat&&c.topics.includes(topic))){explorationUi.selected=cat;explorationUi.topic=topic;explorationUi.tab="field";explorationUi.modal="";location.hash="#/exploration-tree";render();window.scrollTo(0,0)}return}
+    if(openTopic){const [cat,topic]=openTopic.dataset.openTopic.split("|");if(CATEGORIES.some(c=>c.id===cat&&c.topics.includes(topic))){explorationUi.selected=cat;explorationUi.topic=topic;explorationUi.modal="";location.hash="#/exploration-tree";render();window.scrollTo(0,0)}return}
     const rofTab=event.target.closest("[data-rof-v4-phase]");
     if(rofTab){
       const ui=getRofUi(),d=getRofData();

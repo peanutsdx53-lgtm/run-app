@@ -18,8 +18,8 @@ test('L2 candidate is bounded to K04/K05 general knowledge',()=>{
  assert.equal(assessOriginExample('reference').correct,false);
  assert.equal(assessOriginExample('').correct,false);
  const html=originMarkup();
- assert.match(html,/ROF-J：0（有効な回答）/);
- assert.match(html,/ROF-J：未回答（値なし）/);
+ assert.match(html,/疲労感：0（有効な回答）/);
+ assert.match(html,/疲労感：未回答（値なし）/);
  assert.match(html,/読取失敗/);
  assert.match(html,/後日申告/);
  assert.match(html,/適用範囲外の不算出/);
@@ -37,5 +37,5 @@ test('L2 candidate is bounded to K04/K05 general knowledge',()=>{
  assert.ok(appAsset,'versioned app entry must exist');
  const assets=JSON.parse(shell.match(/const ASSETS=(\[[^\n]*\]);/)[1]);
  assert.ok(assets.includes(appAsset),'offline shell must cache the current app entry');
- assert.match(shell,/"\.\/ui\/learningOriginLesson\.js\?v=20261126-cleanup-v5"/);
+ assert.match(shell,/"\.\/ui\/learningOriginLesson\.js\?v=20261126-cleanup-v5-terms"/);
 });
