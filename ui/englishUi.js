@@ -14,7 +14,7 @@ import {ENGLISH_ERRORS_COPY} from './englishErrorsCopy.js?v=20261128-remaining-c
 import {ENGLISH_FINAL_ONBOARDING} from './englishFinalOnboarding.js?v=20261128-remaining-copy';
 import {ENGLISH_FINAL_RECORDING} from './englishFinalRecording.js?v=20261123-ux11-result-source-v1-remaining-copy';
 import {ENGLISH_FINAL_CONDITIONS} from './englishFinalConditions.js?v=20261126-cleanup-v5-daily-only-remaining-copy';
-import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1-daily-compact-stage3-copy-notes-copy-remaining-copy';
+import {ENGLISH_FINAL_HOME_DATA} from './englishFinalHomeData.js?v=20261125-ux15-condition-v1-daily-compact-stage3-copy-notes-copy-remaining-copy-condition-copy';
 import {ENGLISH_FINAL_BACKUP} from './englishFinalBackup.js?v=20261126-cleanup-v5-daily-only-remaining-copy';
 import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-daily-only';
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js?v=20261128-remaining-copy';
@@ -22,7 +22,7 @@ import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
 import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
-import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy';
+import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy-condition-copy';
 
 /* English interface: explicit, offline display phrase mappings. Never translate saved
  * user text, record IDs, scientific numbers, consent or legal document bodies.

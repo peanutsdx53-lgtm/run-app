@@ -1,5 +1,18 @@
 /* Home and daily condition English UI; self-authored notes remain unchanged. */
 export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
+ "就寝": "Bedtime",
+ "☀ 起床": "☀ Wake-up",
+ "就寝時刻": "Bedtime",
+ "起床時刻": "Wake-up time",
+ "コンディションを閉じる": "Close Daily Condition",
+ "生活記録の日付": "Daily record date",
+ "睡眠の入力方法": "Sleep recording method",
+ "睡眠時間（時間）": "Sleep duration (hours)",
+ "睡眠時間（分）": "Sleep duration (minutes)",
+ "分を簡単に選択": "Quick minute selection",
+ "直近7日間の睡眠・就床の記録時間。未入力日は棒を表示しません": "Recorded sleep and time in bed over the past 7 days. Days without entries have no bar.",
+ "就床時間": "Time in bed",
+ "例：7": "e.g. 7",
  "保存した走行の結果を見る": "View a Saved Run's Results",
  "走行記録を確認できません": "Running Records Cannot Be Read",
  "記録が0件という意味ではありません。元の記録は変更していません。": "This does not mean there are no records. Originals were not changed.",
