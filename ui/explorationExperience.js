@@ -1,4 +1,5 @@
 import {EXPLORE_THEMES,EXPLORE_LEGACY,EXPLORE_GROUPS,ENGLISH_EXPLORE_REDESIGN,themeFor,availableViews} from "./explorationRedesign.js?v=20261128-inquiry2";
+import {translateUiText} from './englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-usability1-inquiry2';
 import {ENGLISH_GPS_EXPLORATION_COPY} from './englishGpsExplorationCopy.js?v=20261127-daily-only-notes-copy-remaining-copy-usability1';
 import {runningJointDiagram,paceDiagram,runningPhaseDiagram} from "./explorationDiagrams.js?v=20261128-inquiry2";
 import {createExplorationContext, readCourseDraft} from "./explorationReadAdapter.js";
@@ -328,7 +329,9 @@ export function catalogCards(categories,search=""){
   const rows=primaryViews(g).flatMap(v=>{
    const main=EXPLORE_THEMES[v.main];
    const aliases=g.views.filter(x=>x.main===v.main);
-   const match=q?aliases.find(x=>(x.topic+' '+(ENGLISH_EXPLORE_REDESIGN[x.topic]||ENGLISH_GPS_EXPLORATION_COPY[x.topic]||'')+' '+(categories.find(c=>c.id===x.category)?.name||'')).toLocaleLowerCase().includes(q)):null;
+   const names=x=>[x.topic,ENGLISH_EXPLORE_REDESIGN[x.topic],ENGLISH_GPS_EXPLORATION_COPY[x.topic],translateUiText(x.topic)].filter(Boolean).map(name=>name.toLocaleLowerCase());
+   // A named legacy perspective takes precedence over partial group/title matches.
+   const match=q?(aliases.find(x=>names(x).includes(q))||aliases.find(x=>names(x).some(name=>name.includes(q)))||aliases.find(x=>(categories.find(c=>c.id===x.category)?.name||'').toLocaleLowerCase().includes(q))):null;
    if(q&&!match&&!(main.title.join(' ')+' '+g.name.join(' ')).toLocaleLowerCase().includes(q))return [];
    const target=match||v;
    return ['<button type="button" '+viewAttrs(target)+' data-ex-main="'+v.main+'"><strong>'+esc(main.title[0])+'</strong><span aria-hidden="true">›</span></button>'];

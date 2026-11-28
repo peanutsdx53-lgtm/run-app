@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const source=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const version='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2';
-const pwaVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2';
-const cacheVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2';
+const version='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2-searchfix';
+const pwaVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2-searchfix';
+const cacheVersion='20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2-usability1-inquiry2-searchfix';
 test('all 40 current startup modules load as one concurrent import batch',()=>{
  const app=source('app.js');
  const block=app.slice(app.indexOf('const ['),app.indexOf('const [initialGpsV2Cache,canonicalStartup]'));

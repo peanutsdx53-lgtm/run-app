@@ -48,3 +48,17 @@ test('diagram encodes position rather than intensity, and pace example uses uneq
 
 test('additional diagrams are examples, with no personal load or generated conclusion',()=>{const diagram=runningPhaseDiagram();assert.equal((diagram.match(/class="ex-phase-svg"/g)||[]).length,2);assert.match(diagram,/接地している脚/);assert.match(diagram,/地面を離れた脚/);assert.match(diagram,/関節角度や負荷を測定した図ではありません/);});
 test('a general learning entry cannot disclose a saved run or daily record even when supplied to the renderer',()=>{const ui=makeUi(memory());Object.assign(ui,{selected:'01',topic:'距離・時間・ペース'});const html=render(ui,{...ctx,learningEntry:true,manualRuns:{ok:true,records:[{id:'private-run',source:'manual',type:'run',schema:2,date:'2026-10-05',distanceKm:99,durationSeconds:9000}]},conditions:{entries:[{date:'2026-10-06',sleepMinutes:333,sleepSource:'duration',feeling:'PRIVATE-LIFE'}]}});assert.match(html,/走行は未選択です/);assert.doesNotMatch(html,/private-run|2026-10-05|2026-10-06|PRIVATE-LIFE|99\.00 km/);});
+
+test('catalog resolves all 27 legacy perspectives in Japanese and English without duplicating primary themes',()=>{
+ const element={closest:s=>s==='.ex-page',matches:()=>false};
+ for(const v of availableViews(categories)){
+  for(const query of [v.topic,translateUiText(v.topic,{element})]){
+   const html=catalogCards(categories,query);
+   const tag=`data-ex-category="${v.category}" data-ex-pick-topic="${v.topic}" data-ex-main="${v.main}"`;
+   assert.ok(html.includes(tag),query+' must lead to '+v.id);
+   assert.equal((html.match(new RegExp('data-ex-main="'+v.main+'"','g'))||[]).length,1,query+' duplicate primary theme');
+  }
+ }
+ assert.equal((catalogCards(categories,'  sLeEp  ').match(/data-ex-pick-topic="睡眠"/g)||[]).length,1);
+ assert.match(catalogCards(categories,'no-matching-theme-xyz'),/ex-catalog-empty/);
+});

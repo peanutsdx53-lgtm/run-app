@@ -154,7 +154,12 @@ try{
     assert.equal(await page.locator('[data-ex-pick-topic="気分・ストレス"]').count(),0,'retired topic must not return');
     assert.equal(await page.locator('[data-ex-pick-topic="日々のコンディション"]').count(),1,'current condition topic is unique');
    await page.locator('[data-ex-search]').fill(language==='en'?'Sleep':'睡眠');
-   assert.equal(await page.locator('[data-ex-pick-topic="睡眠"]').count(),1,'legacy sleep perspective remains searchable');
+   const sleepResult=page.locator('[data-ex-pick-topic="睡眠"]');
+   assert.equal(await sleepResult.count(),1,'legacy sleep perspective remains searchable');
+   await sleepResult.click();
+   assert.equal(await page.locator('[data-ex-legacy-view="sleep-recovery"]').count(),1,'search opens the requested perspective, not the default');
+   assert.equal(await page.locator('[data-ex-view="sleep-recovery"][aria-pressed="true"]').count(),1);
+   await page.locator('[data-ex-tab="catalog"]').click();
    await page.locator('[data-ex-search]').fill('');
    await page.screenshot({path:resolve(output,'explore-catalog-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    assert.deepEqual(errors,[],'browser errors '+language+' '+width);
