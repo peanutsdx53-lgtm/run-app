@@ -243,7 +243,7 @@ test('learning help distinguishes numerical definitions, fatigue self-reports an
 });
 
 
-test('Selected-area topics have navigable previous/next controls without the obsolete jump shortcut',()=>{
+test('Selected-area topics remain directly selectable without the obsolete previous/next or jump controls',()=>{
  const html=render(makeUi(memory()),{categories,draft:{},conditions:{entries:[]}});
  assert.equal((html.match(/data-ex-action="jump-topics"/g)||[]).length,0);
  assert.doesNotMatch(html,/data-ex-topic-step=/);

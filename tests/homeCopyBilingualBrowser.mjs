@@ -152,6 +152,7 @@ try{
    await sleepResult.click();
    assert.equal(await page.locator('[data-ex-legacy-view="sleep-recovery"]').count(),1,'search opens the requested perspective, not the default');
    assert.equal(await page.locator('[data-ex-view="sleep-recovery"][aria-pressed="true"]').count(),1);
+   assert.equal(await page.locator('.ex-focus h2').evaluate(el=>document.activeElement===el),true,'search result focuses the matching content heading');
    await page.locator('[data-ex-search]').fill('');
    await page.screenshot({path:resolve(output,'explore-catalog-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    assert.deepEqual(errors,[],'browser errors '+language+' '+width);
