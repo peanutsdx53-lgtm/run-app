@@ -56,14 +56,14 @@ test('obsolete query revisions are not retained solely for historical compatibil
 
 test('offline entry points and dynamic Shadow DOM stylesheet are preserved',()=>{
  for(const url of [
-  './app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy',
+  './app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy',
   './ui/resultExperience.js?v=20261126-cleanup-v5-readable-history-compact-daily-only',
   './ui/buttonContrastSystem.css?v=20261126-cleanup-v5',
   './ui/resultInlineStyles.js?v=20261119-s09-focus-controls-v1-readable-history-daily-only',
   './ui/gpsReplayIndexedDbStore.js?v=20261126-cleanup-v5',
   './ui/annotationEditor.css?v=20261126-cleanup-v5',
   './ui/historyInlineStyles.js?v=20261121-history-more-filters-v2',
-  './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy',
+  './ui/englishUi.js?v=20261126-cleanup-v5-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy',
   './ui/actionCopyKeys.js?v=20261122-ux04-stable-actions-v1',
   './manifest.en.webmanifest'
  ])assert.ok(cached.has(url),'necessary offline resource missing: '+url);

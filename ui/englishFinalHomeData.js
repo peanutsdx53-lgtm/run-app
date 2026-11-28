@@ -102,7 +102,6 @@ export const ENGLISH_FINAL_HOME_DATA=Object.freeze({
  "メモがある日": "Days With Notes",
  "最新の方法": "Latest Recording Method",
  "就床〜起床の経過時間": "Time From Bed to Wake-up",
- "記録なし": "No Record",
  "選択した方法の記録なし": "No Record for the Selected Method",
  "選択した期間・方法の記録なし": "No Records for This Period and Method",
  "期間や入力方法を切り替えるか、ホームで生活記録を入力できます。": "Change the period or method, or enter a daily record on Home.",

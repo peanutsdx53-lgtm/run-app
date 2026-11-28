@@ -382,7 +382,7 @@ test('cleaned dictionaries contain only definitions not superseded by later exac
   for(const name of m[1].split(',').map(s=>s.trim()))if(name.startsWith('ENGLISH_'))imports.set(name,m[2]);
  }
  const order=[...source.matchAll(/^\s*\.\.\.(ENGLISH_\w+)/gm)].map(m=>m[1]);
- for(const current of ['ENGLISH_RECORD_HISTORY_COPY','ENGLISH_SETTINGS_COPY','ENGLISH_GUIDE_COPY','ENGLISH_LEARNING_COPY']){
+ for(const current of order.slice(0,-1)){
  const index=order.indexOf(current);
  assert.ok(index>=0&&index<order.length-1);
  const target=(await import(new URL('../ui/'+imports.get(current),import.meta.url)))[current];
@@ -395,4 +395,11 @@ test('cleaned dictionaries contain only definitions not superseded by later exac
  assert.deepEqual(Object.keys(target).filter(key=>later.has(key)),[],'do not restore overwritten phrases: '+current);
  for(const [key,value] of Object.entries(target))assert.equal(ENGLISH_UI_TEXT[key],value,key);
  }
+ const allKeys=new Set();
+ for(const name of order){
+  const dict=(await import(new URL('../ui/'+imports.get(name),import.meta.url)))[name];
+  for(const key of Object.keys(dict))allKeys.add(key);
+ }
+ const inline=source.slice(source.indexOf('export const ENGLISH_UI_TEXT=Object.freeze({'),source.indexOf(' ...'+order[0]));
+ for(const m of inline.matchAll(/^\s*("(?:[^"\\]|\\.)*")\s*:/gm))assert.ok(!allKeys.has(JSON.parse(m[1])),'do not restore shadowed inline phrase '+m[1]);
 });
