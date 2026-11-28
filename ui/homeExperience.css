@@ -852,7 +852,7 @@ html[lang="en"] .home-v3 .hx-condition-stats :is(small,strong,.hx-wake-time,em){
 .home-v3 .hx-latest-fig>div,.home-v3 .hx-condition-stats>div,.home-v3 .hx-shortcut{box-shadow:inset 0 1px 0 #ffffff10,0 2px 4px #0002}
 .home-v3 .hx-achievement{background-color:#26292c;background-image:linear-gradient(145deg,#c3a67919,transparent 43%,#0003),repeating-linear-gradient(117deg,#dfc39006 0 1px,transparent 1px 8px);border-color:#9d8867}
 .home-v3 .hx-achievement .hx-symbol{color:#e7c38c;background-color:#a58a5426}
-#app .home-v3 .hx-achievement .hx-title-button .hx-right{background:#302e2c;border:1px solid #a78d65;color:#f3dfbb;box-shadow:inset 0 1px 0 #ffffff1a}
+#app .home-v3 .hx-achievement .hx-title-button .hx-right{background:linear-gradient(125deg,#494138,#302e2c);border:1px solid #a78d65;color:#f3dfbb;box-shadow:inset 0 1px 0 #ffffff1a}
 .home-v3 .hx-medal,.home-v3 .hx-medal.hx-unearned{background:none;clip-path:none;filter:none;opacity:1;width:76px;height:76px;flex-basis:76px;}
 .home-v3 .hx-medal svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 4px #0005)}
 .home-v3 .hx-ach-data strong{font-size:clamp(1.35rem,6vw,2rem);font-variant-numeric:tabular-nums;line-height:1.2}
