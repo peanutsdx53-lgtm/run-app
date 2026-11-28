@@ -1,4 +1,4 @@
-/* English Explore surface inventory for 7 categories / 27 topics.
+/* English Explore surface inventory for 4 areas / 12 main topics / 27 legacy perspectives.
  * Diagnoses untranslated SYSTEM text and accessibility labels, in each
  * normal, help and explicit-run context. Never flags user-authored text.
  * Visuals: focused screenshots for iPhone and 1024px; no edits to records.
@@ -9,24 +9,24 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,dirname,extname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {chromium,webkit} from 'playwright';
+import {EXPLORE_LEGACY} from '../ui/explorationRedesign.js';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const engine=process.env.RUNLOAD_BROWSER_ENGINE==='webkit'?'webkit':'chromium';
 const out=resolve(root,'audit-output','explore-copy-'+engine);
 await mkdir(out,{recursive:true});
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml'};
 async function ux14Geometry(page){return page.evaluate(()=>{
- const map=document.querySelector('.ex-map'), focus=document.querySelector('.ex-focus');
+ const map=document.querySelector('.ex-area-grid'),focus=document.querySelector('.ex-focus');
  const rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}};
- const m=rect(map),c=rect(map.querySelector('.ex-core')),f=rect(focus);
+ const m=rect(map),f=rect(focus);
  const rangeRects=e=>{const range=document.createRange();range.selectNodeContents(e);return [...range.getClientRects()].filter(r=>r.width>0&&r.height>0).map(r=>({x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}))};
- const nodes=[...map.querySelectorAll('.ex-node')].map(el=>{const full=el.querySelector('.ex-node-title'),compact=el.querySelector('.ex-node-compact'),label=compact&&getComputedStyle(compact).display!=='none'?compact:full;const brokenWords=[];const walk=document.createTreeWalker(label,NodeFilter.SHOW_TEXT);for(let node=walk.nextNode();node;node=walk.nextNode()){for(const match of node.textContent.matchAll(/[A-Za-z]+/g)){const r=document.createRange();r.setStart(node,match.index);r.setEnd(node,match.index+match[0].length);if([...r.getClientRects()].filter(x=>x.width>0&&x.height>0).length>1)brokenWords.push(match[0]);}}return {id:el.dataset.exCategory,aria:el.getAttribute('aria-label'),title:label.textContent,fullTitle:full.textContent,source:el.dataset.exSource,pressed:el.getAttribute('aria-pressed'),box:rect(el),orb:rect(el.querySelector('.ex-node-orb')),text:rangeRects(label),brokenWords};});
+ const nodes=[...map.querySelectorAll('.ex-area-choice')].map(el=>{const label=el.querySelector('strong'),brokenWords=[];const walk=document.createTreeWalker(label,NodeFilter.SHOW_TEXT);for(let node=walk.nextNode();node;node=walk.nextNode()){for(const match of node.textContent.matchAll(/[A-Za-z]+/g)){const r=document.createRange();r.setStart(node,match.index);r.setEnd(node,match.index+match[0].length);if([...r.getClientRects()].filter(x=>x.width>0&&x.height>0).length>1)brokenWords.push(match[0]);}}return {id:el.dataset.exGroup,aria:el.getAttribute('aria-label'),fullTitle:label.textContent,source:el.dataset.exSource,pressed:el.getAttribute('aria-pressed'),box:rect(el),text:rangeRects(label),brokenWords};});
  const inside=(a,b,t=1)=>a.x>=b.x-t&&a.y>=b.y-t&&a.right<=b.right+t&&a.bottom<=b.bottom+t;
  const overlap=(a,b)=>Math.min(a.right,b.right)-Math.max(a.x,b.x)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y)>1;
  const clipped=[],collisions=[];
- for(const n of nodes){if(!inside(n.box,m,1))clipped.push(n.id+':button');for(const t of n.text)if(!inside(t,n.box,1)||!inside(t,m,1))clipped.push(n.id+':text');if(overlap(n.box,c))collisions.push(n.id+':core');}
+ for(const n of nodes){if(!inside(n.box,m,1))clipped.push(n.id+':button');for(const t of n.text)if(!inside(t,n.box,1)||!inside(t,m,1))clipped.push(n.id+':text');}
  for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++)if(overlap(nodes[i].box,nodes[j].box))collisions.push(nodes[i].id+':'+nodes[j].id);
- const coreText=[...map.querySelectorAll('.ex-core span,.ex-core strong')].flatMap(rangeRects);for(const t of coreText)if(!inside(t,c,1))clipped.push('core:text');
- return {viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,rootFont:parseFloat(getComputedStyle(document.documentElement).fontSize),map:m,core:c,focus:f,documentHeight:document.documentElement.scrollHeight,focusOffset:Math.round(f.y-m.y),columns: getComputedStyle(map.closest('.ex-orbit-workspace')).gridTemplateColumns, nodes,clipped:[...new Set(clipped)],collisions,questionCount:focus.querySelectorAll('.ex-inquiry-start h3').length,stages:focus.querySelectorAll('.ex-inquiry-stage').length,linkCount:map.querySelectorAll('.ex-constellation-link').length,relatedCount:map.querySelectorAll('.ex-node.is-related').length,artVisible:getComputedStyle(map.querySelector('.ex-art')).display!=='none',brokenWords:nodes.flatMap(n=>n.brokenWords.map(w=>n.id+':'+w))};
+ return {viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,rootFont:parseFloat(getComputedStyle(document.documentElement).fontSize),map:m,focus:f,documentHeight:document.documentElement.scrollHeight,focusOffset:Math.round(f.y-m.y),columns:getComputedStyle(map.closest('.ex-reorganized-workspace')).gridTemplateColumns,nodes,clipped:[...new Set(clipped)],collisions,questionCount:focus.querySelectorAll('.ex-inquiry-start h3').length,stages:focus.querySelectorAll('.ex-inquiry-stage').length,relatedCount:map.querySelectorAll('.ex-area-choice.is-related').length,brokenWords:nodes.flatMap(n=>n.brokenWords.map(w=>n.id+':'+w))};
 })}
 const server=createServer(async(req,res)=>{
 try{
@@ -119,6 +119,10 @@ try{
      await page.goto(base+'#/exploration-tree?'+params.toString(),{waitUntil:'networkidle'});
      await page.locator('[data-experience-v3] .ex-inquiry-start h3').first().waitFor({state:'visible',timeout:14000});
      await page.waitForFunction(()=>document.documentElement.lang==='en');
+     const view=EXPLORE_LEGACY[cat.id+'|'+topic];
+     assert.equal(await page.locator('[data-ex-legacy-view]').getAttribute('data-ex-legacy-view'),view.id);
+     assert.equal(await page.locator('[data-ex-main-theme]').getAttribute('data-ex-main-theme'),view.main);
+     assert.equal(await page.locator('.ex-inquiry-start').count(),1);
      await scan(page,mode,cat.id,topic,'visible');
      const details=page.locator('[data-experience-v3] .ex-inquiry-details,[data-experience-v3] .ex-e-boundary-disclosure');
      const n=await details.count();
@@ -135,13 +139,15 @@ try{
       await scan(page,mode,cat.id,topic,'field-help');
       await page.locator('.ex-dialog [data-ex-action="close"]').click();
      }
-     if(await page.locator('[data-ex-action="learn-help"]').count()){
-      const sourceButton=page.locator('[data-ex-action="learn-help"]').first();
-      await sourceButton.evaluate(el=>{const parent=el.closest('details');if(parent)parent.open=true});
-      await sourceButton.click();
-      await page.locator('.ex-dialog').waitFor({state:'visible'});
-      await scan(page,mode,cat.id,topic,'learn-help');
-      await page.locator('.ex-dialog [data-ex-action="close"]').click();
+     assert.equal(await page.locator('[data-ex-action="learn-help"]').count(),0,'duplicate source dialog must not exist');
+     const source=page.locator('.ex-knowledge-reference');
+     if(await source.count()){
+      assert.equal(await source.locator('a[href^="http"]').count(),0,'offline source is readable without a link');
+      const summary=source.locator('summary');
+      await source.evaluate(e=>{e.open=true});
+      await summary.click();assert.equal(await source.evaluate(e=>e.open),false);
+      await summary.focus();await page.keyboard.press('Enter');assert.equal(await source.evaluate(e=>e.open),true);
+      await scan(page,mode,cat.id,topic,'source-expanded');
      }
     }
    }
@@ -234,34 +240,34 @@ try{
    await page.goto(base+'#/exploration-tree?'+query.toString(),{waitUntil:'networkidle'});
    await page.locator('.ex-inquiry-start h3').waitFor({state:'visible',timeout:14000});
    if(percent===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
-   const expected=language==='en'?['7 Areas','Topics','Uphill Movement','Use Records or Experience as Clues','Sources & Limits','Background & Research Sources']:['7つの分野','読むテーマ','上りの動き','記録や経験を手がかりにする','情報の出所と限界','参考知識と研究出典'];
+   const expected=language==='en'?['Running and daily context','Topics','Uphill Movement','A way to understand','Interpretation limits','Sources and study context']:['走行条件と生活','読むテーマ','上りの動き','理解の手掛かり','読み取り上の注意','参考文献・研究条件'];
    await page.waitForFunction(labels=>{
     const q=s=>document.querySelector(s)?.textContent.trim();
-    return q('.ex-core span')===labels[0]&&q('.ex-topic-controls>strong')===labels[1]&&q('.ex-tool-result>strong')===labels[2]&&q('.ex-inquiry-stage>h4')===labels[3]&&[...document.querySelectorAll('.ex-inquiry-details>summary')].some(e=>e.textContent.trim()===labels[4])&&q('.ex-knowledge-reference>summary')===labels[5];
+    return q('.ex-focus h2')===labels[0]&&q('.ex-topic-controls>strong')===labels[1]&&q('.ex-direction-card>strong')===labels[2]&&q('.ex-inquiry-stage>h4')===labels[3]&&q('.ex-reading-limit>strong')===labels[4]&&q('.ex-knowledge-reference>summary')===labels[5];
    },expected,{timeout:14000});
-   const geometry=await page.locator('[data-experience-v3]').evaluate(el=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,font:parseFloat(getComputedStyle(document.documentElement).fontSize),areas:el.querySelectorAll('.ex-node').length,questions:el.querySelectorAll('.ex-inquiry-start h3').length,stages:el.querySelectorAll('.ex-inquiry-stage').length,stepper:el.querySelectorAll('[data-ex-topic-step]').length,note:el.querySelectorAll('[data-ex-action="note"]').length,share:el.querySelectorAll('[data-ex-consultation]').length,history:el.querySelectorAll('[data-ex-action="memories"]').length}));
+   const geometry=await page.locator('[data-experience-v3]').evaluate(el=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,font:parseFloat(getComputedStyle(document.documentElement).fontSize),areas:el.querySelectorAll('.ex-area-choice').length,questions:el.querySelectorAll('.ex-inquiry-start h3').length,stages:el.querySelectorAll('.ex-inquiry-stage').length,stepper:el.querySelectorAll('[data-ex-topic-step]').length,note:el.querySelectorAll('[data-ex-action="note"]').length,share:el.querySelectorAll('[data-ex-consultation]').length,history:el.querySelectorAll('[data-ex-action="memories"]').length}));
    assert.ok(geometry.scroll<=width+3,'UX13 whole page overflow '+JSON.stringify({language,width,percent,geometry}));
    assert.equal(geometry.font,percent===200?32:16,'UX13 root font');
-   assert.deepEqual([geometry.areas,geometry.questions,geometry.stages,geometry.stepper,geometry.note,geometry.share,geometry.history],[7,1,3,2,1,1,1],'UX13 preserves discovery and optional actions');
+   assert.deepEqual([geometry.areas,geometry.questions,geometry.stages,geometry.stepper,geometry.note,geometry.share,geometry.history],[4,1,4,2,1,1,1],'UX13 preserves discovery and optional actions');
    const filename='ux13-'+language+'-'+width+'-'+percent+'.png';
    await page.screenshot({path:resolve(out,filename),fullPage:true,animations:'disabled',timeout:20000});
    ux13Matrix.push({engine,language,width,percent,filename,expected,...geometry});
    const g=await ux14Geometry(page);
    const actions=[];
-   // Test the exact same seven actual controls using real pointer clicks, not synthetic dispatch.
+   // Test the exact same four actual controls using real pointer clicks, not synthetic dispatch.
    // Failed/occluded targets are observations, not silently bypassed with force clicks.
-   for(const id of ['01','02','03','04','05','06','07']){
-    const n=page.locator('.ex-node[data-ex-category="'+id+'"]');
-    try{await n.click({timeout:2200});await page.locator('.ex-node[data-ex-category="'+id+'"][aria-pressed="true"]').waitFor({timeout:2200});const state=await page.evaluate(()=>({active:document.activeElement?.getAttribute('data-ex-category')||document.activeElement?.tagName,activeIsHeading:document.activeElement===document.querySelector('.ex-focus h2'),heading:document.querySelector('.ex-focus h2')?.textContent,focusTop:document.querySelector('.ex-focus')?.getBoundingClientRect().top,scrollY:scrollY,selected:document.querySelector('.ex-node[aria-pressed="true"]')?.dataset.exCategory}));actions.push({id,ok:state.selected===id,...state});}catch(e){actions.push({id,ok:false,error:String(e).split('\n')[0].slice(0,300)})}
+   for(const id of ['A','B','C','D']){
+    const n=page.locator('.ex-area-choice[data-ex-group="'+id+'"]');
+    try{await n.click({timeout:2200});await page.locator('.ex-area-choice[data-ex-group="'+id+'"][aria-pressed="true"]').waitFor({timeout:2200});const state=await page.evaluate(()=>({active:document.activeElement?.getAttribute('data-ex-group')||document.activeElement?.tagName,activeIsHeading:document.activeElement===document.querySelector('.ex-focus h2'),heading:document.querySelector('.ex-focus h2')?.textContent,focusTop:document.querySelector('.ex-focus')?.getBoundingClientRect().top,scrollY:scrollY,selected:document.querySelector('.ex-area-choice[aria-pressed="true"]')?.dataset.exGroup}));actions.push({id,ok:state.selected===id,...state});}catch(e){actions.push({id,ok:false,error:String(e).split('\n')[0].slice(0,300)})}
    }
    const keyboard=[];
-   for(const id of ['03','07']){const n=page.locator('.ex-node[data-ex-category="'+id+'"]');await n.focus();await page.keyboard.press('Enter');keyboard.push(await page.evaluate(id=>({id,selected:document.querySelector('.ex-node[aria-pressed="true"]')?.dataset.exCategory,activeTag:document.activeElement?.tagName,activeIsHeading:document.activeElement===document.querySelector('.ex-focus h2'),headingTop:document.querySelector('.ex-focus h2')?.getBoundingClientRect().top,headingBottom:document.querySelector('.ex-focus h2')?.getBoundingClientRect().bottom,activeCategory:document.activeElement?.dataset?.exCategory||null,focusTop:document.querySelector('.ex-focus')?.getBoundingClientRect().top}),id))}
+   for(const id of ['C','D']){const n=page.locator('.ex-area-choice[data-ex-group="'+id+'"]');await n.focus();await page.keyboard.press('Enter');keyboard.push(await page.evaluate(id=>({id,selected:document.querySelector('.ex-area-choice[aria-pressed="true"]')?.dataset.exGroup,activeTag:document.activeElement?.tagName,activeIsHeading:document.activeElement===document.querySelector('.ex-focus h2'),headingTop:document.querySelector('.ex-focus h2')?.getBoundingClientRect().top,headingBottom:document.querySelector('.ex-focus h2')?.getBoundingClientRect().bottom,activeCategory:document.activeElement?.dataset?.exGroup||null,focusTop:document.querySelector('.ex-focus')?.getBoundingClientRect().top}),id))}
    let disclosure=null;
    {
-    const toggle=page.locator('[data-ex-action="toggle-map"]'),map=page.locator('.ex-map'),before=await ux14Geometry(page);
+    const toggle=page.locator('[data-ex-action="toggle-map"]'),map=page.locator('.ex-area-grid'),before=await ux14Geometry(page);
     await toggle.click();const closed=await map.isHidden(),expandedClosed=await toggle.getAttribute('aria-expanded'),focusClosed=await toggle.evaluate(e=>e===document.activeElement);
-    await page.locator('[data-ex-action="change-area"]').click();const open=await map.isVisible(),expandedOpen=await toggle.getAttribute('aria-expanded'),active=await page.evaluate(()=>document.activeElement?.dataset?.exCategory),selected=await page.locator('.ex-node[aria-pressed="true"]').getAttribute('data-ex-category');
-    disclosure={closed,expandedClosed,focusClosed,open,expandedOpen,active,selected,initialArt:before.artVisible};
+    await page.locator('[data-ex-action="change-area"]').click();const open=await map.isVisible(),expandedOpen=await toggle.getAttribute('aria-expanded'),active=await page.evaluate(()=>document.activeElement?.dataset?.exGroup),selected=await page.locator('.ex-area-choice[aria-pressed="true"]').getAttribute('data-ex-group');
+    disclosure={closed,expandedClosed,focusClosed,open,expandedOpen,active,selected};
    }
    // UPR-02: absence of the old preview, then real saved-run provenance and geometry.
    await page.locator('.ex-heading [data-ex-action="field-help"]').click();const help=await page.locator('.ex-dialog').innerText();await page.keyboard.press('Escape');
@@ -277,19 +283,19 @@ try{
    await page.goto(base+'#/exploration-tree?'+query.toString(),{waitUntil:'networkidle'});
    await page.locator('.ex-inquiry-start h3').waitFor({state:'visible',timeout:14000});
    if(percent===200)await page.addStyleTag({content:'html{font-size:200%!important}'});
-   await page.waitForFunction(()=>document.querySelectorAll('.ex-node.is-related[data-ex-source="saved-run"]').length===3);
+   await page.waitForFunction(()=>document.querySelectorAll('.ex-area-choice.is-related[data-ex-source="saved-run"]').length===3);
    const realGeometry=await ux14Geometry(page);
    await page.locator('.ex-map-card').screenshot({path:resolve(out,'upr-real-'+language+'-'+width+'-'+percent+'.png'),animations:'disabled',timeout:20000});
     const label=JSON.stringify({language,width,percent});
     assert.deepEqual(g.clipped,[],'C clipped '+label);assert.deepEqual(g.collisions,[],'C collision '+label);assert.deepEqual(g.brokenWords,[],'C mid-word wrap '+label);
     assert.ok(g.scrollWidth<=width+3,'C page overflow '+label);
     assert.ok(g.nodes.every(n=>n.box.w>=44&&n.box.h>=44&&n.aria&&n.aria.includes(n.fullTitle)),'C control geometry or full accessible label '+label);
-    assert.equal(actions.filter(x=>x.ok&&x.activeIsHeading).length,7,'C pointer focus '+label);
+    assert.equal(actions.filter(x=>x.ok&&x.activeIsHeading).length,4,'C pointer focus '+label);
     assert.equal(keyboard.filter(x=>x.selected===x.id&&x.activeIsHeading&&x.headingTop>=-1&&x.headingBottom<=900).length,2,'C keyboard focus '+label);
     assert.ok(disclosure.closed&&disclosure.expandedClosed==='false'&&disclosure.focusClosed&&disclosure.open&&disclosure.expandedOpen==='true'&&disclosure.active===disclosure.selected,'C map disclosure '+label);
     assert.ok(realGeometry.relatedCount===3&&realGeometry.clipped.length===0&&realGeometry.collisions.length===0&&realGeometry.brokenWords.length===0,'Real highlight geometry '+label);
     assert.ok(realGeometry.nodes.every(n=>n.aria&&n.aria.includes(n.fullTitle)),'Real highlight accessible names '+label);
-    assert.deepEqual(realGeometry.nodes.filter(n=>n.source==='saved-run').map(n=>n.id),['01','03','04'],'Real saved-run provenance '+label);
+    assert.deepEqual(realGeometry.nodes.filter(n=>n.source==='saved-run').map(n=>n.id),['A','B','C'],'Real saved-run provenance '+label);
     assert.equal(await page.locator('[data-ex-action="sample"]').count(),0,'Sample remains absent with real records');
     assert.ok(language==='en'?/not.*(priority|ranking|burden)|not indicate|not.*load/i.test(help):help.includes('優先順位や身体への負担の大きさを示すものではありません'),'C relevance explanation '+label);
     assert.equal(g.columns.trim().split(/\s+/).length,width===1440&&percent===100?2:1,'C width/font column contract '+label);
@@ -343,6 +349,15 @@ try{
    await page.locator('[data-ex-consultation]').click();await verifyPrivate(ids[0]);
    await page.locator('.cp-back').click();await page.locator('[data-ex-consultation]').waitFor();
    assert.equal(new URLSearchParams(new URL(page.url()).hash.split('?')[1]).get('record'),ids[0]);
+   // Explore -> existing learning -> Explore restores the exact selected record and perspective.
+   const paceQuery=new URLSearchParams({category:'01',topic:'距離・時間・ペース',source:'manual',record:ids[0]});
+   await go('#/exploration-tree?'+paceQuery.toString());
+   await page.locator('[data-ex-related-learning]').click();
+   await page.locator('[data-ex-learning-return]').waitFor({timeout:14000});
+   await page.locator('[data-ex-learning-return]').click();
+   await page.locator('[data-ex-legacy-view="distance-time-pace"]').waitFor({timeout:14000});
+   assert.equal(new URLSearchParams(new URL(page.url()).hash.split('?')[1]).get('record'),ids[0]);
+   assert.equal(await page.evaluate(()=>localStorage.getItem('runload-v2-exploration-notes-v1')),stored);
    // A direct/reloaded link has no in-memory selection; never infer one from recent data.
    await page.goto(base+'#/consultation?from=explore',{waitUntil:'networkidle'});
    await page.reload({waitUntil:'networkidle'});await verifyPrivate('');

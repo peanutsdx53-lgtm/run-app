@@ -224,11 +224,11 @@ if(extended&&(!widths.length||widths.length>3||
   await page.locator('.gps-history-tools>summary').click();
   await verify('S11','exploration-tree','[data-experience-v3]',async t=>{
    assert.match(await t.innerText(),/探究/);
-   assert.equal(await t.locator('.ex-node').count(),7,'seven exploration categories retained');
+   assert.equal(await t.locator('.ex-area-choice').count(),4,'four exploration areas retained');
   });
   const guide='exploration-tree?category=06&topic='+encodeURIComponent('ウォームアップ');
   await verify('S12',guide,'.ex-observation-guide',async t=>{
-   assert.match(await t.innerText(),/観察ガイド/);
+   assert.match(await t.innerText(),/観察の視点/);
   });
   await page.locator('.ex-learning [data-ex-action="note"]').click();
   await verify('S13',null,'.ex-dialog',async t=>{

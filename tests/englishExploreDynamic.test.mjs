@@ -68,3 +68,22 @@ test('UX14 category names agree across plain and related accessible labels',()=>
  assert.equal(translateUiText('目的と楽しみ方、不明な説明',ctx),'目的と楽しみ方、不明な説明');
  assert.equal(translateExploreDynamic('目的と楽しみ方、入力中の身体に関するメモに関連',{element:node}),'Goals & Enjoyment, Related to Unsaved Body Notes');
 });
+
+test('redesigned provenance composites preserve date, source and unsaved distinction without translating authored text',()=>{
+ for(const [ja,en] of [['走行距離と時間','running distance and duration'],['坂道の入力','entered hill conditions'],['ROF-Jの入力','self-reported ROF-J'],['身体に関するメモ','body observation notes']]){
+  for(const date of ['2026-11-20','2025-01-02']){
+   const raw=date+' に保存した'+ja+'に関連。保存した手入力の情報との対応です。';
+   const expected='Related to '+en+' saved on '+date+'. Based on a saved manual entry.';
+   assert.equal(translateUiText(raw,{element:english}),expected);
+   assert.equal(translateUiText(raw,{element:el(true,true)}),raw);
+   assert.equal(translateExploreDynamic(raw,{element:el(false)}),null);
+   assert.equal(translateUiText(raw+'入力途中の値はこのテーマの計算に用いていません。',{element:english}),expected+' Unsaved values are not used in this calculation.');
+  }
+ }
+ for(const [ja,en] of [['入力中の走行距離・時間などに関連','Related to Unsaved Running Distance and Duration'],['入力中の上り坂・下り坂の情報に関連','Related to Unsaved Uphill and Downhill Data'],['入力中の運動前後の疲れに関連','Related to Unsaved Perceived Fatigue'],['入力中の身体に関するメモに関連','Related to Unsaved Body Notes']]){
+  assert.equal(translateUiText(ja+'。入力途中の内容であり、保存済み記録ではありません。',{element:english}),en+'. This is an unsaved entry, not a saved record.');
+ }
+ assert.equal(translateUiText('2026-11-20 の生活コンディション記録に関連。保存済みの生活記録から確認できます。',{element:english}),'Related to the daily condition entry on 2026-11-20. You can review it in saved daily records.');
+ assert.equal(translateUiText('入力途中の坂道情報があるため（まだ保存していない入力）',{element:english}),'Related to entered hill conditions (unsaved entry).');
+ assert.equal(translateUiText('保存済みの生活記録に睡眠の入力があるため（保存済みの生活記録）',{element:english}),'Related to sleep information in saved daily records.');
+});

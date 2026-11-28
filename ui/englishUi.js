@@ -1,3 +1,4 @@
+import {ENGLISH_EXPLORE_REDESIGN} from './explorationRedesign.js?v=20261128-inquiry2';
 import {translateOptInActionText} from './actionCopyKeys.js?v=20261122-ux04-stable-actions-v1';
 import {ENGLISH_RECORD_HISTORY_COPY} from './englishRecordHistoryCopy.js?v=20261128-dictionary';
 import {ENGLISH_RESULT_COPY} from './englishResultCopy.js?v=20261123-ux11-result-source-v1-readable-history-compact-remaining-copy';
@@ -20,7 +21,7 @@ import {ENGLISH_FINAL_GPS} from './englishFinalGps.js?v=20261126-cleanup-v5-dail
 import {ENGLISH_FINAL_ANNOTATION} from './englishFinalAnnotation.js?v=20261128-remaining-copy';
 import {ENGLISH_FINAL_INQUIRY} from './englishFinalInquiry.js';
 import {ENGLISH_EXPLORE_KNOWLEDGE} from './englishExploreKnowledge.js?v=20261122-explore-clean-v1';
-import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy-usability1';
+import {translateExploreDynamic} from './englishExploreDynamic.js?v=20261128-notes-copy-usability1-copyfix';
 import {ENGLISH_FINAL_APP_SHELL} from './englishFinalAppShell.js';
 import {ENGLISH_SURFACE_REMAINDERS,translateResidualDynamic} from './englishSurfaceRemainders.js?v=20261125-ux16-19-batch-v1-readable-history-daily-only-stage3-copy-notes-copy-condition-copy-usability1';
 
@@ -246,6 +247,7 @@ export const ENGLISH_UI_TEXT=Object.freeze({
 export function translateUiText(text,context={}){
  const raw=String(text??'');const trimmed=raw.trim();
  if(context.element?.closest?.('[data-user-authored]'))return raw;
+ if(context.element?.closest?.('.ex-page')&&Object.hasOwn(ENGLISH_EXPLORE_REDESIGN,trimmed))return raw.replace(trimmed,ENGLISH_EXPLORE_REDESIGN[trimmed]);
  // S09 T10: this card describes one selected region. The conditions screen
  // uses the same Japanese words for a multiple-region picker, so its plural
  // English dictionary entry must remain untouched.

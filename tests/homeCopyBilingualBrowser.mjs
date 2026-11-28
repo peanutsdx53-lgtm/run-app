@@ -141,21 +141,26 @@ try{
     assert.ok(m.offset<=3,'Explore switch label is off-centre '+JSON.stringify({width,language,m}));
     assert.ok(m.right<=width+2,'Explore switch exceeds viewport '+JSON.stringify({width,language,m}));
    }
-   const core=await page.locator('.ex-core').evaluate(el=>{
-    const label=el.querySelector('span'),a=el.getBoundingClientRect(),b=label.getBoundingClientRect();
-    return {align:getComputedStyle(label).textAlign,
-      centre:Math.abs((a.left+a.right-b.left-b.right)/2),
-      overflow:label.scrollWidth-label.clientWidth};
-   });
-   assert.equal(core.align,'center','all words above Explore must be centered');
-   assert.ok(core.centre<=1.5,'Explore sphere caption off-center '+JSON.stringify({width,language,core}));
-   assert.ok(core.overflow<=2,'Explore sphere caption is clipped '+JSON.stringify({width,language,core}));
+   const area=await page.locator('.ex-area-choice').evaluateAll(els=>els.map(el=>{
+    const r=el.getBoundingClientRect(),label=el.querySelector('strong'),range=document.createRange();range.selectNodeContents(label);
+    return {w:r.width,h:r.height,contained:[...range.getClientRects()].every(x=>x.left>=r.left-1&&x.right<=r.right+1&&x.top>=r.top-1&&x.bottom<=r.bottom+1)};
+   }));
+   assert.equal(area.length,4,'four real area buttons');
+   assert.ok(area.every(a=>a.w>=44&&a.h>=44&&a.contained),'area labels and targets must fit');
    await page.screenshot({path:resolve(output,'explore-field-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    await page.locator('[data-ex-tab="catalog"]').click();
    assert.equal(await page.locator('.ex-count,.ex-catalog-group-head small').count(),0);
-   assert.equal(await page.locator('[data-ex-pick-topic]').count(),27,'all current topics remain accessible');
+   assert.equal(await page.locator('[data-ex-pick-topic]').count(),12,'all primary themes remain accessible');
     assert.equal(await page.locator('[data-ex-pick-topic="気分・ストレス"]').count(),0,'retired topic must not return');
     assert.equal(await page.locator('[data-ex-pick-topic="日々のコンディション"]').count(),1,'current condition topic is unique');
+   await page.locator('[data-ex-search]').fill(language==='en'?'Sleep':'睡眠');
+   const sleepResult=page.locator('[data-ex-pick-topic="睡眠"]');
+   assert.equal(await sleepResult.count(),1,'legacy sleep perspective remains searchable');
+   await sleepResult.click();
+   assert.equal(await page.locator('[data-ex-legacy-view="sleep-recovery"]').count(),1,'search opens the requested perspective, not the default');
+   assert.equal(await page.locator('[data-ex-view="sleep-recovery"][aria-pressed="true"]').count(),1);
+   await page.locator('[data-ex-tab="catalog"]').click();
+   await page.locator('[data-ex-search]').fill('');
    await page.screenshot({path:resolve(output,'explore-catalog-'+language+'-'+width+'.png'),fullPage:true,animations:'disabled'});
    assert.deepEqual(errors,[],'browser errors '+language+' '+width);
    measurements.push({engine,width,language,pass:true,home:boxed,guide:boxes});

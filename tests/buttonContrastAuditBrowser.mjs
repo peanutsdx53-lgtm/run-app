@@ -69,7 +69,7 @@ async function scan(page,screen,language,width,phase){
     if(r.width<10||r.height<10||css.display==='none'||css.visibility==='hidden'||Number(css.opacity)<.45)continue;
     const text=(btn.innerText||btn.textContent||'').trim().replace(/\s+/g,' ').slice(0,100);
     if(!text||!/[\p{L}\d]/u.test(text))continue;
-    const descendants=[btn,...btn.querySelectorAll('span,b,strong,small,em')].filter(x=>[...x.childNodes].some(n=>n.nodeType===3&&(n.data||'').trim()));
+    const descendants=[btn,...btn.querySelectorAll('span,b,strong,small,em')].filter(x=>x.classList?.contains('ex-area-symbol')||[...x.childNodes].some(n=>n.nodeType===3&&(n.data||'').trim()));
     const font=getComputedStyle(btn);
     const scores=[];
     for(const item of descendants){
@@ -79,7 +79,7 @@ async function scan(page,screen,language,width,phase){
       const ratios=colors.map(c=>contrast(fg,c));
       // These two visible glyphs are icons, not running-record text. Keep
       // checking them at the non-text 3:1 threshold rather than hiding them.
-      const role=item.classList?.contains('s2-chevron')||item.classList?.contains('ex-node-icon')?'non-text-icon':'text';
+      const role=item.classList?.contains('s2-chevron')||item.classList?.contains('ex-area-symbol')?'non-text-icon':'text';
       const size=parseFloat(itemStyle.fontSize),bold=parseInt(itemStyle.fontWeight,10)>=700;
       const threshold=role==='non-text-icon'||size>=24||(size>=18.66&&bold)?3:4.5;
       scores.push({fg:itemStyle.color,min:Math.min(...ratios),max:Math.max(...ratios),threshold,role,

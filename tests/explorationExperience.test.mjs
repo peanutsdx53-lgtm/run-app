@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {makeUi,signals,render,saveNote,deleteNote,EXPLORATION_NOTE_KEY} from '../ui/explorationExperience.js';
 const categories=[
  {id:'01',name:'走りの記録',topics:['距離・時間・ペース']},
- {id:'02',name:'身体のしくみ',topics:['体の動き']},
+ {id:'02',name:'身体のしくみ',topics:['足・膝・股関節']},
  {id:'03',name:'コースと環境',topics:['上り坂・下り坂']},
  {id:'04',name:'疲れと回復',topics:['疲れの感じ方']},
  {id:'05',name:'暮らしと気持ち',topics:['睡眠']},
@@ -29,16 +29,16 @@ test('UPR-02: no sample state or controls; genuine draft relevance remains',()=>
  const ui=makeUi(memory());assert.equal(Object.hasOwn(ui,'sample'),false);
  const context={categories,draft:{},conditions:{entries:[]}};
  ui.sample=true; // stale caller cannot resurrect the removed feature
- const empty=render(ui,context);assert.doesNotMatch(empty,/data-ex-action="sample"|強調表示の例を見る|表示例を終了/);assert.equal((empty.match(/ex-node is-related/g)||[]).length,0);
+ const empty=render(ui,context);assert.doesNotMatch(empty,/data-ex-action="sample"|強調表示の例を見る|表示例を終了/);assert.equal((empty.match(/ex-area-choice is-related/g)||[]).length,0);
  const linked=render(ui,{...context,draft:{distance:'5',gradeMode:'SUMMARY',upPercent:'20',downPercent:'0'}});
- assert.equal((linked.match(/ex-node is-related/g)||[]).length,2);assert.match(linked,/入力中の走行距離・時間などに関連/);assert.match(linked,/入力中の上り坂・下り坂の情報に関連/);
+ assert.equal((linked.match(/ex-area-choice is-related/g)||[]).length,2);assert.match(linked,/入力中の走行距離・時間などに関連/);assert.match(linked,/入力中の上り坂・下り坂の情報に関連/);
 });
 test('field terminology names seven fields and makes relevance explicit without star metaphors',()=>{
  const u=makeUi(memory()),ctx={categories,draft:{},conditions:{entries:[]}};
  const plain=render(u,ctx);
  assert.match(plain,/気になる分野を選ぶ/);
- assert.doesNotMatch(plain,/class="ex-legend ex-signal-legend"/);assert.equal((plain.match(/class="ex-map-help"/g)||[]).length,1);
- assert.match(plain,/aria-label="7つの分野から探す"/);
+ assert.doesNotMatch(plain,/class="ex-legend ex-signal-legend"/);assert.equal((plain.match(/data-ex-action="field-help"/g)||[]).length,1);
+ assert.match(plain,/aria-label="4つの分野から探す"/);
  assert.doesNotMatch(plain,/強調表示の例を見る/);
  assert.doesNotMatch(plain,/星/);
  u.modal='field-help';const help=render(u,ctx);
@@ -50,13 +50,14 @@ test('field terminology names seven fields and makes relevance explicit without 
  assert.doesNotMatch(linked,/星/);
  assert.doesNotMatch(linked,/表示例|星/);
  u.modal='learn-help';const sourceHelp=render(u,ctx);
- assert.doesNotMatch(sourceHelp,/分野の強調表示は、入力・保存記録との関連を示す目印です/);assert.match(sourceHelp,/参考知識は一般的な情報です/);
+ assert.doesNotMatch(sourceHelp,/分野の強調表示は、入力・保存記録との関連を示す目印です/);assert.match(sourceHelp,/理解の手掛かり/);
+ assert.doesNotMatch(sourceHelp,/role="dialog"|data-ex-action="learn-help"/);
  assert.doesNotMatch(sourceHelp,/星/);
 });
 test('purpose label is one translatable text node with its full accessible name',()=>{
  const html=render(makeUi(memory()),{categories,draft:{},conditions:{entries:[]}});
- assert.match(html,/<strong class="ex-node-title">目的と楽しみ方<\/strong>/);
- assert.match(html,/aria-label="目的と楽しみ方"/);
+ assert.match(html,/<strong>自分の経験を振り返る<\/strong>/);
+ assert.match(html,/aria-label="自分の経験を振り返る"/);
  assert.doesNotMatch(html,/目的と<wbr>楽しみ方/);
  assert.doesNotMatch(html,/好きな星|どの星|光る星/);
 });
@@ -72,10 +73,10 @@ test('exploration versioned assets agree across HTML, app and service worker',()
   assert.ok(sw.includes('"'+asset+'"'),'offline cache must include '+asset);
  }
 });
-test('theme catalog expansion is data-driven without fixed 28-topic cap',()=>{
+test('unregistered topics cannot silently masquerade as approved themes',()=>{
  const ui=makeUi(memory());ui.tab='catalog';const extended=categories.map(c=>({...c,topics:[...c.topics]}));
  extended[2].topics.push('コース選び','地形と路面');const r=render(ui,{categories:extended,draft:{},conditions:{entries:[]}});
- assert.equal((r.match(/data-ex-pick-topic=/g)||[]).length,9);assert.doesNotMatch(r,/class="ex-count"|<small>[0-9]+ テーマ<\/small>/);assert.match(r,/コース選び/);
+ assert.equal((r.match(/data-ex-pick-topic=/g)||[]).length,7);assert.doesNotMatch(r,/class="ex-count"|<small>[0-9]+ テーマ<\/small>|コース選び|地形と路面/);
 });
 test('notes are opt-in, persisted only to isolated key, deletion works',()=>{
  const storage=memory(),ui=makeUi(storage);ui.selected='03';
@@ -132,20 +133,20 @@ test('beginner exploration removes duplicate navigation and hides citations unde
  assert.match(html,/気になる分野を選ぶ/);
  assert.match(html,/ふり返り/);
  assert.equal((html.match(/data-ex-action="memories"/g)||[]).length,1);
- assert.equal((html.match(/class="ex-node /g)||[]).length,7);
+ assert.equal((html.match(/class="ex-area-choice /g)||[]).length,4);
  u.selected='03';u.topic='上り坂・下り坂';const reading=render(u,base);
- assert.match(reading,/上り坂と下り坂、走る動きの違い/);
+ assert.match(reading,/坂道・路面と走り方/);
  assert.match(reading,/data-ex-action="note"/);
  assert.doesNotMatch(reading,/参考研究：Vernillo/);
  u.modal='learn-help';const help=render(u,base);
- assert.match(help,/参考資料/);
+ assert.match(help,/参考文献・研究条件/);
  assert.match(help,/Vernillo/);
- assert.match(help,/doi.org/);
+ assert.doesNotMatch(help,/href="https?:|role="dialog"/);
 });
 test('topic catalog groups questions by field and filters without duplicating buttons',()=>{
  const u=makeUi(memory());u.tab='catalog';
  const html=render(u,{categories,draft:{},conditions:{entries:[]}});
- assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,7);
+ assert.equal((html.match(/class="ex-catalog-group"/g)||[]).length,4);
  assert.equal((html.match(/data-ex-pick-topic=/g)||[]).length,7);
  assert.match(html,/data-ex-search/);
 });
@@ -166,8 +167,8 @@ test('saved manual run lights only supported categories and identifies its prove
  assert.equal(signalsSaved.hasSavedRun,true);
  const html=render(makeUi(memory()),{categories,draft:{},conditions:{entries:[]},manualRuns:{ok:true,records:[run]}});
  assert.match(html,/data-ex-source="saved-run"/);
- assert.match(html,/ex-node-signal/);
- assert.equal((html.match(/class="ex-node is-related/g)||[]).length,3);
+ assert.match(html,/保存した坂道/);
+ assert.equal((html.match(/class="ex-area-choice is-related/g)||[]).length,3);
 });
 test('bad saved store, GPS and empty noneligible records never create saved-run glow',()=>{
  const cases=[{ok:false,records:[]},{ok:true,records:[{source:'gps',type:'run',schema:2,distanceKm:5,durationSeconds:1800,date:'2026-10-25'}]},
@@ -184,13 +185,13 @@ test('bad saved store, GPS and empty noneligible records never create saved-run 
 test('discovery orbit and searchable catalog are structurally different',()=>{
  const u=makeUi(memory()),ctx={categories,draft:{distance:'5'},conditions:{entries:[]}};
  const orbit=render(u,ctx);
- assert.match(orbit,/class="ex-map"/);
- assert.match(orbit,/class="ex-core"/);
- assert.match(orbit,/class="ex-art"/);
+ assert.match(orbit,/class="ex-area-grid"/);
+ assert.match(orbit,/data-ex-group="A"/);
+ assert.match(orbit,/data-ex-group="D"/);
  assert.match(orbit,/data-ex-source="draft"/);
  u.tab='catalog';
  const lookup=render(u,ctx);
- assert.doesNotMatch(lookup,/class="ex-core"/);
+ assert.doesNotMatch(lookup,/class="ex-area-grid"/);
  assert.match(lookup,/class="ex-catalog-grid"/);
  assert.match(lookup,/data-ex-search/);
 });
@@ -201,15 +202,16 @@ test('topic layout scales and reflection has one way to review',()=>{
  extra[1]={...extra[1],topics:['足・膝・股関節','姿勢と走る動作','体幹と腕の動き','12部位の参考値の見方','もうひとつのテーマ','さらに追加のテーマ']};
  ui.selected='02';ui.topic='足・膝・股関節';
  const html=render(ui,{categories:extra,draft:{},conditions:{entries:[]}});
- assert.equal((html.match(/data-ex-topic=/g)||[]).length,6);
+ assert.equal((html.match(/data-ex-topic=/g)||[]).length,5);
+ assert.equal((html.match(/data-ex-view=/g)||[]).length,3);
  assert.match(html,/<strong>読むテーマ<\/strong>/);
  assert.doesNotMatch(html,/テーマを切り替える/);
  assert.doesNotMatch(html,/class="ex-topic-instruction"/);
- assert.match(html,/1 \/ 6/);
+ assert.match(html,/2 \/ 2/);
  assert.equal((html.match(/data-ex-topic-step=/g)||[]).length,2);
- assert.match(html,/data-ex-topic-step="-1" aria-label="前のテーマ" disabled/);
+ assert.match(html,/data-ex-topic-step="-1" aria-label="前のテーマ"/);
  assert.doesNotMatch(html,/横に動かして選ぶ|どれから読んでみる|記録がなくても自由に選べます/);
- assert.match(html,/class="ex-topic-set"/);
+ assert.match(html,/class="ex-topic-set ex-main-topic-set"/);
  assert.equal((html.match(/data-ex-action="memories"/g)||[]).length,1);
  assert.doesNotMatch(html,/class="ex-memories"/);
  assert.match(html,/メモを書く/);
@@ -224,13 +226,13 @@ test('learning help distinguishes numerical definitions, ROF-J self-reports and 
  const all=[...categories];
  all[0]={...all[0],topics:['距離・時間・ペース','自分が感じた疲れ']};
  all[1]={...all[1],topics:['12部位の参考値の見方']};
- const ui=makeUi(memory());ui.modal='learn-help';
+ const ui=makeUi(memory());ui.modal='';
  const base={categories:all,draft:{},conditions:{entries:[]}};
  for(const row of [
-  ['01','距離・時間・ペース','距離と経過時間から求める算術上の定義'],
-  ['01','自分が感じた疲れ','日本語版ROF-Jは大学生85人'],
-  ['02','12部位の参考値の見方','測定量・適用条件は部位ごとに異なります'],
-  ['04','疲れの感じ方','妥当性の検討対象は大学生']
+  ['01','距離・時間・ペース','距離と経過時間から求めた算術値'],
+  ['01','自分が感じた疲れ','大学生85人・大学運動部員35人'],
+  ['02','12部位の参考値の見方','部位ごとに測定量・適用条件が異なります'],
+  ['04','疲れの感じ方','大学生85人・大学運動部員35人']
  ]){
   ui.selected=row[0];ui.topic=row[1];
   const html=render(ui,base);
@@ -245,7 +247,7 @@ test('Selected-area topics have navigable previous/next controls without the obs
  assert.equal((html.match(/data-ex-action="jump-topics"/g)||[]).length,0);
  assert.equal((html.match(/data-ex-topic-step=/g)||[]).length,2);
  assert.match(html,/id="ex-topic-content"/);
- assert.equal((html.match(/class="ex-node /g)||[]).length,7);
+ assert.equal((html.match(/class="ex-area-choice /g)||[]).length,4);
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
  assert.doesNotMatch(app,/action==="jump-topics"/);
  assert.match(app,/data-ex-topic-step/);

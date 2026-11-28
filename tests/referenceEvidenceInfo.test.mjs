@@ -58,12 +58,13 @@ test('both fatigue lessons cite the open Japanese ROF-J validation with its scop
  const storage={getItem:()=>null,setItem:()=>{}};
  const categories=[{id:'01',name:'走りの記録',topics:['自分が感じた疲れ']},{id:'04',name:'疲労と回復',topics:['疲れの感じ方']}];
  for(const [category,topic] of [['01','自分が感じた疲れ'],['04','疲れの感じ方']]){
-  const ui=makeUi(storage);ui.selected=category;ui.topic=topic;ui.modal='learn-help';
+  const ui=makeUi(storage);ui.selected=category;ui.topic=topic;ui.modal='';
   const html=render(ui,{categories,draft:{},conditions:{entries:[],canSave:true},manualRuns:{ok:true,records:[]}});
-  assert.match(html,/10\.1186\/s40798-026-01108-8/);
+  assert.match(html,/Suzuki・Arai（2026）/);
+  assert.doesNotMatch(html,/href="https?:/);
   assert.match(html,/ROF-J/);
   assert.match(html,/大学生/);
-  assert.match(html,/研究の対象・使える範囲/);
+  assert.match(html,/参考文献・研究条件/);
  }
 });
 

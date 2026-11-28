@@ -29,7 +29,7 @@ test('field highlight and selected slope theme obey same eligibility; no false g
 test('body teaches movements rather than pretending the twelve-region personal measurement is available',()=>{
  const ui=makeUi(memory());ui.selected='02';ui.topic='足・膝・股関節';
  let output=render(ui,ctx());
- assert.match(output,/股関節・膝・足首が連携/);
+ assert.match(output,/股関節や膝の曲げ伸ばし/);
  assert.match(output,/data-ex-body="ankle"/);
  assert.match(output,/結果画面の参考情報を見る/);
  assert.doesNotMatch(output,/あなたの関節への負荷を算定/);
@@ -64,7 +64,7 @@ test('sleep column displays saved entries; comparison helper rejects incompatibl
  const life=readLifeEntries(records);
  assert.equal(compareLifeDays(life,'2026-10-23','2026-10-24').status,'complete');
  assert.equal(compareLifeDays(life,'2026-10-23','2026-10-24').minutesDelta,20);
- assert.match(html,/2026-10-24/);assert.match(html,/睡眠と、走る日の調子/);
+ assert.match(html,/2026-10-24/);assert.match(html,/睡眠と日々のコンディション/);
  const changed={...records,entries:[records.entries[0],{...records.entries[1],sleepSource:'clock',bedTime:'23:00',wakeTime:'06:50',bedDayRule:'previous',bedDayOffset:1}]};
  html=render(u,ctx({},changed));assert.match(html,/就床から起床までの時間/);
  const incompatible=compareLifeDays(readLifeEntries(changed),'2026-10-23','2026-10-24');
@@ -74,7 +74,7 @@ test('sleep column displays saved entries; comparison helper rejects incompatibl
 });
 test('unsupported topics do not inherit unrelated experiment tools',()=>{
  const u=makeUi(memory());u.selected='06';u.topic='ウォームアップ';const html=render(u,ctx());
- assert.match(html,/走り始める前には、どんなことをしていましたか/);assert.doesNotMatch(html,/data-ex-slope="up"/);
+ assert.match(html,/走る前に何をして、走り始めにどう感じましたか/);assert.doesNotMatch(html,/data-ex-slope="up"/);
  assert.equal(Object.keys(LEARNING_TOPICS).length,10);
 });
 test('next check can be explicitly saved and recovered by stable topic key, without changing run or life records',()=>{

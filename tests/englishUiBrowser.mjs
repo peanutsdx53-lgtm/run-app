@@ -124,16 +124,18 @@ try{
   assert.equal(await page.locator('[data-onboard-overlay]').count(),0);
 
   await page.goto(origin+'exploration-tree',{waitUntil:'networkidle'});
-  await page.locator('.ex-node[data-ex-category="01"]').click();
+  await page.locator('.ex-area-choice[data-ex-group="A"]').click();
   await page.locator('.ex-topic[data-ex-topic="距離・時間・ペース"]').click();
-  await page.waitForFunction(()=>document.querySelector('.ex-inquiry-start h3')?.textContent==='Did running feel different on days with a similar average pace?');
+  await page.waitForFunction(()=>document.querySelector('.ex-inquiry-start h3')?.textContent==='On runs with a similar average pace, did the way you ran or felt differ?');
   await page.locator('.ex-knowledge-reference summary').click();
-  assert.match(await page.locator('.ex-knowledge-reference').innerText(),/average time required to cover 1 km/);
-  await page.locator('.ex-node[data-ex-category="02"]').click();
+  assert.match(await page.locator('.ex-knowledge-stage').innerText(),/total elapsed time divided by distance/);
+  assert.match(await page.locator('.ex-knowledge-reference').innerText(),/arithmetic value calculated from recorded distance and elapsed time/);
+  await page.locator('.ex-area-choice[data-ex-group="B"]').click();
   await page.locator('.ex-topic[data-ex-topic="足・膝・股関節"]').click();
-  await page.waitForFunction(()=>document.querySelector('.ex-inquiry-start h3')?.textContent==='Was there a part of your leg movement or a moment that stood out?');
+  await page.waitForFunction(()=>document.querySelector('.ex-inquiry-start h3')?.textContent==='How did your leg or upper-body movement feel at different speeds or in different situations?');
   await page.locator('.ex-knowledge-reference summary').click();
-  assert.match(await page.locator('.ex-knowledge-reference').innerText(),/hips, knees, and ankles/);
+  assert.match(await page.locator('.ex-knowledge-reference').innerText(),/28 regular runners/);
+  assert.match(await page.locator('.ex-knowledge-stage').innerText(),/hip and knee flexion or extension/);
   await page.screenshot({path:resolve(out,width+'-english-learning-topic.png'),fullPage:true});
 
   // Fully authored isolated learning quizzes: selected answers and reasons

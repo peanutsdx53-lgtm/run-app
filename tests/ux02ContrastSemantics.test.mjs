@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {EXPLORE_GROUPS} from '../ui/explorationRedesign.js';
 
 const source=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 const condition=source('ui/homeExperience.css');
@@ -21,12 +22,13 @@ test('daily condition choices and explanation retain readable contrast on the cu
  assert.match(condition,/\.hx-daily-choices label:has\(input:checked\)\{background:var\(--condition-selected\);border-color:var\(--condition-accent\)/);
 });
 
-test('non-text icon threshold is 3:1; all seven Explore accents and Settings chevron remain distinguishable on dark cards',()=>{
- const icons=['#79c2f4','#f4b978','#65e5c2','#d4adfb','#9de9e0','#c3b5ff','#faa6c8'];
- for(const color of icons)assert.ok(contrast(color,'#155563')>=3,'explore accent '+color);
+test('non-text icon threshold is 3:1; all four Explore accents and Settings chevron remain distinguishable on dark cards',()=>{
+ const icons=EXPLORE_GROUPS.map(g=>g.accent);
+ assert.equal(icons.length,4);
+ for(const color of icons)for(const bg of ['#142e3d','#225363','#294a58'])assert.ok(contrast(color,bg)>=3,'explore accent '+color+' on '+bg);
  assert.ok(contrast('#62a5bb','#103850')>=3,'Settings disclosure chevron');
  assert.match(auditor,/item\.classList\?\.contains\('s2-chevron'\)/);
- assert.match(auditor,/item\.classList\?\.contains\('ex-node-icon'\)/);
+ assert.match(auditor,/item\.classList\?\.contains\('ex-area-symbol'\)/);
  assert.match(auditor,/role==='non-text-icon'\|\|size>=24/,'each descendant has its own category/size threshold');
  assert.match(auditor,/visualRole:low\.role/,'audit captures the type of measured element');
 });
