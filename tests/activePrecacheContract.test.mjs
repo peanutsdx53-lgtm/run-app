@@ -56,7 +56,7 @@ test('obsolete query revisions are not retained solely for historical compatibil
 
 test('offline entry points and dynamic Shadow DOM stylesheet are preserved',()=>{
  for(const url of [
-  './app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics',
+  './app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only-stage3-copy-notes-copy-dictionary-core-copy-remaining-copy-condition-copy-design1-metrics-design2',
   './ui/resultExperience.js?v=20261126-cleanup-v5-readable-history-compact-daily-only',
   './ui/buttonContrastSystem.css?v=20261126-cleanup-v5',
   './ui/resultInlineStyles.js?v=20261119-s09-focus-controls-v1-readable-history-daily-only',
