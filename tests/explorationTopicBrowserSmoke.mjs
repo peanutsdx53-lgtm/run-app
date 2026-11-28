@@ -85,7 +85,7 @@ try{
   assert.equal(purpose.fits,true,'purpose label must not clip '+width);
   const guide=await page.locator('.ex-observation-guide').innerText();
   assert.match(guide,/観察ガイド/);assert.match(guide,/研究出典に基づく専門解説ではありません/);
-  assert.match(guide,/情報の出所と限界/);assert.match(guide,/気づきを残す/);
+  assert.match(guide,/情報の出所と限界/);assert.match(guide,/気づき・疑問を残す/);
   const dimensions=await page.evaluate(()=>({body:document.body.scrollWidth,html:document.documentElement.scrollWidth,inner:innerWidth,panels:[...document.querySelectorAll('.ex-inquiry-stage')].map(el=>({w:el.getBoundingClientRect().width,scroll:el.scrollWidth}))}));
   assert.ok(dimensions.body<=width+2&&dimensions.html<=width+2,'page has no horizontal overflow: '+JSON.stringify(dimensions));
   for(const cell of dimensions.panels)assert.ok(cell.scroll<=cell.w+2&&cell.w>140,'card content fits: '+JSON.stringify(cell));

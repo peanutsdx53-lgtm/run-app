@@ -24,9 +24,15 @@ export function renderObservationGuide(ui,ctx,cat,topic,inquiry=''){
   '<details class="ex-inquiry-details"><summary>情報の出所と限界</summary><p>'+text(guide?.limit||'記録だけから原因や身体の状態を断定しません。')+'</p><p>'+text(OBSERVATION_GUIDE_BOUNDARY)+'</p></details>'+
   '<button type="button" class="ex-help-link" data-ex-action="learn-help">観察ガイドの注意点</button>'+
   '</section>'+
-  '<section class="ex-inquiry-stage ex-inquiry-last"><h4>気づきを残す</h4>'+
-  '<div class="ex-note-invite"><div><strong>自分の言葉で書く</strong><p>印象に残ったことや、次の確認事項を任意で残せます。</p></div>'+
-  '<button type="button" data-ex-action="note">書いてみる <span aria-hidden="true">＋</span></button></div>'+
-  (saved.length?'<div class="ex-note-preview"><strong>以前に書いたこと</strong>'+saved.map(n=>'<p data-user-authored>'+text(n.text)+'</p>').join('')+'</div>':'')+
-  '</section></div>';
+  renderReflectionActions(saved)+'</div>';
+}
+
+// Shared final action section: same affordances for knowledge and observation themes.
+export function renderReflectionActions(saved=[]){
+ const text=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ return '<section class="ex-inquiry-stage ex-inquiry-last"><h4>気づき・疑問を残す</h4>'+
+ '<div class="ex-note-invite"><div><p>感じたことや次に確かめたいことを、任意で記録できます。</p></div>'+
+ '<button type="button" data-ex-action="note"><span>メモを書く</span><span aria-hidden="true">＋</span></button></div>'+
+ (saved.length?'<div class="ex-note-preview"><strong>以前のメモ</strong>'+saved.map(n=>'<p data-user-authored>'+text(n.text)+'</p>').join('')+'</div>':'')+
+ '<div class="ex-consultation-action"><a class="ex-action quiet" data-ex-consultation href="#/consultation?from=explore"><span>相談・共有画面へ</span><span aria-hidden="true">›</span></a></div></section>';
 }

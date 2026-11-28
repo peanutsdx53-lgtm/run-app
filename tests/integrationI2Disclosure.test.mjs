@@ -29,9 +29,11 @@ test('I2: printable opt-in to ROF must not opt-in to evidence timestamps or corr
  assert.match(ui,/画像を作成できませんでした/,'no silent PNG failure');
  assert.match(ui,/自由記述・後日申告・経路は掲載しません/);
 });
-test('I2: cross-feature share failure preserves source and reports a denied clipboard operation',()=>{
+test('I2: cross-feature consultation navigation preserves source and does not use clipboard',()=>{
  const app=readFileSync(new URL('../app.js',import.meta.url),'utf8');
- assert.match(app,/コピーできませんでした/);
+ assert.match(app,/data-ex-consultation/);
+ assert.doesNotMatch(app,/data-ex-draft-text/);
+ assert.match(app,/captureConsultationFromExplore\(location.hash/);
  const consultation=readFileSync(new URL('../ui/consultationExperience.js',import.meta.url),'utf8');
  assert.match(consultation,/data-consultation-gps-v2/);
  assert.match(consultation,/data-share/);

@@ -72,7 +72,7 @@ test('The revision is aligned across active shell and PWA; scientific and persis
  for(const [src,fragment] of [[html,'ui/buttonContrastSystem.css?v=20261126-cleanup-v5'],
   [html,'ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1'],
   [html,'app.js?v=20261126-cleanup-v5-css-retired-mirror-stage3-readable-history-daily-compact-daily-only'],[app,'recordExperience.js?v=20261126-cleanup-v5'],
-  [app,'historyExperience.js?v=20261126-cleanup-v5'],[app,'gaitExperience.js?v=20261126-cleanup-v5'],[app,'learningExperience.js?v=20261126-cleanup-v5'],[app,'consultationExperience.js?v=20261126-cleanup-v5-daily-only'],
+  [app,'historyExperience.js?v=20261126-cleanup-v5'],[app,'gaitExperience.js?v=20261126-cleanup-v5'],[app,'learningExperience.js?v=20261126-cleanup-v5'],[app,'consultationExperience.js?v=20261126-cleanup-v5-daily-only-usability1'],
   [app,'bodyContextExperience.js?v=20261126-cleanup-v5-daily-only'],[app,'environmentExperience.js?v=20261123-ux09-environment-states-v1'],[app,'rofExperience.js?v=20261126-cleanup-v5'],
   [sw,'runload-ui-next-shell-'+cacheGeneration],[sw,'ui/gaitExperience.js?v=20261126-cleanup-v5'],[sw,'ui/recordReturnActions.css?v=20261123-ux09-environment-states-v1']])
   assert.ok(src.includes(fragment),'missing active '+fragment);

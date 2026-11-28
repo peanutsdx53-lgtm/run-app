@@ -26,7 +26,7 @@ test('all 17 observation guides render self-observation, limitation and explicit
   if(LEARNING_TOPICS[key])continue;
   ui.selected=category.id;ui.topic=title;
   const page=render(ui,ctx);
-  for(const label of ['観察ガイド','研究出典に基づく専門解説ではありません','探究の入り口','記録や経験を手がかりにする','情報の出所と限界','気づきを残す'])assert.ok(page.includes(label),key+': '+label);
+  for(const label of ['観察ガイド','研究出典に基づく専門解説ではありません','探究の入り口','記録や経験を手がかりにする','情報の出所と限界','気づき・疑問を残す'])assert.ok(page.includes(label),key+': '+label);
   assert.ok(page.includes('data-ex-action="note"'));
  }}
 });
@@ -38,7 +38,7 @@ test('observation guide note has stable topic ID and survives reload; focused ro
  const after=makeUi(storage);after.selected='06';after.topic='ウォームアップ';
  const run={id:'run-v1-test-1',date:'2026-10-20'};
  const general=render(after,{categories,draft:null,conditions:{entries:[]}});
- assert.match(general,/以前に書いたこと/);
+ assert.match(general,/以前のメモ/);
  assert.match(general,/走る前の気持ちを次に確かめる/);
  const html=render(after,{categories,draft:null,conditions:{entries:[]},focusRunId:run.id,focusRun:run});
  assert.doesNotMatch(html,/走る前の気持ちを次に確かめる/,'unlinked note is not a property of the selected run');

@@ -239,7 +239,7 @@ try{
     const q=s=>document.querySelector(s)?.textContent.trim();
     return q('.ex-core span')===labels[0]&&q('.ex-topic-controls>strong')===labels[1]&&q('.ex-tool-result>strong')===labels[2]&&q('.ex-inquiry-stage>h4')===labels[3]&&[...document.querySelectorAll('.ex-inquiry-details>summary')].some(e=>e.textContent.trim()===labels[4])&&q('.ex-knowledge-reference>summary')===labels[5];
    },expected,{timeout:14000});
-   const geometry=await page.locator('[data-experience-v3]').evaluate(el=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,font:parseFloat(getComputedStyle(document.documentElement).fontSize),areas:el.querySelectorAll('.ex-node').length,questions:el.querySelectorAll('.ex-inquiry-start h3').length,stages:el.querySelectorAll('.ex-inquiry-stage').length,stepper:el.querySelectorAll('[data-ex-topic-step]').length,note:el.querySelectorAll('[data-ex-action="note"]').length,share:el.querySelectorAll('[data-ex-action="share"]').length,history:el.querySelectorAll('[data-ex-action="memories"]').length}));
+   const geometry=await page.locator('[data-experience-v3]').evaluate(el=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,font:parseFloat(getComputedStyle(document.documentElement).fontSize),areas:el.querySelectorAll('.ex-node').length,questions:el.querySelectorAll('.ex-inquiry-start h3').length,stages:el.querySelectorAll('.ex-inquiry-stage').length,stepper:el.querySelectorAll('[data-ex-topic-step]').length,note:el.querySelectorAll('[data-ex-action="note"]').length,share:el.querySelectorAll('[data-ex-consultation]').length,history:el.querySelectorAll('[data-ex-action="memories"]').length}));
    assert.ok(geometry.scroll<=width+3,'UX13 whole page overflow '+JSON.stringify({language,width,percent,geometry}));
    assert.equal(geometry.font,percent===200?32:16,'UX13 root font');
    assert.deepEqual([geometry.areas,geometry.questions,geometry.stages,geometry.stepper,geometry.note,geometry.share,geometry.history],[7,1,3,2,1,1,1],'UX13 preserves discovery and optional actions');
@@ -297,6 +297,58 @@ try{
    ux14Matrix.push({engine,language,width,percent,...g,actions,keyboard,disclosure,realGeometry});
 
   }finally{await ctx.close();}
+ }
+ // New end-to-end consultation handoff: no implicit record, no private transfer, exact return.
+ for(const language of ['ja','en']){
+  const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce',serviceWorkers:'block'});
+  try{
+   await context.addInitScript(lang=>{
+    localStorage.setItem('runload-v2-introduction-preview-v1',JSON.stringify({completed:true,language:lang}));
+    localStorage.setItem('runload-v2-display-preferences-v1',JSON.stringify({textSize:'standard',motion:'system',language:lang}));
+   },language);
+   const page=await context.newPage();page.on('pageerror',e=>errors.push({type:'consultation-handoff',error:String(e)}));
+   await page.goto(base+'#/home',{waitUntil:'networkidle'});
+   const ids=await page.evaluate(async()=>{
+    const [canonical,store]=await Promise.all([import('/ui/manualRunCanonical.js'),import('/ui/manualRunStore.js')]);
+    await canonical.refresh();const ids=[];
+    for(const [date,distance] of [['2026-11-18','5'],['2026-11-20','6']]){
+     const response=await canonical.mutate(st=>store.saveManualRun(st,{date,distance,hours:'',minutes:'35',seconds:'',activityGait:'RUNNING',runningFormat:'UNKNOWN',rofBefore:2,rofAfter:8,steps:'',stepsProvenance:'UNKNOWN',memo:'PRIVATE-CONSULTATION-FIXTURE'}));
+     if(!response.ok)throw Error(response.reason);ids.push(response.record.id);
+    }return ids;
+   });
+   const query=new URLSearchParams({category:'03',topic:'上り坂・下り坂'});
+   const go=async hash=>{await page.goto(base+hash,{waitUntil:'networkidle'});await page.locator('[data-ex-consultation]').waitFor({timeout:20000});};
+   const verifyPrivate=async expected=>{
+    await page.locator('#consultation-root').waitFor({timeout:20000});
+    assert.equal(await page.locator('#cp-target').inputValue(),expected);
+    for(const key of ['rof','notes','condition'])assert.equal(await page.locator('[data-share="'+key+'"]').isChecked(),false);
+    for(const id of ['purpose','observation','question'])assert.equal(await page.locator('#cp-'+id).inputValue(),'');
+    assert.doesNotMatch(await page.locator('#consultation-root').innerText(),/PRIVATE-CONSULTATION/);
+    assert.equal(await page.locator('.cp-back').getAttribute('aria-label'),language==='en'?'Return to Explore':'探究に戻る');
+   };
+   await go('#/exploration-tree?'+query.toString());
+   await page.locator('[data-ex-slope="down"]').click();
+   await page.locator('[data-ex-action="note"]').click();
+   await page.locator('#ex-note').fill('PRIVATE-CONSULTATION 自分のメモ');
+   await page.locator('[data-ex-action="save-note"]').click();
+   await page.locator('.ex-note-preview [data-user-authored]').waitFor();
+   const stored=await page.evaluate(()=>localStorage.getItem('runload-v2-exploration-notes-v1'));
+   await page.locator('.ex-inquiry-last').screenshot({path:resolve(out,'consultation-entry-'+language+'.png'),animations:'disabled'});
+   await page.locator('[data-ex-consultation]').click();await verifyPrivate('');
+   await page.locator('.cp-back').click();await page.locator('[data-ex-consultation]').waitFor();
+   assert.equal(await page.locator('[data-ex-slope="down"]').getAttribute('aria-pressed'),'true');
+   assert.equal(await page.evaluate(()=>localStorage.getItem('runload-v2-exploration-notes-v1')),stored);
+   query.set('source','manual');query.set('record',ids[0]);
+   await go('#/exploration-tree?'+query.toString());
+   await page.locator('[data-ex-consultation]').click();await verifyPrivate(ids[0]);
+   await page.locator('.cp-back').click();await page.locator('[data-ex-consultation]').waitFor();
+   assert.equal(new URLSearchParams(new URL(page.url()).hash.split('?')[1]).get('record'),ids[0]);
+   // A direct/reloaded link has no in-memory selection; never infer one from recent data.
+   await page.goto(base+'#/consultation?from=explore',{waitUntil:'networkidle'});
+   await page.reload({waitUntil:'networkidle'});await verifyPrivate('');
+   assert.equal(await page.locator('.cp-back').getAttribute('href'),'#/exploration-tree');
+   assert.equal(await page.evaluate(()=>localStorage.getItem('runload-v2-exploration-notes-v1')),stored);
+  }finally{await context.close();}
  }
  assert.equal(ux13Matrix.length,16,'UX13 complete per-engine matrix');
  await writeFile(resolve(out,'ux13-matrix.json'),JSON.stringify(ux13Matrix,null,2));

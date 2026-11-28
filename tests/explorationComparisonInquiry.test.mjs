@@ -22,7 +22,7 @@ test('E2 T08 is inquiry distinct from the result comparison and learning',()=>{
  assert.match(h,/比較表を複製しません/);
  assert.match(h,/結果画面で確認/);
  assert.doesNotMatch(h,/data-ex-action="note"/,'T08 reuses old memoir control');
- assert.match(h,/既存テーマにある「書いてみる」/);
+ assert.match(h,/既存テーマにある「メモを書く」/);
  assert.doesNotMatch(h,/改善した|危険度スコア|比較相手.*自動選択/);
 });
 test('E2 requires an explicit pair and does not fill missing data',()=>{

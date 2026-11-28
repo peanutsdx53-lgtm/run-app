@@ -82,7 +82,7 @@ test('next check can be explicitly saved and recovered by stable topic key, with
  const saved=saveNote(u,'次は上りと下りで感じ方を確かめたい');assert.equal(saved.ok,true);
  const after=makeUi(storage);assert.equal(after.notes[0].topicId,'slope-running');
  after.selected='03';after.topic='上り坂・下り坂';const out=render(after,ctx());
- assert.match(out,/以前に書いたこと/);
+ assert.match(out,/以前のメモ/);
  assert.match(out,/次は上りと下りで感じ方を確かめたい/);
  assert.deepEqual([...storage.map.keys()],['runload-v2-exploration-notes-v1']);
 });

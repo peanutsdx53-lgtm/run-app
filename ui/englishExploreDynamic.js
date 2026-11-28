@@ -88,6 +88,7 @@ export function translateExploreDynamic(raw,{element=null}={}){
  const s=String(raw??'').trim();
  if(Object.hasOwn(ENGLISH_EXPLORE_UI,s))return ENGLISH_EXPLORE_UI[s];
  let m;
+ if(element.matches?.('.ex-note-count')&&(m=s.match(/^(\d+)件$/)))return m[1]+(m[1]==='1'?' note':' notes');
  if((m=s.match(/^(\d{4}-\d\d-\d\d) の生活コンディション記録に関連$/)))
   return 'Related to the Daily Condition Entry on '+m[1];
  if((m=s.match(/^(\d{4}-\d\d-\d\d) に保存した(走行距離と時間|坂道の入力|ROF-Jの入力|身体に関するメモ)に関連$/))){

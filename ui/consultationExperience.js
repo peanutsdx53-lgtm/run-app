@@ -62,7 +62,16 @@ export function trendSvg(records){
  const dots=points.map(p=>'<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4.2" fill="#079cab" stroke="white" stroke-width="1.5"/><text text-anchor="middle" x="'+p.x.toFixed(1)+'" y="'+Math.max(26,p.y-9).toFixed(1)+'" font-size="10.5" font-weight="750" fill="#196b79">'+p.r.distanceKm.toFixed(1)+'</text>').join('');
  return '<svg class="cp-trend" viewBox="0 0 630 172" role="img" aria-label="保存済み運動記録の距離の推移。縦軸は距離km、横軸は記録日"><text x="24" y="19" class="cp-trend-axis-title">距離（km）</text>'+lines+'<path fill="none" stroke="#078f9f" stroke-width="3" d="'+points.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'"/>'+dots+xs+'</svg>';
 }
-export function renderConsultation(){return '<section id="consultation-root" aria-label="相談・共有">'+MARKUP+'</section>';}
+export function renderConsultation(entry={}){
+ const back=entry.fromExplore&&/^#\/exploration-tree(?:\?|$)/.test(entry.returnHref||'')?entry.returnHref:'#/exploration-tree';
+ const markup=entry.fromExplore?MARKUP.replace('href="#/home" class="cp-back" aria-label="ホームに戻る"','href="'+esc(back)+'" class="cp-back" aria-label="探究に戻る"'):MARKUP;
+ return '<section id="consultation-root" aria-label="相談・共有">'+markup+'</section>';
+}
+// Explore never substitutes the most recent record for a missing or unselected one.
+export function consultationInitialRecord(records,entry={}){
+ if(!entry.fromExplore)return records[0]?.id||'';
+ return records.filter(r=>r.source==='manual'&&r.id===entry.recordId).length===1?entry.recordId:'';
+}
 function figures(rows){return BODY_REGION_VIEWS.map((v,i)=>{
  const prefix='cpsvg'+i;
  const clip=bodyReferenceSilhouetteClipDef(v,prefix);
@@ -91,14 +100,15 @@ function setSourceNote(host,parentSelector,key,message){
  if(!note){note=document.createElement('p');note.className='cp-txtmeta cp-source-note';note.setAttribute('data-source-note',key);parent.appendChild(note);}
  note.textContent=message;
 }
-export function mountConsultation(host,source){
+export function mountConsultation(host,source,entry={}){
  if(!host)return;
  const standardRecords=source.records,v2Records=source.v2Records||[],conditions=source.conditions;
  const panel=host.querySelector('.cp-preview-panel'),app=host.closest('.cp-app');
  const target=host.querySelector('#cp-target'),noteFields=['purpose','observation','question'];
- const state={mode:'single',periodDays:30,includeGpsV2:false,chosen:standardRecords[0]?.id||''};
+ const state={mode:'single',periodDays:30,includeGpsV2:false,chosen:consultationInitialRecord(standardRecords,entry)};
  const addScope=(after,key)=>{const p=host.ownerDocument.createElement('p');p.className='cp-active-scope';p.dataset.cpScope=key;after.insertAdjacentElement('afterend',p);};
  addScope(target,'edit');addScope(host.querySelector('.cp-preview-top'),'preview');
+ if(entry.fromExplore){const hint=host.ownerDocument.createElement('p');hint.className='cp-description';hint.textContent='共有する記録と情報はここで確認・選択してください。探究のメモは自動で転記しません。';target.insertAdjacentElement('afterend',hint);}
  const reportScope=host.ownerDocument.createElement('p');reportScope.className='cp-txtmeta cp-report-scope';reportScope.dataset.cpScope='print';
  host.querySelector('[data-activity-source]').insertAdjacentElement('beforebegin',reportScope);
  const records=()=>state.includeGpsV2?sorted([...standardRecords,...v2Records]):standardRecords;
@@ -110,7 +120,9 @@ export function mountConsultation(host,source){
   const group=state.mode==='single'?(select()?[select()]:[]):period();
   const single=state.mode==='single'?select():null, newest=group[0]||null;
   const en=host.ownerDocument.documentElement.lang==='en';
-  const scope=state.mode==='single'?(en?englishReportRecordContext(single):reportRecordContext(single)):
+  const noSelection=entry.fromExplore&&state.mode==='single'&&!single&&records().length>0;
+  const recordScope=record=>noSelection&&!record?'共有する記録は未選択です。':reportRecordContext(record,state.mode);
+  const scope=state.mode==='single'?(en?englishReportRecordContext(single):recordScope(single)):
    (en?'Selected period: ':'選択した期間：')+periodStart(state.periodDays)+' – '+isoLocal(new Date())+' / '+group.length+(en?(group.length===1?' saved activity':' saved activities'):'件の保存済み活動');
   for(const el of host.querySelectorAll('[data-cp-scope]')){
    const value=scope+(el.dataset.cpScope==='preview'?(en?' · Preview only. Nothing is sent automatically.':' ／ プレビューのみ。自動送信はしません。'):'');
@@ -134,13 +146,13 @@ export function mountConsultation(host,source){
   const bubbles=host.querySelectorAll('.cp-bubble');if(bubbles[0])bubbles[0].textContent=hasRof?String(rof.rofBefore):'—';if(bubbles[1])bubbles[1].textContent=hasRof?String(rof.rofAfter):'—';
    setSourceNote(host,'.cp-wellbeing[data-output-section="rof"]','rof',hasRof?reportRecordContext(rof,state.mode)+'。'+reportRofInterpretation():(state.mode==='period'?'期間内に運動前後の回答がそろった手入力記録はありません。期間の平均値ではありません。':'選択記録に運動前後の有効な回答がそろっていません。'));
   // A V2 overview must not auto-associate a separately saved personal life entry.
-  const life=single?.source==='gps-v2'?null:lastCondition(single?.date||newest?.date||isoLocal(new Date()));
+  const life=single?.source==='gps-v2'||(entry.fromExplore&&state.mode==='single'&&!single)?null:lastCondition(single?.date||newest?.date||isoLocal(new Date()));
   const lifeText=life?((state.mode==='period'?'期間内の最新1日の記録（期間平均ではありません）／':'')+'記録日：'+dateLabel(life.date)+'／その日の調子：'+(life.feeling||'未記録')+'／'+(Number.isInteger(life.sleepMinutes)?(life.sleepSource==='clock'?'在床時間':'記録された時間')+'：'+Math.floor(life.sleepMinutes/60)+'時間'+pad(life.sleepMinutes%60)+'分':'時間未記録')):'該当する生活コンディションの記録はありません。';
   setText(host,'.cp-wellbeing[data-output-section="condition"] p',lifeText);
   setText(host,'.cp-wellbeing[data-output-section="condition"] h4','本人の生活・コンディション記録');
   setHtml(host,'.cp-body-figures',figures(rows));
   const tr=tableRows(rows),tables=host.querySelectorAll('.cp-part-table tbody');tables.forEach((tb,i)=>{tb.innerHTML=tr.slice(i*6,i*6+6).join('');});
-  const info=host.querySelector('[data-output-section="body"] .cp-info-note');if(info)info.textContent=reportRecordContext(scienceRun,state.mode)+'。'+(count?(count+'/12部位を算出。各部位自身の文献基準を100とする参考値であり、傷害リスクではありません。'):(scienceRun?'活動種別または文献の適用速度範囲により、12部位参考値は算出対象外です。':'対応する保存済み手入力の単独活動がないため、12部位参考値は表示できません。'));
+  const info=host.querySelector('[data-output-section="body"] .cp-info-note');if(info)info.textContent=recordScope(scienceRun)+'。'+(count?(count+'/12部位を算出。各部位自身の文献基準を100とする参考値であり、傷害リスクではありません。'):(scienceRun?'活動種別または文献の適用速度範囲により、12部位参考値は算出対象外です。':'対応する保存済み手入力の単独活動がないため、12部位参考値は表示できません。'));
    // A single chosen reference and its conditions are not summaries of the whole period.
   const memo=single?.source==='manual'?single:scienceRun||newest;
   const conditionsList=host.querySelectorAll('.cp-condition strong');
@@ -149,7 +161,7 @@ export function mountConsultation(host,source){
   if(conditionsList[0])conditionsList[0].textContent=surface&&surface!=='UNKNOWN'?surface:'未記録';
   if(conditionsList[1])conditionsList[1].textContent=memo?.courseName||'未記録';
   if(conditionsList[2])conditionsList[2].textContent=memo?.shoeName||'未記録';
-   setSourceNote(host,'[data-output-section="course"]','course',reportRecordContext(memo,state.mode)+'。走行条件と使用品はこの記録の情報です。');
+   setSourceNote(host,'[data-output-section="course"]','course',recordScope(memo)+'。走行条件と使用品はこの記録の情報です。');
   setHtml(host,'.cp-trend-holder',trendSvg(group));
   host.querySelector('[data-period-toggle]').hidden=state.mode!=='period';
   host.querySelectorAll('.cp-period-only').forEach(e=>e.classList.toggle('cp-printed',state.mode==='period'));
@@ -185,8 +197,11 @@ export function mountConsultation(host,source){
  const options=()=>{const old=state.chosen;target.innerHTML='';if(state.mode==='single'){
   const available=records();
   if(!available.length)target.add(new Option('保存された運動記録がありません',''));
-  else available.forEach(r=>target.add(new Option(consultationTargetLabel(r,host.ownerDocument?.documentElement?.lang),r.id)));
-  state.chosen=available.some(r=>r.id===old)?old:available[0]?.id||'';
+  else {
+   if(entry.fromExplore)target.add(new Option(host.ownerDocument?.documentElement?.lang==='en'?'Select a Record':'記録を選択してください',''));
+   available.forEach(r=>target.add(new Option(consultationTargetLabel(r,host.ownerDocument?.documentElement?.lang),r.id)));
+  }
+  state.chosen=available.filter(r=>r.id===old).length===1?old:entry.fromExplore?'':available[0]?.id||'';
  }else{target.add(new Option('直近30日間','30'));target.add(new Option('直近7日間','7'));target.value=String(state.periodDays);}
  target.value=state.mode==='single'?state.chosen:String(state.periodDays);};
  // This opt-in is reset on every visit. No saved V2 overview enters a PDF

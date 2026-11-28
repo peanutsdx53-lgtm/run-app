@@ -893,3 +893,17 @@ details.ex-e-boundary>summary::-webkit-details-marker{display:none}
 details.ex-e-boundary>summary::after{content:"⌄";margin-left:auto;flex:none}
 details.ex-e-boundary[open]>summary::after{transform:rotate(180deg)}
 details.ex-e-boundary>summary:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+
+/* Optional reflection and navigation are different actions, not nested headings. */
+#app .ex-page .ex-focus .ex-note-invite{grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+#app .ex-page .ex-focus .ex-note-invite button{width:100%!important;min-width:0;min-height:46px;white-space:normal;overflow-wrap:anywhere;display:flex;align-items:center;justify-content:center;gap:8px}
+#app .ex-page .ex-focus .ex-note-invite button span{margin:0}
+#app .ex-page .ex-consultation-action{border-top:1px solid #416d7d;padding-top:12px;margin-top:3px;min-width:0}
+#app .ex-page .ex-consultation-action a{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;box-sizing:border-box;width:100%;text-decoration:none;padding:10px 14px;border-radius:12px;background:#123c4d;border:1px solid #396b79;color:#e1f2f6;line-height:1.5;overflow-wrap:anywhere;scroll-margin-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+#app .ex-page .ex-consultation-action a:focus-visible,#app .ex-page .ex-reflection-footer button:focus-visible{outline:3px solid #a4f7ed;outline-offset:3px}
+#app .ex-page .ex-reflection-footer{padding:0;display:block;overflow:visible}
+#app .ex-page .ex-reflection-footer .ex-header-memo{display:flex;gap:10px;width:100%;min-height:60px;align-items:center;text-align:left;box-sizing:border-box;padding:16px 18px;border:0;border-radius:inherit;background:transparent;margin:0;white-space:normal;overflow-wrap:anywhere}
+#app .ex-page .ex-reflection-footer .ex-header-memo strong{flex:1;min-width:0}
+#app .ex-page .ex-header-memo .ex-note-count{height:auto;min-height:25px;min-width:0;padding:3px 8px;line-height:1.4;white-space:normal;text-align:center;flex:0 1 auto}
+#app .ex-page .ex-header-memo .ex-note-chevron{background:none;min-width:0;width:auto;height:auto;padding:0;font-size:1.3rem}
+.ex-page .ex-note-topic{display:flex;flex-wrap:wrap;gap:4px;align-items:baseline;overflow-wrap:anywhere}

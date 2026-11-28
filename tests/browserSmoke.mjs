@@ -501,7 +501,7 @@ try{
   const footerStyle=await writeAction.evaluate(el=>{
     const b=el.querySelector('button').getBoundingClientRect(),r=el.getBoundingClientRect();
     return {buttonWithin:b.left>=r.left-1&&b.right<=r.right+1,
-      fontSize:parseFloat(getComputedStyle(el.querySelector('strong')).fontSize)};
+      fontSize:parseFloat(getComputedStyle(el.querySelector('p')).fontSize)};
   });
   assert.ok(footerStyle.buttonWithin,'write action stays within the reading card: '+JSON.stringify(footerStyle));
   assert.ok(footerStyle.fontSize>=12,'readable text in reflection footer');
@@ -514,7 +514,7 @@ try{
   await page.screenshot({path:resolve(root,'screenshots',mode.name+'-explore-writing-footer-v24.png'),fullPage:false});
   await ex.locator('[data-ex-action="note"]').click();
    await page.screenshot({path:resolve(root,'screenshots',mode.name+'-explore-note-dialog-v24.png'),fullPage:false});
-   assert.match(await ex.locator('.ex-dialog').innerText(),/画面下部の「ふり返り」で読み返せます/);
+   assert.match(await ex.locator('.ex-dialog').innerText(),/保存したメモはふり返りノートから読み返せます/);
    await ex.locator('#ex-note').focus();
    const noteFont=await ex.locator('#ex-note').evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
    assert.ok(mode.width>800||noteFont>=16,mode.name+' note textarea has iOS safe font size: '+noteFont);
